@@ -1,0 +1,11 @@
+@font-face {
+  font-family: "WhiteOnBlack";
+  src: url("/fonts/WhiteOnBlack.ttf");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+h1 {
+  font-family: "WhiteOnBlack", sans-serif;
+}
