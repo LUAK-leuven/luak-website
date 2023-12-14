@@ -13,7 +13,7 @@ const { data } = await useAsyncData(() =>
     <div
       class="bg-base-100 md:basis-9/12 basis-11/12 shrink-0 grow-0 rounded my-28"
     >
-      <h1 class="w-full text-center text-7xl m-10">News</h1>
+      <h1 class="w-full text-center text-7xl p-10">News</h1>
       <NewsItem
         v-for="(newsItem, index) in data"
         :key="newsItem._path"
