@@ -1,6 +1,6 @@
 <template>
   <NavBar />
-  <main class="z-0">
+  <main class="overflow-hidden">
     <NuxtPage />
   </main>
 </template>

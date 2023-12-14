@@ -5,7 +5,7 @@
     <div class="navbar bg-base-200 w-11/12 rounded-md">
       <div class="flex-1">
         <NuxtLink to="/" class="btn btn-ghost p-1">
-          <NuxtImg src="/luak-logo.png" class="h-full" />
+          <NuxtImg src="/luak-logo.png" class="h-full" :quality="50" />
         </NuxtLink>
       </div>
       <div class="flex-none">
