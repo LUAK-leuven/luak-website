@@ -9,3 +9,21 @@
 h1 {
   font-family: "WhiteOnBlack", sans-serif;
 }
+
+ul {
+  list-style: disc;
+}
+
+ol {
+  list-style: auto;
+}
+
+p {
+  @apply mb-5;
+}
+
+h2 {
+  @apply text-2xl;
+  @apply font-bold;
+  @apply mt-5;
+}

@@ -1,4 +1,8 @@
-<script setup></script>
+<script setup>
+const { data: info_navigation } = await useAsyncData("info_navigation", () =>
+  fetchContentNavigation(queryContent("/info"))
+);
+</script>
 
 <template>
   <div class="flex justify-center top-3 z-50 w-full fixed">
@@ -16,9 +20,9 @@
             <details>
               <summary>Info</summary>
               <ul class="p-2 bg-base-200 rounded-t-none">
-                <li><NuxtLink>Becoming a member</NuxtLink></li>
-                <li><NuxtLink>Rules & regulations</NuxtLink></li>
-                <li><NuxtLink>Gear rental</NuxtLink></li>
+                <li v-for="nav in info_navigation[0].children" :key="nav._path">
+                  <NuxtLink :to="nav._path">{{ nav.title }}</NuxtLink>
+                </li>
               </ul>
             </details>
           </li>
