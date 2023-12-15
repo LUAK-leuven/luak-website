@@ -1,5 +1,5 @@
 ---
-title: "krikke kandersteg"
+title: "Lecture klaas willems & mountcoach"
 description: "what an adventure"
 image: "/kandersteg.jpg"
 ---

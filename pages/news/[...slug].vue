@@ -8,7 +8,9 @@
         <div class="hero-overlay bg-opacity-60"></div>
         <div class="hero-content text-left text-neutral-content my-20">
           <div class="max-w-[90wh]">
-            <h1 class="text-8xl mb-14">{{ doc.title }}</h1>
+            <h1 class="mb-14 text-center" style="font-size: 9vw">
+              {{ doc.title }}
+            </h1>
           </div>
         </div>
       </div>
