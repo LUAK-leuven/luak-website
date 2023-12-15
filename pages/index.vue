@@ -27,7 +27,7 @@ const { data } = await useAsyncData(() =>
   </div>
   <div class="relative flex flex-wrap justify-center z-2 bg-base-300">
     <div
-      class="bg-base-100 md:basis-9/12 basis-11/12 shrink-0 grow-0 rounded"
+      class="bg-base-100 shadow-md md:basis-9/12 basis-11/12 shrink-0 grow-0 rounded"
       style="margin-top: -5em"
     >
       <h1 class="w-full text-center text-7xl p-10">News</h1>
@@ -37,7 +37,7 @@ const { data } = await useAsyncData(() =>
         v-bind="{ data: newsItem, reversed: !!((index + 1) % 2) }"
       />
     </div>
-    <div class="bg-base-100 basis-11/12 shrink-0 grow-0 rounded my-5">
+    <div class="bg-base-100 shadow-md basis-11/12 shrink-0 grow-0 rounded my-5">
       <h1 class="w-full text-center text-7xl m-10">Activities</h1>
     </div>
   </div>
