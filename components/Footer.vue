@@ -1,14 +1,11 @@
 <script setup></script>
 
 <template>
-  <footer class="footer footer-center p-10 bg-primary text-primary-content">
+  <footer
+    class="footer footer-center p-10 bg-primary text-primary-content relative z-10"
+  >
     <aside>
-      <NuxtImg
-        src="/luak-logo-white.png"
-        class="h-full"
-        :quality="50"
-        :height="50"
-      />
+      <NuxtImg src="/luak-logo-white.png" :quality="50" height="50" />
       <p class="font-bold">Leuvens Universitaire Alpinisten Klub vzw</p>
       <p>
         Tervuursevest 101, 3001 Leuven <br />

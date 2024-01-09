@@ -41,9 +41,20 @@ const { data } = await useAsyncData(() =>
         v-bind="{ data: newsItem, reversed: !!((index + 1) % 2) }"
       />
     </div>
-    <div class="bg-base-100 shadow-md basis-11/12 shrink-0 grow-0 rounded my-5">
+    <div
+      class="bg-base-100 shadow-md md:basis-9/12 basis-11/12 shrink-0 grow-0 rounded my-5"
+    >
       <h1 class="w-full text-center text-7xl m-10">Activities</h1>
-      <Accordion />
+      <div class="flex justify-center mb-10">
+        <iframe
+          src="https://calendar.google.com/calendar/embed?height=600&wkst=2&bgcolor=%23ffffff&ctz=Europe%2FBrussels&showTabs=0&showTitle=0&showPrint=0&showCalendars=0&src=bmhsNGlmbXJpczlvZXB0OGloYTB2ZTI2anNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&color=%23EF6C00"
+          style="border-width: 0"
+          width="800"
+          height="600"
+          frameborder="0"
+          scrolling="no"
+        ></iframe>
+      </div>
     </div>
   </div>
 </template>
