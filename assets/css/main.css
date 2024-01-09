@@ -10,6 +10,13 @@ h1 {
   font-family: "WhiteOnBlack", sans-serif;
 }
 
+h3 {
+  @apply font-bold;
+  @apply underline;
+  @apply mt-2;
+  @apply mb-1;
+}
+
 ul {
   list-style: disc;
 }

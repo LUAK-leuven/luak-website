@@ -15,7 +15,7 @@ const { data: info_navigation } = await useAsyncData("info_navigation", () =>
       <div class="flex-none">
         <ul class="menu menu-horizontal px-1">
           <li><NuxtLink to="/news">News</NuxtLink></li>
-          <li><NuxtLink>Calendar</NuxtLink></li>
+          <li><NuxtLink to="/calendar">Calendar</NuxtLink></li>
           <li>
             <details>
               <summary>Info</summary>

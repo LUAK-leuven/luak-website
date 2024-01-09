@@ -20,7 +20,11 @@ const { data } = await useAsyncData(() =>
           Leuvense Universitaire Alpinisten Klub ⛰️ Alpine club in leuven for
           outdoors lovers from beginners to more seasoned climbers 🧗
         </p>
-        <button class="btn btn-primary m-2">Check our activities</button>
+        <NuxtLink to="/calendar"
+          ><button class="btn btn-primary m-2">
+            Check our activities
+          </button></NuxtLink
+        >
         <button class="btn btn-outline m-2 text-white">Become a member</button>
       </div>
     </div>
@@ -39,6 +43,7 @@ const { data } = await useAsyncData(() =>
     </div>
     <div class="bg-base-100 shadow-md basis-11/12 shrink-0 grow-0 rounded my-5">
       <h1 class="w-full text-center text-7xl m-10">Activities</h1>
+      <Accordion />
     </div>
   </div>
 </template>

@@ -1,0 +1,213 @@
+---
+title: "Rules & Regulagions"
+description: "all the boring stuff"
+---
+
+All Rules and regulations are stated below per topic:
+
+::collapsable
+#title
+Disclaimer
+
+#content
+The "Leuvense Alpinisten Klub" vzw brings people with the same interests together: sport climbing, alpinism, tourskiing... Its goal is to organize a variety of activities around these different sorts of climbing and mountaineering. The practitioner needs to be aware that these sports contain inherent risks. While performing said activities, he or she always remains personally responsible for financial loss and/or accidents with or without bodily and/or material damage with the possibility of death. The LUAK and its members of the board can in no way be held responsible for any of the above.
+You are also aware that you are prohibited to use the KHLeuven climbing gym without having a mountaineering insurance and sports card. Furthermore, it is prohibited to climb outdoors in Belgium without being a member of the KBF or equal international organisation (more info at the KBF website).
+Lastly, you are acquainted with the domestic rules of the LUAK (to be found on the website under Info > Rules and Regulations).
+::
+
+::collapsable
+#title
+The in-house rules, het Huishoudreglement (Dutch only)
+
+#content
+
+### Artikel 1
+
+Het verenigingsjaar loopt van het begin van het academiejaar, 1 oktober, tot aan het eind van het academie jaar, 31 september. Daarentegen loopt het boekjaar van de vereniging van 1 januari tot 31 december.
+
+### Artikel 2: Werkende leden en steunende leden
+
+- De vereniging bestaat overeenkomstig de statuten van de LUAK VZW uit werkende (of actieve) leden en steunende leden.
+- Tenzij dit intern reglement anders bepaalt, hebben steunende leden dezelfde rechten en verplichtingen als bij of krachtens dit reglement en de hierin genoemde reglementen aan werkende leden zijn toegekend en opgelegd.
+- Als door de statuten van de VZW bepaald is dat slechts het bestuur van de LUAK VZW in staat is handelingen te verrichten voor het verkrijgen van een lidmaatschap, is zij verplicht daaraan medewerking te verlenen.
+
+### Artikel 3: Rechten en plichten van de leden
+
+Alle werkende leden hebben recht:
+
+- tot het bezoeken van verenigingsavonden en door de vereniging georganiseerde evenementen, tenzij uitgesloten krachtens of ten gevolge van dit reglement;
+- tot het schriftelijk indienen van voorstellen bij het bestuur;
+- op het ontvangen van het verenigingsnieuws door middel van een schrijven;
+- tot het gebruikmaken van overige rechten uit het lidmaatschap voortvloeiend;
+
+### Artikel 4
+
+Alle steunende leden hebben recht:
+
+- op het ontvangen van het verenigingsnieuws door middel van een schrijven;
+- tot het gebruikmaken van overige rechten uit het lidmaatschap van steunende leden voortvloeiend;
+
+### Artikel 5
+
+Alle leden zijn verplicht:
+
+- hun financiële verplichtingen ten aanzien van de vereniging na te komen;
+- op de hoogte te zijn van de mededelingen die het bestuur door middel van een schrijven ter kennis van de leden brengt;
+- de verplichtingen die zij vrijwillig op zich nemen na te komen;
+- zich te houden aan de in de algemene ledenvergadering genomen besluiten;
+
+### Artikel 6
+
+Het lidmaatschap vervalt:
+
+- door overlijden;
+- door schriftelijke opzegging door het lid vier weken voor het eind van het verenigingsjaar;
+- door opzegging namens de vereniging tegen het einde van het boekjaar. Deze kan geschieden wanneer een lid heeft opgehouden aan de vereisten voor het lidmaatschap bij de statuten geregeld te voldoen;
+- door ontzetting. Deze kan enkel worden uitgesproken wanneer een lid in strijd met de statuten, reglementen of besluiten der vereniging handelt of de vereniging op onredelijke wijze benadeelt;
+
+### Artikel 7
+
+Wanneer een lidmaatschap in de loop van een verenigingsjaar eindigt, blijft evenwel de bijdrage over dat jaar verschuldigd.
+
+### Artikel 8
+
+Het bestuur kan een lid schorsen indien het bestuur van oordeel is, dat schorsing in het belang van de vereniging is. Een door het bestuur uitgesproken schorsing dient binnen zes maanden aan de ledenvergadering te worden voorgelegd. Deze beslist tot opheffing van schorsing of ontzetting.
+
+### Artikel 9
+
+Tijdens een schorsing komen alle rechten van de betrokkene te vervallen, behoudens het recht tot beroep op de algemene ledenvergadering. Een dergelijk beroep dient binnen dertig dagen op een algemene ledenvergadering te worden besproken. Alle financiële verplichtingen dienen te worden nagekomen.
+
+### Artikel 10
+
+Er wordt over gewaakt dat niemand lid wordt enkel en alleen of voornamelijk om van de mogelijkheid te genieten gratis te klimmen in de klimzaal van de KHLeuven. Het bestuur kan aldus een lid dat onvoldoende deelneemt aan clubactiviteiten, noch regelmatig routes bouwt in de klimzaal van de KHLeuven, de mogelijkheid op gratis klimmen in de klimzaal van de KHLeuven ontnemen vanaf de tweede schriftelijke verwittiging.
+
+### Artikel 11: Vaststellen tarieven
+
+De jaarlijkse algemene vergadering stelt de hoogte van de volgende tarieven vast:
+
+- de volgens de statuten bepaalde tarieven,
+- de boetes, subsidies en onkostenvergoedingen,
+- overige tarieven.
+
+### Artikel 12: Contributie
+
+De jaarlijkse contributie dient betaald te worden na aanvang van het acadamiejaar en uiterlijk voor 31 december, het einde van het boekjaar.
+
+### Artikel 13: Wekelijkse verhoging debiteuren
+
+Indien de financiële verplichtingen 1 maand na de dag dat door de penningmeester schriftelijk betaling is geëist, niet is voldaan, kan door het bestuur een wekelijkse verhoging van de verplichting worden geëist met een bedrag vastgesteld door de jaarlijkse algemene ledenvergadering, tot maximaal 3 maanden na gestelde datum. Indien 2 maanden na de gestelde datum niet aan financiële verplichting is voldaan, kan het bestuur overgaan tot schorsing van de desbetreffende persoon. Indien 3 maanden na de gestelde datum niet aan de financiële verplichting is voldaan, kan het bestuur overgaan tot voorstel tot ontzetting van de betrokkene aan de algemene ledenvergadering. Vorderingen op leden, ex-leden of steunende leden door de LUAK kunnen op kosten van de desbetreffende persoon geschieden.
+
+### Artikel 14: Schades en boetes
+
+- Schade of verlies door leden, zonder noodzaak, toegebracht aan de eigendommen van de vereniging of aan de onder haar beheer staande aan derden toebehorende goederen, kan door het bestuur op de betrokkene(n) worden verhaald.
+- Het maximaal te verhalen bedrag is gelijk aan de vervangingswaarde of de werkelijk gemaakte kosten.
+
+### Artikel 15: Algemene ledenvergadering
+
+- Algemene ledenvergaderingen kunnen niet bijeengeroepen worden tijdens academische vakanties.
+- Een algemene ledenvergadering moet minimaal 1 week en maximaal 2 maanden van tevoren bij alle leden aangekondigd worden.
+
+### Artikel 16: Stemmingen
+
+Stemrecht hebben alle werkende leden zover dit niet door schorsing wordt beperkt.
+
+### Artikel 17
+
+Stemming over zaken geschieden in principe mondeling, over personen schriftelijk. Over zaken kan, indien de voorzitter of één der stemgerechtigden dit wenselijk acht, schriftelijk gestemd worden.
+
+### Artikel 18
+
+Stemming over zaken Geldige stemmen zijn bij stemmingen:
+
+- voor – stemmen
+- tegen – stemmen
+- blanco stemmen
+
+Een blanco stem geeft hierbij aan dat de stemgerechtigde onverschillig is of het voorstel wordt aangenomen of niet.
+
+- Tevens kan onthouding van stemming als meningsuiting gebruikt worden. Deze uiting geeft aan dat het denkproces van de stemgerechtigde onvoldoende ver gevorderd is om tot een uitspraak te komen.
+- Bij schriftelijke stemming over zaken dient op de stembriefjes vermeld te zijn, voor, tegen of blanco. Anders of niet ingevulde briefjes zijn ongeldig.
+- Een voorstel wordt aangehouden tot de volgende vergadering wanneer meer dan eenderde van de aanwezige leden zich onthoudt van stemming. Wanneer dit niet het geval is, beslist het aantal voor- en tegenstemmen of het voorstel aangenomen danwel verworpen is. In het geval van staken der stemmen is het voorstel verworpen.
+- Bij een mondelinge stemming brengt het bestuur het laatst zijn stem uit.
+
+### Artikel 19
+
+Bij stemmingen en verkiezingen over personen kan men slechts de namen der kandidaten en blanco stemmen. Bij verkiezingen over personen worden er zoveel verkiezingen gehouden als er plaatsen te vervullen zijn. Heeft niemand de meerderheid verkregen, dan wordt er een herstemming gehouden tussen die leden die bij de eerste verkiezing de meeste stemmen verkregen. Bij staken der stemmen beslist het lot.
+
+### Artikel 20
+
+Bij schriftelijke stemming benoemt de voorzitter een commissie van derden, niet onmiddellijk bij stemming betrokken leden als stembureau, die zich ervan overtuigen, dat het aantal stembiljetten gelijk is aan het aantal aanwezige stemgerechtigde leden, vermeerderd met het aantal machtigingen. Zij openen de biljetten en maken de uitslag bekend.
+
+### Artikel 21: Bestuur
+
+- De voorzitter is belast met de coördinatie van de bestuurswerkzaamheden, leidt de vergaderingen en representeert de vereniging bij officiële gelegenheden.
+- De secretaris is belast met het notuleren van vergaderingen, het bijhouden van de verenigingsarchieven en van de ledenlijst en met alle correspondentie binnen de vereniging, behoudens betreffende financiële zaken en die der evenementen. Alle correspondentie binnen de vereniging is openbaar.
+- De penningmeester is belast met alle financiële zaken die de vereniging betreffen. Hij draagt zorg voor het binnenkomen van alle aan de vereniging toekomende gelden, alsmede voor het doen van verantwoorde uitgaven. Van alle financiële handelingen houdt hij boek en houdt hij de betrokkene instanties op de hoogte.
+- Andere bestuursleden dragen zorg voor de taak die zij bij hun verkiezing op zich hebben genomen.
+
+### Artikel 22
+
+- Een kandidaat bestuurslid treedt onmiddellijk na verkiezing in functie, tenzij voor de verkiezing door het bestuur of betrokkenen bekend is gemaakt, dat de functie vanaf een later tijdstip wordt vervuld. In dat geval is de gekozene gehouden aan de genoemde datum.
+- Bij het uitvallen van de voorzitter of de penningmeester nemen de zittende bestuursleden deze functie over.
+
+### Artikel 23
+
+Bestuursleden kunnen door de algemene ledenvergadering aansprakelijk worden gesteld voor alle schade aan de vereniging toegebracht door een daad van grove nalatigheid of door wanbeheer in hun functie gepleegd.
+
+### Artikel 24
+
+Elke willekeurige groep van tenminste vijf stemgerechtigden heeft het recht op een algemene ledenvergadering een motie in te dienen, inhoudende het verzoek tot schorsing of aftreden van één der bestuursleden. Wordt zulk een motie aangenomen, dan stelt het betreffende bestuurslid zijn mandaat onmiddellijk ter beschikking.
+
+### Artikel 25
+
+Het bestuur dient de bestuursmededelingen aan de leden bekend te maken door middel van een schrijven.
+
+### Artikel 26: Aanvullende reglementen
+
+De LUAK kent aanvullend op het huishoudelijk reglement het Materiaalreglement. Deze bevat regels met betrekking tot het te beheren LUAK materiaal.
+
+### Artikel 27: Slotbepalingen
+
+Het bestuur is belast met de naleving van de statuten, het huishoudelijk reglement, de overige reglementen en de besluiten der algemene ledenvergadering. Bij geschil over toepassing beslist de algemene ledenvergadering. Dit geldt ook voor die gevallen, waarin de statuten of de reglementen niet voorzien.
+
+### Artikel 28
+
+De leden kunnen zich niet beroepen op het niet kennen der statuten, het huishoudelijk reglement, de overige reglementen of besluiten der algemene ledenvergadering.
+
+### Artikel 29
+
+De vereniging, bestuursleden en aangeduide monitors zijn niet aansprakelijk voor ziekte, ongeval of schade van welke aard dan ook aan haar leden overkomen.
+
+### Artikel 30
+
+Dit huishoudelijk reglement treedt in werking d.d. 21 september 2006
+
+::
+
+::collapsable
+#title
+Gear Rules
+#content
+Prices and maximum loan period are fixed on the yearly general meeting.
+
+- Only board members can lend out and receive gear. They can also decide to refuse to rent gear.
+- Only working members have the right to borrow gear.
+- Gear cannot be transferred between members
+- In case of loss, theft or damage of the gear, with exception of wear by normal use and damage by normal use and outside the will of the borrower (ex. falling rocks,…), the borrower has to pay the book value of the gear on the moment of the incident or reimburse the actual costs incurred. No matter the security deposit the borrower has given, the minimum reimbursement is equal to the half of the current price of a new piece of the concerning gear. LUAK is responsible to buy the new piece of gear. The borrower possibly can, in consultation with the material master, have the gear to be fixed. The borrower will have to pay for the repair costs.
+- The maximum loan period for gear is 3 weeks.
+- After the exceedance of the maximum loan period, the borrower will be given a fine of 5 euros every two weeks, starting from week 4. The maximum fine can be the current value of the borrowed gear.
+- The maximum amount of gear to be borrowed is: two ropes (one single, one double), 12 quickdraws, 2 ice axes, one piolet, 5 ice screws, one pair of crampons, one rack of traditional gear, one pair of ski’s with boots, 5 books, 1 avalanche set (being avalanche beeper, probe and shovel). Of the rest of the gear, only one piece can be rented out. More gear can be rented out with permission of the whole board.
+- Students have priority to borrow gear.
+- With the return of the gear, the gear has to be cleaned and serviced. Ropes have to be dry. Bivouac sacs have to be dry, without mud, leaves or spiders.
+- With the borrow of the gear, the borrower has to check the condition of the gear and reports every issue.
+- With the return of the gear, the borrower has the duty to report every (possible) damage that has occurred during the use.
+
+::
+
+::collapsable
+#title
+Statuten (Dutch only)
+
+#content
+_to be published soon_
+::
