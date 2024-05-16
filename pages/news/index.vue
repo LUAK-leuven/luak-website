@@ -4,7 +4,7 @@ const { data } = await useAsyncData(() =>
   queryContent("/news")
     .only(["title", "image", "excerpt", "_path"])
     .limit(NR_OF_ARTICLES)
-    .find()
+    .find(),
 );
 </script>
 
