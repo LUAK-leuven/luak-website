@@ -6,7 +6,7 @@ useHead({
 });
 </script>
 <template>
-  <NavBar />
+  <NavBar class="absolute" />
   <main class="overflow-hidden">
     <NuxtPage />
   </main>

@@ -34,3 +34,19 @@ h2 {
   @apply font-bold;
   @apply mt-5;
 }
+
+.iti__globe {
+  background-image: url("path/to/globe.png");
+}
+.iti__flag {
+  background-image: url("path/to/flags.png");
+}
+
+@media (min-resolution: 2x) {
+  .iti__globe {
+    background-image: url("path/to/globe@2x.png");
+  }
+  .iti__flag {
+    background-image: url("path/to/flags@2x.png");
+  }
+}

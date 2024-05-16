@@ -2,7 +2,7 @@
   <main>
     <ContentDoc v-slot="{ doc }">
       <div class="relative flex flex-wrap justify-center z-2 bg-base-300">
-        <h1 class="w-full text-center text-7xl mt-28 p-10 fixed z-0">
+        <h1 class="w-full text-center text-5xl mt-28 p-10 fixed z-0">
           {{ doc.title }}
         </h1>
         <div

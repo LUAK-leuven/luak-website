@@ -1,5 +1,5 @@
 ---
-title: "Rules & Regulagions"
+title: "Rules & Regulations"
 description: "all the boring stuff"
 ---
 

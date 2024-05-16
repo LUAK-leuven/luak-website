@@ -18,9 +18,8 @@ defineProps<{
     >
       <NuxtImg
         :src="data.image"
-        class="rounded-lg shadow-2xl"
+        class="rounded-lg shadow-2xl max-w-96 max-h-96"
         :placeholder="384"
-        :width="384"
       />
       <div>
         <h1 class="text-4xl text-gray-600">{{ data.title }}</h1>

@@ -2,5 +2,20 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/css/main.css"],
-  modules: ["@nuxtjs/tailwindcss", "@nuxt/content", "@nuxt/image"],
+  supabase: {
+    redirect: false,
+  },
+  runtimeConfig: {
+    public: {
+      baseUrl: "",
+      supabaseUrl: "",
+      supabaseKey: "",
+    },
+  },
+  modules: [
+    "@nuxtjs/tailwindcss",
+    "@nuxt/content",
+    "@nuxt/image",
+    "@nuxtjs/supabase",
+  ],
 });
