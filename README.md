@@ -1,75 +1,24 @@
-# Nuxt 3 Minimal Starter
+# LUAK website
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+The techstack used for this project is:
+
+- nuxt 3
+- nuxt content
+- tailwindcss + daisyui
+
+- supabase for the backend
+- vercel for deployment
 
 ## Setup
 
-Make sure to install the dependencies:
+The easiest way to get started is using vscode with devcontainers. a devcontainer is defined including all the necessarry dependencies.
 
-```bash
-# npm
-npm install
+1. install Docker
+2. install Vscode
+3. Open this github repo in a dev-container
 
-# pnpm
-pnpm install
+---OR---
 
-# yarn
-yarn install
+3. use github codespaces
 
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+next set the right env variables to connect with supabase. check `.env.example` and the [Supabase Docs](https://supabase.com/docs/guides/getting-started)
