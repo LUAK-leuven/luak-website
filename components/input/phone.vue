@@ -5,9 +5,9 @@
         <span class="label-text">Phone Number (Whatsapp)</span>
       </div>
       <input
+        ref="phoneInput"
         v-model="phoneNumber"
         type="tel"
-        ref="phoneInput"
         class="input input-bordered w-full"
       />
     </label>
@@ -19,7 +19,7 @@ import { onMounted } from "vue";
 import "intl-tel-input/build/css/intlTelInput.css";
 import intlTelInput from "intl-tel-input";
 
-const phoneNumber = defineModel();
+const phoneNumber = defineModel({ type: String });
 
 onMounted(() => {
   const inputElement = document.querySelector('input[type="tel"]');

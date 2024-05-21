@@ -45,8 +45,8 @@ const signUpWithPassword = async () => {
         <InputPhone v-model="phoneNumber"></InputPhone>
         <div class="flex justify-center">
           <button
-            @click="signUpWithPassword"
             class="btn btn-primary w-full m-5"
+            @click="signUpWithPassword"
           >
             Sign up
           </button>

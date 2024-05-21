@@ -17,5 +17,6 @@ export default defineNuxtConfig({
     "@nuxt/content",
     "@nuxt/image",
     "@nuxtjs/supabase",
+    "@vee-validate/nuxt",
   ],
 });
