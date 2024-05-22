@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import * as yup from "yup";
-import { Form } from "vee-validate";
+import { Form as VeeForm } from "vee-validate";
 
 const supabase = useSupabaseClient();
 const phoneRegExp = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
@@ -35,7 +35,7 @@ async function onSubmit({ email, password, firstName, lastName }: formValues) {
     <div
       class="bg-base-100 shadow-md rounded w-10/12 lg:w-8/12 xl:w-1/3 mb-28 z-10 mt-72 p-20"
     >
-      <Form
+      <VeeForm
         v-slot="{ isSubmitting }"
         :validation-schema="formSchema"
         @submit="onSubmit"
@@ -80,7 +80,7 @@ async function onSubmit({ email, password, firstName, lastName }: formValues) {
             <span v-else>Sign up</span>
           </button>
         </div>
-      </Form>
+      </VeeForm>
     </div>
   </div>
 </template>
