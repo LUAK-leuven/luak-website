@@ -1,0 +1,4 @@
+{
+  "plugins": ["nuxt"], // the same as "eslint-plugin-nuxt"
+  "extends": ["plugin:nuxt/recommended"]
+}

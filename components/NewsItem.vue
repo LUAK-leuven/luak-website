@@ -3,10 +3,10 @@ defineProps<{
   data: {
     title: string;
     image?: string;
-    excerpt: Object;
+    excerpt: object;
     _path: string;
   };
-  reversed?: Boolean;
+  reversed?: boolean;
 }>();
 </script>
 
@@ -23,17 +23,13 @@ defineProps<{
       />
       <div>
         <h1 class="text-4xl text-gray-600">{{ data.title }}</h1>
-        <ContentRenderer
-          :value="data"
-          :excerpt="true"
-          class="py-6"
-        ></ContentRenderer>
-        <span></span>
-        <NuxtLink :to="data._path" :key="data._path" class="btn btn-outline"
+        <ContentRenderer :value="data" :excerpt="true" class="py-6" />
+        <span />
+        <NuxtLink :key="data._path" :to="data._path" class="btn btn-outline"
           >read more</NuxtLink
         >
       </div>
     </div>
   </div>
-  <div class="divider my-5 mx-20"></div>
+  <div class="divider my-5 mx-20" />
 </template>

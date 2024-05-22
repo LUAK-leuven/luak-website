@@ -1,5 +1,4 @@
 <script setup lang="ts">
-const config = useRuntimeConfig();
 const supabase = useSupabaseClient();
 const email = ref("");
 const password = ref("");
@@ -42,8 +41,8 @@ const signInWithPassword = async () => {
         </label>
         <div class="flex justify-center">
           <button
-            @click="signInWithPassword"
             class="btn btn-primary w-full m-5"
+            @click="signInWithPassword"
           >
             Log In
           </button>

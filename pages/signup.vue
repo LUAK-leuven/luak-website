@@ -3,7 +3,7 @@ import * as yup from "yup";
 import { Form } from "vee-validate";
 
 const supabase = useSupabaseClient();
-const phoneRegExp = /^[+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+const phoneRegExp = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
 
 const formSchema = yup.object({
   firstName: yup.string().required().label("First name"),

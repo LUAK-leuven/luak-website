@@ -18,5 +18,6 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@nuxtjs/supabase",
     "@vee-validate/nuxt",
+    "@nuxt/eslint",
   ],
 });

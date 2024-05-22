@@ -10,5 +10,5 @@ useHead({
   <main class="overflow-hidden">
     <NuxtPage />
   </main>
-  <Footer />
+  <FooterItem />
 </template>
