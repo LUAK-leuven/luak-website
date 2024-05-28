@@ -9,24 +9,26 @@ const formSchema = yup.object({
   firstName: yup.string().required().label("First name"),
   lastName: yup.string().required().label("Last name"),
   email: yup.string().required().email(),
-  password: yup.string().required().min(5),
+  password: yup.string().required().min(6),
   phoneNumber: yup
     .string()
     .matches(phoneRegExp, "Format of the phone number is incorrect."),
 });
 interface formValues extends yup.InferType<typeof formSchema> {}
 
-async function onSubmit({ email, password, firstName, lastName }: formValues) {
-  const { error } = await supabase.auth.signUp({
+async function onSubmit({ email, password, firstName, lastName, phoneNumber }: formValues) {
+  const { error, data } = await supabase.auth.signUp({
     email,
     password,
     options: {
       data: {
         firstName,
         lastName,
+        phoneNumber
       },
     },
   });
+  console.log(data);
   if (error) console.log(error);
 }
 </script>
@@ -36,10 +38,11 @@ async function onSubmit({ email, password, firstName, lastName }: formValues) {
       class="bg-base-100 shadow-md rounded w-10/12 lg:w-8/12 xl:w-1/3 mb-28 z-10 mt-72 p-20"
     >
       <VeeForm
-        v-slot="{ isSubmitting }"
+        v-slot="{ isSubmitting, handleSubmit }"
         :validation-schema="formSchema"
-        @submit="onSubmit"
+        as="div"
       >
+      <form @submit="handleSubmit($event, onSubmit)">
         <div class="flex flex-row justify-stretch">
           <InputText
             label="First name"
@@ -80,6 +83,7 @@ async function onSubmit({ email, password, firstName, lastName }: formValues) {
             <span v-else>Sign up</span>
           </button>
         </div>
+      </form>
       </VeeForm>
     </div>
   </div>
