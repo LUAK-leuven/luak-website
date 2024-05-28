@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import * as yup from "yup";
+import type { SubmissionContext } from "vee-validate";
 import { Form as VeeForm } from "vee-validate";
 
 const supabase = useSupabaseClient();
@@ -9,13 +10,15 @@ const formSchema = yup.object({
 });
 interface formValues extends yup.InferType<typeof formSchema> {}
 
-async function onSubmit({ email, password }: formValues) {
-  const { error, data } = await supabase.auth.signInWithPassword({
+async function onSubmit({ email, password }: formValues, actions: SubmissionContext) {
+  const { error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
-  console.log(data);
-  if (error) console.log(error);
+  if (error) {
+    actions.setFieldError('password', error.message)
+  }
+  else await navigateTo('/confirmLogin')
 }
 </script>
 <template>
@@ -42,7 +45,7 @@ async function onSubmit({ email, password }: formValues) {
           type="password"
         />
         <div>
-          <button class="btn btn-primary w-full m-5">
+          <button class="btn btn-primary w-full p-5">
             <span v-if="isSubmitting" class="loading loading-spinner"
               >loading</span
             >
@@ -50,7 +53,7 @@ async function onSubmit({ email, password }: formValues) {
           </button>
           <div class="divider">OR</div>
           <NuxtLink to="/signup">
-            <button class="btn btn-outline btn-primary w-full m-5">Create an account</button>
+            <button class="btn btn-outline btn-primary w-full p-5">Create an account</button>
           </NuxtLink>
         </div>
       </form>

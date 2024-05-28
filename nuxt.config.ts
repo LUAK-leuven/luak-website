@@ -3,7 +3,14 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/css/main.css"],
   supabase: {
-    redirect: false,
+    redirect: true,
+    redirectOptions: {
+      login: '/login',
+      callback: '/confirmLogin',
+      include: ['/member(/*)?'],
+      cookieRedirect: true,
+    }
+  
   },
   runtimeConfig: {
     public: {

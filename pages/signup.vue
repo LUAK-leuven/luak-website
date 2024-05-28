@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import * as yup from "yup";
+import type { SubmissionContext } from "vee-validate";
 import { Form as VeeForm } from "vee-validate";
 
 const supabase = useSupabaseClient();
@@ -16,8 +17,8 @@ const formSchema = yup.object({
 });
 interface formValues extends yup.InferType<typeof formSchema> {}
 
-async function onSubmit({ email, password, firstName, lastName, phoneNumber }: formValues) {
-  const { error, data } = await supabase.auth.signUp({
+async function onSubmit({ email, password, firstName, lastName, phoneNumber }: formValues, actions: SubmissionContext) {
+  const { error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -28,8 +29,9 @@ async function onSubmit({ email, password, firstName, lastName, phoneNumber }: f
       },
     },
   });
-  console.log(data);
-  if (error) console.log(error);
+  if (error) {
+    actions.setFieldError('password', error.message)
+  }
 }
 </script>
 <template>
@@ -64,19 +66,19 @@ async function onSubmit({ email, password, firstName, lastName, phoneNumber }: f
           type="email"
         />
         <InputText
-          label="Password"
-          name="password"
-          placeholder="*******"
-          type="password"
-        />
-        <InputText
           label="Phone Number (for WhatsApp)"
           name="phoneNumber"
           placeholder="+32468123123"
           type="tel"
         />
+        <InputText
+          label="Password"
+          name="password"
+          placeholder="*******"
+          type="password"
+        />
         <div class="flex justify-center">
-          <button class="btn btn-primary w-full m-5">
+          <button class="btn btn-primary w-full p-5">
             <span v-if="isSubmitting" class="loading loading-spinner"
               >loading</span
             >
