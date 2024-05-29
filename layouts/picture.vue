@@ -1,9 +1,8 @@
 <template>
-  <div>
-    <NavBar class="absolute" />
+  <NavBar class="absolute">
     <main class="overflow-hidden">
       <slot />
     </main>
     <FooterItem />
-  </div>
+  </NavBar>
 </template>
