@@ -1,3 +1,9 @@
+<script setup lang="ts">
+definePageMeta({
+  layout: 'picture'
+})
+</script>
+
 <template>
   <main>
     <ContentDoc v-slot="{ doc }">
