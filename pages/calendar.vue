@@ -1,8 +1,6 @@
 <template>
-      <FullPageCard>
-      <template #title>
-        Calendar
-      </template>
-      <GoogleCalendar/>
-    </FullPageCard>
+  <FullPageCard>
+    <template #title> Calendar </template>
+    <GoogleCalendar />
+  </FullPageCard>
 </template>

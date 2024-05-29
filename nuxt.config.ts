@@ -5,12 +5,11 @@ export default defineNuxtConfig({
   supabase: {
     redirect: true,
     redirectOptions: {
-      login: '/login',
-      callback: '/confirmLogin',
-      include: ['/member(/*)?'],
+      login: "/login",
+      callback: "/confirmLogin",
+      include: ["/member(/*)?"],
       cookieRedirect: true,
-    }
-  
+    },
   },
   runtimeConfig: {
     public: {

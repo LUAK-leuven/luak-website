@@ -1,7 +1,7 @@
 <script setup lang="ts">
 definePageMeta({
-  layout: 'picture'
-})
+  layout: "picture",
+});
 const NR_OF_ARTICLES = 5;
 const { data } = await useAsyncData(() =>
   queryContent("/news")
@@ -52,7 +52,7 @@ const { data } = await useAsyncData(() =>
       >
         <h1 class="w-full text-center text-6xl my-10">Activities</h1>
         <div class="p-5">
-          <GoogleCalendar/>
+          <GoogleCalendar />
         </div>
       </div>
     </div>

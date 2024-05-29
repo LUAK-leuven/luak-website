@@ -17,7 +17,10 @@ const formSchema = yup.object({
 });
 interface formValues extends yup.InferType<typeof formSchema> {}
 
-async function onSubmit({ email, password, firstName, lastName, phoneNumber }: formValues, actions: SubmissionContext) {
+async function onSubmit(
+  { email, password, firstName, lastName, phoneNumber }: formValues,
+  actions: SubmissionContext,
+) {
   const { error } = await supabase.auth.signUp({
     email,
     password,
@@ -25,12 +28,12 @@ async function onSubmit({ email, password, firstName, lastName, phoneNumber }: f
       data: {
         firstName,
         lastName,
-        phoneNumber
+        phoneNumber,
       },
     },
   });
   if (error) {
-    actions.setFieldError('password', error.message)
+    actions.setFieldError("password", error.message);
   }
 }
 </script>
@@ -44,48 +47,48 @@ async function onSubmit({ email, password, firstName, lastName, phoneNumber }: f
         :validation-schema="formSchema"
         as="div"
       >
-      <form @submit="handleSubmit($event, onSubmit)">
-        <div class="flex flex-row justify-stretch">
+        <form @submit="handleSubmit($event, onSubmit)">
+          <div class="flex flex-row justify-stretch">
+            <InputText
+              label="First name"
+              name="firstName"
+              placeholder="Alex"
+              class="mr-1"
+            />
+            <InputText
+              label="Last name"
+              name="lastName"
+              placeholder="Megos"
+              class="ml-1"
+            />
+          </div>
           <InputText
-            label="First name"
-            name="firstName"
-            placeholder="Alex"
-            class="mr-1"
+            label="Email"
+            name="email"
+            placeholder="youremail@example.com"
+            type="email"
           />
           <InputText
-            label="Last name"
-            name="lastName"
-            placeholder="Megos"
-            class="ml-1"
+            label="Phone Number (for WhatsApp)"
+            name="phoneNumber"
+            placeholder="+32468123123"
+            type="tel"
           />
-        </div>
-        <InputText
-          label="Email"
-          name="email"
-          placeholder="youremail@example.com"
-          type="email"
-        />
-        <InputText
-          label="Phone Number (for WhatsApp)"
-          name="phoneNumber"
-          placeholder="+32468123123"
-          type="tel"
-        />
-        <InputText
-          label="Password"
-          name="password"
-          placeholder="*******"
-          type="password"
-        />
-        <div class="flex justify-center">
-          <button class="btn btn-primary w-full p-5">
-            <span v-if="isSubmitting" class="loading loading-spinner"
-              >loading</span
-            >
-            <span v-else>Sign up</span>
-          </button>
-        </div>
-      </form>
+          <InputText
+            label="Password"
+            name="password"
+            placeholder="*******"
+            type="password"
+          />
+          <div class="flex justify-center">
+            <button class="btn btn-primary w-full p-5">
+              <span v-if="isSubmitting" class="loading loading-spinner"
+                >loading</span
+              >
+              <span v-else>Sign up</span>
+            </button>
+          </div>
+        </form>
       </VeeForm>
     </div>
   </div>

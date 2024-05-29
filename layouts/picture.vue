@@ -1,9 +1,9 @@
 <template>
-    <div>
+  <div>
     <NavBar class="absolute" />
     <main class="overflow-hidden">
       <slot />
     </main>
     <FooterItem />
-    </div>
+  </div>
 </template>

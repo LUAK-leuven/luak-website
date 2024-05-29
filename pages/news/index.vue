@@ -9,14 +9,12 @@ const { data } = await useAsyncData(() =>
 </script>
 
 <template>
-    <FullPageCard>
-      <template #title>
-        News
-      </template>
-      <NewsItem
+  <FullPageCard>
+    <template #title> News </template>
+    <NewsItem
       v-for="(newsItem, index) in data"
       :key="newsItem._path"
       v-bind="{ data: newsItem, reversed: !!((index + 1) % 2) }"
     />
-    </FullPageCard>
+  </FullPageCard>
 </template>
