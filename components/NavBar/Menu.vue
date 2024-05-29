@@ -18,5 +18,8 @@ const { data: info_navigation } = await useAsyncData("info_navigation", () =>
       </details>
     </li>
     <li><NuxtLink>Contact</NuxtLink></li>
+    <NuxtLink to="/member/overview" class="btn btn-primary btn-outline"
+      >Log In</NuxtLink
+    >
   </ul>
 </template>

@@ -12,7 +12,7 @@
             </NuxtLink>
           </div>
           <div class="flex-none hidden md:block">
-            <NavBarMenu class="menu-horizontal px-1" />
+            <NavBarMenu class="menu-horizontal px-1 items-center" />
           </div>
           <NavBarHamburgerButton />
         </div>

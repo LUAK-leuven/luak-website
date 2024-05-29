@@ -24,14 +24,15 @@ const { data } = await useAsyncData(() =>
             Leuvense Universitaire Alpinisten Klub ⛰️ Alpine club in leuven for
             outdoors lovers from beginners to more seasoned climbers 🧗
           </p>
-          <NuxtLink to="/calendar"
-            ><button class="btn btn-primary m-2">
-              Check our activities
-            </button></NuxtLink
+          <NuxtLink class="btn btn-primary m-2" to="/calendar">
+            Check our activities</NuxtLink
           >
-          <button class="btn btn-outline m-2 text-white">
+          <NuxtLink
+            class="btn btn-outline m-2 text-white"
+            to="/member/overview"
+          >
             Become a member
-          </button>
+          </NuxtLink>
         </div>
       </div>
     </div>
