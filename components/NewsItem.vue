@@ -11,14 +11,14 @@ defineProps<{
 </script>
 
 <template>
-  <div class="hero bg-base-100 m-10 w-fit">
+  <div class="bg-base-100 m-5">
     <div
-      class="hero-content flex-col"
-      :class="[reversed ? 'lg:flex-row' : 'lg:flex-row-reverse']"
+      class="flex justify-center items-center align-middle flex-col"
+      :class="[reversed ? 'md:flex-row' : 'md:flex-row-reverse']"
     >
       <NuxtImg
         :src="data.image"
-        class="rounded-lg shadow-2xl max-w-96 max-h-96"
+        class="rounded-lg shadow-2xl max-w-72 max-h-72 md:max-w-80 md:max-h-80 m-5"
         :placeholder="384"
       />
       <div>
