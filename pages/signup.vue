@@ -44,7 +44,7 @@ const onSubmit = handleSubmit(async (submitted) => {
     });
     if (error) {
       setFieldError("password", error.message);
-    }
+    } else await navigateTo("/confirmLogin");
   }
 });
 </script>
