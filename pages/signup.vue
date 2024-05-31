@@ -41,6 +41,7 @@ const onSubmit = handleSubmit(async (submitted) => {
       last_name: submitted.lastName,
       has_newsletter: submitted.newsletter,
       has_whatsapp: submitted.whatsapp,
+      phone_number: submitted.phoneNumber,
     });
     if (error) {
       setFieldError("password", error.message);
