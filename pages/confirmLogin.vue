@@ -12,7 +12,7 @@ watch(
       // Clear cookie
       useCookie(`${cookieName}-redirect-path`).value = null;
       // Redirect to path
-      return navigateTo(redirectPath || "/member/overview");
+      return navigateTo(redirectPath || "/user/overview");
     }
   },
   { immediate: true },

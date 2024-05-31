@@ -2,6 +2,7 @@
 const { data: info_navigation } = await useAsyncData("info_navigation", () =>
   fetchContentNavigation(queryContent("/info")),
 );
+const user = useSupabaseUser();
 </script>
 <template>
   <ul class="menu">
@@ -18,8 +19,9 @@ const { data: info_navigation } = await useAsyncData("info_navigation", () =>
       </details>
     </li>
     <li><NuxtLink>Contact</NuxtLink></li>
-    <NuxtLink to="/member/overview" class="btn btn-primary btn-outline"
-      >Log In</NuxtLink
-    >
+    <NuxtLink to="/user/overview" class="btn btn-primary btn-outline">
+      <span v-if="!user">Log In</span>
+      <span v-else>My Profile</span>
+    </NuxtLink>
   </ul>
 </template>

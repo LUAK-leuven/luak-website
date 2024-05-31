@@ -53,15 +53,15 @@ async function onSubmit(
               >
               <span v-else>Sign in</span>
             </button>
-            <div class="divider">OR</div>
-            <NuxtLink to="/signup">
-              <button class="btn btn-outline btn-primary w-full p-5">
-                Create an account
-              </button>
-            </NuxtLink>
           </div>
         </form>
       </VeeForm>
+      <div class="divider">OR</div>
+      <NuxtLink to="/signup">
+        <button class="btn btn-outline btn-primary w-full p-5">
+          Create an account
+        </button>
+      </NuxtLink>
     </div>
   </div>
 </template>

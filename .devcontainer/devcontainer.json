@@ -25,7 +25,8 @@
         "esbenp.prettier-vscode",
         "Etsi0.class-collapse",
         "bradlc.vscode-tailwindcss",
-        "tamasfe.even-better-toml"
+        "tamasfe.even-better-toml",
+        "bierner.emojisense"
       ]
     }
   }

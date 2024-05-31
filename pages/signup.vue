@@ -2,8 +2,9 @@
 import * as yup from "yup";
 import type { SubmissionContext } from "vee-validate";
 import { Form as VeeForm } from "vee-validate";
+import type { Database } from "~/types/database.types";
 
-const supabase = useSupabaseClient();
+const supabase = useSupabaseClient<Database>();
 const phoneRegExp = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
 
 const formSchema = yup.object({
@@ -11,29 +12,39 @@ const formSchema = yup.object({
   lastName: yup.string().required().label("Last name"),
   email: yup.string().required().email(),
   password: yup.string().required().min(6),
+  newsletter: yup.bool().default(true),
+  whatsapp: yup.bool().default(true),
   phoneNumber: yup
     .string()
     .matches(phoneRegExp, "Format of the phone number is incorrect."),
 });
 interface formValues extends yup.InferType<typeof formSchema> {}
 
-async function onSubmit(
-  { email, password, firstName, lastName, phoneNumber }: formValues,
-  actions: SubmissionContext,
-) {
+async function onSubmit(form: formValues, actions: SubmissionContext) {
+  console.log(form);
   const { error } = await supabase.auth.signUp({
-    email,
-    password,
+    email: form.email,
+    password: form.password,
+    phone: form.phoneNumber,
     options: {
       data: {
-        firstName,
-        lastName,
-        phoneNumber,
+        firstName: form.firstName,
+        lastName: form.lastName,
       },
     },
   });
   if (error) {
     actions.setFieldError("password", error.message);
+  } else {
+    const { error } = await supabase.from("Users").insert({
+      first_name: form.firstName,
+      last_name: form.lastName,
+      has_newsletter: form.newsletter,
+      has_whatsapp: form.whatsapp,
+    });
+    if (error) {
+      actions.setFieldError("password", error.message);
+    }
   }
 }
 </script>
@@ -80,6 +91,12 @@ async function onSubmit(
             placeholder="*******"
             type="password"
           />
+          <InputBool label="Can we contact you via whatsapp?" name="whatsapp" />
+          <InputBool
+            label="Subscribe to monthly newsletter?"
+            name="newsletter"
+          />
+
           <div class="flex justify-center">
             <button class="btn btn-primary w-full p-5">
               <span v-if="isSubmitting" class="loading loading-spinner"
