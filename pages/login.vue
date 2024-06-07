@@ -2,7 +2,7 @@
 const supabase = useSupabaseClient();
 const formSchema = yup.object({
   email: yup.string().required().email(),
-  password: yup.string().required().min(6),
+  password: yup.string().password().required(),
 });
 const { handleSubmit, isSubmitting, setFieldError } = useForm({
   validationSchema: toTypedSchema(formSchema),

@@ -6,7 +6,7 @@ const formSchema = yup.object({
   firstName: yup.string().required().label("First name"),
   lastName: yup.string().required().label("Last name"),
   email: yup.string().required().email(),
-  password: yup.string().required().min(6),
+  password: yup.string().password().required(),
   newsletter: yup.bool().default(true),
   whatsapp: yup.bool().default(true),
   phoneNumber: yup.string().phone(),

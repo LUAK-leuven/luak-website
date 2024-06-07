@@ -17,6 +17,21 @@ declare module "yup" {
       phone(): this
     }
   }
+
+  yup.addMethod<yup.StringSchema>(yup.string, "password", function () {
+    return this.min(6);
+  });
+  
+  declare module "yup" {
+      interface StringSchema<
+        TType extends Maybe<string> = string | undefined,
+        TContext extends AnyObject = AnyObject,
+        TDefault = undefined,
+        TFlags extends Flags = "",
+      > extends Schema<TType, TContext, TDefault, TFlags> {
+        password(): this
+      }
+    }
   
 
 export default yup;
