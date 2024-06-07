@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import * as yup from "yup";
-
 const supabase = useSupabaseClient();
 const formSchema = yup.object({
   email: yup.string().required().email(),

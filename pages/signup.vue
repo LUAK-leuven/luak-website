@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import * as yup from "yup";
 import type { Database } from "~/types/database.types";
-
 const supabase = useSupabaseClient<Database>();
-const phoneRegExp = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
 
 const formSchema = yup.object({
   firstName: yup.string().required().label("First name"),
@@ -12,9 +9,7 @@ const formSchema = yup.object({
   password: yup.string().required().min(6),
   newsletter: yup.bool().default(true),
   whatsapp: yup.bool().default(true),
-  phoneNumber: yup
-    .string()
-    .matches(phoneRegExp, "Format of the phone number is incorrect."),
+  phoneNumber: yup.string().phone(),
 });
 const { handleSubmit, isSubmitting, setFieldError } = useForm({
   validationSchema: toTypedSchema(formSchema),
