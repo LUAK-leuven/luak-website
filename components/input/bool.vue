@@ -21,7 +21,7 @@ const { checked, handleChange } = useField(() => props.name, "", {
 </script>
 
 <template>
-  <div class="my-5 flex justify-center content-center">
+  <div class="my-5 flex content-center">
     <span class="mr-3">{{ label }}</span>
     <input
       type="checkbox"

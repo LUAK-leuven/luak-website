@@ -1,0 +1,10 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "Generate supabase types",
+      "command": "supabase gen types typescript --project-id=\"cpjapefpqxrptkzeehyd\" --schema public | tee supabase/functions/_shared/database.types.ts > types/database.types.ts"
+    }
+  ]
+}

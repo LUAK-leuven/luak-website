@@ -7,7 +7,8 @@
   // Features to add to the dev container. More info: https://containers.dev/features.
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
-    "ghcr.io/devcontainers/features/docker-in-docker": {}
+    "ghcr.io/devcontainers/features/docker-in-docker": {},
+    "ghcr.io/devcontainers-contrib/features/deno:1": {}
   },
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -26,7 +27,8 @@
         "Etsi0.class-collapse",
         "bradlc.vscode-tailwindcss",
         "tamasfe.even-better-toml",
-        "bierner.emojisense"
+        "bierner.emojisense",
+        "denoland.vscode-deno"
       ]
     }
   }

@@ -16,7 +16,6 @@ const { handleSubmit, isSubmitting, setFieldError } = useForm({
 });
 
 const onSubmit = handleSubmit(async (submitted) => {
-  console.log(submitted);
   const { error } = await supabase.auth.signUp({
     email: submitted.email,
     password: submitted.password,

@@ -35,18 +35,10 @@ h2 {
   @apply mt-5;
 }
 
-.iti__globe {
-  background-image: url("path/to/globe.png");
-}
-.iti__flag {
-  background-image: url("path/to/flags.png");
-}
-
-@media (min-resolution: 2x) {
-  .iti__globe {
-    background-image: url("path/to/globe@2x.png");
-  }
-  .iti__flag {
-    background-image: url("path/to/flags@2x.png");
-  }
+.material-symbols-outlined {
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 20;
 }
