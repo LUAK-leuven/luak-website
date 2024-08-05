@@ -1,16 +1,24 @@
 <script setup lang="ts">
+import type { Database } from "~/types/database.types";
 import createMembershipSchema from "~/yup_schemas/createMembershipSchema";
-const { handleSubmit, isSubmitting } = useForm({
+const { handleSubmit, isSubmitting, setFieldError } = useForm({
   validationSchema: toTypedSchema(createMembershipSchema),
 });
+const supabase = useSupabaseClient<Database>();
 const buyMembership = handleSubmit(async (submitted) => {
-  $fetch();
+  const { data, error } = await supabase.functions.invoke("stripe-checkout", {
+    body: submitted,
+  });
+  if (error) setFieldError("sportscard", error.message);
+  console.log(data);
+  navigateTo(data.payment_url, { external: true });
 });
 const values = useFormValues();
 const price = computed(() => {
   if (values.value.kbf_uiaa_member === "kbf_luak") return 15;
   else return 20;
 });
+const luak_year = ref((await supabase.rpc("get_luak_year")).data);
 </script>
 
 <template>
@@ -27,7 +35,9 @@ const price = computed(() => {
           ✕
         </button>
       </form>
-      <h2 class="mb-4">Buy a membership for 2024</h2>
+      <h2 class="mb-4">
+        Buy a membership for {{ luak_year }}-{{ luak_year! + 1 }}
+      </h2>
       <InputKbfSelect />
       <InputStudentSelect />
       <InputBool label="Do you have a sportscard?" name="sportscard" />

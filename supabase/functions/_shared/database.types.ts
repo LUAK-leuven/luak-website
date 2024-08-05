@@ -26,7 +26,7 @@ export type Database = {
           sportscard: boolean
           student: Database["public"]["Enums"]["student"]
           user_id?: string
-          year: number
+          year?: number
         }
         Update: {
           created_at?: string
@@ -96,6 +96,10 @@ export type Database = {
       get_luak_year: {
         Args: Record<PropertyKey, never>
         Returns: number
+      }
+      has_membership: {
+        Args: Record<PropertyKey, never>
+        Returns: string
       }
     }
     Enums: {
