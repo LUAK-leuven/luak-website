@@ -32,7 +32,7 @@ const buyMembership = handleSubmit(async (submitted) => {
         sportscard: submitted.sportscard,
         student: submitted.student,
       })
-      .match({ user_id: user.value?.id, luak_year: luak_year })
+      .match({ user_id: user.value?.id, year: luak_year })
       .select()
       .single();
     if (error || !data) throw error;
@@ -44,7 +44,7 @@ const buyMembership = handleSubmit(async (submitted) => {
   else payment_url = env.paymentLinkMembership;
 
   const email = user.value?.email?.replace("@", "%40");
-  payment_url = `${payment_url}/?client_reference_id=${membership.id}?prefilled_email=${email}`;
+  payment_url = `${payment_url}?client_reference_id=${membership.id}?prefilled_email=${email}`;
 
   navigateTo(payment_url, { external: true });
 });
