@@ -1,24 +1,58 @@
 <script setup lang="ts">
 import type { Database } from "~/types/database.types";
 import createMembershipSchema from "~/yup_schemas/createMembershipSchema";
-const { handleSubmit, isSubmitting, setFieldError } = useForm({
+const { handleSubmit, isSubmitting } = useForm({
   validationSchema: toTypedSchema(createMembershipSchema),
 });
+const hasMembership = await getHasMembership();
+const luak_year = await getLuakYear();
 const supabase = useSupabaseClient<Database>();
+const user = useSupabaseUser();
+const env = useRuntimeConfig().public;
+
 const buyMembership = handleSubmit(async (submitted) => {
-  const { data, error } = await supabase.functions.invoke("stripe-checkout", {
-    body: submitted,
-  });
-  if (error) setFieldError("sportscard", error.message);
-  console.log(data);
-  navigateTo(data.payment_url, { external: true });
+  let membership;
+  if (hasMembership === "no_membership") {
+    const { data, error } = await supabase
+      .from("Memberships")
+      .insert({
+        kbf_uiaa_member: submitted.kbf_uiaa_member,
+        sportscard: submitted.sportscard,
+        student: submitted.student,
+      })
+      .select()
+      .single();
+    if (error || !data) throw error;
+    membership = data;
+  } else if (hasMembership === "unpaid_membership") {
+    const { data, error } = await supabase
+      .from("Memberships")
+      .update({
+        kbf_uiaa_member: submitted.kbf_uiaa_member,
+        sportscard: submitted.sportscard,
+        student: submitted.student,
+      })
+      .match({ user_id: user.value?.id, luak_year: luak_year })
+      .select()
+      .single();
+    if (error || !data) throw error;
+    membership = data;
+  } else throw Error("User already has a membership");
+  let payment_url;
+  if (submitted.kbf_uiaa_member === "kbf_luak")
+    payment_url = env.paymentLinkMembershipDiscount;
+  else payment_url = env.paymentLinkMembership;
+
+  const email = user.value?.email?.replace("@", "%40");
+  payment_url = `${payment_url}/?client_reference_id=${membership.id}?prefilled_email=${email}`;
+
+  navigateTo(payment_url, { external: true });
 });
 const values = useFormValues();
 const price = computed(() => {
   if (values.value.kbf_uiaa_member === "kbf_luak") return 15;
   else return 20;
 });
-const luak_year = ref((await supabase.rpc("get_luak_year")).data);
 </script>
 
 <template>

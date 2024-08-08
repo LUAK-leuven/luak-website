@@ -26,8 +26,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       baseUrl: "",
-      supabaseUrl: "",
-      supabaseKey: "",
+      paymentLinkMembership: "",
+      paymentLinkMembershipDiscount: "",
     },
   },
   modules: [
