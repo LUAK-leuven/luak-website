@@ -26,8 +26,9 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       baseUrl: "",
-      paymentLinkMembership: "",
-      paymentLinkMembershipDiscount: "",
+      paymentLinkMembership: "https://buy.stripe.com/9AQaGj7K1eso4KsfYZ",
+      paymentLinkMembershipDiscount:
+        "https://buy.stripe.com/4gwbKnfctdokdgYcMM",
     },
   },
   modules: [
