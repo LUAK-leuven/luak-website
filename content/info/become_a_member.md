@@ -1,6 +1,6 @@
 ---
-title: "Become a member"
-description: "advanteges and how to become a member"
+title: Become a member
+description: advanteges and how to become a member
 ---
 
 Becoming a member of the LUAK is easy!
@@ -9,11 +9,11 @@ Becoming a member of the LUAK is easy!
 
 Every year during October we organize info nights to explain and show everything the LUAK does. A perfect night to become a member, just pass by. Any other time you can register by
 
-1.  [Registering](https://forms.gle/HH6AkxLx5kL3WoN26) **Since we are changing our website this year we manage the registrations with a simple google form!** Both new and existing members have to sign up using the Register link pointing to the google form
-2.  Pay the appropriate amount to the bank account # noted at the bottom of the page (The regular membership fee is 20€, But there's a discount of 5€ for new members of for members who chose LUAK as their main club on their KBF membership)
-3.  Pass by the LUAK on a thursday night to get your membership card (grants you the Kariboe discount. Supporting members do not get the membership card!)
+1. [Registering](https://forms.gle/HH6AkxLx5kL3WoN26) **Since we are changing our website this year we manage the registrations with a simple google form!** Both new and existing members have to sign up using the Register link pointing to the google form
+2. Pay the appropriate amount to the bank account # noted at the bottom of the page (The regular membership fee is 20€, But there's a discount of 5€ for new members of for members who chose LUAK as their main club on their KBF membership)
+3. Pass by the LUAK on a thursday night to get your membership card (grants you the Kariboe discount. Supporting members do not get the membership card!)
 
-Having some trouble or questions? contact us at luak.bestuur@gmail.com or pass by the clubhouse on a Thursday night after 22h.
+Having some trouble or questions? contact us at <luak.bestuur@gmail.com> or pass by the clubhouse on a Thursday night after 22h.
 
 ## What's the advantage of becoming a member?
 
@@ -32,4 +32,6 @@ New members only have to pay 15 euros, active members 20 and if you're an active
 
 ## Can I climb Belgian rock now?
 
-Not just yet. To climb Belgian rock, joining LUAK is not enough. You'll have to become a member of the KBF to be allowed to do so. If you become KBF member you'll have to select a club. If you chose LUAK in that list you'll receive 5€ discount on your membership. Visit their website at: http://www.klimenbergsportfederatie.be/ More information can be found in [this presentation](https://docs.google.com/presentation/d/1MOb7rF6Kz8xd2dRu9nDj39vMU4NzeJc7/edit?usp=sharing&ouid=104743637768050835321&rtpof=true&sd=true), This is the information that is being shown on the info evenings as well The bank account number of LUAK is `IBAN: BE03 7340 3133 8584 BIC: KREDBEBB`
+Not just yet. To climb Belgian rock, joining LUAK is not enough. You'll have to become a member of the KBF to be allowed to do so. If you become KBF member you'll have to select a club. If you chose LUAK in that list you'll receive 5€ discount on your membership. Visit their website at: <http://www.klimenbergsportfederatie.be/> More information can be found in [this presentation](https://docs.google.com/presentation/d/1MOb7rF6Kz8xd2dRu9nDj39vMU4NzeJc7/edit?usp=sharing\&ouid=104743637768050835321\&rtpof=true\&sd=true), This is the information that is being shown on the info evenings as well The bank account number of LUAK is `IBAN: BE03 7340 3133 8584 BIC: KREDBEBB`
+
+![aiguilles\_rouges.jpg](/aiguilles_rouges.jpg)
