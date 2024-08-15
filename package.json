@@ -16,6 +16,7 @@
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "@nuxt/eslint": "^0.3.13",
+    "@nuxthq/studio": "^2.0.3",
     "@nuxtjs/supabase": "^1.1.5",
     "@nuxtjs/tailwindcss": "^6.8.0",
     "daisyui": "^3.9.4",
