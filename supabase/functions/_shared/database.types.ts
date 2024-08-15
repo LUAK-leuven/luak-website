@@ -47,6 +47,38 @@ export type Database = {
           },
         ]
       }
+      Payments: {
+        Row: {
+          amount: number | null
+          approved: boolean
+          created_at: string
+          id: string
+          membership_id: string | null
+        }
+        Insert: {
+          amount?: number | null
+          approved: boolean
+          created_at?: string
+          id: string
+          membership_id?: string | null
+        }
+        Update: {
+          amount?: number | null
+          approved?: boolean
+          created_at?: string
+          id?: string
+          membership_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Payments_membership_id_fkey"
+            columns: ["membership_id"]
+            isOneToOne: false
+            referencedRelation: "Memberships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       Users: {
         Row: {
           created_at: string

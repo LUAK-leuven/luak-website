@@ -1,4 +1,6 @@
 import { cryptoProvider, stripe } from "../_shared/stripe.ts";
+import { createClient } from "supabase";
+import type { Database } from "../_shared/database.types.ts";
 
 Deno.serve(async (request) => {
   const signature = request.headers.get("Stripe-Signature");
@@ -19,16 +21,41 @@ Deno.serve(async (request) => {
     return new Response(err.message, { status: 400 });
   }
   console.log(`🔔 Event received: ${receivedEvent.id}`);
+  if (
+    receivedEvent.type === "checkout.session.completed" ||
+    receivedEvent.type === "checkout.session.async_payment_succeeded"
+  ) {
+    fulfillCheckout(receivedEvent.data.object.id);
+  }
   return new Response(JSON.stringify({ ok: true }), { status: 200 });
 });
-/* To invoke locally:
 
-  1. Run `supabase start` (see: https://supabase.com/docs/reference/cli/supabase-start)
-  2. Make an HTTP request:
+async function fulfillCheckout(sessionId: string) {
+  console.log("Fulfilling Checkout Session " + sessionId);
 
-  curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/stripe-webhook' \
-    --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0' \
-    --header 'Content-Type: application/json' \
-    --data '{"name":"Functions"}'
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error("Missing Supabase URL or Service Key");
+  }
+  const supabase = createClient<Database>(supabaseUrl, supabaseServiceKey);
 
-*/
+  // Retrieve the Checkout Session from the API with line_items expanded
+  const checkoutSession = await stripe.checkout.sessions.retrieve(sessionId, {
+    expand: ["line_items"],
+  });
+
+  // Check the Checkout Session's payment_status property
+  // to determine if fulfillment should be peformed
+  if (checkoutSession.payment_status !== "unpaid") {
+    const { error } = await supabase.from("Payments").insert({
+      id: checkoutSession.id,
+      amount: checkoutSession.amount_subtotal,
+      membership_id: checkoutSession.client_reference_id,
+      approved: true,
+    });
+    if (error) {
+      throw error;
+    }
+  }
+}

@@ -12,7 +12,7 @@ const props = defineProps({
   },
 });
 
-const { checked, handleChange } = useField(() => props.name, "", {
+const { checked, handleChange, errorMessage } = useField(() => props.name, "", {
   // Will make the checkbox set its value to true/false if it was checked or not
   type: "checkbox",
   checkedValue: true,
@@ -30,4 +30,5 @@ const { checked, handleChange } = useField(() => props.name, "", {
       @change="handleChange"
     />
   </div>
+  <span class="text-error">{{ errorMessage }}</span>
 </template>

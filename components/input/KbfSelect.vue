@@ -21,4 +21,5 @@
     <option value="kbf_other">Yes, under a different club</option>
     <option value="uiaa">No, I'm member of a different UIAA club</option>
   </Field>
+  <ErrorMessage name="kbf_uiaa_member" class="text-error" />
 </template>

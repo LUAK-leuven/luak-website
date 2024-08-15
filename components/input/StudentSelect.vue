@@ -15,4 +15,5 @@
     </option>
     <option value="phd_kul">I'm a phd student at KUL</option>
   </Field>
+  <ErrorMessage name="student" class="text-error" />
 </template>

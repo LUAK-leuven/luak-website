@@ -19,9 +19,14 @@ const user = useSupabaseUser();
       </details>
     </li>
     <li><NuxtLink>Contact</NuxtLink></li>
-    <NuxtLink to="/user/overview" class="btn btn-primary btn-outline">
-      <span v-if="!user">Log In</span>
-      <span v-else>My Profile</span>
-    </NuxtLink>
+    <NuxtLink
+      v-if="!user"
+      to="/user/overview"
+      class="btn btn-primary btn-outline"
+      >Log In</NuxtLink
+    >
+    <NuxtLink v-else to="/user/overview" class="btn btn-primary btn-outline"
+      >My Account</NuxtLink
+    >
   </ul>
 </template>

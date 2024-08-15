@@ -3,9 +3,10 @@ import type { Database } from "~/types/database.types";
 import createMembershipSchema from "~/yup_schemas/createMembershipSchema";
 const { handleSubmit, isSubmitting } = useForm({
   validationSchema: toTypedSchema(createMembershipSchema),
+  initialValues: { sportscard: false },
 });
 const hasMembership = await getHasMembership();
-const luak_year = await getLuakYear();
+const luak_year = getLuakYear();
 const supabase = useSupabaseClient<Database>();
 const user = useSupabaseUser();
 const env = useRuntimeConfig().public;
@@ -44,7 +45,7 @@ const buyMembership = handleSubmit(async (submitted) => {
   else payment_url = env.paymentLinkMembership;
 
   const email = user.value?.email?.replace("@", "%40");
-  payment_url = `${payment_url}?client_reference_id=${membership.id}?prefilled_email=${email}`;
+  payment_url = `${payment_url}?client_reference_id=${membership.id}&prefilled_email=${email}`;
 
   navigateTo(payment_url, { external: true });
 });
