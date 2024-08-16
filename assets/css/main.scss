@@ -45,6 +45,16 @@ ol {
   hr {
     @apply my-5;
   }
+  img {
+    @apply rounded-lg;
+    @apply shadow-2xl;
+    @apply max-w-60;
+    @apply max-h-60;
+    @apply md:max-w-80;
+    @apply md:max-h-80;
+    @apply m-2;
+    // TODO: screen to wide for viewport fix it with w-full somewhere
+  }
 }
 
 p {
