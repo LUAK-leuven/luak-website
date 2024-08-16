@@ -1,8 +1,10 @@
-<script setup>
-const NR_OF_ARTICLES = 5;
+<script setup lang="ts">
+import type { NewsContent } from "~/types/content.types";
+
+const NR_OF_ARTICLES = 20;
 const { data } = await useAsyncData(() =>
-  queryContent("/news")
-    .only(["title", "image", "excerpt", "_path"])
+  queryContent<NewsContent>("/news")
+    .sort({ date: -1 })
     .limit(NR_OF_ARTICLES)
     .find(),
 );

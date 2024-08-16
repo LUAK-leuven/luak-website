@@ -27,7 +27,7 @@ definePageMeta({
           style="margin-top: -12em"
         >
           <div class="p-10">
-            <ContentRenderer :value="doc" />
+            <ContentRenderer :value="doc" class="nuxt-content" />
           </div>
         </div>
       </div>

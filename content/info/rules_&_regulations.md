@@ -20,6 +20,7 @@ Lastly, you are acquainted with the domestic rules of the LUAK (to be found on t
 The in-house rules, het Huishoudreglement (Dutch only)
 
 #content
+
 ### Artikel 1
 
 Het verenigingsjaar loopt van het begin van het academiejaar, 1 oktober, tot aan het eind van het academie jaar, 31 september. Daarentegen loopt het boekjaar van de vereniging van 1 januari tot 31 december.
@@ -200,6 +201,7 @@ Prices and maximum loan period are fixed on the yearly general meeting.
 - With the return of the gear, the gear has to be cleaned and serviced. Ropes have to be dry. Bivouac sacs have to be dry, without mud, leaves or spiders.
 - With the borrow of the gear, the borrower has to check the condition of the gear and reports every issue.
 - With the return of the gear, the borrower has the duty to report every (possible) damage that has occurred during the use.
+
 ::
 
 ::collapsable
@@ -209,3 +211,5 @@ Statuten (Dutch only)
 #content
 _to be published soon_
 ::
+
+![LUAK_gear_picture](/luak_gear.jpg)

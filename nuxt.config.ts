@@ -13,7 +13,7 @@ export default defineNuxtConfig({
       }],
     },
   },
-  css: ["~/assets/css/main.css"],
+  css: ["~/assets/css/main.scss"],
   supabase: {
     redirect: true,
     redirectOptions: {
@@ -29,6 +29,11 @@ export default defineNuxtConfig({
       paymentLinkMembership: "https://buy.stripe.com/9AQaGj7K1eso4KsfYZ",
       paymentLinkMembershipDiscount:
         "https://buy.stripe.com/4gwbKnfctdokdgYcMM",
+    },
+  },
+  content: {
+    markdown: {
+      anchorLinks: false,
     },
   },
   modules: [

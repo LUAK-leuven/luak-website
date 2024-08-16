@@ -1,0 +1,69 @@
+---
+title: Points of interest
+description: All the spots you need to know as a climber in Leuven.
+---
+
+## 🧭 All the spots you need to know as a climber in Leuven
+
+::collapsable
+#title
+🏠 LUAK Clubhouse
+
+#content
+The LUAK clubhouse is where we meet every week for a chat and a beer, a party, the Christmas party, lend a guidebook (topo) or climbing gear...
+
+### Drinks
+
+The fridge is full of delicious beers & drinks. You pay the amount noted on the fridge door by putting it in the destined container. If you ask if anyone else wants a drink, you also pay for it... But don't worry, the favor will definitively be returned sooner or later.
+
+### Gear or books
+
+Lending gear or books is free, but there is a pledge to be paid (5 to 25 euros depending on the type). Ask the gear guy or anyone of the board to do so!
+
+### Location
+
+We're located in the Minderbroederstraat, opposite nr. 25, behind the cast iron gate. Check our points of interest map and the pictures below to help you out.
+![Outside of luak](/luak_outside.jpg)
+::
+
+::collapsable
+#title
+🏋️ Open Gym Leuven
+
+#content
+Boulder gym under the viaduct. Open 24/7 with an amazing community.
+Every wednesday their is a potluck dinner organized in the evening, where everybody is welcome.
+Checkout their website for more information [Open Gym Leuven](https://www.opengym.be/)
+::
+
+::collapsable
+#title
+🦘 Kariboe
+
+#content
+In need of new climbing shoes, climbing harness, topos or other gear? Kariboe is the place to be!
+The best outdoor shop around Leuven. And with a LUAK membership you even get 20% off!
+Checkout their website for more information [Kariboe](https://www.kariboe.be/)
+::
+
+::collapsable
+#title
+🧗‍♂️ Stordeur
+
+#content
+The biggest indoor climbing hall of leuven. With more than 60 ropes and a Kilter board.
+Checkout their website for more information [Stordeur](https://destordeur.be/)
+::
+
+::collapsable
+#title
+🪨 Boulder One Herent
+
+#content
+Boulder gym in Herent. Little bike ride to get there, but the only propper boulder gym around Leuven. The other gyms only have minor bouldering sections.
+Checkout their website for more information [Boulder One Herent](https://www.boulder.one/)
+::
+
+---
+
+:responsive-iframe{url="https://www.google.com/maps/d/embed?mid=111vyXoNb0if7ctfDagWteBi6mQTxSjR7&ehbc=2E312F" }

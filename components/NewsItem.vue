@@ -1,11 +1,8 @@
 <script setup lang="ts">
+import type { NewsContent } from "~/types/content.types";
+
 defineProps<{
-  data: {
-    title: string;
-    image?: string;
-    excerpt: object;
-    _path: string;
-  };
+  data: NewsContent;
   reversed?: boolean;
 }>();
 </script>
@@ -23,8 +20,18 @@ defineProps<{
       />
       <div>
         <h1 class="text-4xl text-gray-600">{{ data.title }}</h1>
-        <ContentRenderer :value="data" :excerpt="true" class="py-6" />
-        <span />
+        <ContentRenderer
+          :value="data"
+          :excerpt="true"
+          class="py-6 nuxt-content"
+        >
+          <template #empty>
+            <p>Press the read more button to lean more!.</p>
+          </template>
+          <template #error>
+            <p>An error occurred while rendering the content.</p>
+          </template>
+        </ContentRenderer>
         <NuxtLink :key="data._path" :to="data._path" class="btn btn-outline"
           >read more</NuxtLink
         >

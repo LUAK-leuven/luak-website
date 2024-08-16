@@ -5,7 +5,7 @@
         <template #title>
           {{ doc.title }}
         </template>
-        <ContentRenderer :value="doc" />
+        <ContentRenderer :value="doc" class="nuxt-content" />
       </FullPageCard>
     </ContentDoc>
   </main>

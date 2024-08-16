@@ -28,7 +28,8 @@
         "bradlc.vscode-tailwindcss",
         "tamasfe.even-better-toml",
         "bierner.emojisense",
-        "denoland.vscode-deno"
+        "denoland.vscode-deno",
+        "Nuxt.mdc"
       ]
     }
   }
