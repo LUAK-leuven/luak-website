@@ -1,6 +1,6 @@
 ---
-title: "History"
-description: "A little history of luak"
+title: History
+description: A little history of luak
 ---
 
 ( Sorry to all you foreigners out there, you'll have to learn dutch for this one :-) )
@@ -23,4 +23,4 @@ Het duurt dan ook niet lang voor we in de aktiviteitenoverzichten voor de eerste
 Het hek is van de dam. De volgende jaren worden we getrakteerd op soms halve boeken over Yosemite, Chamonix, Zwitserland, Calanques, Fontainebleau,.... Stuk voor stuk prettig gestoorde verhalen voer (zwaar) klimmen en veel plezier.
 Dit doen we nu al een 40 tal jaar, op die 40 jaar zijn we geëvolueerd van de Hypothenuse tot Schwarzenegger, van de Arète des Cosmiques tot Eiger, Jackson, Pinochio,.... Van oriëntatieloop tot marathon en 24 uren-loop, van initiant tot berggids, van holbewoner tot Himalaya, van den Directe in tire clou tot Mescalito, van Kokosmatje tot crashpad, van coin de bois tot camalot, van zootje ongeregeld tot vzw.
 
-<img src="/img/oud_klimmen.jpg" alt="Image"/>
+![Image](/luak-logo.png)

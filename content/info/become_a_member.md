@@ -7,11 +7,14 @@ Becoming a member of the LUAK is easy!
 
 ## Want to know what the LUAK is all about and register?
 
-Every year during October we organize info nights to explain and show everything the LUAK does. A perfect night to become a member, just pass by. Any other time you can register by
+Every year during October we organize **info nights** to explain and show everything the LUAK does. (Check the news section or our socials to stay up to date)
 
-1. [Registering](https://forms.gle/HH6AkxLx5kL3WoN26) **Since we are changing our website this year we manage the registrations with a simple google form!** Both new and existing members have to sign up using the Register link pointing to the google form
-2. Pay the appropriate amount to the bank account # noted at the bottom of the page (The regular membership fee is 20€, But there's a discount of 5€ for new members of for members who chose LUAK as their main club on their KBF membership)
-3. Pass by the LUAK on a thursday night to get your membership card (grants you the Kariboe discount. Supporting members do not get the membership card!)
+A perfect night to become a member, pass by to learn more!
+
+1. [](https://forms.gle/HH6AkxLx5kL3WoN26)
+2. **Pass by the LUAK** on a thursday night to get your **membership card** (grants you the Kariboe discount. Supporting members do not get the membership card!)
+
+/
 
 Having some trouble or questions? contact us at <luak.bestuur@gmail.com> or pass by the clubhouse on a Thursday night after 22h.
 
