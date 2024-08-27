@@ -19,13 +19,6 @@ const onSubmit = handleSubmit(async (submitted) => {
   const { error } = await supabase.auth.signUp({
     email: submitted.email,
     password: submitted.password,
-    phone: submitted.phoneNumber,
-    options: {
-      data: {
-        firstName: submitted.firstName,
-        lastName: submitted.lastName,
-      },
-    },
   });
   if (error) {
     setFieldError("password", error.message);

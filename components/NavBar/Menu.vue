@@ -21,12 +21,12 @@ const user = useSupabaseUser();
     <li><NuxtLink>Contact</NuxtLink></li>
     <NuxtLink
       v-if="!user"
-      to="/user/overview"
+      to="/profile/overview"
       class="btn btn-primary btn-outline"
       >Log In</NuxtLink
     >
-    <NuxtLink v-else to="/user/overview" class="btn btn-primary btn-outline"
-      >My Account</NuxtLink
+    <NuxtLink v-else to="/profile/overview" class="btn btn-primary btn-outline"
+      >My Profile</NuxtLink
     >
   </ul>
 </template>

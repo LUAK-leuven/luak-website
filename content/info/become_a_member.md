@@ -10,7 +10,7 @@ Every year during October we organize **info nights** to explain and show everyt
 A perfect night to become a member, pass by to learn more!
 
 1. **Make an account** on the website through the [signup page](/signup) (if you don't have one already)
-2. Create and pay your membership for this year on the [membership page](/user/overview)
+2. Create and pay your membership for this year on the [membership page](/profile/overview)
 3. **Pass by the LUAK** on a thursday night to get your **membership card** (grants you the Kariboe discount. Supporting members do not get the membership card!)
 
 ---

@@ -13,7 +13,7 @@ const env = useRuntimeConfig().public;
 
 const buyMembership = handleSubmit(async (submitted) => {
   let membership;
-  if (hasMembership === "no_membership") {
+  if (hasMembership.value === "no_membership") {
     const { data, error } = await supabase
       .from("Memberships")
       .insert({
@@ -25,7 +25,7 @@ const buyMembership = handleSubmit(async (submitted) => {
       .single();
     if (error || !data) throw error;
     membership = data;
-  } else if (hasMembership === "unpaid_membership") {
+  } else if (hasMembership.value === "unpaid_membership") {
     const { data, error } = await supabase
       .from("Memberships")
       .update({
@@ -57,7 +57,7 @@ const price = computed(() => {
 </script>
 
 <template>
-  <button class="btn btn-primary" onclick="buy_membership_modal.showModal()">
+  <button class="btn" onclick="buy_membership_modal.showModal()">
     Buy a membership
   </button>
 
