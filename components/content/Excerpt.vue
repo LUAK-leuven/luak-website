@@ -1,0 +1,4 @@
+<template>
+  <!--more-->
+  <div />
+</template>
