@@ -2,11 +2,10 @@
 title: A first ascent that shouldn’t have been
 image: /stories/DSC04260-min-600x400.JPG
 date: 2021-10-13T00:00:00.000Z
+author: Ward Lorenz
 ---
 
 Summer meet 2021 – location La Bérarde
-
-<!--more-->
 
 ## Cascade d’en bas
 
@@ -22,15 +21,11 @@ justify: justify-center
 #item2
 ![Sander climbing](/stories/DSC04244-min-600x400.JPG)
 
-::
-
-::flex-box
-#item1
+#item3
 _Cedric and Sander in the crux pitch. A super delicate (yet powerful) 6b slab. in crazy exposure_
 ::
 
 Amazing 3D-climbing on perfect granite. No-hands-kneebars, hand and footjams, heelhooks – a full range of movements in a crazy (AND VERY EXPOSED) atmosphere. Since I brought my camera, and Kobe was photographing from the other side this gave some amazing pictures.
-
 
 ::flex-box
 ---
