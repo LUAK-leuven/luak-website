@@ -2,6 +2,9 @@
 const { data: info_navigation } = await useAsyncData("info_navigation", () =>
   fetchContentNavigation(queryContent("/info")),
 );
+const { data: pages_navigation } = await useAsyncData("pages_navigation", () =>
+  fetchContentNavigation(queryContent("/pages")),
+);
 const user = useSupabaseUser();
 </script>
 <template>
@@ -18,7 +21,9 @@ const user = useSupabaseUser();
         </ul>
       </details>
     </li>
-    <li><NuxtLink>Contact</NuxtLink></li>
+    <li v-for="nav in pages_navigation[0].children" :key="nav._path">
+      <NuxtLink :to="nav._path">{{ nav.title }}</NuxtLink>
+    </li>
     <NuxtLink
       v-if="!user"
       to="/profile/overview"

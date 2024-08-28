@@ -31,7 +31,7 @@ const { data } = await useAsyncData(() =>
           >
           <NuxtLink
             class="btn btn-outline m-2 text-white"
-            to="/info/become_a_member"
+            to="/pages/become_a_member"
           >
             Become a member
           </NuxtLink>
