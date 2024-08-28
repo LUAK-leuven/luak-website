@@ -24,6 +24,7 @@ const user = useSupabaseUser();
     <li v-for="nav in pages_navigation[0].children" :key="nav._path">
       <NuxtLink :to="nav._path">{{ nav.title }}</NuxtLink>
     </li>
+    <li v-if="user"><NuxtLink to="/stories">Stories</NuxtLink></li>
     <NuxtLink
       v-if="!user"
       to="/profile/overview"
