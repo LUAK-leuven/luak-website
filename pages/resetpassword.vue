@@ -2,20 +2,16 @@
 const supabase = useSupabaseClient();
 const formSchema = yup.object({
   email: yup.string().required().email(),
-  password: yup.string().password().required(),
 });
 const { handleSubmit, isSubmitting, setFieldError } = useForm({
   validationSchema: toTypedSchema(formSchema),
 });
-
+const isSentSuccessfully = ref(false);
 const onSubmit = handleSubmit(async (submitted) => {
-  const { error } = await supabase.auth.signInWithPassword({
-    email: submitted.email,
-    password: submitted.password,
-  });
+  const { error } = await supabase.auth.resetPasswordForEmail(submitted.email);
   if (error) {
-    setFieldError("password", error.message);
-  } else await navigateTo("/confirmLogin");
+    setFieldError("email", error.message);
+  } else isSentSuccessfully.value = true;
 });
 </script>
 <template>
@@ -24,33 +20,34 @@ const onSubmit = handleSubmit(async (submitted) => {
       class="bg-base-100 shadow-md rounded w-10/12 lg:w-8/12 xl:w-1/3 mb-28 z-10 mt-8 p-5 sm:p-20"
     >
       <form @submit="onSubmit">
+        <NuxtLink to="/login" class="btn btn-circle btn-sm btn-outline">
+          <span class="material-symbols-outlined"> arrow_back</span>
+        </NuxtLink>
+        <h2>❓ Forgot password:</h2>
         <InputText
           label="Email"
           name="email"
           placeholder="youremail@example.com"
           type="email"
         />
-        <InputText
-          label="Password"
-          name="password"
-          placeholder="*******"
-          type="password"
-        />
-        <div>
-          <button class="btn btn-primary w-full p-5">
+        <div class="flex justify-end">
+          <button
+            class="btn btn-primary mt-2"
+            :class="{ 'btn-disabled': isSentSuccessfully }"
+          >
             <span v-if="isSubmitting" class="loading loading-spinner"
               >loading</span
             >
-            <span v-else>Sign in</span>
+            <span
+              v-else-if="isSentSuccessfully"
+              class="material-symbols-outlined"
+            >
+              check
+            </span>
+            <span v-else>Sent reset link</span>
           </button>
         </div>
       </form>
-      <div class="divider">OR</div>
-      <NuxtLink to="/signup">
-        <button class="btn btn-outline btn-primary w-full p-5">
-          Create an account
-        </button>
-      </NuxtLink>
     </div>
   </div>
 </template>

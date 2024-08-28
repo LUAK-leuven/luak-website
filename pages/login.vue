@@ -36,6 +36,11 @@ const onSubmit = handleSubmit(async (submitted) => {
           placeholder="*******"
           type="password"
         />
+        <div class="flex flex-row justify-end">
+          <NuxtLink to="/resetpassword" class="underline my-2"
+            >Forgot password?</NuxtLink
+          >
+        </div>
         <div>
           <button class="btn btn-primary w-full p-5">
             <span v-if="isSubmitting" class="loading loading-spinner"
