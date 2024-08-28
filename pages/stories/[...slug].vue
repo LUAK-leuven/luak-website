@@ -17,6 +17,14 @@ definePageMeta({
             <h1 class="mb-14 text-center text-5xl">
               {{ doc.title }}
             </h1>
+            <i>{{
+              new Date(doc.date).toLocaleDateString(undefined, {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })
+            }}</i>
           </div>
         </div>
       </div>
