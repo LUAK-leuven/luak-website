@@ -8,7 +8,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="bg-base-100 m-5">
+  <div class="bg-base-100 my-5">
     <div
       class="flex justify-center items-center align-middle flex-col"
       :class="[reversed ? 'md:flex-row' : 'md:flex-row-reverse']"

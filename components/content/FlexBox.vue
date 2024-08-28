@@ -7,7 +7,7 @@ defineProps({
 });
 </script>
 <template>
-  <div class="flex flex-wrap w-full" :class="justify">
+  <div class="flex flex-wrap w-full items-center" :class="justify">
     <div v-if="$slots.item1" class="max-w-60 md:max-w-80 mx-2">
       <ContentSlot key="slot1" :use="$slots.item1" />
     </div>
