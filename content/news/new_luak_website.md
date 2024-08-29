@@ -1,7 +1,7 @@
 ---
 title: Finally!.. The new website!!
 image: /news/new_website.jpg
-date: 2024-08-15
+date: 2024-08-15T00:00:00.000Z
 ---
 
 For 4 years now, I have been promising to make a new website for LUAK. Most of you probably thougt it woud never happen. But the future is now! Take your agendas and mark the date, because this day is going down in the LUAK history books.
@@ -19,6 +19,10 @@ There is still a bunch of features to be improved, and still some data to be por
 ## Can I help?
 
 Of course! If you have any suggestions or if you want to help with the development of the website, please contact me (Cedric) on whatsapp.
+
+## Where is the old website 😢
+
+We will keep the old one alive for quite a while still on [old.luak.be ](http://old.luak.be)
 
 Lots of LUAK Love xx,
 Cedric 😗
