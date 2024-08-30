@@ -6,7 +6,7 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "preview": "nuxt preview",
+    "preview": "NODE_OPTIONS='--import ./public/instrument.server.mjs' nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "yarn lint:eslint && yarn lint:prettier",
     "lint:eslint": "eslint .",
@@ -34,6 +34,7 @@
   "dependencies": {
     "@nuxt/content": "^2.9.0",
     "@nuxt/image": "^1.1.0",
+    "@sentry/nuxt": "^8.27.0",
     "@vee-validate/nuxt": "^4.12.8",
     "@vee-validate/yup": "^4.12.8",
     "yup": "^1.4.0"
