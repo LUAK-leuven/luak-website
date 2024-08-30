@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { yup_password } from "~/utils/yup";
+
 const supabase = useSupabaseClient();
 const formSchema = yup.object({
   email: yup.string().required().email(),
-  password: yup.string().password().required(),
+  password: yup_password.required(),
 });
 const { handleSubmit, isSubmitting, setFieldError } = useForm({
   validationSchema: toTypedSchema(formSchema),

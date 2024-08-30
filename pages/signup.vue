@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import type { Database } from "~/types/database.types";
+import { yup_password, yup_phone } from "~/utils/yup";
 const supabase = useSupabaseClient<Database>();
 
 const formSchema = yup.object({
   firstName: yup.string().required().label("First name"),
   lastName: yup.string().required().label("Last name"),
   email: yup.string().required().email(),
-  password: yup.string().password().required(),
+  password: yup_password.required(),
   newsletter: yup.bool().default(true),
   whatsapp: yup.bool().default(true),
-  phoneNumber: yup.string().phone(),
+  phoneNumber: yup_phone,
 });
 const { handleSubmit, isSubmitting, setFieldError } = useForm({
   validationSchema: toTypedSchema(formSchema),

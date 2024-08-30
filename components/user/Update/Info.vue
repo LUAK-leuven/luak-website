@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { Database } from "~/types/database.types";
+import { yup_phone } from "~/utils/yup";
 const supabase = useSupabaseClient<Database>();
 const user = useSupabaseUser();
 
@@ -25,7 +26,7 @@ const formSchema = yup.object({
   lastName: yup.string().label("Last name"),
   newsletter: yup.bool(),
   whatsapp: yup.bool(),
-  phoneNumber: yup.string().phone(),
+  phoneNumber: yup_phone,
 });
 const isChangedSuccessfull = ref(false);
 

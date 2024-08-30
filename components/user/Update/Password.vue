@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import type { Database } from "~/types/database.types";
+import { yup_password } from "~/utils/yup";
 
 const supabase = useSupabaseClient<Database>();
 const isChangedSuccessfull = ref(false);
 const { handleSubmit, setFieldError, isSubmitting } = useForm({
   validationSchema: toTypedSchema(
     yup.object({
-      password: yup.string().password().required(),
+      password: yup_password.required(),
     }),
   ),
 });
