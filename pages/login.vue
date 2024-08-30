@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import * as yup from "yup";
 import { yup_password } from "~/utils/yup";
 
 const supabase = useSupabaseClient();

@@ -1,4 +1,6 @@
 import type { Database } from "~/types/database.types";
+import * as yup from "yup";
+
 type MembershipTable = Database["public"]["Tables"]["Memberships"]["Row"];
 type KbfUiaaMember = MembershipTable["kbf_uiaa_member"];
 type Student = MembershipTable["student"];

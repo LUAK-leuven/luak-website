@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { Database } from "~/types/database.types";
+import * as yup from "yup";
 import { yup_password } from "~/utils/yup";
 
 const supabase = useSupabaseClient<Database>();

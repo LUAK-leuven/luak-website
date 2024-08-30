@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import type { Database } from "~/types/database.types";
 import { yup_phone } from "~/utils/yup";
+import * as yup from "yup";
+
 const supabase = useSupabaseClient<Database>();
 const user = useSupabaseUser();
 
