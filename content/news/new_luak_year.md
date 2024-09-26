@@ -19,8 +19,10 @@ They will start at **20:00** and will be held at the [LUAK clubhouse](https://ma
 
 ### The initiations will be on:
 
-- Saturday Ocotber 5th in **Beez*** <https://forms.gle/V6BxLB1cqkTmqn9Q6>
-- Sunnday October 13th in **Yvoir*** <https://forms.gle/EuuZNKimJLEbJUgt8>
+- Saturday Ocotber 5th in **Beez**
+  - <https://forms.gle/V6BxLB1cqkTmqn9Q6>
+- Sunnday October 13th in **Yvoir**
+  - <https://forms.gle/EuuZNKimJLEbJUgt8>
 
 **Signing up is mandatory** and can be done through the link!
 
