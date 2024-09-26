@@ -78,8 +78,8 @@ const onSubmit = handleSubmit(async (submitted) => {
       placeholder="+32468123123"
       type="tel"
     />
-    <InputBool label="Can we contact you via whatsapp?" name="whatsapp" />
-    <InputBool label="Subscribe to monthly newsletter?" name="newsletter" />
+    <InputBool name="whatsapp">Can we contact you via whatsapp?</InputBool>
+    <InputBool name="newsletter">Subscribe to monthly newsletter?</InputBool>
     <div class="flex justify-end">
       <button
         class="btn btn-primary mt-2"

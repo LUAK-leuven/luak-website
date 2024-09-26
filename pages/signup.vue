@@ -76,8 +76,10 @@ const onSubmit = handleSubmit(async (submitted) => {
           placeholder="*******"
           type="password"
         />
-        <InputBool label="Can we contact you via whatsapp?" name="whatsapp" />
-        <InputBool label="Subscribe to monthly newsletter?" name="newsletter" />
+        <InputBool name="whatsapp">Can we contact you via whatsapp?</InputBool>
+        <InputBool name="newsletter"
+          >Subscribe to monthly newsletter?</InputBool
+        >
 
         <div class="flex justify-center">
           <button class="btn btn-primary w-full p-5">

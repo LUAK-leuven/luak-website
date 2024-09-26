@@ -75,7 +75,16 @@ const price = computed(() => {
       </h2>
       <InputKbfSelect />
       <InputStudentSelect />
-      <InputBool label="Do you have a sportscard?" name="sportscard" />
+      <InputBool name="sportscard">Do you have a sportscard?</InputBool>
+      <InputBool name="houserules"
+        >Do you agree to the
+        <NuxtLink
+          to="/info/rules_and_regulations"
+          class="text-primary underline"
+          >house rules</NuxtLink
+        >? <span class="italic text-error">(required)</span></InputBool
+      >
+
       <div class="flex w-full justify-end">
         <div class="stat w-fit">
           <div class="stat-title">Total price</div>

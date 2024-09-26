@@ -6,10 +6,6 @@ const props = defineProps({
     type: String,
     default: "checkbox",
   },
-  label: {
-    type: String,
-    default: "checkbox",
-  },
 });
 
 const { checked, handleChange, errorMessage } = useField(() => props.name, "", {
@@ -22,7 +18,9 @@ const { checked, handleChange, errorMessage } = useField(() => props.name, "", {
 
 <template>
   <div class="my-5 flex content-center">
-    <span class="mr-3">{{ label }}</span>
+    <span class="mr-3">
+      <slot />
+    </span>
     <input
       type="checkbox"
       class="checkbox"
