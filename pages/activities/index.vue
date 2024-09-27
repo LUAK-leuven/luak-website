@@ -4,8 +4,7 @@ import type { ActivityContent } from "~/types/content.types";
 const NR_OF_ACTIVITIES = 20;
 const { data } = await useAsyncData(() =>
   queryContent<ActivityContent>("/activities")
-    //TODO: only showing future activities
-    // .where({ date: { $gt: new Date().valueOf() } })
+    .where({ date: { $gte: new Date().toISOString() } })
     .sort({ date: 1 })
     .limit(NR_OF_ACTIVITIES)
     .find(),
