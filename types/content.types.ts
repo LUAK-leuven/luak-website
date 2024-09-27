@@ -5,3 +5,9 @@ export interface NewsContent extends MarkdownParsedContent {
     title: string;
     date: Date;
 }
+export interface ActivityContent extends MarkdownParsedContent {
+    image: string;
+    title: string;
+    date: Date;
+    price: number;
+}

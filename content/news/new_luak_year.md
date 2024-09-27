@@ -28,4 +28,4 @@ They will start at **20:00** and will be held at the [LUAK clubhouse](https://ma
 
 ---
 
-For more information about our activities, be sure to check our [Calendar](/calendar) and [Instagram](https://www.instagram.com/luakleuven/) .
+For more information about our activities, be sure to check our [Activities](/activities) and [Instagram](https://www.instagram.com/luakleuven/) .

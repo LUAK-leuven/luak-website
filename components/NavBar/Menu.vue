@@ -10,7 +10,7 @@ const user = useSupabaseUser();
 <template>
   <ul class="menu">
     <li><NuxtLink to="/news">News</NuxtLink></li>
-    <li><NuxtLink to="/calendar">Calendar</NuxtLink></li>
+    <li><NuxtLink to="/activities">Activities</NuxtLink></li>
     <li>
       <details>
         <summary>Info</summary>

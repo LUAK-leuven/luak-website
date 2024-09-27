@@ -26,7 +26,7 @@ const { data } = await useAsyncData(() =>
             Leuvense Universitaire Alpinisten Klub ⛰️ Alpine club in leuven for
             outdoors lovers from beginners to more seasoned climbers 🧗
           </p>
-          <NuxtLink class="btn btn-primary m-2" to="/calendar">
+          <NuxtLink class="btn btn-primary m-2" to="/activities">
             Check our activities</NuxtLink
           >
           <NuxtLink
@@ -43,7 +43,11 @@ const { data } = await useAsyncData(() =>
         class="bg-base-100 shadow-md md:basis-9/12 basis-11/12 shrink-0 grow-0 rounded px-5"
         style="margin-top: -5em"
       >
-        <h1 class="w-full text-center text-6xl mt-10 mb-5">News</h1>
+        <NuxtLink to="/news"
+          ><h1 class="w-full text-center text-6xl mt-10 mb-5">
+            News
+          </h1></NuxtLink
+        >
         <NewsItem
           v-for="(newsItem, index) in data"
           :key="newsItem._path"
@@ -53,7 +57,11 @@ const { data } = await useAsyncData(() =>
       <div
         class="bg-base-100 shadow-md md:basis-9/12 basis-11/12 shrink-0 grow-0 rounded my-5"
       >
-        <h1 class="w-full text-center text-6xl my-10">Activities</h1>
+        <NuxtLink to="/activities"
+          ><h1 class="w-full text-center text-6xl my-10">
+            Activities
+          </h1></NuxtLink
+        >
         <div class="p-5">
           <GoogleCalendar />
         </div>
