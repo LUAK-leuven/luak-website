@@ -17,7 +17,7 @@ const priceString = computed(() => {
 
 <template>
   <div
-    class="card card-compact bg-base-200 w-full md:w-80 shadow-xl my-5 md:mx-5"
+    class="card card-compact bg-base-200 w-full sm:w-80 shadow-xl my-5 md:mx-5"
   >
     <figure>
       <NuxtImg :src="data.image" />

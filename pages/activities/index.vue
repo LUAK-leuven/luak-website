@@ -4,6 +4,8 @@ import type { ActivityContent } from "~/types/content.types";
 const NR_OF_ACTIVITIES = 20;
 const { data } = await useAsyncData(() =>
   queryContent<ActivityContent>("/activities")
+    //TODO: only showing future activities
+    // .where({ date: { $gt: new Date().valueOf() } })
     .sort({ date: 1 })
     .limit(NR_OF_ACTIVITIES)
     .find(),
@@ -13,7 +15,10 @@ const { data } = await useAsyncData(() =>
 <template>
   <FullPageCard>
     <template #title> Activities </template>
-    <div class="flex flex-wrap justify-start">
+    <div v-if="!data || data.length === 0" class="flex justify-center">
+      <h2>Activities coming soon!</h2>
+    </div>
+    <div v-else class="flex flex-wrap justify-center">
       <ActivityItem
         v-for="newsItem in data"
         :key="newsItem._path"
