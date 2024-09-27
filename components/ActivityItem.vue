@@ -20,7 +20,7 @@ const priceString = computed(() => {
     class="card card-compact bg-base-200 w-full sm:w-80 shadow-xl my-5 md:mx-5"
   >
     <figure>
-      <NuxtImg :src="data.image" />
+      <NuxtImg :src="data.image" class="h-56 object-cover w-full" />
     </figure>
     <div class="card-body">
       <h2 class="card-title">{{ data.title }}</h2>

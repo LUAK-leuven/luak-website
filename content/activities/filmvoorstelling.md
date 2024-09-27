@@ -1,5 +1,5 @@
 ---
-title: Filmvoorstelling:\ 'Kangchenjunga, de vergeten 8000-der'
+title: "Filmvoorstelling: 'Kangchenjunga, de vergeten 8000-der'"
 image: /activities/promo_luak.jpg
 date: 2024-11-19T19:00:00.000Z
 price: 200
