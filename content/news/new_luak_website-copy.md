@@ -1,7 +1,7 @@
 ---
-title: 'Black Diamond sling replacement order: open call'
+title: 'Black Diamond Sling Replacement Order: Open Call'
 image: /20241102_134927[1].jpg
-date: '2024-08-15T00:00:00.000Z'
+date: 2024-11-25T01:00:00.000Z
 ---
 
 Resling your BD cams!
