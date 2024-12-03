@@ -1,7 +1,13 @@
 ---
-title: 'Black Diamond Sling Replacement Order: Open Call'
+title: 'Black Diamond Sling Replacement Order: ON HOLD'
 image: /20241102_134927[1].jpg
-date: 2024-11-25T01:00:00.000Z
+date: '2024-11-25T01:00:00.000Z'
+---
+
+Update \[27 November]:
+
+The cams repair service in the US stopped, and the service in Europe is not ready yet (they say it will be there soon). So for now we will put the reslinging on hold and we'll let you know when we know more about the situation.
+
 ---
 
 Resling your BD cams!
