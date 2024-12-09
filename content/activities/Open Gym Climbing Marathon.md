@@ -1,7 +1,7 @@
 ---
 title: Open Gym Climbing Marathon and Sleepover :DDD
 image: /luak-logo-white.png
-date: '2024-11-19T19:00:00.000Z'
+date: 2024-11-19T19:00:00.000Z
 price: 0
 ---
 
