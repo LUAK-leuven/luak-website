@@ -45,7 +45,7 @@ Valeria in position after rapping down - on her left side 'the corner project'. 
 
 Val and I walk to the top to abseil down, giving the line a last cleaning, and I bounce-test some cams. Fixing a ‘dynamic’ static line in the process. Meanwhile we notice the great work of the CAB Namur the previous week. The slab on the left has entirely been cleaned. So the 6c Rochassiers is climbable. Perfect warm-up, no? It’s actually a great route, with mostly one hard move and slab climbing with beautiful exposure.
 
-Now we know we can climb the slab without crack, climbing a similar angled slab with a corner crack &#x5F;even though trad_ shouldn’t be a problem.
+Now we know we can climb the slab without crack, climbing a similar angled slab with a corner crack \_even though trad\_ shouldn’t be a problem.
 
 \* Racking up
 
