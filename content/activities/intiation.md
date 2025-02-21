@@ -13,4 +13,4 @@ The initiation is meant for beginners, so no experience needed. The experienced 
 
 LUAK can provide climbing gear. You need to bring: sporty clothes, lunch, enough water and a big smile.
 
-More info & registration will come after our info evening.
+More info & registration [here](https://docs.google.com/forms/d/e/1FAIpQLSd7UPR4ePauTYz3i3ktBS9uCGpi3Off5Abs21kj6Apzm3VJPg/viewform?usp=header).

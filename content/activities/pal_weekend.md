@@ -1,6 +1,6 @@
 ---
 title: Pont-à-Lesse weekend
-image: /activities/freyr.jpg
+image: /activities/PAL.jpg
 date: 2025-04-05T00:00:00.000Z
 price: 0
 ---
@@ -12,3 +12,5 @@ For this activity you need to be **member of KBF** or another federation affilia
 We will stay overnight on the bivouac spot in Freyr. A tent and sleeping gear are required. Let us know if you still need something. Also bring €2 cash to pay for the bivouac (it's a small fee to help pay for the accommodations there).
 
 Bring food for the weekend (there is a store in Anseremme, but we lose less time if everyone brings their own food). In the evening usually we eat fries at the Colébi, close to the bivouac.
+
+Registrations for the weekend will open after the initiation.
