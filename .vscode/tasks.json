@@ -4,7 +4,24 @@
     {
       "type": "shell",
       "label": "Generate supabase types",
-      "command": "supabase gen types typescript --project-id=\"cpjapefpqxrptkzeehyd\" --schema public | tee supabase/functions/_shared/database.types.ts > types/database.types.ts"
+      "command": "npx supabase gen types typescript --project-id=\"cpjapefpqxrptkzeehyd\" --schema public | tee supabase/functions/_shared/database.types.ts > types/database.types.ts"
+    },
+    {
+      "type": "shell",
+      "label": "Pull prod db schema",
+      "command": "npx supabase db pull --schema public"
+    },
+    {
+      "type": "shell",
+      "label": "db diff",
+      "command": "npx supabase db diff -f ${input:migrationName}"
+    }
+  ],
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "migrationName",
+      "description": "Enter the name of the migration"
     }
   ]
 }
