@@ -235,8 +235,8 @@ onMounted(() => {
       </div>
 
       <!-- Table -->
-      <div class="overflow-x-auto">
-        <table class="table table-zebra w-full">
+      <div class="overflow-x-auto w-full">
+        <table class="table table-zebra">
           <thead>
             <tr>
               <th class="cursor-pointer" @click="toggleSort('name')">

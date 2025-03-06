@@ -5,10 +5,10 @@ export const formatStudentStatus = (
   status: Database["public"]["Enums"]["student"],
 ) => {
   const statusMap = {
-    student_kul: "KU Leuven Student",
-    phd_kul: "KU Leuven PhD",
-    student_other: "Other Student",
-    not_student: "Not a Student",
+    student_kul: "Kul",
+    phd_kul: "PhD",
+    student_other: "Other",
+    not_student: "No",
   };
   return statusMap[status] || status;
 };
@@ -18,10 +18,10 @@ export const formatKbfUiaaStatus = (
   status: Database["public"]["Enums"]["kbf_uiaa"],
 ) => {
   const statusMap = {
-    not: "None",
-    kbf_luak: "KBF via LUAK",
-    kbf_other: "KBF via Other Club",
-    uiaa: "UIAA Member",
+    not: "No",
+    kbf_luak: "LUAK",
+    kbf_other: "KBF",
+    uiaa: "UIAA",
   };
   return statusMap[status] || status;
 };
