@@ -5,6 +5,20 @@ const user = useSupabaseUser();
 
 const supabase = useSupabaseClient<Database>();
 const has_membership = ref(await getHasMembership());
+const isBoardMember = ref(false);
+
+// Check if user is a board member
+const checkBoardMemberStatus = async () => {
+  if (!user.value) return;
+
+  const { data } = await supabase
+    .from("BoardMembers")
+    .select("*")
+    .eq("user_id", user.value.id)
+    .single();
+
+  isBoardMember.value = !!data;
+};
 
 const { data: userData } = await useAsyncData("userData", async () => {
   if (!user.value) throw createError({ statusCode: 401 });
@@ -14,6 +28,11 @@ const { data: userData } = await useAsyncData("userData", async () => {
     .eq("id", user.value.id)
     .single();
   return data;
+});
+
+// Check board member status when component is mounted
+onMounted(() => {
+  checkBoardMemberStatus();
 });
 </script>
 <template>
@@ -33,7 +52,22 @@ const { data: userData } = await useAsyncData("userData", async () => {
             Change your password, phone number and other settings
           </template>
           <template #actions>
-            <NuxtLink to="/profile/settings" class="btn"> settings </NuxtLink>
+            <NuxtLink class="btn" to="/profile/settings"> settings </NuxtLink>
+          </template>
+        </UserCard>
+        <!-- Board Member Card - Only visible to board members -->
+        <UserCard v-if="isBoardMember" image="/IMG_20240410_125659.jpg">
+          <template #title> Members Overview 👥 </template>
+          <template #description>
+            View and export all active club memberships
+          </template>
+          <template #actions>
+            <NuxtLink
+              class="btn btn-primary"
+              to="/profile/subscriptions-overview"
+            >
+              View Members
+            </NuxtLink>
           </template>
         </UserCard>
         <UserLogOutCard />

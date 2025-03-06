@@ -105,6 +105,7 @@ export type Database = {
       Users: {
         Row: {
           created_at: string
+          email: string | null
           first_name: string
           has_newsletter: boolean
           has_whatsapp: boolean
@@ -114,6 +115,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          email?: string | null
           first_name: string
           has_newsletter?: boolean
           has_whatsapp?: boolean
@@ -123,6 +125,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          email?: string | null
           first_name?: string
           has_newsletter?: boolean
           has_whatsapp?: boolean

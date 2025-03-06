@@ -31,6 +31,7 @@ const onSubmit = handleSubmit(async (submitted) => {
       has_newsletter: submitted.newsletter,
       has_whatsapp: submitted.whatsapp,
       phone_number: submitted.phoneNumber,
+      email: submitted.email,
     });
     if (error) {
       setFieldError("password", error.message);
@@ -46,16 +47,16 @@ const onSubmit = handleSubmit(async (submitted) => {
       <form @submit="onSubmit">
         <div class="flex flex-row justify-stretch">
           <InputText
+            class="mr-1"
             label="First name"
             name="firstName"
             placeholder="Alex"
-            class="mr-1"
           />
           <InputText
+            class="ml-1"
             label="Last name"
             name="lastName"
             placeholder="Megos"
-            class="ml-1"
           />
         </div>
         <InputText
@@ -83,7 +84,7 @@ const onSubmit = handleSubmit(async (submitted) => {
 
         <div class="flex justify-center">
           <button class="btn btn-primary w-full p-5">
-            <span v-if="isSubmitting" class="loading loading-spinner"
+            <span class="loading loading-spinner" v-if="isSubmitting"
               >loading</span
             >
             <span v-else>Sign up</span>
