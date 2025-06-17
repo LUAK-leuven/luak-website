@@ -8,7 +8,7 @@ The long standing debate of where the next summermeet will take place has finall
 
 <!--more-->
 
-We will be spending the week of 12 to 20 July in **Pralognan-la-Vanoise**! Curious about all the opportunities in Pralognan? Come and take a peep in our newly acquired topo: *Topo de la Vanoise* and start dreaming about your summer plans😀
+We will be spending the week of 12 to 20 July in **Val di Mello**!
 
 ### Upcoming Activities
 
@@ -20,7 +20,7 @@ We still have a lot of activities planned after the easter hollidays! As usual t
 - Open board meeting (Thursday 8 May): What does the LUAK board actually do?
 - Clothing Swap (Thursday 15 May): Need new clothes or want to get rid of old clothes.
 - BBQ and AV (Friday 27 June): Finally summer and (almost) the end of the exams? This deserves a BBQ (:
-- Summermeet (12 to 20 July): @Pralognan-la-Vanoise
+- Summermeet (12 to 20 July): @Val di Mello
 
 ---
 
