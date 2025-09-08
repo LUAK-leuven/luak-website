@@ -36,10 +36,10 @@ Membership costs only 20€ per year. Which gives you access to the gear rental,
 
 Not just yet. To climb Belgian rock, joining LUAK is not enough. You'll have to become a member of the KBF to be allowed to do so. If you become KBF member you'll have to select a club. If you chose LUAK in that list you'll receive 5€ discount on your membership. Visit their website at: [http://www.klimenbergsportfederatie.be/](http://www.klimenbergsportfederatie.be/)
 
-## More information...
+<!-- ## More information...
 
 More information can be found in [this presentation](https://docs.google.com/presentation/d/1MOb7rF6Kz8xd2dRu9nDj39vMU4NzeJc7/edit?usp=sharing&ouid=104743637768050835321&rtpof=true&sd=true), This is the information that is being shown on the info evenings
 
 ---
 
-:responsive-iframe{url="https://docs.google.com/presentation/d/1MOb7rF6Kz8xd2dRu9nDj39vMU4NzeJc7/embed?start=false&loop=true&delayms=3000" }
+:responsive-iframe{url="https://docs.google.com/presentation/d/1MOb7rF6Kz8xd2dRu9nDj39vMU4NzeJc7/embed?start=false&loop=true&delayms=3000" } -->

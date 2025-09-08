@@ -19,4 +19,4 @@ Freyr, home of the gods, the epicentre of the universe. On the weekend of 27-28 
 
 ---
 
-To join the weekend you can register [here]() <- TODO
+To join the weekend you can register [here](https://docs.google.com/forms/d/e/1FAIpQLSeKHMu_nwxKVuVNJo71UvxPgEDliVayciTl_4UvHYpe273fDA/viewform?usp=header)
