@@ -5,10 +5,7 @@ image: activities/seba-tilff-secret-place.jpg
 price: 7000
 ---
 
-Inschrijven kan [hier](https://forms.gle/hw962UHMsAUNQJTx9). Meer info hieronder👇
+Meer informatie over de cursus vind je [hier](https://drive.google.com/file/d/1zvYJsG3IqaF7LRBh6MDc1aRjSs6jz4pY/view?usp=drive_link)
 
-<object data="activities/rope-solo-klimmen.docx.pdf" type="application/pdf" width=100% height=700>
-    <embed src="activities/rope-solo-klimmen.docx.pdf">
-        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="activities/rope-solo-klimmen.docx.pdf">Download PDF</a>.</p>
-    </embed>
-</object>
+Inschrijven kan [hier](https://forms.gle/hw962UHMsAUNQJTx9).
+
