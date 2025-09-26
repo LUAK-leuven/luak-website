@@ -50,8 +50,8 @@ const { data } = await useAsyncData(() =>
         >
         <NewsItem
           v-for="(newsItem, index) in data"
-          :key="newsItem._path"
           v-bind="{ data: newsItem, reversed: !!((index + 1) % 2) }"
+          :key="newsItem._path"
         />
       </div>
       <div

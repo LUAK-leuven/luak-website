@@ -27,6 +27,7 @@ const searchTerm = ref("");
 const filterType = ref("all");
 const sortField = ref("created_at");
 const sortDirection = ref("desc");
+const currentYear = getLuakYear();
 
 // Check if user is a board member
 const checkBoardMemberAccess = async () => {
@@ -77,7 +78,7 @@ const fetchSubscriptions = async () => {
         )
       `,
       )
-      .eq("Memberships.year", 2024)
+      .eq("Memberships.year", currentYear)
       .eq("Memberships.Payments.approved", true);
 
     if (fetchError) throw fetchError;
