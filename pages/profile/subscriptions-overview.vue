@@ -21,6 +21,7 @@ const subscriptions = ref<
     sportscard: boolean;
     kbf_uiaa_member: Database["public"]["Enums"]["kbf_uiaa"];
     created_at: string;
+    year: number;
   }>
 >([]);
 const searchTerm = ref("");
@@ -28,6 +29,7 @@ const filterType = ref("all");
 const sortField = ref("created_at");
 const sortDirection = ref("desc");
 const currentYear = getLuakYear();
+const selectedYear = ref(0);
 
 // Check if user is a board member
 const checkBoardMemberAccess = async () => {
@@ -78,7 +80,6 @@ const fetchSubscriptions = async () => {
         )
       `,
       )
-      .eq("Memberships.year", currentYear)
       .eq("Memberships.Payments.approved", true);
 
     if (fetchError) throw fetchError;
@@ -97,6 +98,7 @@ const fetchSubscriptions = async () => {
           sportscard: membership.sportscard,
           kbf_uiaa_member: membership.kbf_uiaa_member,
           created_at: membership.created_at,
+          year: membership.year,
         })),
       )
       .filter((sub) => sub.name); // Ensure we have a name
@@ -132,6 +134,9 @@ const toggleSort = (field: string) => {
 // Computed property for filtered and sorted subscriptions
 const filteredSubscriptions = computed(() => {
   return subscriptions.value
+    .filter((sub) => {
+      return sub.year === currentYear - selectedYear.value;
+    })
     .filter((sub) => {
       const matchesSearch = sub.name
         .toLowerCase()
@@ -205,6 +210,16 @@ onMounted(() => {
             type="text"
             placeholder="Search by name"
           />
+        </div>
+
+        <div class="form-control w-full md:w-64">
+          <label class="label">
+            <span class="label-text">Select year</span>
+          </label>
+          <select class="select select-bordered w-full" v-model="selectedYear">
+            <option value="0">{{ currentYear }}-{{ currentYear + 1 }}</option>
+            <option value="1">{{ currentYear - 1 }}-{{ currentYear }}</option>
+          </select>
         </div>
 
         <div class="form-control w-full md:w-64">
