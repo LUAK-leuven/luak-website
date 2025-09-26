@@ -16,11 +16,13 @@ const priceString = computed(() => {
 </script>
 
 <template>
-  <div
+  <NuxtLink
     class="card card-compact bg-base-200 w-full sm:w-80 shadow-xl my-5 md:mx-5"
+    :key="data._path"
+    :to="data._path"
   >
     <figure>
-      <NuxtImg :src="data.image" class="h-56 object-cover w-full" />
+      <NuxtImg class="h-56 object-cover w-full" :src="data.image" />
     </figure>
     <div class="card-body">
       <h2 class="card-title">{{ data.title }}</h2>
@@ -53,10 +55,10 @@ const priceString = computed(() => {
         </div>
       </div>
       <div class="card-actions justify-center">
-        <NuxtLink :key="data._path" :to="data._path" class="btn btn-outline"
+        <NuxtLink class="btn btn-outline" :key="data._path" :to="data._path"
           >More info</NuxtLink
         >
       </div>
     </div>
-  </div>
+  </NuxtLink>
 </template>
