@@ -17,7 +17,7 @@ The date is 15 december 2021 – lockdown week n° …… “stopped counting”
 #item1
 ![Ward & Sebastiaan looking at the route](/stories/DSC05328-min-min-600x400.jpg)
 
-_Siked about great weather and dry rock_
+*Siked about great weather and dry rock*
 ::
 
 After walking to the top to find an abseil tree, starting to abseil to find out we took a tree too far to the right we start again. To our surprise, after some bushwacking, we find some anchors. Most of them above bolted routes, but one is in perfect spot for the end of the ‘superdiedre’. Maybe not the best news for the first ascent status of the route, but anyway, it makes the cleaning a lot easier.
@@ -75,12 +75,12 @@ Once the first 15m are gone and a few solid placements have been put, I get into
 #item1
 ![DSC05285-min-600x900.jpg](/stories/DSC05285-min-600x900.jpg)
 
-_Perfect nut placement_
+*Perfect nut placement*
 
 #item2
 ![DSC05298-min-600x400.jpg](/stories/DSC05298-min-600x400.jpg)
 
-_That smile when you can place the big toys_
+*That smile when you can place the big toys*
 ::
 
 Next up Sebastiaan – who follows by fluidly sending the line. We notice quite a lot of our gear placements are the same. Wherever the climbing gets a bit more difficult the protection is great. In the easier parts sometimes the rock is a bit less quality.
@@ -89,12 +89,12 @@ Next up Sebastiaan – who follows by fluidly sending the line. We notice quite 
 #item1
 ![DSC05305-min-600x900.jpg](/stories/DSC05305-min-600x900.jpg)
 
-_A craftsman at work_
+*A craftsman at work*
 
 #item2
 ![DSC05316-2-min-600x400.jpg](/stories/DSC05316-2-min-600x400.jpg)
 
-_Sebastiaan being equally happy about the nut placement as I was_
+*Sebastiaan being equally happy about the nut placement as I was*
 ::
 
 We leave in the rope. Valeria never really climbed trad so decides to toprope the line – thus making the first toprope ascent (at least in recent history).
