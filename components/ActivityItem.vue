@@ -23,6 +23,11 @@ const priceString = computed(() => {
   >
     <figure>
       <NuxtImg class="h-56 object-cover w-full" :src="data.image" />
+      <figcaption class="absolute top-3 right-3" v-if="data.tag">
+        <div class="badge badge-info badge-lg">
+          {{ data.tag }}
+        </div>
+      </figcaption>
     </figure>
     <div class="card-body">
       <h2 class="card-title">{{ data.title }}</h2>
