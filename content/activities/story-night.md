@@ -1,6 +1,6 @@
 ---
 title: Story Night
-image: /luak-logo.png
+image: /news/zomer-2025-71.jpg
 date: 2025-10-16T01:00:00.000Z
 price: 0
 ---
