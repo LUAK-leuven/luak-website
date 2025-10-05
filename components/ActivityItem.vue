@@ -17,7 +17,7 @@ const priceString = computed(() => {
 
 <template>
   <NuxtLink
-    class="card card-compact bg-base-200 w-full sm:w-80 shadow-xl my-5 md:mx-5"
+    class="card card-compact bg-base-200 w-full sm:w-80 shadow-xl my-5 md:mx-5 hover:shadow-2xl"
     :key="data._path"
     :to="data._path"
   >
@@ -60,9 +60,10 @@ const priceString = computed(() => {
         </div>
       </div>
       <div class="card-actions justify-center">
-        <NuxtLink class="btn btn-outline" :key="data._path" :to="data._path"
+        <!-- <NuxtLink class="btn btn-outline" :key="data._path" :to="data._path"
           >More info</NuxtLink
-        >
+        > -->
+        <div class="btn btn-outline">More info</div>
       </div>
     </div>
   </NuxtLink>
