@@ -10,4 +10,5 @@ export interface ActivityContent extends MarkdownParsedContent {
     title: string;
     date: Date;
     price: number;
+    tag: string;
 }

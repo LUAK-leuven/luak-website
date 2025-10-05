@@ -3,6 +3,7 @@ title: Initiation Grands Malades
 image: /activities/initiatie_beez.jpg
 date: 2025-10-12T00:00:00.000Z
 price: 0
+tag: beginner friendly
 ---
 
 Our rock climbing initiations are a great opportunity to make your first experience with rock climging. The experienced people from LUAK will hang topropes and explain how to climb and belay safely. After that it is up to you!
