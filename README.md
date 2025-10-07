@@ -22,3 +22,9 @@ The easiest way to get started is using vscode with devcontainers. a devcontaine
 3. use github codespaces
 
 next set the right env variables to connect with supabase. check `.env.example` and the [Supabase Docs](https://supabase.com/docs/guides/getting-started)
+
+# Supabase
+
+- supabase start
+- supabase login
+- supabase link
