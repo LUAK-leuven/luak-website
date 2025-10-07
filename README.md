@@ -28,3 +28,19 @@ next set the right env variables to connect with supabase. check `.env.example` 
 - supabase start
 - supabase login
 - supabase link
+
+To make your local db look like the migrations
+
+> supabase db reset
+
+To make your local db look like the prod db
+
+> supabase db pull
+
+To generate a migration file for the diff between you local db and what is defined in the migrations files
+
+> supabase db diff --schema=public -f [migration name]
+
+To push db changes to prod
+
+> supabase db push -- DON'T USE!!! (if you don't know what you are doing)
