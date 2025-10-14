@@ -12,4 +12,4 @@ For this activity you need to be **member of KBF** or another federation affilia
 
 We will stay overnight on the camping in Sy. A tent and sleeping gear are required. Let us know in the registration form if you still need something.
 
-Registrations for the weekend will open after the initiations.
+Wanna join the weekend? Register [here](https://forms.gle/97ZdqYyuRXwKcqAB7)!
