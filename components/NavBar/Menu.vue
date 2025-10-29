@@ -15,6 +15,25 @@ const closeDrawer = () => {
     drawerToggle.checked = false;
   }
 };
+
+function closeInfo() {
+  const infoToggle = document.getElementById(
+    "info-toggle",
+  ) as HTMLDetailsElement;
+  if (infoToggle) {
+    infoToggle.open = false;
+  }
+}
+
+function infoToggleEventListener(event: Event) {
+  if (event instanceof ToggleEvent) {
+    if (event.newState === "open") {
+      window.addEventListener("click", closeInfo);
+    } else {
+      window.removeEventListener("click", closeInfo);
+    }
+  }
+}
 </script>
 <template>
   <ul class="menu">
@@ -23,7 +42,7 @@ const closeDrawer = () => {
       <NuxtLink to="/activities" @click="closeDrawer">Activities</NuxtLink>
     </li>
     <li>
-      <details>
+      <details id="info-toggle" @toggle="infoToggleEventListener">
         <summary>Info</summary>
         <ul class="p-2 bg-base-200 rounded-t-none">
           <li v-for="nav in info_navigation?.[0]?.children" :key="nav._path">
