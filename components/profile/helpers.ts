@@ -36,4 +36,4 @@ export const csvHeaders = {
   Sportscard: "sportscard",
   KBFStatus: "kbf_uiaa_member",
   SubscriptionDate: "created_at",
-}; 
+};

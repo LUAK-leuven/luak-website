@@ -1,15 +1,15 @@
 <template>
   <div class="flex-none md:hidden">
     <label
+      class="btn btn-square btn-ghost"
       for="my-drawer-3"
       aria-label="open sidebar"
-      class="btn btn-square btn-ghost"
     >
       <svg
+        class="inline-block w-6 h-6 stroke-current"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
-        class="inline-block w-6 h-6 stroke-current"
       >
         <path
           stroke-linecap="round"

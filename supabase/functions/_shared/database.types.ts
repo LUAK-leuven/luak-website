@@ -4,162 +4,162 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[]
+  | Json[];
 
 export type Database = {
   public: {
     Tables: {
       BoardMembers: {
         Row: {
-          created_at: string
-          user_id: string
-        }
+          created_at: string;
+          user_id: string;
+        };
         Insert: {
-          created_at?: string
-          user_id: string
-        }
+          created_at?: string;
+          user_id: string;
+        };
         Update: {
-          created_at?: string
-          user_id?: string
-        }
+          created_at?: string;
+          user_id?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "BoardMembers_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "Users"
-            referencedColumns: ["id"]
+            foreignKeyName: "BoardMembers_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: true;
+            referencedRelation: "Users";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       Memberships: {
         Row: {
-          created_at: string
-          id: string
-          kbf_uiaa_member: Database["public"]["Enums"]["kbf_uiaa"]
-          sportscard: boolean
-          student: Database["public"]["Enums"]["student"]
-          user_id: string
-          year: number
-        }
+          created_at: string;
+          id: string;
+          kbf_uiaa_member: Database["public"]["Enums"]["kbf_uiaa"];
+          sportscard: boolean;
+          student: Database["public"]["Enums"]["student"];
+          user_id: string;
+          year: number;
+        };
         Insert: {
-          created_at?: string
-          id?: string
-          kbf_uiaa_member: Database["public"]["Enums"]["kbf_uiaa"]
-          sportscard: boolean
-          student: Database["public"]["Enums"]["student"]
-          user_id?: string
-          year?: number
-        }
+          created_at?: string;
+          id?: string;
+          kbf_uiaa_member: Database["public"]["Enums"]["kbf_uiaa"];
+          sportscard: boolean;
+          student: Database["public"]["Enums"]["student"];
+          user_id?: string;
+          year?: number;
+        };
         Update: {
-          created_at?: string
-          id?: string
-          kbf_uiaa_member?: Database["public"]["Enums"]["kbf_uiaa"]
-          sportscard?: boolean
-          student?: Database["public"]["Enums"]["student"]
-          user_id?: string
-          year?: number
-        }
+          created_at?: string;
+          id?: string;
+          kbf_uiaa_member?: Database["public"]["Enums"]["kbf_uiaa"];
+          sportscard?: boolean;
+          student?: Database["public"]["Enums"]["student"];
+          user_id?: string;
+          year?: number;
+        };
         Relationships: [
           {
-            foreignKeyName: "Memberships_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "Users"
-            referencedColumns: ["id"]
+            foreignKeyName: "Memberships_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "Users";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       Payments: {
         Row: {
-          amount: number | null
-          approved: boolean
-          created_at: string
-          id: string
-          membership_id: string | null
-        }
+          amount: number | null;
+          approved: boolean;
+          created_at: string;
+          id: string;
+          membership_id: string | null;
+        };
         Insert: {
-          amount?: number | null
-          approved: boolean
-          created_at?: string
-          id: string
-          membership_id?: string | null
-        }
+          amount?: number | null;
+          approved: boolean;
+          created_at?: string;
+          id: string;
+          membership_id?: string | null;
+        };
         Update: {
-          amount?: number | null
-          approved?: boolean
-          created_at?: string
-          id?: string
-          membership_id?: string | null
-        }
+          amount?: number | null;
+          approved?: boolean;
+          created_at?: string;
+          id?: string;
+          membership_id?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "Payments_membership_id_fkey"
-            columns: ["membership_id"]
-            isOneToOne: false
-            referencedRelation: "Memberships"
-            referencedColumns: ["id"]
+            foreignKeyName: "Payments_membership_id_fkey";
+            columns: ["membership_id"];
+            isOneToOne: false;
+            referencedRelation: "Memberships";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       Users: {
         Row: {
-          created_at: string
-          email: string | null
-          first_name: string
-          has_newsletter: boolean
-          has_whatsapp: boolean
-          id: string
-          last_name: string
-          phone_number: string | null
-        }
+          created_at: string;
+          email: string | null;
+          first_name: string;
+          has_newsletter: boolean;
+          has_whatsapp: boolean;
+          id: string;
+          last_name: string;
+          phone_number: string | null;
+        };
         Insert: {
-          created_at?: string
-          email?: string | null
-          first_name: string
-          has_newsletter?: boolean
-          has_whatsapp?: boolean
-          id?: string
-          last_name: string
-          phone_number?: string | null
-        }
+          created_at?: string;
+          email?: string | null;
+          first_name: string;
+          has_newsletter?: boolean;
+          has_whatsapp?: boolean;
+          id?: string;
+          last_name: string;
+          phone_number?: string | null;
+        };
         Update: {
-          created_at?: string
-          email?: string | null
-          first_name?: string
-          has_newsletter?: boolean
-          has_whatsapp?: boolean
-          id?: string
-          last_name?: string
-          phone_number?: string | null
-        }
-        Relationships: []
-      }
-    }
+          created_at?: string;
+          email?: string | null;
+          first_name?: string;
+          has_newsletter?: boolean;
+          has_whatsapp?: boolean;
+          id?: string;
+          last_name?: string;
+          phone_number?: string | null;
+        };
+        Relationships: [];
+      };
+    };
     Views: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Functions: {
       get_luak_year: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
+        Args: Record<PropertyKey, never>;
+        Returns: number;
+      };
       has_membership: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
-    }
+        Args: Record<PropertyKey, never>;
+        Returns: string;
+      };
+    };
     Enums: {
-      kbf_uiaa: "not" | "kbf_luak" | "kbf_other" | "uiaa"
-      student: "student_kul" | "phd_kul" | "student_other" | "not_student"
-    }
+      kbf_uiaa: "not" | "kbf_luak" | "kbf_other" | "uiaa";
+      student: "student_kul" | "phd_kul" | "student_other" | "not_student";
+    };
     CompositeTypes: {
-      [_ in never]: never
-    }
-  }
-}
+      [_ in never]: never;
+    };
+  };
+};
 
-type PublicSchema = Database[Extract<keyof Database, "public">]
+type PublicSchema = Database[Extract<keyof Database, "public">];
 
 export type Tables<
   PublicTableNameOrOptions extends
@@ -172,7 +172,7 @@ export type Tables<
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
       Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R
+      Row: infer R;
     }
     ? R
     : never
@@ -180,11 +180,11 @@ export type Tables<
         PublicSchema["Views"])
     ? (PublicSchema["Tables"] &
         PublicSchema["Views"])[PublicTableNameOrOptions] extends {
-        Row: infer R
+        Row: infer R;
       }
       ? R
       : never
-    : never
+    : never;
 
 export type TablesInsert<
   PublicTableNameOrOptions extends
@@ -195,17 +195,17 @@ export type TablesInsert<
     : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
+      Insert: infer I;
     }
     ? I
     : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
     ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-        Insert: infer I
+        Insert: infer I;
       }
       ? I
       : never
-    : never
+    : never;
 
 export type TablesUpdate<
   PublicTableNameOrOptions extends
@@ -216,17 +216,17 @@ export type TablesUpdate<
     : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
+      Update: infer U;
     }
     ? U
     : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
     ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-        Update: infer U
+        Update: infer U;
       }
       ? U
       : never
-    : never
+    : never;
 
 export type Enums<
   PublicEnumNameOrOptions extends
@@ -239,14 +239,14 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
-    : never
+    : never;
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof PublicSchema["CompositeTypes"]
     | { schema: keyof Database },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof Database;
   }
     ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
@@ -254,4 +254,4 @@ export type CompositeTypes<
   ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
     ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
+    : never;

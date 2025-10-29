@@ -41,15 +41,15 @@ const closeDrawer = () => {
       <NuxtLink to="/stories" @click="closeDrawer">Stories</NuxtLink>
     </li>
     <NuxtLink
-      class="btn btn-primary btn-outline"
       v-if="!user"
+      class="btn btn-primary btn-outline"
       to="/profile/overview"
       @click="closeDrawer"
       >Log In</NuxtLink
     >
     <NuxtLink
-      class="btn btn-primary btn-outline"
       v-else
+      class="btn btn-primary btn-outline"
       to="/profile/overview"
       @click="closeDrawer"
       >My Profile</NuxtLink

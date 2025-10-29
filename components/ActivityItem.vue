@@ -17,13 +17,13 @@ const priceString = computed(() => {
 
 <template>
   <NuxtLink
-    class="card card-compact bg-base-200 w-full sm:w-80 shadow-xl my-5 md:mx-5 hover:shadow-2xl"
     :key="data._path"
+    class="card card-compact bg-base-200 w-full sm:w-80 shadow-xl my-5 md:mx-5 hover:shadow-2xl"
     :to="data._path"
   >
     <figure>
       <NuxtImg class="h-56 object-cover w-full" :src="data.image" />
-      <figcaption class="absolute top-3 right-3" v-if="data.tag">
+      <figcaption v-if="data.tag" class="absolute top-3 right-3">
         <div class="badge badge-info badge-lg">
           {{ data.tag }}
         </div>

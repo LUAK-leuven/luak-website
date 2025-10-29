@@ -40,7 +40,7 @@ const onSubmit = handleSubmit(async (submitted) => {
           type="password"
         />
         <div class="flex flex-row justify-end">
-          <NuxtLink to="/resetpassword" class="underline my-2"
+          <NuxtLink class="underline my-2" to="/resetpassword"
             >Forgot password?</NuxtLink
           >
         </div>

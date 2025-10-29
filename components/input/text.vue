@@ -32,9 +32,9 @@ const { value, errorMessage } = useField(() => props.name);
     </div>
     <input
       v-model="value"
+      class="input input-bordered w-full"
       :type="type"
       :placeholder="placeholder"
-      class="input input-bordered w-full"
     />
     <span class="text-error">{{ errorMessage }}</span>
   </label>

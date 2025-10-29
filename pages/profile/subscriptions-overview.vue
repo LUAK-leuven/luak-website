@@ -187,12 +187,12 @@ onMounted(() => {
     <template #title>👥 Members Overview </template>
 
     <!-- Error message -->
-    <div class="alert alert-error" v-if="error">
+    <div v-if="error" class="alert alert-error">
       <span>{{ error }}</span>
     </div>
 
     <!-- Loading state -->
-    <div class="flex justify-center items-center py-10" v-else-if="isLoading">
+    <div v-else-if="isLoading" class="flex justify-center items-center py-10">
       <span class="loading loading-spinner loading-lg"></span>
     </div>
 
@@ -205,8 +205,8 @@ onMounted(() => {
             <span class="label-text">Search by name</span>
           </label>
           <input
-            class="input input-bordered w-full"
             v-model="searchTerm"
+            class="input input-bordered w-full"
             type="text"
             placeholder="Search by name"
           />
@@ -216,7 +216,7 @@ onMounted(() => {
           <label class="label">
             <span class="label-text">Select year</span>
           </label>
-          <select class="select select-bordered w-full" v-model="selectedYear">
+          <select v-model="selectedYear" class="select select-bordered w-full">
             <option value="0">{{ currentYear }}-{{ currentYear + 1 }}</option>
             <option value="1">{{ currentYear - 1 }}-{{ currentYear }}</option>
           </select>
@@ -226,7 +226,7 @@ onMounted(() => {
           <label class="label">
             <span class="label-text">Filter by</span>
           </label>
-          <select class="select select-bordered w-full" v-model="filterType">
+          <select v-model="filterType" class="select select-bordered w-full">
             <option value="all">All Members</option>
             <option value="student">Students Only</option>
             <option value="non-student">Non-Students Only</option>
@@ -338,7 +338,7 @@ onMounted(() => {
       </div>
 
       <!-- No results message -->
-      <div class="text-center py-10" v-if="filteredSubscriptions.length === 0">
+      <div v-if="filteredSubscriptions.length === 0" class="text-center py-10">
         <p>No subscriptions found matching your criteria.</p>
       </div>
     </div>

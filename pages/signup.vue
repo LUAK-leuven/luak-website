@@ -84,7 +84,7 @@ const onSubmit = handleSubmit(async (submitted) => {
 
         <div class="flex justify-center">
           <button class="btn btn-primary w-full p-5">
-            <span class="loading loading-spinner" v-if="isSubmitting"
+            <span v-if="isSubmitting" class="loading loading-spinner"
               >loading</span
             >
             <span v-else>Sign up</span>

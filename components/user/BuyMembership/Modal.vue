@@ -79,8 +79,8 @@ const price = computed(() => {
       <InputBool name="houserules"
         >Do you agree to the
         <NuxtLink
-          to="/info/rules_and_regulations"
           class="text-primary underline"
+          to="/info/rules_and_regulations"
           >house rules</NuxtLink
         >? <span class="italic text-error">(required)</span></InputBool
       >

@@ -22,8 +22,8 @@ const { checked, handleChange, errorMessage } = useField(() => props.name, "", {
       <slot />
     </span>
     <input
-      type="checkbox"
       class="checkbox"
+      type="checkbox"
       :checked="checked"
       @change="handleChange"
     />

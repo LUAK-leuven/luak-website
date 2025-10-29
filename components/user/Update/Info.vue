@@ -60,16 +60,16 @@ const onSubmit = handleSubmit(async (submitted) => {
     <h2>👩 Update Info:</h2>
     <div class="flex flex-row justify-stretch">
       <InputText
+        class="mr-1"
         label="First name"
         name="firstName"
         placeholder="Alex"
-        class="mr-1"
       />
       <InputText
+        class="ml-1"
         label="Last name"
         name="lastName"
         placeholder="Megos"
-        class="ml-1"
       />
     </div>
     <InputText

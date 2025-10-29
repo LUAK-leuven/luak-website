@@ -33,7 +33,7 @@ defineProps<{
           </template>
         </ContentRenderer>
         <div class="flex justify-center">
-          <NuxtLink class="btn btn-outline" :key="data._path" :to="data._path"
+          <NuxtLink :key="data._path" class="btn btn-outline" :to="data._path"
             >read more</NuxtLink
           >
         </div>

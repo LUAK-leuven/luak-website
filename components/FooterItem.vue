@@ -19,11 +19,11 @@
       <div class="grid grid-flow-col gap-4">
         <a href="https://www.facebook.com/groups/5832932507"
           ><svg
+            class="fill-current"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             viewBox="0 0 24 24"
-            class="fill-current"
           >
             <title>Facebook</title>
             <path
@@ -33,11 +33,11 @@
         </a>
         <a href="https://www.instagram.com/luakleuven"
           ><svg
+            class="fill-current"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             viewBox="0 0 24 24"
-            class="fill-current"
           >
             <title>Instagram</title>
             <path
@@ -47,11 +47,11 @@
         </a>
         <a href="mailto:luak.bestuur@gmail.com"
           ><svg
+            class="fill-current"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             viewBox="0 0 24 24"
-            class="fill-current"
           >
             <title>Mail</title>
             <path d="M0 0h24v24H0z" fill="none" />
@@ -62,11 +62,11 @@
         </a>
         <a href="tel:+32468193797"
           ><svg
+            class="fill-current"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             viewBox="0 0 24 24"
-            class="fill-current"
           >
             <title>Phone</title>
             <path d="M0 0h24v24H0z" fill="none" />

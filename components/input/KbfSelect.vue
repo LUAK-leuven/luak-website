@@ -11,9 +11,9 @@
     </span>
   </div>
   <Field
+    class="select select-bordered w-full max-w-xs mb-2"
     name="kbf_uiaa_member"
     as="select"
-    class="select select-bordered w-full max-w-xs mb-2"
   >
     <option disabled selected>Choose an option...</option>
     <option value="not">No</option>
@@ -21,5 +21,5 @@
     <option value="kbf_other">Yes, under a different club</option>
     <option value="uiaa">No, I'm member of a different UIAA club</option>
   </Field>
-  <ErrorMessage name="kbf_uiaa_member" class="text-error" />
+  <ErrorMessage class="text-error" name="kbf_uiaa_member" />
 </template>

@@ -36,12 +36,12 @@ definePageMeta({
         >
           <div class="p-10">
             <NuxtLink
-              to="/activities"
               class="btn btn-circle btn-sm btn-outline mb-5"
+              to="/activities"
             >
               <span class="material-symbols-outlined"> arrow_back</span>
             </NuxtLink>
-            <ContentRenderer :value="doc" class="nuxt-content" />
+            <ContentRenderer class="nuxt-content" :value="doc" />
           </div>
         </div>
       </div>
