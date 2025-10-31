@@ -23,8 +23,7 @@
       <label
         class="drawer-overlay"
         for="my-drawer-3"
-        aria-label="close sidebar"
-      />
+        aria-label="close sidebar" />
       <NavBarMenu class="p-4 w-80 min-h-full bg-base-200" />
     </div>
   </div>

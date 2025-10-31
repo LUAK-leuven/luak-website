@@ -1,7 +1,7 @@
-import Stripe from "stripe";
+import Stripe from 'stripe';
 
-export const stripe = new Stripe(Deno.env.get("STRIPE_API_KEY") as string, {
-  apiVersion: "2024-04-10",
+export const stripe = new Stripe(Deno.env.get('STRIPE_API_KEY') as string, {
+  apiVersion: '2024-04-10',
   httpClient: Stripe.createFetchHttpClient(),
 });
 

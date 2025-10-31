@@ -1,23 +1,22 @@
 <script setup lang="ts">
-import type { NewsContent } from "~/types/content.types";
+  import type { NewsContent } from '~/types/content.types';
 
-definePageMeta({
-  layout: "picture",
-});
-const NR_OF_ARTICLES = 3;
-const { data } = await useAsyncData(() =>
-  queryContent<NewsContent>("/news")
-    .sort({ date: -1 })
-    .limit(NR_OF_ARTICLES)
-    .find(),
-);
+  definePageMeta({
+    layout: 'picture',
+  });
+  const NR_OF_ARTICLES = 3;
+  const { data } = await useAsyncData(() =>
+    queryContent<NewsContent>('/news')
+      .sort({ date: -1 })
+      .limit(NR_OF_ARTICLES)
+      .find(),
+  );
 </script>
 <template>
   <div>
     <div
       class="hero min-h-[80vh] z-10"
-      style="background-image: url(/kandersteg.jpg); background-size: cover"
-    >
+      style="background-image: url(/kandersteg.jpg); background-size: cover">
       <div class="hero-overlay bg-opacity-60" />
       <div class="hero-content text-left text-neutral-content my-20">
         <div class="max-w-md">
@@ -31,8 +30,7 @@ const { data } = await useAsyncData(() =>
           >
           <NuxtLink
             class="btn btn-outline m-2 text-white"
-            to="/pages/become_a_member"
-          >
+            to="/pages/become_a_member">
             Become a member
           </NuxtLink>
         </div>
@@ -41,8 +39,7 @@ const { data } = await useAsyncData(() =>
     <div class="relative flex flex-wrap justify-center z-2 bg-base-300">
       <div
         class="bg-base-100 shadow-md md:basis-9/12 basis-11/12 shrink-0 grow-0 rounded px-5"
-        style="margin-top: -5em"
-      >
+        style="margin-top: -5em">
         <NuxtLink to="/news"
           ><h1 class="w-full text-center text-6xl mt-10 mb-5">
             News
@@ -51,12 +48,10 @@ const { data } = await useAsyncData(() =>
         <NewsItem
           v-for="(newsItem, index) in data"
           :key="newsItem._path"
-          v-bind="{ data: newsItem, reversed: !!((index + 1) % 2) }"
-        />
+          v-bind="{ data: newsItem, reversed: !!((index + 1) % 2) }" />
       </div>
       <div
-        class="bg-base-100 shadow-md md:basis-9/12 basis-11/12 shrink-0 grow-0 rounded my-5"
-      >
+        class="bg-base-100 shadow-md md:basis-9/12 basis-11/12 shrink-0 grow-0 rounded my-5">
         <NuxtLink to="/activities"
           ><h1 class="w-full text-center text-6xl my-10">
             Activities

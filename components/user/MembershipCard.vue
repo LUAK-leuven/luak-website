@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const luak_year = getLuakYear();
+  const luak_year = getLuakYear();
 </script>
 <template>
   <UserCard image="/aiguilles_rouges.jpg">

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{ image: string }>();
+  defineProps<{ image: string }>();
 </script>
 <template>
   <div class="card w-full max-w-96 bg-base-100 shadow-xl image-full my-5">

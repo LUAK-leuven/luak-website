@@ -1,39 +1,40 @@
 <script setup lang="ts">
-const { data: info_navigation } = await useAsyncData("info_navigation", () =>
-  fetchContentNavigation(queryContent("/info")),
-);
-const { data: pages_navigation } = await useAsyncData("pages_navigation", () =>
-  fetchContentNavigation(queryContent("/pages")),
-);
-const user = useSupabaseUser();
+  const { data: info_navigation } = await useAsyncData('info_navigation', () =>
+    fetchContentNavigation(queryContent('/info')),
+  );
+  const { data: pages_navigation } = await useAsyncData(
+    'pages_navigation',
+    () => fetchContentNavigation(queryContent('/pages')),
+  );
+  const user = useSupabaseUser();
 
-const closeDrawer = () => {
-  const drawerToggle = document.getElementById(
-    "my-drawer-3",
-  ) as HTMLInputElement;
-  if (drawerToggle) {
-    drawerToggle.checked = false;
-  }
-};
+  const closeDrawer = () => {
+    const drawerToggle = document.getElementById(
+      'my-drawer-3',
+    ) as HTMLInputElement;
+    if (drawerToggle) {
+      drawerToggle.checked = false;
+    }
+  };
 
-function closeInfo() {
-  const infoToggle = document.getElementById(
-    "info-toggle",
-  ) as HTMLDetailsElement;
-  if (infoToggle) {
-    infoToggle.open = false;
-  }
-}
-
-function infoToggleEventListener(event: Event) {
-  if (event instanceof ToggleEvent) {
-    if (event.newState === "open") {
-      window.addEventListener("click", closeInfo);
-    } else {
-      window.removeEventListener("click", closeInfo);
+  function closeInfo() {
+    const infoToggle = document.getElementById(
+      'info-toggle',
+    ) as HTMLDetailsElement;
+    if (infoToggle) {
+      infoToggle.open = false;
     }
   }
-}
+
+  function infoToggleEventListener(event: Event) {
+    if (event instanceof ToggleEvent) {
+      if (event.newState === 'open') {
+        window.addEventListener('click', closeInfo);
+      } else {
+        window.removeEventListener('click', closeInfo);
+      }
+    }
+  }
 </script>
 <template>
   <ul class="menu">

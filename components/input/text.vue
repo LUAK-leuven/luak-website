@@ -1,28 +1,28 @@
 <script setup lang="ts">
-import { useField } from "vee-validate";
+  import { useField } from 'vee-validate';
 
-const props = defineProps({
-  label: {
-    type: String,
-    default: "text",
-  },
-  type: {
-    type: String,
-    default: "text",
-  },
-  name: {
-    type: String,
-    default: "text",
-  },
-  placeholder: {
-    type: String,
-    default: "text",
-  },
-});
+  const props = defineProps({
+    label: {
+      type: String,
+      default: 'text',
+    },
+    type: {
+      type: String,
+      default: 'text',
+    },
+    name: {
+      type: String,
+      default: 'text',
+    },
+    placeholder: {
+      type: String,
+      default: 'text',
+    },
+  });
 
-// The `name` is returned in a function because we want to make sure it stays reactive
-// If the name changes you want `useField` to be able to pick it up
-const { value, errorMessage } = useField(() => props.name);
+  // The `name` is returned in a function because we want to make sure it stays reactive
+  // If the name changes you want `useField` to be able to pick it up
+  const { value, errorMessage } = useField(() => props.name);
 </script>
 
 <template>
@@ -34,8 +34,7 @@ const { value, errorMessage } = useField(() => props.name);
       v-model="value"
       class="input input-bordered w-full"
       :type="type"
-      :placeholder="placeholder"
-    />
+      :placeholder="placeholder" />
     <span class="text-error">{{ errorMessage }}</span>
   </label>
 </template>

@@ -1,26 +1,25 @@
 <script setup lang="ts">
-import type { ActivityContent } from "~/types/content.types";
+  import type { ActivityContent } from '~/types/content.types';
 
-const props = defineProps<{
-  data: ActivityContent;
-}>();
-const priceString = computed(() => {
-  if (props.data.price === 0) {
-    return "Free";
-  } else if (typeof props.data.price === "number") {
-    return `${props.data.price / 100} €`;
-  } else {
-    return " - €";
-  }
-});
+  const props = defineProps<{
+    data: ActivityContent;
+  }>();
+  const priceString = computed(() => {
+    if (props.data.price === 0) {
+      return 'Free';
+    } else if (typeof props.data.price === 'number') {
+      return `${props.data.price / 100} €`;
+    } else {
+      return ' - €';
+    }
+  });
 </script>
 
 <template>
   <NuxtLink
     :key="data._path"
     class="card card-compact bg-base-200 w-full sm:w-80 shadow-xl my-5 md:mx-5 hover:shadow-2xl"
-    :to="data._path"
-  >
+    :to="data._path">
     <figure>
       <NuxtImg class="h-56 object-cover w-full" :src="data.image" />
       <figcaption v-if="data.tag" class="absolute top-3 right-3">
@@ -45,9 +44,9 @@ const priceString = computed(() => {
           <div class="badge badge-primary badge-lg">
             {{
               new Date(data.date).toLocaleDateString(undefined, {
-                weekday: "short",
-                day: "numeric",
-                month: "short",
+                weekday: 'short',
+                day: 'numeric',
+                month: 'short',
               })
             }}
           </div>
