@@ -1,7 +1,8 @@
 <script setup lang="ts">
   const supabase = useSupabaseClient();
-  const logout = () => {
-    supabase.auth.signOut();
+  const logout = async () => {
+    await supabase.auth.signOut();
+    navigateTo('/login');
   };
   const user = useSupabaseUser();
 </script>
