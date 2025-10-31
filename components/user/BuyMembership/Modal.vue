@@ -106,7 +106,6 @@
       </form>
       <h2 class="mb-4">
         Buy a membership for {{ luak_year }}-{{ luak_year! + 1 }} <br />
-        New Member: {{ isFirstTimeMember }}
       </h2>
       <InputKbfSelect />
       <InputStudentSelect />
