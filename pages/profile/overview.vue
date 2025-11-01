@@ -1,46 +1,46 @@
 <script setup lang="ts">
-import type { Database } from "~/types/database.types";
+  import type { Database } from '~/types/database.types';
 
-const user = useSupabaseUser();
+  const user = useSupabaseUser();
 
-const supabase = useSupabaseClient<Database>();
-const has_membership = ref(await getHasMembership());
-const isBoardMember = ref(false);
+  const supabase = useSupabaseClient<Database>();
+  const has_membership = ref(await getHasMembership());
+  const isBoardMember = ref(false);
 
-// Check if user is a board member
-const checkBoardMemberStatus = async () => {
-  if (!user.value) return;
+  // Check if user is a board member
+  const checkBoardMemberStatus = async () => {
+    if (!user.value) return;
 
-  const { data } = await supabase
-    .from("BoardMembers")
-    .select("*")
-    .eq("user_id", user.value.id)
-    .single();
+    const { data } = await supabase
+      .from('BoardMembers')
+      .select('*')
+      .eq('user_id', user.value.id)
+      .single();
 
-  isBoardMember.value = !!data;
-};
+    isBoardMember.value = !!data;
+  };
 
-const { data: userData } = await useAsyncData("userData", async () => {
-  if (!user.value) throw createError({ statusCode: 401 });
-  const { data } = await supabase
-    .from("Users")
-    .select("*")
-    .eq("id", user.value.id)
-    .single();
-  return data;
-});
+  const { data: userData } = await useAsyncData('userData', async () => {
+    if (!user.value) throw createError({ statusCode: 401 });
+    const { data } = await supabase
+      .from('Users')
+      .select('*')
+      .eq('id', user.value.id)
+      .single();
+    return data;
+  });
 
-// Check board member status when component is mounted
-onMounted(() => {
-  checkBoardMemberStatus();
-});
+  // Check board member status when component is mounted
+  onMounted(() => {
+    checkBoardMemberStatus();
+  });
 </script>
 <template>
   <FullPageCard>
     <template #title> My Profile </template>
     <span v-if="!user">Not logged in yet</span>
     <template v-else>
-      <h2>Hi {{ userData?.first_name ?? "LUAK member" }} 👋</h2>
+      <h2>Hi {{ userData?.first_name ?? 'LUAK member' }} 👋</h2>
       Welcome to your profile page. Here you can manage your membership! In the
       future more functionaity will be added.
       <div class="my-5 mx-2 flex flex-wrap justify-around">
@@ -64,8 +64,7 @@ onMounted(() => {
           <template #actions>
             <NuxtLink
               class="btn btn-primary"
-              to="/profile/subscriptions-overview"
-            >
+              to="/profile/subscriptions-overview">
               View Members
             </NuxtLink>
           </template>

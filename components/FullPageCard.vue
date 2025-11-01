@@ -5,8 +5,7 @@
         <slot name="title" />
       </h1>
       <div
-        class="bg-base-100 shadow-md md:basis-9/12 basis-11/12 shrink-0 grow-0 rounded mb-28 z-10 p-10"
-      >
+        class="bg-base-100 shadow-md md:basis-9/12 basis-11/12 shrink-0 grow-0 rounded mb-28 z-10 p-10">
         <slot />
       </div>
     </div>

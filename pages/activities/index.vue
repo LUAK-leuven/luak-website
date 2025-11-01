@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import dayjs from "dayjs";
-import type { ActivityContent } from "~/types/content.types";
+  import dayjs from 'dayjs';
+  import type { ActivityContent } from '~/types/content.types';
 
-const NR_OF_ACTIVITIES = 20;
-const { data } = await useAsyncData(() =>
-  queryContent<ActivityContent>("/activities")
-    .where({ date: { $gte: dayjs().startOf("day").toISOString() } })
-    .sort({ date: 1 })
-    .limit(NR_OF_ACTIVITIES)
-    .find(),
-);
+  const NR_OF_ACTIVITIES = 20;
+  const { data } = await useAsyncData(() =>
+    queryContent<ActivityContent>('/activities')
+      .where({ date: { $gte: dayjs().startOf('day').toISOString() } })
+      .sort({ date: 1 })
+      .limit(NR_OF_ACTIVITIES)
+      .find(),
+  );
 </script>
 
 <template>
@@ -22,8 +22,7 @@ const { data } = await useAsyncData(() =>
       <ActivityItem
         v-for="newsItem in data"
         :key="newsItem._path"
-        v-bind="{ data: newsItem }"
-      />
+        v-bind="{ data: newsItem }" />
     </div>
     <div class="divider my-5" />
     <GoogleCalendar />

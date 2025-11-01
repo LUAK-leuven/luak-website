@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-defineProps({
-  justify: {
-    type: String,
-    default: "justify-center",
-  },
-});
+  defineProps({
+    justify: {
+      type: String,
+      default: 'justify-center',
+    },
+  });
 </script>
 <template>
   <div class="flex flex-wrap w-full items-center" :class="justify">

@@ -1,27 +1,27 @@
 <script lang="ts" setup>
-import type { Database } from "~/types/database.types";
-import * as yup from "yup";
-import { yup_password } from "~/utils/yup";
+  import type { Database } from '~/types/database.types';
+  import * as yup from 'yup';
+  import { yup_password } from '~/utils/yup';
 
-const supabase = useSupabaseClient<Database>();
-const isChangedSuccessfull = ref(false);
-const { handleSubmit, setFieldError, isSubmitting } = useForm({
-  validationSchema: toTypedSchema(
-    yup.object({
-      password: yup_password.required(),
-    }),
-  ),
-});
-const onSubmit = handleSubmit(async (submitted) => {
-  const { error } = await supabase.auth.updateUser({
-    password: submitted.password,
+  const supabase = useSupabaseClient<Database>();
+  const isChangedSuccessfull = ref(false);
+  const { handleSubmit, setFieldError, isSubmitting } = useForm({
+    validationSchema: toTypedSchema(
+      yup.object({
+        password: yup_password.required(),
+      }),
+    ),
   });
-  if (error) {
-    setFieldError("password", error.message);
-  } else {
-    isChangedSuccessfull.value = true;
-  }
-});
+  const onSubmit = handleSubmit(async (submitted) => {
+    const { error } = await supabase.auth.updateUser({
+      password: submitted.password,
+    });
+    if (error) {
+      setFieldError('password', error.message);
+    } else {
+      isChangedSuccessfull.value = true;
+    }
+  });
 </script>
 <template>
   <form @submit="onSubmit">
@@ -30,18 +30,15 @@ const onSubmit = handleSubmit(async (submitted) => {
       label="Password"
       name="password"
       placeholder="*******"
-      type="password"
-    />
+      type="password" />
     <div class="flex justify-end">
       <button
         class="btn btn-primary mt-2"
-        :class="{ 'btn-disabled': isChangedSuccessfull }"
-      >
+        :class="{ 'btn-disabled': isChangedSuccessfull }">
         <span v-if="isSubmitting" class="loading loading-spinner">loading</span>
         <span
           v-else-if="isChangedSuccessfull"
-          class="material-symbols-outlined"
-        >
+          class="material-symbols-outlined">
           check
         </span>
         <span v-else>Change Password</span>

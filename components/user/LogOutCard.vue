@@ -1,9 +1,10 @@
 <script setup lang="ts">
-const supabase = useSupabaseClient();
-const logout = () => {
-  supabase.auth.signOut();
-};
-const user = useSupabaseUser();
+  const supabase = useSupabaseClient();
+  const logout = async () => {
+    await supabase.auth.signOut();
+    navigateTo('/login');
+  };
+  const user = useSupabaseUser();
 </script>
 <template>
   <UserCard image="/chardonnet.jpg">
