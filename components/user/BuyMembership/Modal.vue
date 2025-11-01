@@ -63,6 +63,7 @@
         .select('id')
         .eq('user_id', user.value?.id)
         .lte('year', luak_year);
+      console.log(membershipIds);
       if (membershipIds === null || membershipIds.length === 0) {
         return true;
       }
@@ -70,11 +71,12 @@
       const { data: payments } = await supabase
         .from('Payments')
         .select('*')
-        .contains(
+        .in(
           'membership_id',
           membershipIds.map((item) => item.id),
         )
         .eq('approved', true);
+      console.log(payments);
       if (payments === null || payments.length === 0) {
         return true;
       }
