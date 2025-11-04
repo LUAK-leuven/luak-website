@@ -38,7 +38,7 @@
     </div>
     <div class="relative flex flex-wrap justify-center z-2 bg-base-300">
       <div
-        class="bg-base-100 shadow-md md:basis-9/12 basis-11/12 shrink-0 grow-0 rounded px-5"
+        class="bg-base-100 shadow-md md:basis-9/12 basis-11/12 shrink-0 grow-0 rounded-lg px-5"
         style="margin-top: -5em">
         <NuxtLink to="/news"
           ><h1 class="w-full text-center text-6xl mt-10 mb-5">

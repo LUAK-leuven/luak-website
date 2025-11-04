@@ -1,11 +1,16 @@
 <template>
   <main>
-    <div class="relative w-full flex flex-wrap justify-center z-2 bg-base-300">
-      <h1 class="w-full text-center text-5xl mt-5 p-10">
+    <div
+      class="relative w-full flex flex-col flex-wrap items-center bg-base-300">
+      <h1 class="w-full text-center text-5xl mt-16 mb-10">
         <slot name="title" />
       </h1>
       <div
-        class="bg-base-100 shadow-md md:basis-9/12 basis-11/12 shrink-0 grow-0 rounded mb-28 z-10 p-10">
+        class="bg-base-100 shadow-md md:w-9/12 w-11/12 shrink-0 grow-0 rounded-lg mb-28 p-10">
+        <div class="empty:hidden mb-4 ml-4 mr-4 text-center break-words">
+          <slot name="subtitle" />
+        </div>
+        <hr />
         <slot />
       </div>
     </div>
