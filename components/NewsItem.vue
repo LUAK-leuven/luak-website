@@ -12,10 +12,12 @@
     <div
       class="flex justify-center items-center align-middle flex-col"
       :class="[reversed ? 'md:flex-row' : 'md:flex-row-reverse']">
-      <NuxtImg
-        class="rounded-lg shadow-2xl max-w-72 max-h-72 md:max-w-80 md:max-h-80 m-5"
-        :src="data.image"
-        :placeholder="384" />
+      <NuxtLink :key="data._path" class="m-5" :to="data._path">
+        <NuxtImg
+          class="rounded-lg shadow-2xl max-w-72 max-h-72 md:max-w-80 md:max-h-80"
+          :src="data.image"
+          :placeholder="384" />
+      </NuxtLink>
       <div>
         <h1 class="text-4xl text-gray-600">{{ data.title }}</h1>
         <ContentRenderer
@@ -23,7 +25,7 @@
           :value="data"
           :excerpt="true">
           <template #empty>
-            <!-- <p>Press the read more button to lean more!.</p> -->
+            <p>{{ data.teaser }}</p>
           </template>
           <template #error>
             <p>An error occurred while rendering the content.</p>

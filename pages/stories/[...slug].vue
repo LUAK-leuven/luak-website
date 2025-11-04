@@ -12,18 +12,22 @@
         :style="`background-image: url(${doc.image}); background-size: cover`">
         <div class="hero-overlay bg-opacity-60" />
         <div class="hero-content text-left text-neutral-content my-20">
-          <div class="max-w-[90wh]">
-            <h1 class="mb-14 text-center text-5xl">
+          <div class="max-w-[90wh] flex flex-col items-center">
+            <h1 class="mb-10 text-center text-5xl">
               {{ doc.title }}
             </h1>
-            <i>{{
-              new Date(doc.date).toLocaleDateString(undefined, {
-                weekday: 'long',
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric',
-              })
-            }}</i>
+            <div
+              class="flex gap-x-5 justify-between flex-wrap-reverse md:max-w-[70vw] max-w-[90vw] w-full">
+              <i>{{
+                new Date(doc.date).toLocaleDateString(undefined, {
+                  weekday: 'long',
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                })
+              }}</i>
+              <i>By: {{ doc.author }}</i>
+            </div>
           </div>
         </div>
       </div>

@@ -4,6 +4,7 @@ export interface NewsContent extends MarkdownParsedContent {
   image: string;
   title: string;
   date: Date;
+  teaser?: string;
 }
 export interface ActivityContent extends MarkdownParsedContent {
   image: string;

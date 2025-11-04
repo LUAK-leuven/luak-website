@@ -3,6 +3,7 @@ title: "Climbing on clouds"
 image: /stories/manhattan-transfer.jpg
 date: 2025-11-04T00:00:00.000Z
 author: Arend Ryckeboer
+teaser: We start at the beginning, that fatefull day at the epicenter of the universe...
 ---
 
 We start at the beginning, that fatefull day at the epicenter of the universe, on the plateau in a sea of grey. 
