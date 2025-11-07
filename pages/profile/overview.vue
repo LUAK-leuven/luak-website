@@ -69,6 +69,12 @@
             </NuxtLink>
           </template>
         </UserCard>
+        <UserCard v-if="isBoardMember" image="/luak-logo.png">
+          <template #title> Gear Rental 🧗 </template>
+          <template #actions>
+            <NuxtLink class="btn btn-primary"> Go to Form </NuxtLink>
+          </template>
+        </UserCard>
         <UserLogOutCard />
       </div>
     </template>
