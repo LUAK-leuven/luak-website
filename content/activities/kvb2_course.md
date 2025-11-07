@@ -21,9 +21,7 @@ This course aims to teach you all the skills required for safe indoor lead climb
 - Dynamic belaying
 - Leading basics and tips & tricks
 - Taking lead falls & becoming comfortable with it
-- Injury prevention
-  :br
-  :br
+- Injury prevention :br:br
 
 The course follows the curriculum by KVB, which can be found here (dutch only): <https://www.klimenbergsportfederatie.be/klimvaardigheidsbewijzen>
 
@@ -70,9 +68,7 @@ It is important to understand that the KVB courses are courses you take to grow 
 - Lesson 1: Monday 24 February
 - Lesson 2: Wednesday 26 February
 - Lesson 3: Wednesday 12 March
-- Exam: Wednesday 19 March
-  :br
-  :br
+- Exam: Wednesday 19 March :br:br
 
 **HOW TO SIGN UP?**
 
