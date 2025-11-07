@@ -5,4 +5,4 @@ image: /kvb1.png
 price: 4000
 ---
 
-More info & registration: https\://forms.gle/BduT7VgDg2MNUnMZ9
+More info & registration: <https://forms.gle/BduT7VgDg2MNUnMZ9>
