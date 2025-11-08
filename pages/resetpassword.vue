@@ -12,6 +12,7 @@
   const onSubmit = handleSubmit(async (submitted) => {
     const { error } = await supabase.auth.resetPasswordForEmail(
       submitted.email,
+      { redirectTo: `${getURL()}passwordReset` },
     );
     if (error) {
       setFieldError('email', error.message);
