@@ -9,6 +9,10 @@
     validationSchema: toTypedSchema(
       yup.object({
         password: yup_password.required(),
+        password2: yup_password
+          .required()
+          .oneOf([yup.ref('password')], 'Password does not match')
+          .label('password'),
       }),
     ),
   });
@@ -27,8 +31,13 @@
   <form @submit="onSubmit">
     <h2>🔐 Change Password:</h2>
     <InputText
-      label="Password"
+      label="New password"
       name="password"
+      placeholder="*******"
+      type="password" />
+    <InputText
+      label="Confirm password"
+      name="password2"
       placeholder="*******"
       type="password" />
     <div class="flex justify-end">
