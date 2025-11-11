@@ -6,6 +6,6 @@ const phoneRegExp =
 const yup_phone = yup
   .string()
   .matches(phoneRegExp, 'Format of the phone number is incorrect.');
-const yup_password = yup.string().min(6);
+const yup_password = yup.string().min(8);
 
 export { yup_password, yup_phone };
