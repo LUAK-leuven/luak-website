@@ -2,6 +2,8 @@
   import * as yup from 'yup';
 
   const supabase = useSupabaseClient();
+  const url = useRequestURL();
+
   const formSchema = yup.object({
     email: yup.string().required().email(),
   });
@@ -12,7 +14,7 @@
   const onSubmit = handleSubmit(async (submitted) => {
     const { error } = await supabase.auth.resetPasswordForEmail(
       submitted.email,
-      { redirectTo: `${getURL()}passwordReset` },
+      { redirectTo: `${url.origin}/passwordReset` },
     );
     if (error) {
       setFieldError('email', error.message);

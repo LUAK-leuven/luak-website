@@ -22,22 +22,17 @@
   });
 
   const onSubmit = handleSubmit(async (submitted) => {
-    success.value = true;
-    console.log(`reset pwd to: ${submitted.pwd1}`);
     const { data, error } = await supabase.auth.updateUser({
       password: submitted.pwd1,
     });
-    console.log('data: ', data);
-    console.log('error: ', error);
     if (data.user) {
       success.value = true;
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 800));
       await navigateTo({
         path: '/profile/overview',
       });
     }
     if (error) {
-      console.log(error);
       authError.value = {
         error: `There was an error updating your password!`,
         description: error.message,
