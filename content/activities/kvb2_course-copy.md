@@ -2,7 +2,7 @@
 title: KVB2 course
 date: 2025-11-19T00:00:00.000Z
 image: /kvb2.png
-price: 85000
+price: 8500
 ---
 
 Course dates: 19/11/2025 and 21/11/2025
