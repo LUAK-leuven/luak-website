@@ -1,7 +1,7 @@
 // Check if user is a board member
 export default async function (): Promise<{
   boardMember: boolean;
-  error: string;
+  error?: string;
 }> {
   const supabase = useSupabaseClient();
   const user = useSupabaseUser();
@@ -25,5 +25,5 @@ export default async function (): Promise<{
     };
   }
 
-  return { boardMember: true, error: '' };
+  return { boardMember: true };
 }

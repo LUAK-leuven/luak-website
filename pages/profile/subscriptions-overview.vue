@@ -6,7 +6,6 @@
   } from '~/components/profile/helpers';
 
   const supabase = useSupabaseClient<Database>();
-  const user = useSupabaseUser();
   const isLoading = ref(true);
   const error = ref<string | null>(null);
   const subscriptions = ref<
@@ -30,29 +29,6 @@
   const sortDirection = ref('desc');
   const currentYear = getLuakYear();
   const selectedYear = ref(0);
-
-  // Check if user is a board member
-  const checkBoardMemberAccess = async () => {
-    if (!user.value) {
-      error.value = 'You must be logged in to view this page.';
-      isLoading.value = false;
-      return false;
-    }
-
-    const { data, error: boardError } = await supabase
-      .from('BoardMembers')
-      .select('*')
-      .eq('user_id', user.value.id)
-      .single();
-
-    if (boardError || !data) {
-      error.value = 'You do not have permission to view this page.';
-      isLoading.value = false;
-      return false;
-    }
-
-    return true;
-  };
 
   // Fetch all active subscriptions
   const fetchSubscriptions = async () => {
@@ -115,7 +91,11 @@
 
   // Initialize data
   const initData = async () => {
-    const hasAccess = await checkBoardMemberAccess();
+    const { boardMember: hasAccess, error: err } = await checkIsBoardMember();
+    if (err) {
+      error.value = err;
+      isLoading.value = false;
+    }
     if (hasAccess) {
       await fetchSubscriptions();
     }

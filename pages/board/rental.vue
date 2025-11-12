@@ -1,10 +1,16 @@
 <script setup lang="ts">
-  const { boardMember, error } = await isBoardMember();
+  const { error } = await checkIsBoardMember();
 </script>
 
 <template>
   <FullPageCard>
-    <div v-if="error">{{ error }}</div>
+    <template #title>Rental form 🧗</template>
+
+    <!-- Error message -->
+    <div v-if="error" class="alert alert-error">
+      <span>{{ error }}</span>
+    </div>
+
     <div v-else>Success</div>
   </FullPageCard>
 </template>

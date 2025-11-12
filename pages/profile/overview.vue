@@ -7,19 +7,6 @@
   const has_membership = ref(await getHasMembership());
   const isBoardMember = ref(false);
 
-  // Check if user is a board member
-  const checkBoardMemberStatus = async () => {
-    if (!user.value) return;
-
-    const { data } = await supabase
-      .from('BoardMembers')
-      .select('*')
-      .eq('user_id', user.value.id)
-      .single();
-
-    isBoardMember.value = !!data;
-  };
-
   const { data: userData } = await useAsyncData('userData', async () => {
     if (!user.value) throw createError({ statusCode: 401 });
     const { data } = await supabase
@@ -31,8 +18,10 @@
   });
 
   // Check board member status when component is mounted
-  onMounted(() => {
-    checkBoardMemberStatus();
+  onMounted(async () => {
+    const { boardMember } = await checkIsBoardMember();
+    isBoardMember.value = boardMember;
+    // checkBoardMemberStatus();
   });
 </script>
 <template>
