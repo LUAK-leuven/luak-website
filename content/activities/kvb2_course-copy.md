@@ -14,4 +14,4 @@ Required:
 - 15 years of age or older
 - proficiency in toprope (+ to participate in the exam, having acquired the KVB1 certificate before)
 
-Info and registrations:
+Info and registrations: https\://forms.gle/ucWCDuDMBkzAjRvf7
