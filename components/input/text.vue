@@ -12,16 +12,18 @@
     },
     name: {
       type: String,
-      default: 'text',
+      required: true,
     },
     placeholder: {
       type: String,
       default: 'text',
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   });
 
-  // The `name` is returned in a function because we want to make sure it stays reactive
-  // If the name changes you want `useField` to be able to pick it up
   const { value, errorMessage } = useField(() => props.name);
 </script>
 
@@ -34,7 +36,8 @@
       v-model="value"
       class="input input-bordered w-full"
       :type="type"
-      :placeholder="placeholder" />
+      :placeholder="placeholder"
+      :disabled="disabled" />
     <span class="text-error">{{ errorMessage }}</span>
   </label>
 </template>
