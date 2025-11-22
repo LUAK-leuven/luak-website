@@ -15,8 +15,14 @@
     options: typeof selectableUsers,
     input: string | undefined,
   ) {
+    console.log(options[0]);
+    console.log(input);
     if (input === undefined) return options;
-    return options.filter((option) => option.name.includes(input));
+    return options
+      .filter((option) =>
+        option.name.toLowerCase().includes(input.toLowerCase()),
+      )
+      .slice(0, 5);
   }
 
   const selectedMember = ref<{ id: string; name: string; hasPaid: boolean }>();

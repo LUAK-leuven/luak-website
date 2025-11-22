@@ -10,11 +10,6 @@
     computedDepositFee: [value: number];
   }>();
 
-  // const model = defineModel<{
-  //   gearList: { id: string; amount: number }[];
-  //   depositFee: number;
-  // }>({ required: true });
-
   const allGear = await gearService().getPublicGearInfo();
   const selectedGear = ref<Record<string, GearInfo | undefined>>({});
   const selectedGearList = computed(() => {
@@ -22,9 +17,6 @@
       (item) => item !== undefined,
     );
   });
-  // effect(() => {
-  //   model.value.gearList = selectedGearList.value;
-  // });
   const availableGearList = computed(() =>
     allGear
       .filter((item) => selectedGear.value[item.id] === undefined)
@@ -56,7 +48,11 @@
 
   function filterGear(options: GearInfo[], input: string | undefined) {
     if (input === undefined) return options;
-    return options.filter((option) => option.name.includes(input));
+    return options
+      .filter((option) =>
+        option.name.toLowerCase().includes(input.toLowerCase()),
+      )
+      .slice(0, 5);
   }
 
   const { value, errorMessage } = useField<{ id: string; amount: number }[]>(
