@@ -41,6 +41,10 @@ To generate a migration file for the diff between you local db and what is defin
 
 > supabase db diff --schema=public -f [migration name]
 
+Esport DB types
+
+ > yarn supabase gen types typescript --local > database.types.ts
+
 To push db changes to prod
 
 > supabase db push -- DON'T USE!!! (if you don't know what you are doing)

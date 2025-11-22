@@ -1,52 +1,20 @@
 <script setup lang="ts">
-  import dayjs from 'dayjs';
-  import * as yup from 'yup';
-  import type { Database } from '~/types/database.types';
-
-  const user = useSupabaseUser();
-  const supabase = useSupabaseClient<Database>();
   const { error } = await checkIsBoardMember();
-  const { data: userData } = await useAsyncData('userData', async () => {
-    if (!user.value) throw createError({ statusCode: 401 });
-    const { data } = await supabase
-      .from('Users')
-      .select('*')
-      .eq('id', user.value.id)
-      .single();
-    return data;
-  });
-  if (!userData.value) throw new Error('Failed to load User data.');
 
-  const users = await getUserInfo();
-  const selectableUsers =
-    users?.map((user) => ({
-      label: user.first_name + ' ' + user.last_name,
-      value: { id: user.id, hasPaid: user.paid_membership },
-    })) ?? [];
-
-  const gear = await getAvailableGear();
-  console.log('gear', gear);
-
-  const formSchema = yup.object({
-    boardMember: yup.string().required(),
-    member: yup
-      .mixed<(typeof selectableUsers)[number]['value']>()
-      .required('You must select a member')
-      .label('member'),
-    date_borrow: yup.string().required(),
-    date_return: yup.string().required(),
-  });
-  const initialValues = {
-    boardMember: userData.value.first_name + ' ' + userData.value.last_name,
-    date_borrow: dayjs().format('YYYY-MM-DD').toString(),
-    date_return: dayjs().add(3, 'w').format('YYYY-MM-DD').toString(),
-  };
-
-  const { values, errors, meta, defineField } = useForm({
-    validationSchema: toTypedSchema(formSchema),
-    initialValues: initialValues,
-  });
-  const [member] = defineField('member');
+  const rental = ref<
+    Partial<{
+      boardMember: string;
+      member: string;
+      dateBorrowed: string;
+      dateReturn: string;
+      depositFee: number;
+      paymentMethod: 'cash' | 'transfer';
+      gearList: {
+        gearId: string;
+        amount: number;
+      }[];
+    }>
+  >({});
 </script>
 
 <template>
@@ -58,47 +26,49 @@
       <span>{{ error }}</span>
     </div>
 
-    <div v-else class="grid grid-cols-2 gap-x-10 gap-y-2 mb-3">
-      <div class="w-full">
-        <InputTextOptionsSelect
-          v-model="member"
-          label="Member *"
-          :options="selectableUsers"
-          placeholder="select member"
-          :error="errors.member" />
-
-        <div
-          v-if="!(values.member?.hasPaid ?? true)"
-          class="bg-yellow-300 rounded-md w-fit px-1">
-          Warning: user has no active membership!
+    <div v-else>
+      <details class="collapse collapse-arrow bg-base-100" open>
+        <summary class="collapse-title">
+          <h2 class="my-0">General info</h2>
+        </summary>
+        <div class="collapse-content">
+          <BoardRentalGeneral v-model="rental" />
         </div>
+      </details>
+      <hr />
+      <details class="collapse collapse-arrow bg-base-100" open>
+        <summary class="collapse-title">
+          <h2 class="my-0">Gear list</h2>
+        </summary>
+        <div class="collapse-content">
+          <BoardRentalGearSelection
+            v-model="rental.gearList"
+            @computed-deposit-fee="(value) => (rental.depositFee = value)" />
+        </div>
+      </details>
+      <hr />
+      <details class="collapse collapse-arrow bg-base-100" open>
+        <summary class="collapse-title">
+          <h2 class="my-0">Payment</h2>
+        </summary>
+        <div class="collapse-content">
+          <label class="input input-bordered flex w-full">
+            <span class="label w-fit">€</span>
+            <input class="" />
+          </label>
+          <InputText label="Deposit fee € *" name="deposit_fee" type="number" />
+        </div>
+      </details>
+
+      <div class="flex justify-end">
+        <!-- <button
+          class="btn btn-primary mt-3 w-fit"
+          :class="{ 'btn-disabled': !meta.valid || !meta.dirty }">
+          Submit
+        </button> -->
+        <button class="btn btn-primary mt-3 w-fit">Submit</button>
+        {{ rental }}
       </div>
-
-      <InputText
-        class="w-full"
-        label="Board member *"
-        name="boardMember"
-        :disabled="true" />
-
-      <InputText label="Date borrow *" name="date_borrow" type="date" />
-      <InputText label="Date return *" name="date_return" type="date" />
     </div>
-    <hr />
-    <div>
-      <h2>Gear</h2>
-      <InputTextOptionsSelect
-        :options="[
-          { label: '1', value: 1 },
-          { label: '2', value: 2 },
-        ]" />
-    </div>
-
-    {{ values }}
-
-    <button
-      class="btn btn-primary mt-2 w-fit"
-      :class="{ 'btn-disabled': !meta.valid || !meta.dirty }">
-      Submit
-    </button>
   </FullPageCard>
 </template>

@@ -1,93 +1,79 @@
-<script setup lang="ts">
-  import * as yup from 'yup';
+<script setup lang="ts" generic="T">
+  const props = defineProps<{
+    options: T[];
+    placeholder: string;
+    optionsSelectFn: (options: T[], input: string | undefined) => T[];
+    showSelectedItem?: boolean;
+  }>();
 
-  export type Option = {
-    label: string;
-    value: unknown;
-  };
-
-  const props = defineProps({
-    label: {
-      type: String,
-      default: 'text',
-    },
-    options: {
-      type: Array<Option>,
-      required: true,
-    },
-    placeholder: {
-      type: String,
-      default: 'text',
-    },
-    error: {
-      type: String,
-      default: '',
-    },
+  const model = defineModel<T | undefined>({
+    required: true,
   });
 
-  const value = defineModel<unknown>();
-
-  const { values, defineField, meta, setFieldValue } = useForm({
-    validationSchema: toTypedSchema(
-      yup.object({
-        option: yup
-          .string()
-          .required()
-          .oneOf(props.options.map((option) => option.label)),
-      }),
-    ),
-  });
-  const [optionValue] = defineField('option');
-
-  effect(() => {
-    if (!meta.value.valid) value.value = undefined;
-  });
-  const filteredOptions: ComputedRef<Option[]> = computed(() => {
-    const txt = values.option;
-    const fOptions =
-      txt === undefined
-        ? props.options
-        : props.options.filter((option) => option.label.includes(txt));
-    return fOptions.slice(0, 5);
-  });
-
+  const textValue = ref<string>();
   const hidden = ref(true);
 
-  function onSelect(option: Option) {
-    setFieldValue('option', option.label);
-    value.value = option.value;
+  const selectedOptions = computed(() => {
+    return props.optionsSelectFn(props.options, textValue.value);
+  });
+
+  // function closeSelection(e: Event) {
+  //   e.stopImmediatePropagation();
+  //   console.log('hide');
+  //   hidden.value = true;
+  // }
+  // watch(hidden, (hidden_new) => {
+  //   if (!hidden_new) {
+  //     console.log('add');
+  //     window.addEventListener('click', closeSelection, { once: true });
+  //   }
+  // });
+
+  function onSelect(option: T) {
     hidden.value = true;
+    model.value = option;
   }
   function onFocus() {
-    optionValue.value = '';
+    textValue.value = '';
     hidden.value = false;
+    model.value = undefined;
   }
 </script>
 
 <template>
-  <label class="form-control w-full mb-2 peer">
-    <div class="label">
-      <span class="label-text">{{ label }}</span>
-    </div>
+  <label class="input input-bordered flex w-full mb-2">
+    <span v-if="model && showSelectedItem" class="label w-fit">
+      <slot name="item" :data="model" />
+    </span>
     <input
-      v-model="optionValue"
-      class="input input-bordered w-full"
+      v-model="textValue"
+      :class="model ? 'w-0' : ''"
       type="text"
       :placeholder="placeholder"
       popovertarget="popover-1"
       style="anchor-name: --anchor-1"
-      @focus="onFocus()" />
-    <span class="text-error">{{ error }}</span>
+      @focus="onFocus()"
+      @dblclick="hidden = true" />
   </label>
 
-  <ul
-    id="popover-1"
-    class="dropdown menu w-52 rounded-box bg-base-100 shadow-md"
-    :class="hidden ? 'hidden' : ''"
-    popover
-    style="position-anchor: --anchor-1">
-    <li v-for="option in filteredOptions" :key="option.label">
-      <button @click="onSelect(option)">{{ option.label }}</button>
-    </li>
-  </ul>
+  <div class="relative">
+    <ul
+      id="popover-1"
+      class="absolute dropdown menu w-52 rounded-box bg-base-100 shadow-md gap-y-1 z-10"
+      :class="hidden ? 'hidden' : ''"
+      popover
+      style="position-anchor: --anchor-1">
+      <li
+        v-for="(option, idx) in selectedOptions"
+        :key="idx"
+        class="hover:opacity-60">
+        <button class="grid-cols-1 p-0" @click="onSelect(option)">
+          <slot name="item" :data="option" />
+        </button>
+      </li>
+      <li v-if="selectedOptions.length === 0">
+        <div>No results found</div>
+      </li>
+    </ul>
+  </div>
 </template>

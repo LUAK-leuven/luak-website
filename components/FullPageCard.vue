@@ -10,7 +10,7 @@
         <div class="empty:hidden mb-4 ml-4 mr-4 text-center break-words">
           <slot name="subtitle" />
         </div>
-        <hr />
+        <hr v-if="$slots.subtitle" />
         <slot />
       </div>
     </div>

@@ -1,28 +1,21 @@
 <script setup lang="ts">
   import { useField } from 'vee-validate';
+  import type { InputTypeHTMLAttribute } from 'vue';
 
-  const props = defineProps({
-    label: {
-      type: String,
-      default: 'text',
+  const props = withDefaults(
+    defineProps<{
+      label: string;
+      type?: InputTypeHTMLAttribute;
+      name: string;
+      placeholder?: string;
+      disabled?: boolean;
+    }>(),
+    {
+      type: 'text',
+      placeholder: 'text',
+      disabled: false,
     },
-    type: {
-      type: String,
-      default: 'text',
-    },
-    name: {
-      type: String,
-      required: true,
-    },
-    placeholder: {
-      type: String,
-      default: 'text',
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-  });
+  );
 
   const { value, errorMessage } = useField(() => props.name);
 </script>
