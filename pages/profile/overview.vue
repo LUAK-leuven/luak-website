@@ -1,39 +1,17 @@
 <script setup lang="ts">
-  import type { Database } from '~/types/database.types';
-
-  const user = useSupabaseUser();
-
-  const supabase = useSupabaseClient<Database>();
-  const has_membership = ref(await getHasMembership());
-  const boardMember = ref(false);
-
-  const { data: userData } = await useAsyncData('userData', async () => {
-    if (!user.value) throw createError({ statusCode: 401 });
-    const { data } = await supabase
-      .from('Users')
-      .select('*')
-      .eq('id', user.value.id)
-      .single();
-    return data;
-  });
-
-  // Check board member status when component is mounted
-  onMounted(async () => {
-    const { isBoardMember } = await checkIsBoardMember();
-    boardMember.value = isBoardMember;
-    // checkBoardMemberStatus();
-  });
+  const user = await useLuakMember();
 </script>
 <template>
   <FullPageCard>
     <template #title> My Profile </template>
     <span v-if="!user">Not logged in yet</span>
     <template v-else>
-      <h2>Hi {{ userData?.first_name ?? 'LUAK member' }} 👋</h2>
+      <h2>Hi {{ user.userInfo?.first_name ?? 'LUAK member' }} 👋</h2>
       Welcome to your profile page. Here you can manage your membership! In the
       future more functionaity will be added.
       <div class="my-5 mx-2 flex flex-wrap justify-around">
-        <UserBuyMembershipCard v-if="has_membership !== 'paid_membership'" />
+        <UserBuyMembershipCard
+          v-if="user.membershipType !== 'paid_membership'" />
         <UserMembershipCard v-else />
         <UserCard image="/IMG_20240410_125659.jpg">
           <template #title> Profile Settings 🔧 </template>
@@ -45,7 +23,7 @@
           </template>
         </UserCard>
         <!-- Board Member Card - Only visible to board members -->
-        <UserCard v-if="boardMember" image="/IMG_20240410_125659.jpg">
+        <UserCard v-if="user.isBoard" image="/IMG_20240410_125659.jpg">
           <template #title> Members Overview 👥 </template>
           <template #description>
             View and export all active club memberships
@@ -58,7 +36,7 @@
             </NuxtLink>
           </template>
         </UserCard>
-        <UserCard v-if="boardMember" image="/luak-logo.png">
+        <UserCard v-if="user.isBoard" image="/luak-logo.png">
           <template #title> Gear Rental 🧗 </template>
           <template #actions>
             <NuxtLink class="btn btn-primary" to="/board/rental">

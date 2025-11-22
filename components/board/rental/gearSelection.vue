@@ -145,7 +145,4 @@
       </button>
     </div>
   </div>
-
-  <p>Selected gear: {{ selectedGear }}</p>
-  <p>Available gear: {{ remainingGear }}</p>
 </template>

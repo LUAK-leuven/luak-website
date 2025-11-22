@@ -3,7 +3,7 @@
     name: 'member',
   });
 
-  const users = await getUserInfo();
+  const users = await userService().getAllUsers();
   const selectableUsers =
     users?.map((user) => ({
       name: user.first_name + ' ' + user.last_name,

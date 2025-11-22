@@ -4,10 +4,10 @@
 
   definePageMeta({ middleware: 'board-member-guard' });
 
-  const user = (await userService().getUserInfo())!;
+  const user = await useLuakMember();
   const boardMember = {
-    name: user.first_name + ' ' + user.last_name,
-    id: user.id,
+    name: user.userInfo!.first_name + ' ' + user.userInfo!.last_name,
+    id: user.userInfo!.id,
   };
 
   const formSchema = yup.object({
@@ -37,7 +37,7 @@
     date_return: dayjs().add(3, 'w').format('YYYY-MM-DD').toString(),
   };
 
-  const { values, meta, handleSubmit } = useForm({
+  const { meta, handleSubmit } = useForm({
     validationSchema: toTypedSchema(formSchema),
     initialValues: initialValues,
   });
@@ -110,7 +110,6 @@
           Submit
         </button>
       </div>
-      {{ values }}
     </form>
 
     <pop-up v-model:show="submitError" type="error">{{ errorMessage }}</pop-up>

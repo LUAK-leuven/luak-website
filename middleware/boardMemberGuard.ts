@@ -1,7 +1,7 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  const boardMember = await checkIsBoardMember();
-  if (!boardMember.isBoardMember) {
-    return abortNavigation(`Unauthorized: ${boardMember.error}`);
+  const boardMember = await useLuakMember();
+  if (!boardMember.isBoard) {
+    return abortNavigation(`Unauthorized`);
   }
   return;
 });

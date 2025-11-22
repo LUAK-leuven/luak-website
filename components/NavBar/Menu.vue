@@ -6,7 +6,7 @@
     'pages_navigation',
     () => fetchContentNavigation(queryContent('/pages')),
   );
-  const user = useSupabaseUser();
+  const user = await useLuakMember();
 
   const closeDrawer = () => {
     const drawerToggle = document.getElementById(
@@ -58,11 +58,23 @@
     <li v-for="nav in pages_navigation?.[0]?.children" :key="nav._path">
       <NuxtLink :to="nav._path" @click="closeDrawer">{{ nav.title }}</NuxtLink>
     </li>
-    <li v-if="user">
+    <li v-if="user.isMember">
       <NuxtLink to="/stories" @click="closeDrawer">Stories</NuxtLink>
     </li>
+    <li>
+      <details id="info-toggle" @toggle="infoToggleEventListener">
+        <summary>Info</summary>
+        <ul class="p-2 bg-base-200 rounded-t-none">
+          <li v-for="nav in info_navigation?.[0]?.children" :key="nav._path">
+            <NuxtLink :to="nav._path" @click="closeDrawer">{{
+              nav.title
+            }}</NuxtLink>
+          </li>
+        </ul>
+      </details>
+    </li>
     <NuxtLink
-      v-if="!user"
+      v-if="!user.isMember"
       class="btn btn-primary btn-outline"
       to="/profile/overview"
       @click="closeDrawer"
