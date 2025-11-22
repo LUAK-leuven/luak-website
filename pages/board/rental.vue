@@ -20,7 +20,7 @@
       )
       .label('return date'),
     gear: yup
-      .array(yup.mixed<{ id: string; amouont: number }>().required())
+      .array(yup.mixed<{ id: string; amount: number }>().required())
       .required()
       .min(1),
     deposit_fee: yup.number().required().positive(),
@@ -36,11 +36,17 @@
     initialValues: initialValues,
   });
 
-  const onSubmit = handleSubmit((formState) => {
-    console.log('pooop');
+  const submitError = ref(false);
+  const errorMessage = ref<string>();
+
+  const onSubmit = handleSubmit(async (formState) => {
     formState.boardMember = boardMember.memberInfo!.id;
     console.log(formState);
-    navigateTo('/');
+    // TODO: Show preview
+    const { error } = await gearService().saveRental(formState);
+    submitError.value = !!error;
+    errorMessage.value = error;
+    if (!error) navigateTo('/');
   });
 
   const computedDeposit = ref<number>();
@@ -105,5 +111,7 @@
       </div>
       {{ values }}
     </form>
+
+    <pop-up v-model:show="submitError" type="error">{{ errorMessage }}</pop-up>
   </FullPageCard>
 </template>

@@ -91,13 +91,12 @@
 
   // Initialize data
   const initData = async () => {
-    const { boardMember: hasAccess, error: err } = await checkIsBoardMember();
-    if (err) {
-      error.value = err;
-      isLoading.value = false;
-    }
-    if (hasAccess) {
+    const result = await checkIsBoardMember();
+    if (result.isBoardMember) {
       await fetchSubscriptions();
+    } else {
+      error.value = result.error;
+      isLoading.value = false;
     }
   };
 

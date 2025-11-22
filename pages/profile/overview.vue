@@ -53,7 +53,7 @@
           <template #actions>
             <NuxtLink
               class="btn btn-primary"
-              to="/profile/subscriptions-overview">
+              to="/board/subscriptions-overview">
               View Members
             </NuxtLink>
           </template>

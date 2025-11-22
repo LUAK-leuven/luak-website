@@ -52,7 +52,6 @@
       ]),
     ),
   );
-  console.log('gear', allGear);
   const selectedGearItem = ref<GearInfo>();
 
   function filterGear(options: GearInfo[], input: string | undefined) {
