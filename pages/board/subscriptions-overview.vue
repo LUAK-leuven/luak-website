@@ -5,6 +5,8 @@
     formatKbfUiaaStatus,
   } from '~/components/profile/helpers';
 
+  definePageMeta({ middleware: 'board-member-guard' });
+
   const supabase = useSupabaseClient<Database>();
   const isLoading = ref(true);
   const error = ref<string | null>(null);
@@ -91,13 +93,7 @@
 
   // Initialize data
   const initData = async () => {
-    const result = await checkIsBoardMember();
-    if (result.isBoardMember) {
-      await fetchSubscriptions();
-    } else {
-      error.value = result.error;
-      isLoading.value = false;
-    }
+    await fetchSubscriptions();
   };
 
   // Toggle sort direction

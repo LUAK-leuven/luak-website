@@ -2,7 +2,13 @@
   import * as yup from 'yup';
   import dayjs from 'dayjs';
 
-  const boardMember = await checkIsBoardMember();
+  definePageMeta({ middleware: 'board-member-guard' });
+
+  const user = (await userService().getUserInfo())!;
+  const boardMember = {
+    name: user.first_name + ' ' + user.last_name,
+    id: user.id,
+  };
 
   const formSchema = yup.object({
     boardMember: yup.string().required(),
@@ -26,7 +32,7 @@
     deposit_fee: yup.number().required().positive(),
   });
   const initialValues = {
-    boardMember: boardMember.memberInfo?.name,
+    boardMember: boardMember.name,
     date_borrow: dayjs().format('YYYY-MM-DD').toString(),
     date_return: dayjs().add(3, 'w').format('YYYY-MM-DD').toString(),
   };
@@ -40,7 +46,7 @@
   const errorMessage = ref<string>();
 
   const onSubmit = handleSubmit(async (formState) => {
-    formState.boardMember = boardMember.memberInfo!.id;
+    formState.boardMember = boardMember.id;
     console.log(formState);
     // TODO: Show preview
     const { error } = await gearService().saveRental(formState);
@@ -56,12 +62,7 @@
   <FullPageCard>
     <template #title>Rental form 🧗</template>
 
-    <!-- Error message -->
-    <div v-if="!boardMember.isBoardMember" class="alert alert-error">
-      <span>{{ boardMember.error }}</span>
-    </div>
-
-    <form v-else @submit.prevent="onSubmit">
+    <form @submit.prevent="onSubmit">
       <h2>General info</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-2 mb-3">
         <div class="w-full self-end">

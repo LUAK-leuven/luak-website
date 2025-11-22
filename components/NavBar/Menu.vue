@@ -36,6 +36,7 @@
     }
   }
 </script>
+
 <template>
   <ul class="menu">
     <li><NuxtLink to="/news" @click="closeDrawer">News</NuxtLink></li>
