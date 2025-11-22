@@ -1,33 +1,22 @@
 <script setup lang="ts" generic="T">
   const props = defineProps<{
+    label?: string;
     options: T[];
     placeholder: string;
     optionsSelectFn: (options: T[], input: string | undefined) => T[];
     showSelectedItem?: boolean;
+    errorMessage?: string;
   }>();
 
-  const model = defineModel<T | undefined>({
-    required: true,
-  });
+  const model = defineModel<T>();
 
   const textValue = ref<string>();
   const hidden = ref(true);
+  const mouseOnSelection = ref(false);
 
-  const selectedOptions = computed(() => {
+  const filteredOptions = computed(() => {
     return props.optionsSelectFn(props.options, textValue.value);
   });
-
-  // function closeSelection(e: Event) {
-  //   e.stopImmediatePropagation();
-  //   console.log('hide');
-  //   hidden.value = true;
-  // }
-  // watch(hidden, (hidden_new) => {
-  //   if (!hidden_new) {
-  //     console.log('add');
-  //     window.addEventListener('click', closeSelection, { once: true });
-  //   }
-  // });
 
   function onSelect(option: T) {
     hidden.value = true;
@@ -41,39 +30,48 @@
 </script>
 
 <template>
-  <label class="input input-bordered flex w-full mb-2">
-    <span v-if="model && showSelectedItem" class="label w-fit">
-      <slot name="item" :data="model" />
-    </span>
-    <input
-      v-model="textValue"
-      :class="model ? 'w-0' : ''"
-      type="text"
-      :placeholder="placeholder"
-      popovertarget="popover-1"
-      style="anchor-name: --anchor-1"
-      @focus="onFocus()"
-      @dblclick="hidden = true" />
-  </label>
+  <div class="form-control w-full mb-2">
+    <div v-if="label" class="label">
+      <span class="label-text">{{ label }}</span>
+    </div>
+    <label class="input input-bordered flex w-full relative">
+      <span v-if="model && showSelectedItem" class="label w-fit">
+        <slot name="item" :data="model" />
+      </span>
+      <input
+        v-model="textValue"
+        :class="model ? 'w-0' : ''"
+        type="text"
+        :placeholder="placeholder"
+        popovertarget="popover-1"
+        style="anchor-name: --anchor-1"
+        @focus="onFocus()"
+        @blur="if (!mouseOnSelection) hidden = true;" />
 
-  <div class="relative">
-    <ul
-      id="popover-1"
-      class="absolute dropdown menu w-52 rounded-box bg-base-100 shadow-md gap-y-1 z-10"
-      :class="hidden ? 'hidden' : ''"
-      popover
-      style="position-anchor: --anchor-1">
-      <li
-        v-for="(option, idx) in selectedOptions"
-        :key="idx"
-        class="hover:opacity-60">
-        <button class="grid-cols-1 p-0" @click="onSelect(option)">
-          <slot name="item" :data="option" />
-        </button>
-      </li>
-      <li v-if="selectedOptions.length === 0">
-        <div>No results found</div>
-      </li>
-    </ul>
+      <ul
+        id="popover-1"
+        class="absolute dropdown menu w-52 rounded-box bg-base-100 shadow-md gap-y-1 top-12"
+        :class="hidden ? 'hidden' : ''"
+        popover
+        style="position-anchor: --anchor-1"
+        @mouseenter="mouseOnSelection = true"
+        @mouseleave="mouseOnSelection = false">
+        <li
+          v-for="(option, idx) in filteredOptions"
+          :key="idx"
+          class="hover:opacity-60">
+          <button
+            class="grid-cols-1 p-0"
+            type="button"
+            @click="onSelect(option)">
+            <slot name="item" :data="option" />
+          </button>
+        </li>
+        <li v-if="filteredOptions.length === 0">
+          <div>No results found</div>
+        </li>
+      </ul>
+    </label>
+    <span v-if="errorMessage" class="text-error">{{ errorMessage }}</span>
   </div>
 </template>

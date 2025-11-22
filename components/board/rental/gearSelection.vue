@@ -6,9 +6,14 @@
     depositFee: number;
   };
 
-  const emits = defineEmits<{
+  const emit = defineEmits<{
     computedDepositFee: [value: number];
   }>();
+
+  // const model = defineModel<{
+  //   gearList: { id: string; amount: number }[];
+  //   depositFee: number;
+  // }>({ required: true });
 
   const allGear = await gearService().getPublicGearInfo();
   const selectedGear = ref<Record<string, GearInfo | undefined>>({});
@@ -17,6 +22,9 @@
       (item) => item !== undefined,
     );
   });
+  // effect(() => {
+  //   model.value.gearList = selectedGearList.value;
+  // });
   const availableGearList = computed(() =>
     allGear
       .filter((item) => selectedGear.value[item.id] === undefined)
@@ -52,18 +60,29 @@
     return options.filter((option) => option.name.includes(input));
   }
 
-  watch(selectedGearItem, (new_) => {
-    if (new_) {
-      selectedGear.value[new_.id] = {
-        id: new_.id,
-        name: new_.name,
-        amount: new_.name === 'quickdraw' ? 6 : 1,
-        depositFee: new_.depositFee,
+  const { value, errorMessage } = useField<{ id: string; amount: number }[]>(
+    () => 'gear',
+  );
+
+  effect(() => {
+    value.value = selectedGearList.value.map((item) => ({
+      id: item.id,
+      amount: item.amount,
+    }));
+  });
+
+  effect(() => {
+    if (selectedGearItem.value) {
+      selectedGear.value[selectedGearItem.value.id] = {
+        id: selectedGearItem.value.id,
+        name: selectedGearItem.value.name,
+        amount: selectedGearItem.value.name === 'quickdraw' ? 6 : 1,
+        depositFee: selectedGearItem.value.depositFee,
       };
     }
   });
   effect(() => {
-    emits(
+    emit(
       'computedDepositFee',
       sum(selectedGearList.value.map((item) => item.depositFee * item.amount)),
     );
@@ -79,7 +98,8 @@
     :options="availableGearList"
     placeholder="select gear"
     :options-select-fn="filterGear"
-    :show-selected-item="false">
+    :show-selected-item="false"
+    :error-message="errorMessage">
     <template #item="{ data }">
       <div
         class="p-3 rounded-md w-full flex flex-row justify-between"
@@ -107,12 +127,15 @@
         {{ item.name }}
       </span>
       <span>
-        <label class="form-control max-w-24">
+        <label class="form-control max-w-20 sm:max-w-24">
           <input
             v-model="selectedGear[item.id]!.amount"
-            class="input input-bordered z-0"
-            type="number" />
-          <!-- <span class="text-error">{{ errorMessage }}</span> -->
+            class="input input-bordered"
+            type="number"
+            @focusout="
+              if (selectedGear[item.id]!.amount < 0)
+                selectedGear[item.id]!.amount = 0;
+            " />
         </label>
       </span>
       <div>Deposit: {{ (item.amount * item.depositFee) / 100 }}€</div>

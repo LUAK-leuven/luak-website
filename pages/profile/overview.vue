@@ -5,7 +5,7 @@
 
   const supabase = useSupabaseClient<Database>();
   const has_membership = ref(await getHasMembership());
-  const isBoardMember = ref(false);
+  const boardMember = ref(false);
 
   const { data: userData } = await useAsyncData('userData', async () => {
     if (!user.value) throw createError({ statusCode: 401 });
@@ -19,8 +19,8 @@
 
   // Check board member status when component is mounted
   onMounted(async () => {
-    const { boardMember } = await checkIsBoardMember();
-    isBoardMember.value = boardMember;
+    const { isBoardMember } = await checkIsBoardMember();
+    boardMember.value = isBoardMember;
     // checkBoardMemberStatus();
   });
 </script>
@@ -45,7 +45,7 @@
           </template>
         </UserCard>
         <!-- Board Member Card - Only visible to board members -->
-        <UserCard v-if="isBoardMember" image="/IMG_20240410_125659.jpg">
+        <UserCard v-if="boardMember" image="/IMG_20240410_125659.jpg">
           <template #title> Members Overview 👥 </template>
           <template #description>
             View and export all active club memberships
@@ -58,7 +58,7 @@
             </NuxtLink>
           </template>
         </UserCard>
-        <UserCard v-if="isBoardMember" image="/luak-logo.png">
+        <UserCard v-if="boardMember" image="/luak-logo.png">
           <template #title> Gear Rental 🧗 </template>
           <template #actions>
             <NuxtLink class="btn btn-primary" to="/board/rental">

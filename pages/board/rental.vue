@@ -1,20 +1,49 @@
 <script setup lang="ts">
-  const { error } = await checkIsBoardMember();
+  import * as yup from 'yup';
+  import dayjs from 'dayjs';
 
-  const rental = ref<
-    Partial<{
-      boardMember: string;
-      member: string;
-      dateBorrowed: string;
-      dateReturn: string;
-      depositFee: number;
-      paymentMethod: 'cash' | 'transfer';
-      gearList: {
-        gearId: string;
-        amount: number;
-      }[];
-    }>
-  >({});
+  const boardMember = await checkIsBoardMember();
+
+  const formSchema = yup.object({
+    boardMember: yup.string().required(),
+    member: yup.string().required(),
+    date_borrow: yup.string().required().label('date borrow'),
+    date_return: yup
+      .string()
+      .required()
+      .test(
+        'isAfter',
+        'Return date must be after borrow date',
+        (date, context) => {
+          return context.parent.date_borrow < date;
+        },
+      )
+      .label('return date'),
+    gear: yup
+      .array(yup.mixed<{ id: string; amouont: number }>().required())
+      .required()
+      .min(1),
+    deposit_fee: yup.number().required().positive(),
+  });
+  const initialValues = {
+    boardMember: boardMember.memberInfo?.name,
+    date_borrow: dayjs().format('YYYY-MM-DD').toString(),
+    date_return: dayjs().add(3, 'w').format('YYYY-MM-DD').toString(),
+  };
+
+  const { values, meta, handleSubmit } = useForm({
+    validationSchema: toTypedSchema(formSchema),
+    initialValues: initialValues,
+  });
+
+  const onSubmit = handleSubmit((formState) => {
+    console.log('pooop');
+    formState.boardMember = boardMember.memberInfo!.id;
+    console.log(formState);
+    navigateTo('/');
+  });
+
+  const computedDeposit = ref<number>();
 </script>
 
 <template>
@@ -22,53 +51,59 @@
     <template #title>Rental form 🧗</template>
 
     <!-- Error message -->
-    <div v-if="error" class="alert alert-error">
-      <span>{{ error }}</span>
+    <div v-if="!boardMember.isBoardMember" class="alert alert-error">
+      <span>{{ boardMember.error }}</span>
     </div>
 
-    <div v-else>
-      <details class="collapse collapse-arrow bg-base-100" open>
-        <summary class="collapse-title">
-          <h2 class="my-0">General info</h2>
-        </summary>
-        <div class="collapse-content">
-          <BoardRentalGeneral v-model="rental" />
+    <form v-else @submit.prevent="onSubmit">
+      <h2>General info</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-2 mb-3">
+        <div class="w-full self-end">
+          <BoardRentalSelectMember />
+          <!-- <div
+            v-if="!(values.member?.hasPaid ?? true)"
+            class="bg-yellow-300 rounded-md w-fit px-1">
+            Warning: user has no active membership!
+          </div> -->
         </div>
-      </details>
+
+        <InputText
+          class="w-full"
+          label="Board member *"
+          name="boardMember"
+          :disabled="true" />
+
+        <InputText label="Date borrow *" name="date_borrow" type="date" />
+        <InputText label="Date return *" name="date_return" type="date" />
+      </div>
+
       <hr />
-      <details class="collapse collapse-arrow bg-base-100" open>
-        <summary class="collapse-title">
-          <h2 class="my-0">Gear list</h2>
-        </summary>
-        <div class="collapse-content">
-          <BoardRentalGearSelection
-            v-model="rental.gearList"
-            @computed-deposit-fee="(value) => (rental.depositFee = value)" />
-        </div>
-      </details>
+      <h2>Gear list</h2>
+      <BoardRentalGearSelection
+        @computed-deposit-fee="
+          (value) => (computedDeposit = value < 2000 ? 20 : value / 100)
+        " />
       <hr />
-      <details class="collapse collapse-arrow bg-base-100" open>
-        <summary class="collapse-title">
-          <h2 class="my-0">Payment</h2>
-        </summary>
-        <div class="collapse-content">
-          <label class="input input-bordered flex w-full">
-            <span class="label w-fit">€</span>
-            <input class="" />
-          </label>
-          <InputText label="Deposit fee € *" name="deposit_fee" type="number" />
-        </div>
-      </details>
+
+      <h2>Payment</h2>
+      <InputText
+        label="Deposit fee *"
+        name="deposit_fee"
+        type="number"
+        :placeholder="computedDeposit?.toString() ?? 'deposit'"
+        :auto-fill-with-placeholder="true">
+        <template #label1><span class="mr-1">€</span></template>
+      </InputText>
 
       <div class="flex justify-end">
-        <!-- <button
+        <button
           class="btn btn-primary mt-3 w-fit"
-          :class="{ 'btn-disabled': !meta.valid || !meta.dirty }">
+          :class="{ 'btn-disabled': !meta.valid || !meta.dirty }"
+          type="submit">
           Submit
-        </button> -->
-        <button class="btn btn-primary mt-3 w-fit">Submit</button>
-        {{ rental }}
+        </button>
       </div>
-    </div>
+      {{ values }}
+    </form>
   </FullPageCard>
 </template>
