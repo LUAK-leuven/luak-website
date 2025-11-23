@@ -52,6 +52,11 @@
           to="/board/subscriptions-overview"
           >👥</NuxtLink
         >
+        <NuxtLink
+          class="btn btn-lg btn-circle text-2xl"
+          to="/board/rental-overview"
+          >👀</NuxtLink
+        >
       </div>
     </div>
     <div class="drawer-side z-50">

@@ -103,6 +103,50 @@ class GearService {
 
     return { error: undefined };
   }
+
+  public async getRentals(): Promise<Rental[]> {
+    const { data, error } = await this.supabase.from('Rentals').select(
+      `id,
+        BoardMembers(
+          Users(
+            first_name,
+            last_name
+          )
+        ),
+        Users(
+          first_name,
+          last_name
+        ),
+        date_borrow,
+        date_return,
+        deposit,
+        payment_method,
+        RentedGear(
+          GearItems(
+            name
+          ),
+          amount
+        )
+        `,
+    );
+
+    if (error || data === null) {
+      console.warn('failed to load rentals', error);
+      return [];
+    }
+
+    return data.map((rental) => ({
+      member: getFullName(rental.Users!),
+      boardMember: getFullName(rental.BoardMembers!.Users!),
+      date_borrow: rental.date_borrow,
+      date_return: rental.date_return,
+      deposit_fee: rental.deposit,
+      gear: rental.RentedGear.map((gearItem) => ({
+        id: gearItem.GearItems!.name,
+        amount: gearItem.amount,
+      })),
+    }));
+  }
 }
 
 let gearServiceInstance: GearService | undefined = undefined;

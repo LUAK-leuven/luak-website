@@ -58,3 +58,7 @@ export function userService(): UserService {
     userServiceInstance = new UserService();
   return userServiceInstance;
 }
+
+export function getFullName(user: { first_name: string; last_name: string }) {
+  return user.first_name + ' ' + user.last_name;
+}
