@@ -39,6 +39,7 @@
     "@sentry/nuxt": "^8.27.0",
     "@vee-validate/nuxt": "^4.12.8",
     "@vee-validate/yup": "^4.12.8",
+    "@vueuse/core": "^14.0.0",
     "dayjs": "^1.11.13",
     "yup": "^1.4.0"
   },

@@ -3,3 +3,8 @@ export function sum(array: number[]) {
 }
 
 export type DropNull<T> = T extends null ? never : T;
+
+export function search(content: string, searchTerm: string): boolean {
+  if (!content) return false;
+  return content.toLowerCase().includes(searchTerm.toLowerCase());
+}

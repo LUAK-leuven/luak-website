@@ -66,7 +66,7 @@
       <h2>General info</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-2 mb-3">
         <div class="w-full self-end">
-          <BoardRentalSelectMember />
+          <BoardRentalFormSelectMember />
           <!-- <div
             v-if="!(values.member?.hasPaid ?? true)"
             class="bg-yellow-300 rounded-md w-fit px-1">
@@ -86,7 +86,7 @@
 
       <hr />
       <h2>Gear list</h2>
-      <BoardRentalGearSelection
+      <BoardRentalFormGearSelection
         @computed-deposit-fee="
           (value) => (computedDeposit = value < 2000 ? 20 : value / 100)
         " />

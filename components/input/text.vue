@@ -4,35 +4,43 @@
 
   const props = withDefaults(
     defineProps<{
-      label: string;
+      label?: string | undefined;
       type?: InputTypeHTMLAttribute;
       name: string;
       placeholder?: string;
       disabled?: boolean;
       autoFillWithPlaceholder?: boolean;
+      round?: boolean;
     }>(),
     {
       type: 'text',
       placeholder: 'text',
       disabled: false,
       autoFillWithPlaceholder: false,
+      label: undefined,
+      round: false,
     },
   );
 
-  const { value, errorMessage } = useField(() => props.name);
+  const model = defineModel<string>();
+
+  const { value, errorMessage } = useField<string | undefined>(
+    () => props.name,
+  );
   effect(() => {
     if (value.value === '') value.value = undefined;
+    model.value = value.value;
   });
 </script>
 
 <template>
   <div class="form-control w-full mb-2">
-    <div class="label">
+    <div v-if="label" class="label">
       <span class="label-text">{{ label }}</span>
     </div>
     <label
       class="input input-bordered w-full flex items-center"
-      :class="disabled ? 'bg-gray-300' : ''">
+      :class="(disabled ? 'bg-gray-300' : '') + (round ? ' rounded-full' : '')">
       <slot name="label1" />
       <input
         v-model="value"

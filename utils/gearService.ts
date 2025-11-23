@@ -20,6 +20,20 @@ export type Rental = {
   deposit_fee: number;
 };
 
+export type RentalDetails = {
+  id: string;
+  memberName: string;
+  boardMember: string;
+  date_borrow: string;
+  date_return: string;
+  gear: {
+    name: string;
+    amount: number;
+  }[];
+  deposit_fee: number;
+  payment_method: 'cash' | 'transfer';
+};
+
 class GearService {
   private readonly supabase = useSupabaseClient<Database>();
 
@@ -104,7 +118,7 @@ class GearService {
     return { error: undefined };
   }
 
-  public async getRentals(): Promise<Rental[]> {
+  public async getRentals(): Promise<RentalDetails[]> {
     const { data, error } = await this.supabase.from('Rentals').select(
       `id,
         BoardMembers(
@@ -136,16 +150,70 @@ class GearService {
     }
 
     return data.map((rental) => ({
-      member: getFullName(rental.Users!),
+      id: rental.id,
+      memberName: getFullName(rental.Users!),
       boardMember: getFullName(rental.BoardMembers!.Users!),
       date_borrow: rental.date_borrow,
       date_return: rental.date_return,
       deposit_fee: rental.deposit,
       gear: rental.RentedGear.map((gearItem) => ({
-        id: gearItem.GearItems!.name,
+        name: gearItem.GearItems!.name,
         amount: gearItem.amount,
       })),
+      payment_method: rental.payment_method,
     }));
+  }
+
+  public async getRental(
+    rental_id: string,
+  ): Promise<RentalDetails | undefined> {
+    const { data: rental, error } = await this.supabase
+      .from('Rentals')
+      .select(
+        `id,
+        BoardMembers(
+          Users(
+            first_name,
+            last_name
+          )
+        ),
+        Users(
+          first_name,
+          last_name
+        ),
+        date_borrow,
+        date_return,
+        deposit,
+        payment_method,
+        RentedGear(
+          GearItems(
+            name
+          ),
+          amount
+        )
+        `,
+      )
+      .eq('id', rental_id)
+      .single();
+
+    if (error || rental === null) {
+      console.warn('failed to load rentals', error);
+      return undefined;
+    }
+
+    return {
+      id: rental.id,
+      memberName: getFullName(rental.Users!),
+      boardMember: getFullName(rental.BoardMembers!.Users!),
+      date_borrow: rental.date_borrow,
+      date_return: rental.date_return,
+      deposit_fee: rental.deposit,
+      gear: rental.RentedGear.map((gearItem) => ({
+        name: gearItem.GearItems!.name,
+        amount: gearItem.amount,
+      })),
+      payment_method: rental.payment_method,
+    };
   }
 }
 

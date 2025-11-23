@@ -55,7 +55,7 @@
     <li v-if="user.isMember">
       <NuxtLink to="/stories">Stories</NuxtLink>
     </li>
-    <li>
+    <li v-if="user.isBoard">
       <details id="board-toggle">
         <summary>Board</summary>
         <ul class="p-2 bg-base-200 rounded-t-none w-52">
