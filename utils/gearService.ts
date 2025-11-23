@@ -1,4 +1,4 @@
-import type { Database } from '~/types/database.types';
+import type { Database, Enums } from '~/types/database.types';
 
 export type PublicGearInfo = {
   id: string;
@@ -8,30 +8,33 @@ export type PublicGearInfo = {
   depositFee: number;
 };
 
-export type Rental = {
-  member: string;
-  boardMember: string;
-  date_borrow: string;
-  date_return: string;
+export type UnsavedRental = {
+  memberId: string;
+  boardMemberId: string;
+  dateBorrow: string;
+  dateReturn: string;
   gear: {
-    id: string;
+    gearItemId: string;
     amount: number;
   }[];
-  deposit_fee: number;
+  depositFee: number;
+  paymentMethod: Enums<'PaymentMethod'>;
 };
 
 export type RentalDetails = {
   id: string;
   memberName: string;
   boardMember: string;
-  date_borrow: string;
-  date_return: string;
+  dateBorrow: string;
+  dateReturn: string;
   gear: {
     name: string;
     amount: number;
+    returnedAmount: number;
   }[];
-  deposit_fee: number;
-  payment_method: 'cash' | 'transfer';
+  depositFee: number;
+  returnedDeposit: number;
+  paymentMethod: Enums<'PaymentMethod'>;
 };
 
 class GearService {
@@ -76,17 +79,17 @@ class GearService {
   }
 
   public async saveRental(
-    rental: Rental,
+    rental: UnsavedRental,
   ): Promise<{ error: string | undefined }> {
     const { data, error } = await this.supabase
       .from('Rentals')
       .insert({
-        board_member: rental.boardMember,
-        member_id: rental.member,
-        date_borrow: rental.date_borrow,
-        date_return: rental.date_return,
-        deposit: rental.deposit_fee,
-        payment_method: 'transfer',
+        board_member: rental.boardMemberId,
+        member_id: rental.memberId,
+        date_borrow: rental.dateBorrow,
+        date_return: rental.dateReturn,
+        deposit: rental.depositFee,
+        payment_method: rental.paymentMethod,
       })
       .select('id')
       .single();
@@ -97,7 +100,7 @@ class GearService {
       .from('RentedGear')
       .insert(
         rental.gear.map((gearItem) => ({
-          gear_item_id: gearItem.id,
+          gear_item_id: gearItem.gearItemId,
           rental_id: data.id,
           amount: gearItem.amount,
         })),
@@ -120,28 +123,29 @@ class GearService {
 
   public async getRentals(): Promise<RentalDetails[]> {
     const { data, error } = await this.supabase.from('Rentals').select(
-      `id,
-        BoardMembers(
-          Users(
-            first_name,
-            last_name
-          )
+      `
+      id,
+      board_member:Users!Rentals_board_member_fkey(
+        first_name,
+        last_name
+      ),
+      member:Users!Rentals_member_id_fkey (
+        first_name,
+        last_name
+      ),
+      date_borrow,
+      date_return,
+      deposit,
+      payment_method,
+      RentedGear(
+        GearItems(
+          name
         ),
-        Users(
-          first_name,
-          last_name
-        ),
-        date_borrow,
-        date_return,
-        deposit,
-        payment_method,
-        RentedGear(
-          GearItems(
-            name
-          ),
-          amount
-        )
-        `,
+        amount,
+        returned_amount
+      ),
+      returned_deposit
+      `,
     );
 
     if (error || data === null) {
@@ -151,16 +155,18 @@ class GearService {
 
     return data.map((rental) => ({
       id: rental.id,
-      memberName: getFullName(rental.Users!),
-      boardMember: getFullName(rental.BoardMembers!.Users!),
-      date_borrow: rental.date_borrow,
-      date_return: rental.date_return,
-      deposit_fee: rental.deposit,
+      memberName: getFullName(rental.member!),
+      boardMember: getFullName(rental.board_member!),
+      dateBorrow: rental.date_borrow,
+      dateReturn: rental.date_return,
+      depositFee: rental.deposit,
       gear: rental.RentedGear.map((gearItem) => ({
         name: gearItem.GearItems!.name,
         amount: gearItem.amount,
+        returnedAmount: gearItem.returned_amount,
       })),
-      payment_method: rental.payment_method,
+      paymentMethod: rental.payment_method,
+      returnedDeposit: rental.returned_deposit,
     }));
   }
 
@@ -170,14 +176,13 @@ class GearService {
     const { data: rental, error } = await this.supabase
       .from('Rentals')
       .select(
-        `id,
-        BoardMembers(
-          Users(
-            first_name,
-            last_name
-          )
+        `
+        id,
+        board_member:Users!Rentals_board_member_fkey(
+          first_name,
+          last_name
         ),
-        Users(
+        member:Users!Rentals_member_id_fkey(
           first_name,
           last_name
         ),
@@ -189,8 +194,10 @@ class GearService {
           GearItems(
             name
           ),
-          amount
-        )
+          amount,
+          returned_amount
+        ),
+        returned_deposit
         `,
       )
       .eq('id', rental_id)
@@ -203,16 +210,18 @@ class GearService {
 
     return {
       id: rental.id,
-      memberName: getFullName(rental.Users!),
-      boardMember: getFullName(rental.BoardMembers!.Users!),
-      date_borrow: rental.date_borrow,
-      date_return: rental.date_return,
-      deposit_fee: rental.deposit,
+      memberName: getFullName(rental.member!),
+      boardMember: getFullName(rental.board_member!),
+      dateBorrow: rental.date_borrow,
+      dateReturn: rental.date_return,
+      depositFee: rental.deposit,
       gear: rental.RentedGear.map((gearItem) => ({
         name: gearItem.GearItems!.name,
         amount: gearItem.amount,
+        returnedAmount: gearItem.returned_amount,
       })),
-      payment_method: rental.payment_method,
+      paymentMethod: rental.payment_method,
+      returnedDeposit: rental.returned_deposit,
     };
   }
 }

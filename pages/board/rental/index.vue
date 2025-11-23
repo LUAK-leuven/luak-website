@@ -11,42 +11,44 @@
   };
 
   const formSchema = yup.object({
-    boardMember: yup.string().required(),
-    member: yup.string().required(),
-    date_borrow: yup.string().required().label('date borrow'),
-    date_return: yup
+    boardMemberId: yup.string().required(),
+    memberId: yup.string().required(),
+    dateBorrow: yup.string().required().label('date borrow'),
+    dateReturn: yup
       .string()
       .required()
       .test(
         'isAfter',
         'Return date must be after borrow date',
         (date, context) => {
-          return context.parent.date_borrow < date;
+          return context.parent.dateBorrow < date;
         },
       )
       .label('return date'),
     gear: yup
-      .array(yup.mixed<{ id: string; amount: number }>().required())
+      .array(yup.mixed<{ gearItemId: string; amount: number }>().required())
       .required()
       .min(1),
-    deposit_fee: yup.number().required().positive(),
+    depositFee: yup.number().required().positive(),
+    paymentMethod: yup.string<'transfer' | 'cash'>().required(),
   });
   const initialValues = {
-    boardMember: boardMember.name,
-    date_borrow: dayjs().format('YYYY-MM-DD').toString(),
-    date_return: dayjs().add(3, 'w').format('YYYY-MM-DD').toString(),
-  };
+    boardMemberId: boardMember.name,
+    dateBorrow: dayjs().format('YYYY-MM-DD').toString(),
+    dateReturn: dayjs().add(3, 'w').format('YYYY-MM-DD').toString(),
+  } as const;
 
-  const { meta, handleSubmit } = useForm({
+  const { meta, handleSubmit, errors, validateField } = useForm({
     validationSchema: toTypedSchema(formSchema),
     initialValues: initialValues,
+    validateOnMount: false,
   });
 
   const submitError = ref(false);
   const errorMessage = ref<string>();
 
   const onSubmit = handleSubmit(async (formState) => {
-    formState.boardMember = boardMember.id;
+    formState.boardMemberId = boardMember.id;
     console.log(formState);
     // TODO: Show preview
     const { error } = await gearService().saveRental(formState);
@@ -56,6 +58,10 @@
   });
 
   const computedDeposit = ref<number>();
+
+  onMounted(() => {
+    validateField('paymentMethod');
+  });
 </script>
 
 <template>
@@ -66,7 +72,7 @@
       <h2>General info</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-2 mb-3">
         <div class="w-full self-end">
-          <BoardRentalFormSelectMember />
+          <BoardRentalFormSelectMember name="memberId" />
           <!-- <div
             v-if="!(values.member?.hasPaid ?? true)"
             class="bg-yellow-300 rounded-md w-fit px-1">
@@ -77,11 +83,11 @@
         <InputText
           class="w-full"
           label="Board member *"
-          name="boardMember"
+          name="boardMemberId"
           :disabled="true" />
 
-        <InputText label="Date borrow *" name="date_borrow" type="date" />
-        <InputText label="Date return *" name="date_return" type="date" />
+        <InputText label="Date borrow *" name="dateBorrow" type="date" />
+        <InputText label="Date return *" name="dateReturn" type="date" />
       </div>
 
       <hr />
@@ -93,14 +99,25 @@
       <hr />
 
       <h2>Payment</h2>
-      <InputText
-        label="Deposit fee *"
-        name="deposit_fee"
-        type="number"
-        :placeholder="computedDeposit?.toString() ?? 'deposit'"
-        :auto-fill-with-placeholder="true">
-        <template #label1><span class="mr-1">€</span></template>
-      </InputText>
+      <div class="flex flex-row items-end gap-5">
+        <InputText
+          label="Deposit fee *"
+          name="depositFee"
+          type="number"
+          :placeholder="computedDeposit?.toString() ?? 'deposit'"
+          :auto-fill-with-placeholder="true">
+          <template #label1><span class="mr-1">€</span></template>
+        </InputText>
+        <Field
+          class="select select-bordered w-min mb-2"
+          :class="errors.paymentMethod ? 'select-error border-4' : ''"
+          name="paymentMethod"
+          as="select">
+          <option disabled selected>Payment method</option>
+          <option value="cash">cash</option>
+          <option value="transfer">transfer</option>
+        </Field>
+      </div>
 
       <div class="flex justify-end">
         <button

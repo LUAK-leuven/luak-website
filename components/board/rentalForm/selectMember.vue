@@ -15,8 +15,6 @@
     options: typeof selectableUsers,
     input: string | undefined,
   ) {
-    console.log(options[0]);
-    console.log(input);
     if (input === undefined) return options;
     return options
       .filter((option) =>

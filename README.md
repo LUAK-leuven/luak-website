@@ -43,7 +43,7 @@ To generate a migration file for the diff between you local db and what is defin
 
 Esport DB types
 
- > yarn supabase gen types typescript --local > database.types.ts
+ > yarn supabase gen types typescript --local > types/database.types.ts
 
 To push db changes to prod
 

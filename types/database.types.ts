@@ -261,6 +261,7 @@ export type Database = {
           id: string;
           member_id: string | null;
           payment_method: Database['public']['Enums']['PaymentMethod'];
+          returned_deposit: number;
         };
         Insert: {
           board_member?: string;
@@ -272,6 +273,7 @@ export type Database = {
           id?: string;
           member_id?: string | null;
           payment_method: Database['public']['Enums']['PaymentMethod'];
+          returned_deposit?: number;
         };
         Update: {
           board_member?: string;
@@ -283,14 +285,22 @@ export type Database = {
           id?: string;
           member_id?: string | null;
           payment_method?: Database['public']['Enums']['PaymentMethod'];
+          returned_deposit?: number;
         };
         Relationships: [
           {
             foreignKeyName: 'Rentals_board_member_fkey';
             columns: ['board_member'];
             isOneToOne: false;
-            referencedRelation: 'BoardMembers';
-            referencedColumns: ['user_id'];
+            referencedRelation: 'Users';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'Rentals_contact_info_fkey';
+            columns: ['contact_info'];
+            isOneToOne: false;
+            referencedRelation: 'TemporaryUsers';
+            referencedColumns: ['id'];
           },
           {
             foreignKeyName: 'Rentals_member_id_fkey';
@@ -306,19 +316,25 @@ export type Database = {
           amount: number;
           gear_item_id: string;
           id: string;
+          last_edited_date: string;
           rental_id: string;
+          returned_amount: number;
         };
         Insert: {
           amount: number;
           gear_item_id?: string;
           id?: string;
+          last_edited_date?: string;
           rental_id?: string;
+          returned_amount?: number;
         };
         Update: {
           amount?: number;
           gear_item_id?: string;
           id?: string;
+          last_edited_date?: string;
           rental_id?: string;
+          returned_amount?: number;
         };
         Relationships: [
           {
@@ -336,6 +352,33 @@ export type Database = {
             referencedColumns: ['id'];
           },
         ];
+      };
+      TemporaryUsers: {
+        Row: {
+          created_at: string;
+          email: string | null;
+          first_name: string;
+          id: string;
+          last_name: string;
+          phone_number: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          email?: string | null;
+          first_name: string;
+          id?: string;
+          last_name: string;
+          phone_number?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          email?: string | null;
+          first_name?: string;
+          id?: string;
+          last_name?: string;
+          phone_number?: string | null;
+        };
+        Relationships: [];
       };
       Users: {
         Row: {

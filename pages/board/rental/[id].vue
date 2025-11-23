@@ -21,10 +21,10 @@
       <div class="grid grid-cols-2 gap-3">
         <div>Member: {{ rental.memberName }}</div>
         <div>Board member: {{ rental.boardMember }}</div>
-        <div>Date borrow: {{ rental.date_borrow }}</div>
-        <ReturnDate :date="rental.date_return" />
-        <div>Deposit: {{ rental.deposit_fee }}</div>
-        <div>Payment: {{ rental.payment_method }}</div>
+        <div>Date borrow: {{ rental.dateBorrow }}</div>
+        <ReturnDate :date="rental.dateReturn" />
+        <div>Deposit: {{ rental.depositFee }}</div>
+        <div>Payment: {{ rental.paymentMethod }}</div>
       </div>
       <hr class="my-3" />
       <div
@@ -32,10 +32,12 @@
         <b class="border px-1">Gear</b>
         <b class="border px-1">Amount</b>
         <b class="border px-1">Returned</b>
-        <template v-for="({ name, amount }, idx) of rental.gear" :key="idx">
+        <template
+          v-for="({ name, amount, returnedAmount }, idx) of rental.gear"
+          :key="idx">
           <div class="border p-1">{{ name }}</div>
           <div class="border p-1">{{ amount }}</div>
-          <div class="border p-1">0</div>
+          <div class="border p-1">{{ returnedAmount }}</div>
         </template>
       </div>
       <hr class="my-3" />

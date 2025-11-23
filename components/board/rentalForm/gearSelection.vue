@@ -11,6 +11,9 @@
   }>();
 
   const allGear = await gearService().getPublicGearInfo();
+  const gearRecord = Object.fromEntries(
+    allGear.map((gearItem) => [gearItem.id, gearItem]),
+  );
   const selectedGear = ref<Record<string, GearInfo | undefined>>({});
   const selectedGearList = computed(() => {
     return Object.values(selectedGear.value).filter(
@@ -55,13 +58,13 @@
       .slice(0, 5);
   }
 
-  const { value, errorMessage } = useField<{ id: string; amount: number }[]>(
-    () => 'gear',
-  );
+  const { value, errorMessage } = useField<
+    { gearItemId: string; amount: number }[]
+  >(() => 'gear');
 
   effect(() => {
     value.value = selectedGearList.value.map((item) => ({
-      id: item.id,
+      gearItemId: item.id,
       amount: item.amount,
     }));
   });
@@ -85,6 +88,14 @@
 
   function putItemBack(item: GearInfo) {
     selectedGear.value[item.id] = undefined;
+  }
+
+  function clampAmount(id: string) {
+    const amount = selectedGear.value[id]?.amount;
+    if (amount === undefined) return;
+    const totalAmount = gearRecord[id].totalAmount;
+    if (amount < 0) selectedGear.value[id]!.amount = 0;
+    if (totalAmount < amount) selectedGear.value[id]!.amount = totalAmount;
   }
 </script>
 <template>
@@ -125,12 +136,18 @@
         <label class="form-control max-w-20 sm:max-w-24">
           <input
             v-model="selectedGear[item.id]!.amount"
-            class="input input-bordered"
+            class="input input-bordered border-2"
+            :class="
+              selectedGear[item.id]!.amount > gearRecord[item.id].totalAmount ||
+              selectedGear[item.id]!.amount < 0
+                ? 'input-error'
+                : selectedGear[item.id]!.amount >
+                    gearRecord[item.id].availableAmount
+                  ? 'input-warning'
+                  : ''
+            "
             type="number"
-            @focusout="
-              if (selectedGear[item.id]!.amount < 0)
-                selectedGear[item.id]!.amount = 0;
-            " />
+            @focusout="clampAmount(item.id)" />
         </label>
       </span>
       <div>Deposit: {{ (item.amount * item.depositFee) / 100 }}€</div>
