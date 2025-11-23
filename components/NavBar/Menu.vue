@@ -65,10 +65,10 @@
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/board/rental"> Rental form </NuxtLink>
+            <NuxtLink to="/board/rental-form"> Rental form </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/board/rental-overview"> Rental overview </NuxtLink>
+            <NuxtLink to="/board/rentals"> Rental overview </NuxtLink>
           </li>
         </ul>
       </details>

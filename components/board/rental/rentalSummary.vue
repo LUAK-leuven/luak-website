@@ -5,7 +5,7 @@
 </script>
 
 <template>
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+  <div class="flex flex-row flex-wrap gap-5 justify-evenly">
     <div>Name: {{ rental.memberName }}</div>
     <BoardRentalReturnDate :date="rental.dateReturn" />
   </div>

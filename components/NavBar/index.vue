@@ -44,19 +44,19 @@
         </div>
 
         <!-- buttons that show up when FAB is open -->
-        <NuxtLink class="btn btn-lg btn-circle text-2xl" to="/board/rental"
-          >🧗‍♀️</NuxtLink
-        >
         <NuxtLink
           class="btn btn-lg btn-circle text-2xl"
-          to="/board/subscriptions-overview"
-          >👥</NuxtLink
-        >
+          to="/board/rental-form">
+          🧗‍♀️
+        </NuxtLink>
         <NuxtLink
           class="btn btn-lg btn-circle text-2xl"
-          to="/board/rental-overview"
-          >👀</NuxtLink
-        >
+          to="/board/subscriptions-overview">
+          👥
+        </NuxtLink>
+        <NuxtLink class="btn btn-lg btn-circle text-2xl" to="/board/rentals">
+          👀
+        </NuxtLink>
       </div>
     </div>
     <div class="drawer-side z-50">
