@@ -34,7 +34,7 @@
 </script>
 
 <template>
-  <div class="form-control w-full mb-2">
+  <div class="form-control w-full">
     <div v-if="label" class="label">
       <span class="label-text">{{ label }}</span>
     </div>

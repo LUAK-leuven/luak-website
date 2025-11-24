@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import ReturnDate from '~/components/board/rental/returnDate.vue';
+  import StatusBadge from '~/components/board/rental/statusBadge.vue';
   import type { RentalDetails } from '~/utils/gearService';
 
   const rental = ref<RentalDetails>();
@@ -16,15 +17,18 @@
   <FullPageCard>
     <template #subtitle><h2>title?</h2></template>
     <div class="h-2"></div>
-    <div v-if="loading">loading ...</div>
+    <div v-if="loading" class="flex justify-center">
+      <span class="loading loading-spinner loading-lg" />
+    </div>
     <div v-else-if="rental !== undefined">
       <div class="grid grid-cols-2 gap-3">
         <div>Member: {{ rental.memberName }}</div>
         <div>Board member: {{ rental.boardMember }}</div>
         <div>Date borrow: {{ rental.dateBorrow }}</div>
-        <ReturnDate :date="rental.dateReturn" />
+        <div>Return date: <ReturnDate :date="rental.dateReturn" /></div>
         <div>Deposit: {{ rental.depositFee }}</div>
         <div>Payment: {{ rental.paymentMethod }}</div>
+        <div>Status: <StatusBadge :status="rental.status" /></div>
       </div>
       <hr class="my-3" />
       <div

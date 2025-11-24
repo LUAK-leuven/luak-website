@@ -260,8 +260,8 @@ export type Database = {
           deposit: number;
           id: string;
           member_id: string | null;
-          payment_method: Database['public']['Enums']['PaymentMethod'];
-          returned_deposit: number;
+          payment_method: Database['public']['Enums']['payment_method'];
+          status: Database['public']['Enums']['rental_status'];
         };
         Insert: {
           board_member?: string;
@@ -272,8 +272,8 @@ export type Database = {
           deposit: number;
           id?: string;
           member_id?: string | null;
-          payment_method: Database['public']['Enums']['PaymentMethod'];
-          returned_deposit?: number;
+          payment_method: Database['public']['Enums']['payment_method'];
+          status?: Database['public']['Enums']['rental_status'];
         };
         Update: {
           board_member?: string;
@@ -284,8 +284,8 @@ export type Database = {
           deposit?: number;
           id?: string;
           member_id?: string | null;
-          payment_method?: Database['public']['Enums']['PaymentMethod'];
-          returned_deposit?: number;
+          payment_method?: Database['public']['Enums']['payment_method'];
+          status?: Database['public']['Enums']['rental_status'];
         };
         Relationships: [
           {
@@ -430,7 +430,8 @@ export type Database = {
     Enums: {
       gear_status: 'available' | 'archived';
       kbf_uiaa: 'not' | 'kbf_luak' | 'kbf_other' | 'uiaa';
-      PaymentMethod: 'cash' | 'transfer';
+      payment_method: 'cash' | 'transfer';
+      rental_status: 'returned' | 'partially_returned' | 'not_returned';
       student: 'student_kul' | 'phd_kul' | 'student_other' | 'not_student';
     };
     CompositeTypes: {
@@ -1099,7 +1100,8 @@ export const Constants = {
     Enums: {
       gear_status: ['available', 'archived'],
       kbf_uiaa: ['not', 'kbf_luak', 'kbf_other', 'uiaa'],
-      PaymentMethod: ['cash', 'transfer'],
+      payment_method: ['cash', 'transfer'],
+      rental_status: ['returned', 'partially_returned', 'not_returned'],
       student: ['student_kul', 'phd_kul', 'student_other', 'not_student'],
     },
   },

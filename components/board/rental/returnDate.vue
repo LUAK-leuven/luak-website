@@ -9,12 +9,9 @@
 </script>
 
 <template>
-  <div>
-    Return date:
-    <span
-      class="rounded-2xl p-1 px-2 text-nowrap"
-      :class="isLate ? 'bg-red-300' : isAlmostLate ? 'bg-yellow-200' : ''">
-      {{ date }}
-    </span>
-  </div>
+  <span
+    class="rounded-2xl p-1 px-2 text-nowrap"
+    :class="isLate ? 'bg-red-300' : isAlmostLate ? 'bg-yellow-200' : ''">
+    {{ date }}
+  </span>
 </template>

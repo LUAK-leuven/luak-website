@@ -18,7 +18,14 @@ export type UnsavedRental = {
     amount: number;
   }[];
   depositFee: number;
-  paymentMethod: Enums<'PaymentMethod'>;
+  paymentMethod: Enums<'payment_method'>;
+};
+
+export type RentalSummary = {
+  id: string;
+  memberName: string;
+  dateReturn: string;
+  status: Enums<'rental_status'>;
 };
 
 export type RentalDetails = {
@@ -33,8 +40,8 @@ export type RentalDetails = {
     returnedAmount: number;
   }[];
   depositFee: number;
-  returnedDeposit: number;
-  paymentMethod: Enums<'PaymentMethod'>;
+  paymentMethod: Enums<'payment_method'>;
+  status: Enums<'rental_status'>;
 };
 
 class GearService {
@@ -121,30 +128,16 @@ class GearService {
     return { error: undefined };
   }
 
-  public async getRentals(): Promise<RentalDetails[]> {
+  public async getRentals(): Promise<RentalSummary[]> {
     const { data, error } = await this.supabase.from('Rentals').select(
       `
       id,
-      board_member:Users!Rentals_board_member_fkey(
-        first_name,
-        last_name
-      ),
       member:Users!Rentals_member_id_fkey (
         first_name,
         last_name
       ),
-      date_borrow,
       date_return,
-      deposit,
-      payment_method,
-      RentedGear(
-        GearItems(
-          name
-        ),
-        amount,
-        returned_amount
-      ),
-      returned_deposit
+      status
       `,
     );
 
@@ -156,17 +149,8 @@ class GearService {
     return data.map((rental) => ({
       id: rental.id,
       memberName: getFullName(rental.member!),
-      boardMember: getFullName(rental.board_member!),
-      dateBorrow: rental.date_borrow,
       dateReturn: rental.date_return,
-      depositFee: rental.deposit,
-      gear: rental.RentedGear.map((gearItem) => ({
-        name: gearItem.GearItems!.name,
-        amount: gearItem.amount,
-        returnedAmount: gearItem.returned_amount,
-      })),
-      paymentMethod: rental.payment_method,
-      returnedDeposit: rental.returned_deposit,
+      status: rental.status,
     }));
   }
 
@@ -197,7 +181,7 @@ class GearService {
           amount,
           returned_amount
         ),
-        returned_deposit
+        status
         `,
       )
       .eq('id', rental_id)
@@ -221,7 +205,7 @@ class GearService {
         returnedAmount: gearItem.returned_amount,
       })),
       paymentMethod: rental.payment_method,
-      returnedDeposit: rental.returned_deposit,
+      status: rental.status,
     };
   }
 }

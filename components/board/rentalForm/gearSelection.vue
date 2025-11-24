@@ -94,7 +94,7 @@
     const amount = selectedGear.value[id]?.amount;
     if (amount === undefined) return;
     const totalAmount = gearRecord[id].totalAmount;
-    if (amount < 0) selectedGear.value[id]!.amount = 0;
+    if (amount < 1) selectedGear.value[id]!.amount = 1;
     if (totalAmount < amount) selectedGear.value[id]!.amount = totalAmount;
   }
 </script>
@@ -139,7 +139,7 @@
             class="input input-bordered border-2"
             :class="
               selectedGear[item.id]!.amount > gearRecord[item.id].totalAmount ||
-              selectedGear[item.id]!.amount < 0
+              selectedGear[item.id]!.amount < 1
                 ? 'input-error'
                 : selectedGear[item.id]!.amount >
                     gearRecord[item.id].availableAmount
