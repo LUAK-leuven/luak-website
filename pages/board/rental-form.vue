@@ -109,7 +109,7 @@
           <template #label1><span class="mr-1">€</span></template>
         </InputText>
         <Field
-          class="select select-bordered w-min mb-2"
+          class="select select-bordered w-min"
           :class="errors.paymentMethod ? 'select-error border-4' : ''"
           name="paymentMethod"
           as="select">

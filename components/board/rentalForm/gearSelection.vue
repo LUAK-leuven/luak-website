@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+  import Number from '~/components/input/number.vue';
+
   type GearInfo = {
     id: string;
     name: string;
@@ -33,20 +35,7 @@
           }) satisfies GearInfo,
       ),
   );
-  const remainingGear: ComputedRef<Record<string, GearInfo>> = computed(() =>
-    Object.fromEntries(
-      allGear.map((item) => [
-        item.id,
-        {
-          id: item.id,
-          name: item.name,
-          amount:
-            item.availableAmount - (selectedGear.value[item.id]?.amount ?? 0),
-          depositFee: item.depositFee,
-        },
-      ]),
-    ),
-  );
+
   const selectedGearItem = ref<GearInfo>();
 
   function filterGear(options: GearInfo[], input: string | undefined) {
@@ -89,15 +78,8 @@
   function putItemBack(item: GearInfo) {
     selectedGear.value[item.id] = undefined;
   }
-
-  function clampAmount(id: string) {
-    const amount = selectedGear.value[id]?.amount;
-    if (amount === undefined) return;
-    const totalAmount = gearRecord[id].totalAmount;
-    if (amount < 1) selectedGear.value[id]!.amount = 1;
-    if (totalAmount < amount) selectedGear.value[id]!.amount = totalAmount;
-  }
 </script>
+
 <template>
   <InputTextOptionsSelect
     v-model="selectedGearItem"
@@ -129,26 +111,15 @@
       class="p-1 rounded-2xl w-full grid grid-cols-[max-content_1fr_1fr_min-content] items-center gap-y-3 bg-stone-200"
       :class="item.amount === 0 ? 'bg-red-100' : ''">
       <span class="mx-3">
-        {{ remainingGear[item.id].amount < 0 ? '⚠️ ' : '' }}
+        {{ item.amount > gearRecord[item.id].availableAmount ? '⚠️ ' : '' }}
         {{ item.name }}
       </span>
       <span>
-        <label class="form-control max-w-20 sm:max-w-24">
-          <input
-            v-model="selectedGear[item.id]!.amount"
-            class="input input-bordered border-2"
-            :class="
-              selectedGear[item.id]!.amount > gearRecord[item.id].totalAmount ||
-              selectedGear[item.id]!.amount < 1
-                ? 'input-error'
-                : selectedGear[item.id]!.amount >
-                    gearRecord[item.id].availableAmount
-                  ? 'input-warning'
-                  : ''
-            "
-            type="number"
-            @focusout="clampAmount(item.id)" />
-        </label>
+        <Number
+          v-model="item.amount"
+          :clamp-input="true"
+          :hard-max="gearRecord[item.id].totalAmount"
+          :soft-max="gearRecord[item.id].availableAmount" />
       </span>
       <div>Deposit: {{ (item.amount * item.depositFee) / 100 }}€</div>
       <button
@@ -158,4 +129,11 @@
       </button>
     </div>
   </div>
+
+  <!-- <div>
+    <p>total: {{ gearRecord }}</p>
+    <p>availableGearList: {{ availableGearList }}</p>
+    <p>selected: {{ selectedGear }}</p>
+    <p>remaining: {{ remainingGear }}</p>
+  </div> -->
 </template>

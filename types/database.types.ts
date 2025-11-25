@@ -313,28 +313,28 @@ export type Database = {
       };
       RentedGear: {
         Row: {
-          amount: number;
+          actual_amount: number;
           gear_item_id: string;
           id: string;
           last_edited_date: string;
           rental_id: string;
-          returned_amount: number;
+          rented_amount: number;
         };
         Insert: {
-          amount: number;
+          actual_amount?: number;
           gear_item_id?: string;
           id?: string;
           last_edited_date?: string;
           rental_id?: string;
-          returned_amount?: number;
+          rented_amount: number;
         };
         Update: {
-          amount?: number;
+          actual_amount?: number;
           gear_item_id?: string;
           id?: string;
           last_edited_date?: string;
           rental_id?: string;
-          returned_amount?: number;
+          rented_amount?: number;
         };
         Relationships: [
           {

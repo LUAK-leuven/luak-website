@@ -1,5 +1,6 @@
 export default function (id: string) {
-  const toggle = document.getElementById(id) as HTMLDetailsElement;
+  const toggle = document.getElementById(id) as HTMLDetailsElement | null;
+  if (toggle === null) return;
   const summary = toggle.getElementsByTagName('summary').item(0) as HTMLElement;
 
   const mouseOnElement = ref(false);

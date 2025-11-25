@@ -36,8 +36,8 @@ export type RentalDetails = {
   dateReturn: string;
   gear: {
     name: string;
-    amount: number;
-    returnedAmount: number;
+    rentedAmount: number;
+    actualAmount: number;
   }[];
   depositFee: number;
   paymentMethod: Enums<'payment_method'>;
@@ -48,8 +48,10 @@ class GearService {
   private readonly supabase = useSupabaseClient<Database>();
 
   public async getPublicGearInfo(): Promise<PublicGearInfo[]> {
-    const { data: gear } = await this.supabase.from('GearItems').select(
-      `
+    const { data: gear } = await this.supabase
+      .from('GearItems')
+      .select(
+        `
       id,
       name,
       GearCategories (
@@ -60,10 +62,11 @@ class GearService {
         status
       ),
       RentedGear (
-        amount
+        actual_amount
       )
     `,
-    );
+      )
+      .gt('RentedGear.actual_amount', 0);
     if (gear === null) return [];
 
     function getTotalAmount(gearItem: DropNull<typeof gear>[number]) {
@@ -80,7 +83,7 @@ class GearService {
       totalAmount: getTotalAmount(gearItem),
       availableAmount:
         getTotalAmount(gearItem) -
-        sum(gearItem.RentedGear.map((item) => item.amount)),
+        sum(gearItem.RentedGear.map((item) => item.actual_amount)),
       depositFee: gearItem.GearCategories?.deposit_fee ?? -1,
     }));
   }
@@ -109,7 +112,8 @@ class GearService {
         rental.gear.map((gearItem) => ({
           gear_item_id: gearItem.gearItemId,
           rental_id: data.id,
-          amount: gearItem.amount,
+          rented_amount: gearItem.amount,
+          actual_amount: gearItem.amount,
         })),
       )
       .select();
@@ -178,8 +182,8 @@ class GearService {
           GearItems(
             name
           ),
-          amount,
-          returned_amount
+          rented_amount,
+          actual_amount
         ),
         status
         `,
@@ -201,8 +205,8 @@ class GearService {
       depositFee: rental.deposit,
       gear: rental.RentedGear.map((gearItem) => ({
         name: gearItem.GearItems!.name,
-        amount: gearItem.amount,
-        returnedAmount: gearItem.returned_amount,
+        rentedAmount: gearItem.rented_amount,
+        actualAmount: gearItem.actual_amount,
       })),
       paymentMethod: rental.payment_method,
       status: rental.status,

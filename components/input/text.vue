@@ -31,6 +31,11 @@
     if (value.value === '') value.value = undefined;
     model.value = value.value;
   });
+  onBeforeMount(() => {
+    if (model.value !== undefined) {
+      value.value = model.value;
+    }
+  });
 </script>
 
 <template>
