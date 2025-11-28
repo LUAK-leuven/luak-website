@@ -378,6 +378,19 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      create_rental: {
+        Args: {
+          p_board_member_id: string;
+          p_date_borrow: string;
+          p_date_return: string;
+          p_deposit: number;
+          p_gear: Json;
+          p_member_id: string;
+          p_payment_method: Database['public']['Enums']['payment_method'];
+          p_status: Database['public']['Enums']['rental_status'];
+        };
+        Returns: undefined;
+      };
       get_luak_year: {
         Args: Record<PropertyKey, never>;
         Returns: number;
@@ -386,7 +399,7 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: string;
       };
-      update_rentals: {
+      update_rental: {
         Args: {
           p_date_return: string;
           p_deposit_fee: number;

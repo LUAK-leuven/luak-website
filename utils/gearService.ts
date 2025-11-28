@@ -103,45 +103,21 @@ class GearService {
   public async saveRental(
     rental: UnsavedRental,
   ): Promise<{ error: string | undefined }> {
-    const { data, error } = await this.supabase
-      .from('Rentals')
-      .insert({
-        board_member_id: rental.boardMemberId,
-        member_id: rental.memberId,
-        date_borrow: rental.dateBorrow,
-        date_return: rental.dateReturn,
-        deposit: rental.depositFee,
-        payment_method: rental.paymentMethod,
-      })
-      .select('id')
-      .single();
+    const { error } = await this.supabase.rpc('create_rental', {
+      p_board_member_id: rental.boardMemberId,
+      p_member_id: rental.memberId,
+      p_date_borrow: rental.dateBorrow,
+      p_date_return: rental.dateReturn,
+      p_deposit: rental.depositFee,
+      p_status: 'not_returned',
+      p_gear: rental.gear.map((gearItem) => ({
+        gear_item_id: gearItem.gearItemId,
+        rented_amount: gearItem.amount,
+      })),
+      p_payment_method: rental.paymentMethod,
+    });
 
-    if (error || !data) return { error: error.message };
-
-    const { data: data2, error: error2 } = await this.supabase
-      .from('RentedGear')
-      .insert(
-        rental.gear.map((gearItem) => ({
-          gear_item_id: gearItem.gearItemId,
-          rental_id: data.id,
-          rented_amount: gearItem.amount,
-          actual_amount: gearItem.amount,
-        })),
-      )
-      .select();
-
-    if (error2 || !data2) {
-      const { data: data3 } = await this.supabase
-        .from('Rentals')
-        .delete()
-        .eq('id', data.id)
-        .select('*');
-      if (data3 === null || data3.length === 0)
-        console.error('Failed to rollback');
-      return { error: error2.message };
-    }
-
-    return { error: undefined };
+    return { error: error?.message };
   }
 
   public async getRentals(): Promise<RentalSummary[]> {
@@ -229,7 +205,7 @@ class GearService {
 
   public async updateRental(rentalUpdate: RentalUpdate): Promise<boolean> {
     console.log('saving:', rentalUpdate);
-    const { error } = await this.supabase.rpc('update_rentals', {
+    const { error } = await this.supabase.rpc('update_rental', {
       p_rental_id: rentalUpdate.id,
       p_date_return: rentalUpdate.dateReturn,
       p_deposit_fee: rentalUpdate.depositFee,

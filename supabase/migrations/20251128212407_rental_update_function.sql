@@ -1,6 +1,33 @@
 set check_function_bodies = off;
 
-CREATE OR REPLACE FUNCTION public.update_rentals(p_rental_id uuid, p_date_return date, p_deposit_fee numeric, p_status rental_status, p_gear jsonb)
+CREATE OR REPLACE FUNCTION public.create_rental(p_board_member_id uuid, p_member_id uuid, p_date_borrow date, p_date_return date, p_deposit numeric, p_payment_method payment_method, p_status rental_status, p_gear jsonb)
+ RETURNS void
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+  rental_id uuid;
+  rented_gear_item jsonb;
+  gear_item_id uuid;
+  gear_item_amount numeric;
+BEGIN
+  -- Create the Rental
+  insert into "Rentals" (board_member_id, member_id, date_borrow, date_return, deposit, payment_method, status)
+  values (p_board_member_id, p_member_id, p_date_borrow, p_date_return, p_deposit, p_payment_method, p_status)
+  returning id into rental_id;
+
+  -- Update the Gear
+  for rented_gear_item in select jsonb_array_elements(p_gear)
+  loop
+    gear_item_id := (rented_gear_item ->> 'gear_item_id')::uuid;
+    gear_item_amount := (rented_gear_item ->> 'rented_amount')::numeric;
+
+    insert into "RentedGear" (gear_item_id, rental_id, rented_amount, actual_amount)
+    values (gear_item_id, rental_id, gear_item_amount, gear_item_amount);
+  end loop;
+END;$function$
+;
+
+CREATE OR REPLACE FUNCTION public.update_rental(p_rental_id uuid, p_date_return date, p_deposit_fee numeric, p_status rental_status, p_gear jsonb)
  RETURNS void
  LANGUAGE plpgsql
 AS $function$
