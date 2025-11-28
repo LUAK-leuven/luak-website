@@ -35,12 +35,24 @@ export type RentalDetails = {
   dateBorrow: string;
   dateReturn: string;
   gear: {
+    id: string;
     name: string;
     rentedAmount: number;
     actualAmount: number;
   }[];
   depositFee: number;
   paymentMethod: Enums<'payment_method'>;
+  status: Enums<'rental_status'>;
+};
+
+export type RentalUpdate = {
+  id: string;
+  dateReturn: string;
+  gear: {
+    id: string;
+    actualAmount: number;
+  }[];
+  depositFee: number;
   status: Enums<'rental_status'>;
 };
 
@@ -179,6 +191,7 @@ class GearService {
         deposit,
         payment_method,
         RentedGear(
+          id,
           GearItems(
             name
           ),
@@ -204,6 +217,7 @@ class GearService {
       dateReturn: rental.date_return,
       depositFee: rental.deposit,
       gear: rental.RentedGear.map((gearItem) => ({
+        id: gearItem.id,
         name: gearItem.GearItems!.name,
         rentedAmount: gearItem.rented_amount,
         actualAmount: gearItem.actual_amount,
@@ -211,6 +225,19 @@ class GearService {
       paymentMethod: rental.payment_method,
       status: rental.status,
     };
+  }
+
+  public async updateRental(rentalUpdate: RentalUpdate): Promise<boolean> {
+    console.log('saving:', rentalUpdate);
+    const { error } = await this.supabase.rpc('update_rentals', {
+      p_rental_id: rentalUpdate.id,
+      p_date_return: rentalUpdate.dateReturn,
+      p_deposit_fee: rentalUpdate.depositFee,
+      p_status: rentalUpdate.status,
+      p_gear: rentalUpdate.gear,
+    });
+    console.log('updateRental: ', error);
+    return error === null;
   }
 }
 

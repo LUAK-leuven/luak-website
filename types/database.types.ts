@@ -426,6 +426,16 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: string;
       };
+      update_rentals: {
+        Args: {
+          p_date_return: string;
+          p_deposit_fee: number;
+          p_gear: Json;
+          p_rental_id: string;
+          p_status: string;
+        };
+        Returns: undefined;
+      };
     };
     Enums: {
       gear_status: 'available' | 'archived';

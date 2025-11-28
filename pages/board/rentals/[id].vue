@@ -1,6 +1,7 @@
 <script setup lang="ts">
-  import ReturnDate from '~/components/board/rental/returnDate.vue';
-  import StatusBadge from '~/components/board/rental/statusBadge.vue';
+  // import ReturnDate from '~/components/board/rental/returnDate.vue';
+  // import StatusBadge from '~/components/board/rental/statusBadge.vue';
+  import type { Enums } from '~/types/database.types';
   import type { RentalDetails } from '~/utils/gearService';
 
   const rental = ref<RentalDetails>();
@@ -11,6 +12,7 @@
     gear: {
       returnedAmount: number;
     }[];
+    status: Enums<'rental_status'>;
   }>();
 
   onMounted(async () => {
@@ -26,6 +28,7 @@
         gear: rental.value.gear.map((gearItem) => ({
           returnedAmount: gearItem.rentedAmount - gearItem.actualAmount,
         })),
+        status: rental.value.status,
       };
     }
   });
@@ -38,16 +41,42 @@
       rentalUpdate.value!.gear = rental.value!.gear.map((gearItem) => ({
         returnedAmount: gearItem.rentedAmount,
       }));
-      rental.value!.status = 'returned';
+      rentalUpdate.value!.status = 'returned';
     }
+  }
+
+  async function save() {
+    editMode.value = false;
+    if (rental.value === undefined || rentalUpdate.value === undefined) return;
+    const gear: { id: string; actualAmount: number }[] = new Array(
+      rental.value.gear.length,
+    );
+    for (let i = 0; i < rental.value.gear.length; i++) {
+      gear[i] = {
+        id: rental.value.gear[i].id,
+        actualAmount:
+          rental.value.gear[i].rentedAmount -
+          rentalUpdate.value.gear[i].returnedAmount,
+      };
+    }
+    // TODO: feedbackk on success/fail
+    await gearService().updateRental({
+      id: rental.value.id,
+      dateReturn: rentalUpdate.value.dateReturn,
+      depositFee: rentalUpdate.value.depositFee,
+      gear: gear,
+      status: rentalUpdate.value.status,
+    });
     // TODO: input validation
-    // TODO: Persist changes
   }
 </script>
 
 <template>
   <FullPageCard>
-    <template #subtitle><h2>title?</h2></template>
+    <template #subtitle
+      ><h2>Rental</h2>
+      <i class="text-sm">{{ rental ? rental.id : '' }}</i></template
+    >
     <div class="h-2"></div>
     <div v-if="loading" class="flex justify-center">
       <span class="loading loading-spinner loading-lg" />
@@ -69,7 +98,7 @@
               v-model="rentalUpdate!.dateReturn"
               name="dateReturn"
               type="date" />
-            <ReturnDate v-else :date="rentalUpdate!.dateReturn" />
+            <BoardRentalReturnDate v-else :date="rentalUpdate!.dateReturn" />
           </span>
         </div>
         <div class="flex flex-row gap-1 items-center">
@@ -88,17 +117,17 @@
           <select
             v-if="editMode"
             class="select select-bordered w-full max-w-xs">
-            <option :selected="rental.status === 'not_returned'">
-              <StatusBadge status="not_returned" />
+            <option :selected="rentalUpdate!.status === 'not_returned'">
+              <BoardRentalStatusBadge status="not_returned" />
             </option>
-            <option :selected="rental.status === 'partially_returned'">
-              <StatusBadge status="partially_returned" />
+            <option :selected="rentalUpdate!.status === 'partially_returned'">
+              <BoardRentalStatusBadge status="partially_returned" />
             </option>
-            <option :selected="rental.status === 'returned'">
-              <StatusBadge status="returned" />
+            <option :selected="rentalUpdate!.status === 'returned'">
+              <BoardRentalStatusBadge status="returned" />
             </option>
           </select>
-          <StatusBadge v-else :status="rental.status" />
+          <BoardRentalStatusBadge v-else :status="rental.status" />
         </div>
       </div>
       <hr class="my-3" />
@@ -108,7 +137,7 @@
         <b class="border px-1">Amount</b>
         <b class="border px-1">Returned amount</b>
         <template
-          v-for="({ name, rentedAmount }, idx) of rental.gear"
+          v-for="({ name, rentedAmount, actualAmount }, idx) of rental.gear"
           :key="idx">
           <div class="border p-1">{{ name }}</div>
           <div class="border p-1">{{ rentedAmount }}</div>
@@ -120,20 +149,17 @@
                 :hard-min="0"
                 :hard-max="rentedAmount" />
             </span>
-            <span v-else>{{ rentalUpdate!.gear[idx].returnedAmount }}</span>
+            <span v-else>{{ rentedAmount - actualAmount }}</span>
           </div>
         </template>
       </div>
       <hr class="my-3" />
       <div class="flex justify-end">
-        <button
-          v-if="editMode"
-          class="btn btn-primary"
-          @click="editMode = false">
+        <button v-if="editMode" class="btn btn-primary" @click="save()">
           Save changes
         </button>
         <button v-else class="btn btn-primary" @click="markReturned()">
-          Mark as returned
+          {{ rental.status === 'not_returned' ? 'Mark as returned' : 'Edit' }}
         </button>
       </div>
     </div>

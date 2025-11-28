@@ -49,11 +49,11 @@
           to="/board/rental-form">
           🧗‍♀️
         </NuxtLink>
-        <NuxtLink
+        <!-- <NuxtLink
           class="btn btn-lg btn-circle text-2xl"
           to="/board/subscriptions-overview">
           👥
-        </NuxtLink>
+        </NuxtLink> -->
         <NuxtLink class="btn btn-lg btn-circle text-2xl" to="/board/rentals">
           👀
         </NuxtLink>
