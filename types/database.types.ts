@@ -68,7 +68,7 @@ export type Database = {
           deposit_fee: number;
           id?: string;
           lifespan: number;
-          name?: string;
+          name: string;
         };
         Update: {
           deposit_fee?: number;
@@ -82,9 +82,9 @@ export type Database = {
         Row: {
           amount: number;
           created_at: string;
-          details: string | null;
+          details: string;
+          gear_item_id: string;
           id: string;
-          item_id: string;
           production_date: string | null;
           purchase_date: string | null;
           status: Database['public']['Enums']['gear_status'];
@@ -92,9 +92,9 @@ export type Database = {
         Insert: {
           amount: number;
           created_at?: string;
-          details?: string | null;
+          details?: string;
+          gear_item_id: string;
           id?: string;
-          item_id?: string;
           production_date?: string | null;
           purchase_date?: string | null;
           status: Database['public']['Enums']['gear_status'];
@@ -102,17 +102,17 @@ export type Database = {
         Update: {
           amount?: number;
           created_at?: string;
-          details?: string | null;
+          details?: string;
+          gear_item_id?: string;
           id?: string;
-          item_id?: string;
           production_date?: string | null;
           purchase_date?: string | null;
           status?: Database['public']['Enums']['gear_status'];
         };
         Relationships: [
           {
-            foreignKeyName: 'GearInventory_item_id_fkey';
-            columns: ['item_id'];
+            foreignKeyName: 'GearInventory_gear_item_id_fkey';
+            columns: ['gear_item_id'];
             isOneToOne: false;
             referencedRelation: 'GearItems';
             referencedColumns: ['id'];
@@ -121,30 +121,24 @@ export type Database = {
       };
       GearItems: {
         Row: {
-          gear_category: string;
+          gear_category_id: string;
           id: string;
-          is_unique: boolean;
           name: string;
-          searchTags: string | null;
         };
         Insert: {
-          gear_category: string;
+          gear_category_id: string;
           id?: string;
-          is_unique?: boolean;
-          name?: string;
-          searchTags?: string | null;
+          name: string;
         };
         Update: {
-          gear_category?: string;
+          gear_category_id?: string;
           id?: string;
-          is_unique?: boolean;
           name?: string;
-          searchTags?: string | null;
         };
         Relationships: [
           {
-            foreignKeyName: 'GearItems_gear_category_fkey';
-            columns: ['gear_category'];
+            foreignKeyName: 'GearItems_gear_category_id_fkey';
+            columns: ['gear_category_id'];
             isOneToOne: false;
             referencedRelation: 'GearCategories';
             referencedColumns: ['id'];
@@ -155,25 +149,25 @@ export type Database = {
         Row: {
           comment: string;
           created_at: string;
-          gear_id: string;
+          gear_inventory_id: string;
           id: string;
         };
         Insert: {
-          comment: string;
+          comment?: string;
           created_at?: string;
-          gear_id?: string;
+          gear_inventory_id: string;
           id?: string;
         };
         Update: {
           comment?: string;
           created_at?: string;
-          gear_id?: string;
+          gear_inventory_id?: string;
           id?: string;
         };
         Relationships: [
           {
-            foreignKeyName: 'GearLogs_gear_id_fkey';
-            columns: ['gear_id'];
+            foreignKeyName: 'GearLogs_gear_inventory_id_fkey';
+            columns: ['gear_inventory_id'];
             isOneToOne: false;
             referencedRelation: 'GearInventory';
             referencedColumns: ['id'];
@@ -252,7 +246,7 @@ export type Database = {
       };
       Rentals: {
         Row: {
-          board_member: string;
+          board_member_id: string;
           contact_info: string | null;
           created_at: string;
           date_borrow: string;
@@ -264,7 +258,7 @@ export type Database = {
           status: Database['public']['Enums']['rental_status'];
         };
         Insert: {
-          board_member?: string;
+          board_member_id?: string;
           contact_info?: string | null;
           created_at?: string;
           date_borrow: string;
@@ -276,7 +270,7 @@ export type Database = {
           status?: Database['public']['Enums']['rental_status'];
         };
         Update: {
-          board_member?: string;
+          board_member_id?: string;
           contact_info?: string | null;
           created_at?: string;
           date_borrow?: string;
@@ -289,17 +283,10 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: 'Rentals_board_member_fkey';
-            columns: ['board_member'];
+            foreignKeyName: 'Rentals_board_member_id_fkey';
+            columns: ['board_member_id'];
             isOneToOne: false;
             referencedRelation: 'Users';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'Rentals_contact_info_fkey';
-            columns: ['contact_info'];
-            isOneToOne: false;
-            referencedRelation: 'TemporaryUsers';
             referencedColumns: ['id'];
           },
           {
@@ -321,11 +308,11 @@ export type Database = {
           rented_amount: number;
         };
         Insert: {
-          actual_amount?: number;
-          gear_item_id?: string;
+          actual_amount: number;
+          gear_item_id: string;
           id?: string;
           last_edited_date?: string;
-          rental_id?: string;
+          rental_id: string;
           rented_amount: number;
         };
         Update: {
@@ -352,33 +339,6 @@ export type Database = {
             referencedColumns: ['id'];
           },
         ];
-      };
-      TemporaryUsers: {
-        Row: {
-          created_at: string;
-          email: string | null;
-          first_name: string;
-          id: string;
-          last_name: string;
-          phone_number: string | null;
-        };
-        Insert: {
-          created_at?: string;
-          email?: string | null;
-          first_name: string;
-          id?: string;
-          last_name: string;
-          phone_number?: string | null;
-        };
-        Update: {
-          created_at?: string;
-          email?: string | null;
-          first_name?: string;
-          id?: string;
-          last_name?: string;
-          phone_number?: string | null;
-        };
-        Relationships: [];
       };
       Users: {
         Row: {
@@ -432,7 +392,7 @@ export type Database = {
           p_deposit_fee: number;
           p_gear: Json;
           p_rental_id: string;
-          p_status: string;
+          p_status: Database['public']['Enums']['rental_status'];
         };
         Returns: undefined;
       };

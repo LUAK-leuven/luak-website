@@ -4,6 +4,8 @@
   import type { Enums } from '~/types/database.types';
   import type { RentalDetails } from '~/utils/gearService';
 
+  definePageMeta({ middleware: 'board-member-guard' });
+
   const rental = ref<RentalDetails>();
   const loading = ref(true);
   const rentalUpdate = ref<{

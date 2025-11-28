@@ -1,13 +1,9 @@
-create or replace function update_rentals(
-  p_rental_id uuid,
-  p_date_return date,
-  p_deposit_fee numeric,
-  p_status rental_status,
-  p_gear jsonb
-)
-returns void
-language plpgsql
-as $function$
+set check_function_bodies = off;
+
+CREATE OR REPLACE FUNCTION public.update_rentals(p_rental_id uuid, p_date_return date, p_deposit_fee numeric, p_status rental_status, p_gear jsonb)
+ RETURNS void
+ LANGUAGE plpgsql
+AS $function$
 DECLARE
   gear_item jsonb;
   rented_gear_id uuid;
@@ -42,4 +38,5 @@ BEGIN
         rented_gear_id, p_rental_id;
     end if;
   end loop;
-END;$function$;
+END;$function$
+;

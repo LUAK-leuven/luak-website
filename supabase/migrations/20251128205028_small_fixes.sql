@@ -1,16 +1,9 @@
-create type "public"."PaymentMethod" as enum ('cash', 'transfer');
+alter table "public"."Payments" alter column "membership_id" set not null;
 
-alter table "public"."GearInventory" drop constraint "GearInventory_category_id_fkey";
+alter table "public"."Users" alter column "email" set not null;
 
-alter table "public"."GearInventory" drop column "category_id";
 
-alter table "public"."GearItems" add column "gear_category" uuid not null;
-
-alter table "public"."Rentals" alter column "payment_method" set data type "PaymentMethod" using "payment_method"::"PaymentMethod";
-
-alter table "public"."GearItems" add constraint "GearItems_gear_category_fkey" FOREIGN KEY (gear_category) REFERENCES "GearCategories"(id) ON DELETE RESTRICT not valid;
-
-alter table "public"."GearItems" validate constraint "GearItems_gear_category_fkey";
+-- Fix previous migration
 
 grant delete on table "public"."BoardMembers" to "anon";
 
@@ -179,29 +172,3 @@ grant trigger on table "public"."Users" to "service_role";
 grant truncate on table "public"."Users" to "service_role";
 
 grant update on table "public"."Users" to "service_role";
-
-create policy "Enable read access for all users"
-on "public"."GearInventory"
-as permissive
-for select
-to authenticated
-using (true);
-
-
-create policy "Enable read access for all users"
-on "public"."GearItems"
-as permissive
-for select
-to authenticated
-using (true);
-
-
-create policy "Enable read access for all users"
-on "public"."RentedGear"
-as permissive
-for select
-to authenticated
-using (true);
-
-
-

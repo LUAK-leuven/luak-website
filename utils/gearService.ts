@@ -106,7 +106,7 @@ class GearService {
     const { data, error } = await this.supabase
       .from('Rentals')
       .insert({
-        board_member: rental.boardMemberId,
+        board_member_id: rental.boardMemberId,
         member_id: rental.memberId,
         date_borrow: rental.dateBorrow,
         date_return: rental.dateReturn,
@@ -178,7 +178,7 @@ class GearService {
       .select(
         `
         id,
-        board_member:Users!Rentals_board_member_fkey(
+        board_member:Users!Rentals_board_member_id_fkey(
           first_name,
           last_name
         ),

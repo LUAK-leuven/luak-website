@@ -29,13 +29,13 @@ next set the right env variables to connect with supabase. check `.env.example` 
 - supabase login
 - supabase link
 
+To pull the latest migrations from the linked(=remote) db
+
+> supabase db pull
+
 To make your local db look like the migrations
 
 > supabase db reset
-
-To make your local db look like the prod db
-
-> supabase db pull
 
 To generate a migration file for the diff between you local db and what is defined in the migrations files
 
