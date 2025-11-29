@@ -1,5 +1,12 @@
-export function sum(array: number[]) {
+export function sum(array: number[]): number {
   return array.reduce((sum, current) => sum + current, 0);
+}
+
+export function sumOf<T extends { [k: string]: number }>(
+  array: T[],
+  key: keyof T,
+): number {
+  return array.reduce((sum, current) => sum + current[key], 0);
 }
 
 export type DropNull<T> = T extends null ? never : T;

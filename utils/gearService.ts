@@ -70,34 +70,28 @@ class GearService {
         deposit_fee
       ),
       GearInventory (
-        amount,
-        status
+        amount
       ),
       RentedGear (
         actual_amount
       )
     `,
       )
-      .gt('RentedGear.actual_amount', 0);
+      .gt('RentedGear.actual_amount', 0)
+      .eq('GearInventory.status', 'available');
     if (gear === null) return [];
 
-    function getTotalAmount(gearItem: DropNull<typeof gear>[number]) {
-      return sum(
-        gearItem.GearInventory.filter(
-          (item) => item.status === 'available',
-        ).map((item) => item.amount),
-      );
-    }
-
-    return gear.map((gearItem) => ({
-      id: gearItem.id,
-      name: gearItem.name,
-      totalAmount: getTotalAmount(gearItem),
-      availableAmount:
-        getTotalAmount(gearItem) -
-        sum(gearItem.RentedGear.map((item) => item.actual_amount)),
-      depositFee: gearItem.GearCategories?.deposit_fee ?? -1,
-    }));
+    return gear.map((gearItem) => {
+      const totalAmount = sumOf(gearItem.GearInventory, 'amount');
+      return {
+        id: gearItem.id,
+        name: gearItem.name,
+        totalAmount: totalAmount,
+        availableAmount:
+          totalAmount - sumOf(gearItem.RentedGear, 'actual_amount'),
+        depositFee: gearItem.GearCategories!.deposit_fee,
+      };
+    });
   }
 
   public async saveRental(

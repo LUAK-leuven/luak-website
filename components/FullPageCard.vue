@@ -6,7 +6,7 @@
         <slot name="title" />
       </h1>
       <div
-        class="bg-base-100 shadow-md md:w-9/12 w-11/12 shrink-0 grow-0 rounded-lg mb-28 p-10">
+        class="relative bg-base-100 shadow-md md:w-9/12 w-11/12 shrink-0 grow-0 rounded-2xl mb-28 p-10">
         <div class="empty:hidden mb-4 ml-4 mr-4 text-center break-words">
           <slot name="subtitle" />
         </div>
