@@ -11,13 +11,12 @@
   onMounted(async () => {
     rentals.value = await gearService().getRentals();
     rentals.value.sort((a, b) => {
-      if (a.status === b.status) return 0;
+      if (a.status === b.status) {
+        if (a.dateReturn === b.dateReturn) return 0;
+        if (a.dateReturn < b.dateReturn) return -1;
+        return 1;
+      }
       if (b.status === 'returned') return -1;
-      return 1;
-    });
-    rentals.value.sort((a, b) => {
-      if (a.dateReturn === b.dateReturn) return 0;
-      if (a.dateReturn < b.dateReturn) return -1;
       return 1;
     });
   });
@@ -45,19 +44,16 @@
 
     if (term.includes(':')) {
       const [key, value] = term.split(':', 2);
-      let field: 'memberName' | undefined = undefined;
       switch (key) {
         case 'm':
-          field = 'memberName';
-          break;
+          return selectedRentals.filter((rental) =>
+            search(rental.memberName, value),
+          );
       }
-      if (field) {
-        return selectedRentals.filter((rental) => search(rental[field], value));
-      } else {
-        return selectedRentals.filter((rental) =>
-          search(rental.memberName, value),
-        );
-      }
+
+      return selectedRentals.filter((rental) =>
+        search(rental.memberName, value),
+      );
     }
     return selectedRentals.filter((rental) => search(rental.memberName, term));
   });
