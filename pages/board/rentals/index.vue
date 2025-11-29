@@ -89,8 +89,8 @@
       v-if="rentals === undefined"
       class="loading loading-dots loading-lg"></span>
     <NuxtLink
-      v-for="(rental, idx) in filteredRentals"
-      :key="idx"
+      v-for="rental in filteredRentals"
+      :key="rental.id"
       class="bg-base-100 shadow-md w-full shrink-0 grow-0 rounded-xl px-8 py-6 md:p-5 hover:shadow-lg hover:bg-base-200 active:bg-base-300"
       :to="`/board/rentals/${rental.id}`">
       <BoardRentalSummary :rental="rental" />

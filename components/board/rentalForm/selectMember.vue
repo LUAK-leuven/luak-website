@@ -4,12 +4,11 @@
   });
 
   const users = await userService().getAllUsers();
-  const selectableUsers =
-    users?.map((user) => ({
-      name: user.first_name + ' ' + user.last_name,
-      id: user.id,
-      hasPaid: user.paid_membership,
-    })) ?? [];
+  const selectableUsers = users.map((user) => ({
+    name: user.first_name + ' ' + user.last_name,
+    id: user.id,
+    hasPaid: user.paid_membership,
+  }));
 
   function filterMember(
     options: typeof selectableUsers,
@@ -39,7 +38,7 @@
     label="Member name *"
     :options="selectableUsers"
     placeholder="select member"
-    :options-select-fn="filterMember"
+    :search-fn="filterMember"
     :show-selected-item="true"
     :error-message="errorMessage">
     <template #item="{ data }">

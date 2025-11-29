@@ -54,7 +54,10 @@
         :type="type"
         :placeholder="placeholder"
         :disabled="disabled"
-        @focus="if (autoFillWithPlaceholder && !value) value = placeholder;" />
+        @focus="
+          if (autoFillWithPlaceholder && value === undefined)
+            value = placeholder;
+        " />
     </label>
     <span v-if="errorMessage" class="text-error">{{ errorMessage }}</span>
   </div>

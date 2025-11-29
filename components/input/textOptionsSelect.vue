@@ -3,7 +3,7 @@
     label?: string;
     options: T[];
     placeholder: string;
-    optionsSelectFn: (options: T[], input: string | undefined) => T[];
+    searchFn: (options: T[], input: string | undefined) => T[];
     showSelectedItem?: boolean;
     errorMessage?: string;
   }>();
@@ -15,7 +15,7 @@
   const mouseOnSelection = ref(false);
 
   const filteredOptions = computed(() => {
-    return props.optionsSelectFn(props.options, textValue.value);
+    return props.searchFn(props.options, textValue.value);
   });
 
   function onSelect(option: T) {

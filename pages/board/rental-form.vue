@@ -10,9 +10,14 @@
     id: user.userInfo!.id,
   };
 
+  const allGear = await gearService().getPublicGearInfo();
+  const gearMap = Object.fromEntries(
+    allGear.map((gearItem) => [gearItem.id, gearItem]),
+  );
+
   const formSchema = yup.object({
     boardMemberId: yup.string().required(),
-    memberId: yup.string().required(),
+    memberId: yup.string().uuid().required(),
     dateBorrow: yup.string().required().label('date borrow'),
     dateReturn: yup
       .string()
@@ -26,19 +31,37 @@
       )
       .label('return date'),
     gear: yup
-      .array(yup.mixed<{ gearItemId: string; amount: number }>().required())
+      .array(
+        yup
+          .object({
+            gearItemId: yup.string().required().uuid(),
+            amount: yup.number().required().integer().moreThan(0),
+          })
+          .required()
+          .test('max_amount', function (gearItem) {
+            if (gearItem.amount > gearMap[gearItem.gearItemId].totalAmount) {
+              return this.createError({
+                path: `${this.path}.amount`,
+                message: `Value for ${gearMap[gearItem.gearItemId].name} cannot exceed ${gearMap[gearItem.gearItemId].totalAmount}`,
+              });
+            }
+
+            return true;
+          }),
+      )
       .required()
       .min(1),
-    depositFee: yup.number().required().positive(),
+    depositFee: yup.number().required().min(0),
     paymentMethod: yup.string<'transfer' | 'cash'>().required(),
   });
+
   const initialValues = {
     boardMemberId: boardMember.name,
     dateBorrow: dayjs().format('YYYY-MM-DD').toString(),
     dateReturn: dayjs().add(3, 'w').format('YYYY-MM-DD').toString(),
   } as const;
 
-  const { meta, handleSubmit, errors, validateField } = useForm({
+  const { values, meta, handleSubmit, errors, validateField } = useForm({
     validationSchema: toTypedSchema(formSchema),
     initialValues: initialValues,
     validateOnMount: false,
@@ -51,10 +74,14 @@
     formState.boardMemberId = boardMember.id;
     console.log(formState);
     // TODO: Show preview
-    const { error } = await gearService().saveRental(formState);
+    const { id, error } = await gearService().saveRental(formState);
+    console.log('id', id);
     submitError.value = !!error;
     errorMessage.value = error;
-    if (!error) navigateTo('/');
+    if (!error) {
+      if (id) navigateTo(`/board/rentals/${id}`);
+      else navigateTo('/');
+    }
   });
 
   const computedDeposit = ref<number>();
@@ -73,11 +100,6 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-2 mb-3">
         <div class="w-full self-end">
           <BoardRentalFormSelectMember name="memberId" />
-          <!-- <div
-            v-if="!(values.member?.hasPaid ?? true)"
-            class="bg-yellow-300 rounded-md w-fit px-1">
-            Warning: user has no active membership!
-          </div> -->
         </div>
 
         <InputText
@@ -93,6 +115,8 @@
       <hr />
       <h2>Gear list</h2>
       <BoardRentalFormGearSelection
+        :all-gear="allGear"
+        :gear-map="gearMap"
         @computed-deposit-fee="
           (value) => (computedDeposit = value < 2000 ? 20 : value / 100)
         " />
@@ -104,7 +128,7 @@
           label="Deposit fee *"
           name="depositFee"
           type="number"
-          :placeholder="computedDeposit?.toString() ?? 'deposit'"
+          :placeholder="computedDeposit?.toString()"
           :auto-fill-with-placeholder="true">
           <template #label1><span class="mr-1">€</span></template>
         </InputText>
@@ -128,6 +152,9 @@
         </button>
       </div>
     </form>
+
+    <p>Values: {{ values }}</p>
+    <p>Errors: {{ errors }}</p>
 
     <pop-up v-model:show="submitError" type="error">{{ errorMessage }}</pop-up>
   </FullPageCard>

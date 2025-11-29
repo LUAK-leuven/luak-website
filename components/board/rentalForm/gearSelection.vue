@@ -8,14 +8,15 @@
     depositFee: number;
   };
 
+  const props = defineProps<{
+    allGear: PublicGearInfo[];
+    gearMap: Record<string, PublicGearInfo>;
+  }>();
+
   const emit = defineEmits<{
     computedDepositFee: [value: number];
   }>();
 
-  const allGear = await gearService().getPublicGearInfo();
-  const gearRecord = Object.fromEntries(
-    allGear.map((gearItem) => [gearItem.id, gearItem]),
-  );
   const selectedGear = ref<Record<string, GearInfo | undefined>>({});
   const selectedGearList = computed(() => {
     return Object.values(selectedGear.value).filter(
@@ -23,7 +24,7 @@
     );
   });
   const availableGearList = computed(() =>
-    allGear
+    props.allGear
       .filter((item) => selectedGear.value[item.id] === undefined)
       .map(
         (item) =>
@@ -85,7 +86,7 @@
     v-model="selectedGearItem"
     :options="availableGearList"
     placeholder="select gear"
-    :options-select-fn="filterGear"
+    :search-fn="filterGear"
     :show-selected-item="false"
     :error-message="errorMessage">
     <template #item="{ data }">
@@ -106,20 +107,19 @@
 
   <div class="flex flex-col gap-1">
     <div
-      v-for="item in selectedGearList"
-      :key="item.id"
+      v-for="(item, idx) in selectedGearList"
+      :key="idx"
       class="p-1 rounded-2xl w-full grid grid-cols-[max-content_1fr_1fr_min-content] items-center gap-y-3 bg-stone-200"
       :class="item.amount === 0 ? 'bg-red-100' : ''">
       <span class="mx-3">
-        {{ item.amount > gearRecord[item.id].availableAmount ? '⚠️ ' : '' }}
+        {{ item.amount > props.gearMap[item.id].availableAmount ? '⚠️ ' : '' }}
         {{ item.name }}
       </span>
       <span>
         <Number
-          v-model="item.amount"
-          :clamp-input="true"
-          :hard-max="gearRecord[item.id].totalAmount"
-          :soft-max="gearRecord[item.id].availableAmount" />
+          :name="`gear[${idx}].amount`"
+          :soft-max="props.gearMap[item.id].availableAmount"
+          @value-change="(value) => (item.amount = value)" />
       </span>
       <div>Deposit: {{ (item.amount * item.depositFee) / 100 }}€</div>
       <button

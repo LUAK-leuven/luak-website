@@ -8,6 +8,12 @@
   <div class="flex flex-row flex-wrap gap-5 justify-between items-center">
     <div>Name: {{ rental.memberName }}</div>
     <BoardRentalStatusBadge :status="rental.status" />
-    <BoardRentalReturnDate :date="rental.dateReturn" />
+    <div>
+      <BoardRentalReturnDate :date="rental.dateBorrow" :ghost="true" />
+      <span class="mr-1">→</span>
+      <BoardRentalReturnDate
+        :date="rental.dateReturn"
+        :ghost="rental.status === 'returned'" />
+    </div>
   </div>
 </template>

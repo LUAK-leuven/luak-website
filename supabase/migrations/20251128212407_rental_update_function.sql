@@ -1,7 +1,7 @@
 set check_function_bodies = off;
 
 CREATE OR REPLACE FUNCTION public.create_rental(p_board_member_id uuid, p_member_id uuid, p_date_borrow date, p_date_return date, p_deposit numeric, p_payment_method payment_method, p_status rental_status, p_gear jsonb)
- RETURNS void
+ RETURNS uuid
  LANGUAGE plpgsql
 AS $function$
 DECLARE
@@ -24,8 +24,11 @@ BEGIN
     insert into "RentedGear" (gear_item_id, rental_id, rented_amount, actual_amount)
     values (gear_item_id, rental_id, gear_item_amount, gear_item_amount);
   end loop;
+  
+  return rental_id;
 END;$function$
 ;
+
 
 CREATE OR REPLACE FUNCTION public.update_rental(p_rental_id uuid, p_date_return date, p_deposit_fee numeric, p_status rental_status, p_gear jsonb)
  RETURNS void

@@ -25,6 +25,7 @@ export type RentalSummary = {
   id: string;
   memberName: string;
   dateReturn: string;
+  dateBorrow: string;
   status: Enums<'rental_status'>;
 };
 
@@ -96,8 +97,8 @@ class GearService {
 
   public async saveRental(
     rental: UnsavedRental,
-  ): Promise<{ error: string | undefined }> {
-    const { error } = await this.supabase.rpc('create_rental', {
+  ): Promise<{ id: string | undefined; error: string | undefined }> {
+    const { error, data } = await this.supabase.rpc('create_rental', {
       p_board_member_id: rental.boardMemberId,
       p_member_id: rental.memberId,
       p_date_borrow: rental.dateBorrow,
@@ -111,7 +112,7 @@ class GearService {
       p_payment_method: rental.paymentMethod,
     });
 
-    return { error: error?.message };
+    return { id: data ?? undefined, error: error?.message };
   }
 
   public async getRentals(): Promise<RentalSummary[]> {
@@ -123,6 +124,7 @@ class GearService {
         last_name
       ),
       date_return,
+      date_borrow,
       status
       `,
     );
@@ -136,6 +138,7 @@ class GearService {
       id: rental.id,
       memberName: getFullName(rental.member!),
       dateReturn: rental.date_return,
+      dateBorrow: rental.date_borrow,
       status: rental.status,
     }));
   }

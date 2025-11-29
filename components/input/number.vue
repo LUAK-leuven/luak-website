@@ -5,7 +5,12 @@
     name: string;
   }>();
 
+  const emit = defineEmits<{
+    (e: 'valueChange', value: number): void;
+  }>();
+
   const { value, errorMessage } = useField<number>(props.name);
+  effect(() => emit('valueChange', value.value));
 
   const getTextboxColor: (value: number) => string = (value: number) => {
     if (errorMessage.value) return 'input-error';

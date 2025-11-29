@@ -389,7 +389,7 @@ export type Database = {
           p_payment_method: Database['public']['Enums']['payment_method'];
           p_status: Database['public']['Enums']['rental_status'];
         };
-        Returns: undefined;
+        Returns: string;
       };
       get_luak_year: {
         Args: Record<PropertyKey, never>;
