@@ -49,7 +49,7 @@
       <slot name="label1" />
       <input
         v-model="value"
-        class="w-min"
+        class="w-full"
         :class="disabled ? 'bg-gray-300' : ''"
         :type="type"
         :placeholder="placeholder"

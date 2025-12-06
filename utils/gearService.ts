@@ -43,11 +43,7 @@ export type TopoSumary = {
 
 export type RentalDetails = {
   id: string;
-  member: {
-    fullName: string;
-    email?: string;
-    phone?: string;
-  };
+  member: ContactInfo;
   boardMember: string;
   dateBorrow: string;
   dateReturn: string;

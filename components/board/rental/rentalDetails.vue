@@ -133,8 +133,8 @@
         <span v-if="rental.member.email" class="ml-3">
           ✉️: <MailTo :email="rental.member.email" />
         </span>
-        <span v-if="rental.member.phone" class="ml-3">
-          ☎️: <WhatsappLink :phone-number="rental.member.phone" />
+        <span v-if="rental.member.phoneNumber" class="ml-3">
+          ☎️: <WhatsappLink :phone-number="rental.member.phoneNumber" />
         </span>
       </div>
       <div>Board member: {{ rental.boardMember }}</div>
