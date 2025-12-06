@@ -30,7 +30,7 @@ END;$function$
 ;
 
 
-CREATE OR REPLACE FUNCTION public.update_rental(p_rental_id uuid, p_date_return date, p_deposit_fee numeric, p_status rental_status, p_gear jsonb)
+CREATE OR REPLACE FUNCTION public.update_rental(p_rental_id uuid, p_date_return date, p_deposit_fee numeric, p_status rental_status, p_gear jsonb, p_topos jsonb)
  RETURNS void
  LANGUAGE plpgsql
 AS $function$
@@ -65,6 +65,22 @@ BEGIN
 
     if not found then
       raise exception 'GearItem % does not belong to Rental % or does not exist',
+        rented_gear_id, p_rental_id;
+    end if;
+  end loop;
+
+  -- Update the Topos
+  for gear_item in select jsonb_array_elements(p_topos)
+  loop
+    rented_gear_id := (gear_item ->> 'id')::uuid;
+    gear_item_amount := (gear_item ->> 'actualAmount')::numeric;
+
+    update "RentedTopos"
+    set actual_amount = gear_item_amount
+    where id = rented_gear_id and rental_id = p_rental_id;
+
+    if not found then
+      raise exception 'Topo % does not belong to Rental % or does not exist',
         rented_gear_id, p_rental_id;
     end if;
   end loop;

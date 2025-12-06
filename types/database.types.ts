@@ -394,7 +394,7 @@ export type Database = {
           place_in_library: string;
           tags: string[] | null;
           title: string;
-          type_of_climbing: string | null;
+          type_of_climbing: string[] | null;
           year_published: number | null;
         };
         Insert: {
@@ -408,7 +408,7 @@ export type Database = {
           place_in_library: string;
           tags?: string[] | null;
           title: string;
-          type_of_climbing?: string | null;
+          type_of_climbing?: string[] | null;
           year_published?: number | null;
         };
         Update: {
@@ -422,7 +422,7 @@ export type Database = {
           place_in_library?: string;
           tags?: string[] | null;
           title?: string;
-          type_of_climbing?: string | null;
+          type_of_climbing?: string[] | null;
           year_published?: number | null;
         };
         Relationships: [];
@@ -493,6 +493,7 @@ export type Database = {
           p_gear: Json;
           p_rental_id: string;
           p_status: Database['public']['Enums']['rental_status'];
+          p_topos: Json;
         };
         Returns: undefined;
       };

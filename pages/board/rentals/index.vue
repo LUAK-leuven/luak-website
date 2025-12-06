@@ -11,7 +11,7 @@
   onMounted(async () => {
     rentals.value = await gearService().getRentals();
     rentals.value.sort((a, b) => {
-      if (a.status === b.status) {
+      if ((a.status === 'returned') === (b.status === 'returned')) {
         if (a.dateReturn === b.dateReturn) return 0;
         if (a.dateReturn < b.dateReturn) return -1;
         return 1;

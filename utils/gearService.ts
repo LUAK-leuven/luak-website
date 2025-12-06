@@ -66,6 +66,10 @@ export type RentalUpdate = {
     id: string;
     actualAmount: number;
   }[];
+  topos: {
+    id: string;
+    actualAmount: number;
+  }[];
   depositFee: number;
   status: Enums<'rental_status'>;
 };
@@ -262,6 +266,7 @@ class GearService {
       p_deposit_fee: rentalUpdate.depositFee,
       p_status: rentalUpdate.status,
       p_gear: rentalUpdate.gear,
+      p_topos: rentalUpdate.topos,
     });
     console.log('updateRental: ', error);
     return error === null;

@@ -27,13 +27,31 @@
           }
           return true;
         }),
+      returnedTopos: yup
+        .array(yup.number().integer().required().min(0))
+        .required()
+        .test('max_per_item', function (array) {
+          for (let i = 0; i < array.length; i++) {
+            if (array[i] > rental.topos[i].rentedAmount) {
+              return this.createError({
+                path: `${this.path}[${i}]`,
+                message: `Value for ${rental.topos[i].title} cannot exceed rented amount`,
+              });
+            }
+          }
+          return true;
+        }),
       depositFee: yup
         .number()
         .integer()
         .required()
         .when('status', {
           is: 'returned',
-          then: (deposit) => deposit.equals([0]),
+          then: (deposit) =>
+            deposit.equals(
+              [0],
+              "When a rental is marked as 'Returned', the deposit fee must be returned and set to 0",
+            ),
           otherwise: (deposit) => deposit.min(0).max(rental.depositFee),
         }),
       status: yup.string<Enums<'rental_status'>>().required(),
@@ -54,6 +72,11 @@
           ? gearItem.rentedAmount
           : gearItem.rentedAmount - gearItem.actualAmount,
       ),
+      returnedTopos: rental.topos.map((topo) =>
+        rental.status === 'not_returned'
+          ? topo.rentedAmount
+          : topo.rentedAmount - topo.actualAmount,
+      ),
       depositFee: rental.depositFee,
     });
   }
@@ -73,12 +96,23 @@
           actualAmount: rental.gear[i].rentedAmount - formState.returnedGear[i],
         };
       }
+      const topos: { id: string; actualAmount: number }[] = new Array(
+        rental.topos.length,
+      );
+      for (let i = 0; i < rental.topos.length; i++) {
+        topos[i] = {
+          id: rental.topos[i].rentedToposId,
+          actualAmount:
+            rental.topos[i].rentedAmount - formState.returnedTopos[i],
+        };
+      }
       // TODO: feedbackk on success/fail
       const success = await gearService().updateRental({
         id: rental.id,
         dateReturn: formState.dateReturn,
         depositFee: formState.depositFee,
         gear: gear,
+        topos: topos,
         status: formState.status,
       });
 
