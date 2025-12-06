@@ -1,6 +1,6 @@
 set check_function_bodies = off;
 
-CREATE OR REPLACE FUNCTION public.create_rental(p_board_member_id uuid, p_member_id uuid, p_date_borrow date, p_date_return date, p_deposit numeric, p_payment_method payment_method, p_status rental_status, p_gear jsonb)
+CREATE OR REPLACE FUNCTION public.create_rental(p_board_member_id uuid, p_member_id uuid, p_date_borrow date, p_date_return date, p_deposit numeric, p_payment_method payment_method, p_status rental_status, p_gear jsonb, p_topos jsonb)
  RETURNS uuid
  LANGUAGE plpgsql
 AS $function$
@@ -15,13 +15,23 @@ BEGIN
   values (p_board_member_id, p_member_id, p_date_borrow, p_date_return, p_deposit, p_payment_method, p_status)
   returning id into rental_id;
 
-  -- Update the Gear
+  -- Save the Gear
   for rented_gear_item in select jsonb_array_elements(p_gear)
   loop
     gear_item_id := (rented_gear_item ->> 'gear_item_id')::uuid;
     gear_item_amount := (rented_gear_item ->> 'rented_amount')::numeric;
 
     insert into "RentedGear" (gear_item_id, rental_id, rented_amount, actual_amount)
+    values (gear_item_id, rental_id, gear_item_amount, gear_item_amount);
+  end loop;
+
+  -- Save the Topos
+  for rented_gear_item in select jsonb_array_elements(p_topos)
+  loop
+    gear_item_id := (rented_gear_item ->> 'topo_id')::uuid;
+    gear_item_amount := (rented_gear_item ->> 'rented_amount')::numeric;
+
+    insert into "RentedTopos" (topo_id, rental_id, rented_amount, actual_amount)
     values (gear_item_id, rental_id, gear_item_amount, gear_item_amount);
   end loop;
   
@@ -60,7 +70,7 @@ BEGIN
     gear_item_amount := (gear_item ->> 'actualAmount')::numeric;
 
     update "RentedGear"
-    set actual_amount = gear_item_amount
+    set actual_amount = gear_item_amount, last_edited_date = now()
     where id = rented_gear_id and rental_id = p_rental_id;
 
     if not found then
@@ -76,7 +86,7 @@ BEGIN
     gear_item_amount := (gear_item ->> 'actualAmount')::numeric;
 
     update "RentedTopos"
-    set actual_amount = gear_item_amount
+    set actual_amount = gear_item_amount, last_edited_date = now()
     where id = rented_gear_id and rental_id = p_rental_id;
 
     if not found then

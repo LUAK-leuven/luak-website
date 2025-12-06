@@ -475,6 +475,7 @@ export type Database = {
           p_member_id: string;
           p_payment_method: Database['public']['Enums']['payment_method'];
           p_status: Database['public']['Enums']['rental_status'];
+          p_topos: Json;
         };
         Returns: string;
       };

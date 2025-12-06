@@ -13,10 +13,8 @@ export type UnsavedRental = {
   boardMemberId: string;
   dateBorrow: string;
   dateReturn: string;
-  gear: {
-    gearItemId: string;
-    amount: number;
-  }[];
+  gear: Record<string, number>;
+  topos: Record<string, number>;
   depositFee: number;
   paymentMethod: Enums<'payment_method'>;
 };
@@ -62,14 +60,8 @@ export type RentalDetails = {
 export type RentalUpdate = {
   id: string;
   dateReturn: string;
-  gear: {
-    id: string;
-    actualAmount: number;
-  }[];
-  topos: {
-    id: string;
-    actualAmount: number;
-  }[];
+  gear: Record<string, number>;
+  topos: Record<string, number>;
   depositFee: number;
   status: Enums<'rental_status'>;
 };
@@ -99,17 +91,19 @@ class GearService {
       .eq('GearInventory.status', 'available');
     if (gear === null) return [];
 
-    return gear.map((gearItem) => {
-      const totalAmount = sumOf(gearItem.GearInventory, 'amount');
-      return {
-        id: gearItem.id,
-        name: gearItem.name,
-        totalAmount: totalAmount,
-        availableAmount:
-          totalAmount - sumOf(gearItem.RentedGear, 'actual_amount'),
-        depositFee: gearItem.GearCategories!.deposit_fee,
-      };
-    });
+    return gear
+      .map((gearItem) => {
+        const totalAmount = sumOf(gearItem.GearInventory, 'amount');
+        return {
+          id: gearItem.id,
+          name: gearItem.name,
+          totalAmount: totalAmount,
+          availableAmount:
+            totalAmount - sumOf(gearItem.RentedGear, 'actual_amount'),
+          depositFee: gearItem.GearCategories!.deposit_fee,
+        };
+      })
+      .filter((gearItem) => gearItem.totalAmount > 0);
   }
 
   public async getAllTopos(): Promise<TopoSumary[]> {
@@ -148,9 +142,13 @@ class GearService {
       p_date_return: rental.dateReturn,
       p_deposit: rental.depositFee,
       p_status: 'not_returned',
-      p_gear: rental.gear.map((gearItem) => ({
-        gear_item_id: gearItem.gearItemId,
-        rented_amount: gearItem.amount,
+      p_gear: Object.entries(rental.gear).map(([id, amount]) => ({
+        gear_item_id: id,
+        rented_amount: amount,
+      })),
+      p_topos: Object.entries(rental.topos).map(([id, amount]) => ({
+        topo_id: id,
+        rented_amount: amount,
       })),
       p_payment_method: rental.paymentMethod,
     });
@@ -265,8 +263,14 @@ class GearService {
       p_date_return: rentalUpdate.dateReturn,
       p_deposit_fee: rentalUpdate.depositFee,
       p_status: rentalUpdate.status,
-      p_gear: rentalUpdate.gear,
-      p_topos: rentalUpdate.topos,
+      p_gear: Object.entries(rentalUpdate.gear).map(([id, amount]) => ({
+        id: id,
+        actualAmount: amount,
+      })),
+      p_topos: Object.entries(rentalUpdate.topos).map(([id, amount]) => ({
+        id: id,
+        actualAmount: amount,
+      })),
     });
     console.log('updateRental: ', error);
     return error === null;

@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-  import Number from '~/components/input/number.vue';
-
   type GearInfo = {
     id: string;
     name: string;
@@ -11,6 +9,7 @@
   const props = defineProps<{
     allGear: PublicGearInfo[];
     gearMap: Record<string, PublicGearInfo>;
+    fieldName: string;
   }>();
 
   const emit = defineEmits<{
@@ -48,15 +47,14 @@
       .slice(0, 5);
   }
 
-  const { value, errorMessage } = useField<
-    { gearItemId: string; amount: number }[]
-  >(() => 'gear');
+  const { value, errorMessage } = useField<Record<string, number>>(
+    () => props.fieldName,
+  );
 
   effect(() => {
-    value.value = selectedGearList.value.map((item) => ({
-      gearItemId: item.id,
-      amount: item.amount,
-    }));
+    value.value = Object.fromEntries(
+      selectedGearList.value.map((item) => [item.id, item.amount]),
+    );
   });
 
   effect(() => {
@@ -107,8 +105,8 @@
 
   <div class="flex flex-col gap-1">
     <div
-      v-for="(item, idx) in selectedGearList"
-      :key="idx"
+      v-for="item in selectedGearList"
+      :key="item.id"
       class="p-1 rounded-2xl w-full grid grid-cols-[max-content_1fr_1fr_min-content] items-center gap-y-3 bg-stone-200"
       :class="item.amount === 0 ? 'bg-red-100' : ''">
       <span class="mx-3">
@@ -116,8 +114,8 @@
         {{ item.name }}
       </span>
       <span>
-        <Number
-          :name="`gear[${idx}].amount`"
+        <InputNumber
+          :name="`${fieldName}.${item.id}`"
           :soft-max="props.gearMap[item.id].availableAmount"
           @value-change="(value) => (item.amount = value)" />
       </span>

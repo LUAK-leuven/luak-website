@@ -50,7 +50,7 @@
 
       <ul
         id="popover-1"
-        class="absolute dropdown menu w-52 rounded-box bg-base-100 shadow-md gap-y-1 top-12"
+        class="absolute dropdown menu w-52 rounded-box bg-base-100 shadow-md gap-y-1 top-12 z-10"
         :class="hidden ? 'hidden' : ''"
         popover
         style="position-anchor: --anchor-1"

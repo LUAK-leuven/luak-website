@@ -14,46 +14,86 @@
   const gearMap = Object.fromEntries(
     allGear.map((gearItem) => [gearItem.id, gearItem]),
   );
+  const allTopos = (await gearService().getAllTopos()).map((topo) => ({
+    id: topo.id,
+    name: topo.title,
+    totalAmount: topo.totalAmount,
+    availableAmount: topo.availableAmount,
+    depositFee: 500,
+  }));
+  const topoMap = Object.fromEntries(allTopos.map((topo) => [topo.id, topo]));
 
-  const formSchema = yup.object({
-    boardMemberId: yup.string().required(),
-    memberId: yup.string().uuid().required(),
-    dateBorrow: yup.string().required().label('date borrow'),
-    dateReturn: yup
-      .string()
-      .required()
-      .test(
-        'isAfter',
-        'Return date must be after borrow date',
-        (date, context) => {
-          return context.parent.dateBorrow < date;
-        },
-      )
-      .label('return date'),
-    gear: yup
-      .array(
-        yup
-          .object({
-            gearItemId: yup.string().required().uuid(),
-            amount: yup.number().required().integer().moreThan(0),
-          })
-          .required()
-          .test('max_amount', function (gearItem) {
-            if (gearItem.amount > gearMap[gearItem.gearItemId].totalAmount) {
+  const formSchema = yup
+    .object({
+      boardMemberId: yup.string().required(),
+      memberId: yup.string().uuid().required(),
+      dateBorrow: yup.string().required().label('date borrow'),
+      dateReturn: yup
+        .string()
+        .required()
+        .test(
+          'isAfter',
+          'Return date must be after borrow date',
+          (date, context) => {
+            return context.parent.dateBorrow < date;
+          },
+        )
+        .label('return date'),
+      gear: yup
+        .mixed<Record<string, number>>()
+        .required()
+        .test(function (gear) {
+          for (const [id, amount] of Object.entries(gear)) {
+            if (amount <= 0) {
               return this.createError({
-                path: `${this.path}.amount`,
-                message: `Value for ${gearMap[gearItem.gearItemId].name} cannot exceed ${gearMap[gearItem.gearItemId].totalAmount}`,
+                path: `${this.path}.${id}`,
+                message: `Value for ${gearMap[id].name} must be a positive number`,
               });
             }
-
-            return true;
-          }),
-      )
-      .required()
-      .min(1),
-    depositFee: yup.number().required().min(0),
-    paymentMethod: yup.string<'transfer' | 'cash'>().required(),
-  });
+            if (amount > gearMap[id].totalAmount) {
+              return this.createError({
+                path: `${this.path}.${id}`,
+                message: `Value for ${gearMap[id].name} cannot exceed ${gearMap[id].totalAmount}`,
+              });
+            }
+          }
+          return true;
+        }),
+      topos: yup
+        .mixed<Record<string, number>>()
+        .required()
+        .test(function (topos) {
+          for (const [id, amount] of Object.entries(topos)) {
+            if (amount <= 0) {
+              return this.createError({
+                path: `${this.path}.${id}`,
+                message: `Value for ${topoMap[id].name} must be a positive number`,
+              });
+            }
+            if (amount > topoMap[id].totalAmount) {
+              return this.createError({
+                path: `${this.path}.${id}`,
+                message: `Value for ${topoMap[id].name} cannot exceed ${topoMap[id].totalAmount}`,
+              });
+            }
+          }
+          return true;
+        }),
+      depositFee: yup.number().required().min(0),
+      paymentMethod: yup.string<'transfer' | 'cash'>().required(),
+    })
+    .test('require gear', function (value) {
+      if (
+        Object.keys(value.gear).length + Object.keys(value.topos).length ==
+        0
+      ) {
+        return this.createError({
+          path: `${this.path}topos`,
+          message: `You must select gear for the rental`,
+        });
+      }
+      return true;
+    });
 
   const initialValues = {
     boardMemberId: boardMember.name,
@@ -84,7 +124,14 @@
     }
   });
 
-  const computedDeposit = ref<number>();
+  const computedGearDeposit = ref<number>();
+  const computedTopoDeposit = ref<number>();
+  const computedDeposit = computed(() => {
+    const total =
+      ((computedGearDeposit.value ?? 0) + (computedTopoDeposit.value ?? 0)) /
+      100;
+    return total > 20 ? total : 20;
+  });
 
   onMounted(() => {
     validateField('paymentMethod');
@@ -117,9 +164,13 @@
       <BoardRentalFormGearSelection
         :all-gear="allGear"
         :gear-map="gearMap"
-        @computed-deposit-fee="
-          (value) => (computedDeposit = value < 2000 ? 20 : value / 100)
-        " />
+        field-name="gear"
+        @computed-deposit-fee="(value) => (computedGearDeposit = value)" />
+      <BoardRentalFormGearSelection
+        :all-gear="allTopos"
+        :gear-map="topoMap"
+        field-name="topos"
+        @computed-deposit-fee="(value) => (computedTopoDeposit = value)" />
       <hr />
 
       <h2>Payment</h2>

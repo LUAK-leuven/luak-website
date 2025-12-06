@@ -87,26 +87,23 @@
   const save = handleSubmit(
     async (formState) => {
       console.log('hey', formState);
-      const gear: { id: string; actualAmount: number }[] = new Array(
-        rental.gear.length,
-      );
+      const gear: Record<string, number> = {};
       for (let i = 0; i < rental.gear.length; i++) {
-        gear[i] = {
-          id: rental.gear[i].id,
-          actualAmount: rental.gear[i].rentedAmount - formState.returnedGear[i],
-        };
+        const updatedAmount =
+          rental.gear[i].rentedAmount - formState.returnedGear[i];
+        if (updatedAmount !== rental.gear[i].actualAmount) {
+          gear[rental.gear[i].id] = updatedAmount;
+        }
       }
-      const topos: { id: string; actualAmount: number }[] = new Array(
-        rental.topos.length,
-      );
+      const topos: Record<string, number> = {};
       for (let i = 0; i < rental.topos.length; i++) {
-        topos[i] = {
-          id: rental.topos[i].rentedToposId,
-          actualAmount:
-            rental.topos[i].rentedAmount - formState.returnedTopos[i],
-        };
+        const updatedAmount =
+          rental.topos[i].rentedAmount - formState.returnedTopos[i];
+        if (updatedAmount !== rental.topos[i].actualAmount) {
+          topos[rental.topos[i].rentedToposId] = updatedAmount;
+        }
       }
-      // TODO: feedbackk on success/fail
+      // TODO: feedback on success/fail
       const success = await gearService().updateRental({
         id: rental.id,
         dateReturn: formState.dateReturn,
