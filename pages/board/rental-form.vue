@@ -101,7 +101,7 @@
     dateReturn: dayjs().add(3, 'w').format('YYYY-MM-DD').toString(),
   } as const;
 
-  const { values, meta, handleSubmit, errors, validateField } = useForm({
+  const { meta, handleSubmit, errors, validateField } = useForm({
     validationSchema: toTypedSchema(formSchema),
     initialValues: initialValues,
     validateOnMount: false,
@@ -115,7 +115,6 @@
     console.log(formState);
     // TODO: Show preview
     const { id, error } = await gearService().saveRental(formState);
-    console.log('id', id);
     submitError.value = !!error;
     errorMessage.value = error;
     if (!error) {
@@ -165,11 +164,14 @@
         :all-gear="allGear"
         :gear-map="gearMap"
         field-name="gear"
+        placeholder="select gear"
         @computed-deposit-fee="(value) => (computedGearDeposit = value)" />
+      <div class="h-4"></div>
       <BoardRentalFormGearSelection
         :all-gear="allTopos"
         :gear-map="topoMap"
         field-name="topos"
+        placeholder="select topos"
         @computed-deposit-fee="(value) => (computedTopoDeposit = value)" />
       <hr />
 
@@ -204,8 +206,8 @@
       </div>
     </form>
 
-    <p>Values: {{ values }}</p>
-    <p>Errors: {{ errors }}</p>
+    <!-- <p>Values: {{ values }}</p>
+    <p>Errors: {{ errors }}</p> -->
 
     <pop-up v-model:show="submitError" type="error">{{ errorMessage }}</pop-up>
   </FullPageCard>

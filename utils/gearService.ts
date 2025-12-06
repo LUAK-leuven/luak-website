@@ -121,8 +121,10 @@ class GearService {
       )
       .gt('RentedTopos.actual_amount', 0);
 
-    console.log(topos, error);
-    if (topos === null) return [];
+    if (topos === null) {
+      console.warn('getAllTopos', error);
+      return [];
+    }
 
     return topos.map((topo) => ({
       id: topo.id,
@@ -257,7 +259,6 @@ class GearService {
   }
 
   public async updateRental(rentalUpdate: RentalUpdate): Promise<boolean> {
-    console.log('saving:', rentalUpdate);
     const { error } = await this.supabase.rpc('update_rental', {
       p_rental_id: rentalUpdate.id,
       p_date_return: rentalUpdate.dateReturn,
@@ -272,7 +273,7 @@ class GearService {
         actualAmount: amount,
       })),
     });
-    console.log('updateRental: ', error);
+    if (error) console.warn('updateRental: ', error);
     return error === null;
   }
 }

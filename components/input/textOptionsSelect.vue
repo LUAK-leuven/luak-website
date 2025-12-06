@@ -8,7 +8,9 @@
     errorMessage?: string;
   }>();
 
-  const model = defineModel<T>();
+  const emit = defineEmits<{
+    selected: [value: T];
+  }>();
 
   const textValue = ref<string>();
   const hidden = ref(true);
@@ -18,14 +20,18 @@
     return props.searchFn(props.options, textValue.value);
   });
 
+  const selectedOption = ref<T>();
+
   function onSelect(option: T) {
     hidden.value = true;
-    model.value = option;
+    emit('selected', option);
+    selectedOption.value = option;
   }
+
   function onFocus() {
     textValue.value = '';
     hidden.value = false;
-    model.value = undefined;
+    selectedOption.value = undefined;
   }
 </script>
 
@@ -35,12 +41,12 @@
       <span class="label-text">{{ label }}</span>
     </div>
     <label class="input input-bordered flex w-full relative">
-      <span v-if="model && showSelectedItem" class="label w-fit">
-        <slot name="item" :data="model" />
+      <span v-if="selectedOption && showSelectedItem" class="label w-fit">
+        <slot name="item" :data="selectedOption" />
       </span>
       <input
         v-model="textValue"
-        :class="model ? 'w-0' : ''"
+        :class="selectedOption && showSelectedItem ? 'w-0' : ''"
         type="text"
         :placeholder="placeholder"
         popovertarget="popover-1"

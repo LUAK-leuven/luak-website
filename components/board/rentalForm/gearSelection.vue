@@ -10,6 +10,7 @@
     allGear: PublicGearInfo[];
     gearMap: Record<string, PublicGearInfo>;
     fieldName: string;
+    placeholder: string;
   }>();
 
   const emit = defineEmits<{
@@ -36,8 +37,6 @@
       ),
   );
 
-  const selectedGearItem = ref<GearInfo>();
-
   function filterGear(options: GearInfo[], input: string | undefined) {
     if (input === undefined) return options;
     return options
@@ -57,16 +56,15 @@
     );
   });
 
-  effect(() => {
-    if (selectedGearItem.value) {
-      selectedGear.value[selectedGearItem.value.id] = {
-        id: selectedGearItem.value.id,
-        name: selectedGearItem.value.name,
-        amount: selectedGearItem.value.name === 'quickdraw' ? 6 : 1,
-        depositFee: selectedGearItem.value.depositFee,
-      };
-    }
-  });
+  function addSelection(gearItem: GearInfo) {
+    selectedGear.value[gearItem.id] = {
+      id: gearItem.id,
+      name: gearItem.name,
+      amount: gearItem.name === 'quickdraw' ? 6 : 1,
+      depositFee: gearItem.depositFee,
+    };
+  }
+
   effect(() => {
     emit(
       'computedDepositFee',
@@ -81,12 +79,12 @@
 
 <template>
   <InputTextOptionsSelect
-    v-model="selectedGearItem"
     :options="availableGearList"
-    placeholder="select gear"
+    :placeholder="placeholder"
     :search-fn="filterGear"
     :show-selected-item="false"
-    :error-message="errorMessage">
+    :error-message="errorMessage"
+    @selected="addSelection">
     <template #item="{ data }">
       <div
         class="p-3 rounded-md w-full flex flex-row justify-between"

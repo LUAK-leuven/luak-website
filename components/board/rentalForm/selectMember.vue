@@ -22,25 +22,28 @@
       .slice(0, 5);
   }
 
-  const selectedMember = ref<{ id: string; name: string; hasPaid: boolean }>();
-
   const { value, errorMessage } = useField<string | undefined>(
     () => props.name,
   );
-  effect(() => {
-    value.value = selectedMember.value?.id;
-  });
+
+  function onSelect(selectedMember: {
+    id: string;
+    name: string;
+    hasPaid: boolean;
+  }) {
+    value.value = selectedMember.id;
+  }
 </script>
 
 <template>
   <InputTextOptionsSelect
-    v-model="selectedMember"
     label="Member name *"
     :options="selectableUsers"
     placeholder="select member"
     :search-fn="filterMember"
     :show-selected-item="true"
-    :error-message="errorMessage">
+    :error-message="errorMessage"
+    @selected="onSelect">
     <template #item="{ data }">
       <div
         class="px-3 py-1 rounded-md"

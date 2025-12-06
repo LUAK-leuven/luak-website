@@ -58,7 +58,7 @@
     }),
   );
 
-  const { values, errors, setValues, handleSubmit } = useForm({
+  const { setValues, handleSubmit } = useForm({
     validationSchema: toTypedSchema(formSchema.value),
   });
 
@@ -86,7 +86,6 @@
 
   const save = handleSubmit(
     async (formState) => {
-      console.log('hey', formState);
       const gear: Record<string, number> = {};
       for (let i = 0; i < rental.gear.length; i++) {
         const updatedAmount =
@@ -218,10 +217,10 @@
         {{ rental.status === 'not_returned' ? 'Mark as returned' : 'Edit' }}
       </button>
     </div>
-    <p>Values: {{ values }}</p>
+    <!-- <p>Values: {{ values }}</p>
     <p>Errors: {{ errors }}</p>
     <hr />
-    <p>Rental: {{ rental }}</p>
+    <p>Rental: {{ rental }}</p> -->
   </form>
 
   <PopUp v-model:show="showPopup" type="error"> Failed to save changes </PopUp>
