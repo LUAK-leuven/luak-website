@@ -18,7 +18,7 @@ create table "public"."Topos" (
     "year_published" numeric,
     "amount" numeric not null,
     "condition" topo_condition not null,
-    "type_of_climbing" text,
+    "types_of_climbing" text[],
     "tags" text[],
     "place_in_library" text not null,
     "details" text,

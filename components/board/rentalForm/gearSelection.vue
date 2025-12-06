@@ -23,6 +23,7 @@
       (item) => item !== undefined,
     );
   });
+
   const availableGearList = computed(() =>
     props.allGear
       .filter((item) => selectedGear.value[item.id] === undefined)
@@ -127,9 +128,9 @@
   </div>
 
   <!-- <div>
-    <p>total: {{ gearRecord }}</p>
+    <p>total: {{ gearMap }}</p>
     <p>availableGearList: {{ availableGearList }}</p>
     <p>selected: {{ selectedGear }}</p>
-    <p>remaining: {{ remainingGear }}</p>
+    <p>selectedList: {{ selectedGearList }}</p>
   </div> -->
 </template>

@@ -9,7 +9,7 @@ export type PublicGearInfo = {
 };
 
 export type UnsavedRental = {
-  memberId: string;
+  memberId?: string;
   boardMemberId: string;
   dateBorrow: string;
   dateReturn: string;
@@ -17,6 +17,13 @@ export type UnsavedRental = {
   topos: Record<string, number>;
   depositFee: number;
   paymentMethod: Enums<'payment_method'>;
+  contactInfo?: ContactInfo;
+};
+
+type ContactInfo = {
+  fullName: string;
+  email?: string;
+  phoneNumber?: string;
 };
 
 export type RentalSummary = {
@@ -36,7 +43,11 @@ export type TopoSumary = {
 
 export type RentalDetails = {
   id: string;
-  memberName: string;
+  member: {
+    fullName: string;
+    email?: string;
+    phone?: string;
+  };
   boardMember: string;
   dateBorrow: string;
   dateReturn: string;
@@ -139,7 +150,7 @@ class GearService {
   ): Promise<{ id: string | undefined; error: string | undefined }> {
     const { error, data } = await this.supabase.rpc('create_rental', {
       p_board_member_id: rental.boardMemberId,
-      p_member_id: rental.memberId,
+      p_member_id: rental.memberId ?? null,
       p_date_borrow: rental.dateBorrow,
       p_date_return: rental.dateReturn,
       p_deposit: rental.depositFee,
@@ -153,6 +164,9 @@ class GearService {
         rented_amount: amount,
       })),
       p_payment_method: rental.paymentMethod,
+      p_contact_info: rental.contactInfo
+        ? JSON.stringify(rental.contactInfo)
+        : null,
     });
 
     return { id: data ?? undefined, error: error?.message };
@@ -168,7 +182,8 @@ class GearService {
       ),
       date_return,
       date_borrow,
-      status
+      status,
+      contact_info
       `,
     );
 
@@ -177,13 +192,22 @@ class GearService {
       return [];
     }
 
-    return data.map((rental) => ({
-      id: rental.id,
-      memberName: getFullName(rental.member!),
-      dateReturn: rental.date_return,
-      dateBorrow: rental.date_borrow,
-      status: rental.status,
-    }));
+    return data.map((rental) => {
+      const contactInfo: ContactInfo = rental.contact_info
+        ? JSON.parse(rental.contact_info)
+        : undefined;
+      return {
+        id: rental.id,
+        memberName: rental.member
+          ? getFullName(rental.member)
+          : contactInfo
+            ? contactInfo.fullName
+            : 'Failed to load name',
+        dateReturn: rental.date_return,
+        dateBorrow: rental.date_borrow,
+        status: rental.status,
+      };
+    });
   }
 
   public async getRental(
@@ -200,7 +224,9 @@ class GearService {
         ),
         member:Users!Rentals_member_id_fkey(
           first_name,
-          last_name
+          last_name,
+          email,
+          phone_number
         ),
         date_borrow,
         date_return,
@@ -223,7 +249,8 @@ class GearService {
           ),
           rented_amount,
           actual_amount
-        )
+        ),
+        contact_info
         `,
       )
       .eq('id', rental_id)
@@ -234,9 +261,19 @@ class GearService {
       return undefined;
     }
 
+    const contactInfo: ContactInfo = rental.member
+      ? {
+          fullName: getFullName(rental.member),
+          email: rental.member.email,
+          phoneNumber: rental.member.phone_number,
+        }
+      : rental.contact_info
+        ? JSON.parse(rental.contact_info)
+        : { fullName: 'Failed to load name' };
+
     return {
       id: rental.id,
-      memberName: getFullName(rental.member!),
+      member: contactInfo,
       boardMember: getFullName(rental.board_member!),
       dateBorrow: rental.date_borrow,
       dateReturn: rental.date_return,

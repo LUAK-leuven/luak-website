@@ -26,7 +26,12 @@
   const formSchema = yup
     .object({
       boardMemberId: yup.string().required(),
-      memberId: yup.string().uuid().required(),
+      memberId: yup.string().when('contactInfo', {
+        is: (x: unknown) => {
+          return x === undefined;
+        },
+        then: (s) => s.required(),
+      }),
       dateBorrow: yup.string().required().label('date borrow'),
       dateReturn: yup
         .string()
@@ -81,6 +86,23 @@
         }),
       depositFee: yup.number().required().min(0),
       paymentMethod: yup.string<'transfer' | 'cash'>().required(),
+      contactInfo: yup
+        .object({
+          fullName: yup.string().required(),
+          email: yup.string().email(),
+          phone: yup_phone,
+        })
+        .optional()
+        .default(undefined)
+        .test('email and phone', function (contact) {
+          if (contact && !contact.email && !contact.phone) {
+            return this.createError({
+              path: `${this.path}`,
+              message: `One of email or phone number is required`,
+            });
+          }
+          return true;
+        }),
     })
     .test('require gear', function (value) {
       if (
@@ -101,7 +123,7 @@
     dateReturn: dayjs().add(3, 'w').format('YYYY-MM-DD').toString(),
   } as const;
 
-  const { meta, handleSubmit, errors, validateField } = useForm({
+  const { meta, handleSubmit, errors, validateField, values } = useForm({
     validationSchema: toTypedSchema(formSchema),
     initialValues: initialValues,
     validateOnMount: false,
@@ -112,6 +134,7 @@
 
   const onSubmit = handleSubmit(async (formState) => {
     formState.boardMemberId = boardMember.id;
+    if (formState.memberId === '') formState.memberId = undefined;
     console.log(formState);
     // TODO: Show preview
     const { id, error } = await gearService().saveRental(formState);
@@ -206,8 +229,8 @@
       </div>
     </form>
 
-    <!-- <p>Values: {{ values }}</p>
-    <p>Errors: {{ errors }}</p> -->
+    <p>Values: {{ values }}</p>
+    <p>Errors: {{ errors }}</p>
 
     <pop-up v-model:show="submitError" type="error">{{ errorMessage }}</pop-up>
   </FullPageCard>

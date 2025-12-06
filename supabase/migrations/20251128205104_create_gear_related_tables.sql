@@ -102,7 +102,7 @@ alter table "public"."GearCategories" add constraint "GearCategories_name_key" U
 alter table "public"."GearItems" add constraint "GearItems_gear_category_id_fkey" FOREIGN KEY (gear_category_id) REFERENCES "GearCategories"(id) ON DELETE RESTRICT not valid;
 alter table "public"."GearItems" validate constraint "GearItems_gear_category_id_fkey";
 
-alter table "public"."GearInventory" add constraint "GearInventory_gear_item_id_fkey" FOREIGN KEY (gear_item_id) REFERENCES "GearItems"(id) ON DELETE SET NULL not valid;
+alter table "public"."GearInventory" add constraint "GearInventory_gear_item_id_fkey" FOREIGN KEY (gear_item_id) REFERENCES "GearItems"(id) ON not valid;
 alter table "public"."GearInventory" validate constraint "GearInventory_gear_item_id_fkey";
 
 alter table "public"."GearItems" add constraint "GearItems_name_key" UNIQUE using index "GearItems_name_key";
@@ -119,7 +119,7 @@ alter table "public"."Rentals" validate constraint "Rentals_member_id_fkey";
 alter table "public"."RentedGear" add constraint "RentedGear_gear_item_id_fkey" FOREIGN KEY (gear_item_id) REFERENCES "GearItems"(id) ON DELETE RESTRICT not valid;
 alter table "public"."RentedGear" validate constraint "RentedGear_gear_item_id_fkey";
 
-alter table "public"."RentedGear" add constraint "RentedGear_rental_id_fkey" FOREIGN KEY (rental_id) REFERENCES "Rentals"(id) ON DELETE RESTRICT not valid;
+alter table "public"."RentedGear" add constraint "RentedGear_rental_id_fkey" FOREIGN KEY (rental_id) REFERENCES "Rentals"(id) ON DELETE CASCADE not valid;
 alter table "public"."RentedGear" validate constraint "RentedGear_rental_id_fkey";
 
 

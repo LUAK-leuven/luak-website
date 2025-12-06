@@ -9,6 +9,11 @@
     id: user.id,
     hasPaid: user.paid_membership,
   }));
+  selectableUsers.push({
+    name: 'Add a non-member',
+    id: '',
+    hasPaid: true,
+  });
 
   function filterMember(
     options: typeof selectableUsers,
@@ -36,20 +41,45 @@
 </script>
 
 <template>
-  <InputTextOptionsSelect
-    label="Member name *"
-    :options="selectableUsers"
-    placeholder="select member"
-    :search-fn="filterMember"
-    :show-selected-item="true"
-    :error-message="errorMessage"
-    @selected="onSelect">
-    <template #item="{ data }">
-      <div
-        class="px-3 py-1 rounded-md"
-        :class="data.hasPaid ? 'bg-green-100' : 'bg-red-100'">
-        {{ data.hasPaid ? '' : '⚠️ ' }}{{ data.name }}
-      </div>
-    </template>
-  </InputTextOptionsSelect>
+  <div class="flex flex-col">
+    <InputTextOptionsSelect
+      label="Member name *"
+      :options="selectableUsers"
+      placeholder="select member"
+      :search-fn="filterMember"
+      :show-selected-item="true"
+      :error-message="errorMessage"
+      @selected="onSelect">
+      <template #item="{ data }">
+        <div
+          class="px-3 py-1 rounded-md"
+          :class="
+            data.id === ''
+              ? 'bg-blue-100'
+              : data.hasPaid
+                ? 'bg-green-100'
+                : 'bg-red-100'
+          ">
+          {{ data.hasPaid ? '' : '⚠️ ' }}{{ data.name }}
+        </div>
+      </template>
+    </InputTextOptionsSelect>
+    <div v-if="value === ''">
+      <InputText
+        name="contactInfo.fullName"
+        placeholder="Adam Ondra"
+        label="Full name *"
+        type="text" />
+      <InputText
+        name="contactInfo.email"
+        placeholder="example@mail.com"
+        label="Email"
+        type="email" />
+      <InputText
+        name="contactInfo.phone"
+        placeholder="+32 123 34 56 77"
+        label="Phone number"
+        type="text" />
+    </div>
+  </div>
 </template>

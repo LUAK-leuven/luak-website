@@ -468,6 +468,7 @@ export type Database = {
       create_rental: {
         Args: {
           p_board_member_id: string;
+          p_contact_info: Json;
           p_date_borrow: string;
           p_date_return: string;
           p_deposit: number;
