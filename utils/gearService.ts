@@ -29,6 +29,13 @@ export type RentalSummary = {
   status: Enums<'rental_status'>;
 };
 
+export type TopoSumary = {
+  id: string;
+  title: string;
+  totalAmount: number;
+  availableAmount: number;
+};
+
 export type RentalDetails = {
   id: string;
   memberName: string;
@@ -38,6 +45,12 @@ export type RentalDetails = {
   gear: {
     id: string;
     name: string;
+    rentedAmount: number;
+    actualAmount: number;
+  }[];
+  topos: {
+    rentedToposId: string;
+    title: string;
     rentedAmount: number;
     actualAmount: number;
   }[];
@@ -93,6 +106,32 @@ class GearService {
         depositFee: gearItem.GearCategories!.deposit_fee,
       };
     });
+  }
+
+  public async getAllTopos(): Promise<TopoSumary[]> {
+    const { data: topos, error } = await this.supabase
+      .from('Topos')
+      .select(
+        `
+      id,
+      title,
+      amount,
+      RentedTopos (
+        actual_amount
+      )
+      `,
+      )
+      .gt('RentedTopos.actual_amount', 0);
+
+    console.log(topos, error);
+    if (topos === null) return [];
+
+    return topos.map((topo) => ({
+      id: topo.id,
+      title: topo.title,
+      totalAmount: topo.amount,
+      availableAmount: topo.amount - sumOf(topo.RentedTopos, 'actual_amount'),
+    }));
   }
 
   public async saveRental(
@@ -163,6 +202,7 @@ class GearService {
         date_return,
         deposit,
         payment_method,
+        status,
         RentedGear(
           id,
           GearItems(
@@ -171,7 +211,15 @@ class GearService {
           rented_amount,
           actual_amount
         ),
-        status
+        RentedTopos(
+          id,
+          Topos(
+            id,
+            title
+          ),
+          rented_amount,
+          actual_amount
+        )
         `,
       )
       .eq('id', rental_id)
@@ -194,6 +242,12 @@ class GearService {
         name: gearItem.GearItems!.name,
         rentedAmount: gearItem.rented_amount,
         actualAmount: gearItem.actual_amount,
+      })),
+      topos: rental.RentedTopos.map((topo) => ({
+        rentedToposId: topo.id,
+        title: topo.Topos!.title,
+        rentedAmount: topo.rented_amount,
+        actualAmount: topo.actual_amount,
       })),
       paymentMethod: rental.payment_method,
       status: rental.status,

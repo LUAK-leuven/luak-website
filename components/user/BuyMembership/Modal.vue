@@ -75,7 +75,6 @@
           membershipIds.map((item) => item.id),
         )
         .eq('approved', true);
-      console.log(payments);
       if (payments === null || payments.length === 0) {
         return true;
       }

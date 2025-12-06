@@ -340,6 +340,93 @@ export type Database = {
           },
         ];
       };
+      RentedTopos: {
+        Row: {
+          actual_amount: number;
+          id: string;
+          last_edited_date: string;
+          rental_id: string;
+          rented_amount: number;
+          topo_id: string;
+        };
+        Insert: {
+          actual_amount: number;
+          id?: string;
+          last_edited_date?: string;
+          rental_id: string;
+          rented_amount: number;
+          topo_id: string;
+        };
+        Update: {
+          actual_amount?: number;
+          id?: string;
+          last_edited_date?: string;
+          rental_id?: string;
+          rented_amount?: number;
+          topo_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'RentedTopos_rental_id_fkey';
+            columns: ['rental_id'];
+            isOneToOne: false;
+            referencedRelation: 'Rentals';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'RentedTopos_topo_id_fkey';
+            columns: ['topo_id'];
+            isOneToOne: false;
+            referencedRelation: 'Topos';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      Topos: {
+        Row: {
+          amount: number;
+          authors: string[] | null;
+          condition: Database['public']['Enums']['topo_condition'];
+          countries: string[] | null;
+          details: string | null;
+          id: string;
+          languages: string[] | null;
+          place_in_library: string;
+          tags: string[] | null;
+          title: string;
+          type_of_climbing: string | null;
+          year_published: number | null;
+        };
+        Insert: {
+          amount: number;
+          authors?: string[] | null;
+          condition: Database['public']['Enums']['topo_condition'];
+          countries?: string[] | null;
+          details?: string | null;
+          id?: string;
+          languages?: string[] | null;
+          place_in_library: string;
+          tags?: string[] | null;
+          title: string;
+          type_of_climbing?: string | null;
+          year_published?: number | null;
+        };
+        Update: {
+          amount?: number;
+          authors?: string[] | null;
+          condition?: Database['public']['Enums']['topo_condition'];
+          countries?: string[] | null;
+          details?: string | null;
+          id?: string;
+          languages?: string[] | null;
+          place_in_library?: string;
+          tags?: string[] | null;
+          title?: string;
+          type_of_climbing?: string | null;
+          year_published?: number | null;
+        };
+        Relationships: [];
+      };
       Users: {
         Row: {
           created_at: string;
@@ -416,6 +503,7 @@ export type Database = {
       payment_method: 'cash' | 'transfer';
       rental_status: 'returned' | 'partially_returned' | 'not_returned';
       student: 'student_kul' | 'phd_kul' | 'student_other' | 'not_student';
+      topo_condition: 'as_good_as_new' | 'good' | 'used' | 'damaged';
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -1086,6 +1174,7 @@ export const Constants = {
       payment_method: ['cash', 'transfer'],
       rental_status: ['returned', 'partially_returned', 'not_returned'],
       student: ['student_kul', 'phd_kul', 'student_other', 'not_student'],
+      topo_condition: ['as_good_as_new', 'good', 'used', 'damaged'],
     },
   },
   storage: {

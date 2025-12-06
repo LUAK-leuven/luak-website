@@ -27,3 +27,8 @@ values
     ('3825a13b-0002-4d44-b7f8-e8d0d8730cd2', 2, 'available'),
     ('6777b0e7-1b72-4572-821c-f0d7e7ed898c', 2, 'available'),
     ('645702cc-5d7a-4c16-9a2a-027e5bcb40c3', 2, 'available');
+
+insert into "Topos" (title, authors, countries, year_published, amount, condition, type_of_climbing, tags, place_in_library, details, languages)
+values
+  ('Topo Flone', array['KBF'], array['Belgium'], 2019, 2, 'good', array['sport_climbing'], array['flone', 'ourthe'], 'belgie', '', array['Dutch']),
+  ('Ailefriode', array[]::text[], array['France'], 2011, 1, 'used', array['multipitch', 'sport_climbing'], array['ailefroide', 'ecrin'], 'france', '', array['French'])
