@@ -146,6 +146,22 @@
       <b class="border px-1">Amount</b>
       <b class="border px-1">Returned amount</b>
       <template
+        v-for="({ title, rentedAmount, actualAmount }, idx) of rental.topos"
+        :key="idx">
+        <div class="border p-1">{{ title }}</div>
+        <div class="border p-1">{{ rentedAmount }}</div>
+        <div class="border p-1">
+          <span v-if="editMode">
+            <InputNumber
+              :class="{
+                'animate-bounceInput': bouncing[`returnedTopos[${idx}]`],
+              }"
+              :name="`returnedTopos[${idx}]`" />
+          </span>
+          <span v-else>{{ rentedAmount - actualAmount }}</span>
+        </div>
+      </template>
+      <template
         v-for="({ name, rentedAmount, actualAmount }, idx) of rental.gear"
         :key="idx">
         <div class="border p-1">{{ name }}</div>
