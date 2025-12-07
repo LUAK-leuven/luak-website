@@ -23,6 +23,18 @@ The easiest way to get started is using vscode with devcontainers. a devcontaine
 
 next set the right env variables to connect with supabase. check `.env.example` and the [Supabase Docs](https://supabase.com/docs/guides/getting-started)
 
+# Test users
+
+Some test users are created when setting up the database [seed.sql](supabase/seed.sql):
+
+- non_member@test.com
+- unpaid_membership@test.com
+- paid_last_year@test.com
+- paid_this_year@test.com
+- board_member@test.com
+
+All the users have the same password: 123456789
+
 # Supabase
 
 - supabase start
