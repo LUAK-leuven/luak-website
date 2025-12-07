@@ -9,7 +9,7 @@
       <h2>Hi {{ user.userInfo?.first_name ?? 'LUAK member' }} 👋</h2>
       Welcome to your profile page. Here you can manage your membership! In the
       future more functionaity will be added.
-      <div class="my-5 mx-2 flex flex-wrap justify-around">
+      <div class="my-5 mx-2 flex flex-wrap justify-evenly gap-x-4">
         <UserBuyMembershipCard
           v-if="user.membershipType !== 'paid_membership'" />
         <UserMembershipCard v-else />
@@ -20,6 +20,17 @@
           </template>
           <template #actions>
             <NuxtLink class="btn" to="/profile/settings"> settings </NuxtLink>
+          </template>
+        </UserCard>
+        <UserCard image="/20241102_134927[1].jpg">
+          <template #title> My gear ⚙️ </template>
+          <template #description>
+            View the status of your active rental(s)
+          </template>
+          <template #actions>
+            <NuxtLink class="btn btn-accent" to="/profile/gear">
+              my gear
+            </NuxtLink>
           </template>
         </UserCard>
         <UserLogOutCard />

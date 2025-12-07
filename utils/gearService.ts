@@ -41,10 +41,8 @@ export type TopoSumary = {
   availableAmount: number;
 };
 
-export type RentalDetails = {
+export type PublicRentalDetails = {
   id: string;
-  member: ContactInfo;
-  boardMember: string;
   dateBorrow: string;
   dateReturn: string;
   gear: {
@@ -61,6 +59,11 @@ export type RentalDetails = {
   }[];
   depositFee: number;
   paymentMethod: Enums<'payment_method'>;
+};
+
+export type RentalDetails = PublicRentalDetails & {
+  member: ContactInfo;
+  boardMember: string;
   status: Enums<'rental_status'>;
 };
 
@@ -308,6 +311,126 @@ class GearService {
     });
     if (error) console.warn('updateRental: ', error);
     return error === null;
+  }
+
+  public async getActiveRentalsForUser(
+    userId: string,
+  ): Promise<PublicRentalDetails[] | undefined> {
+    const { data: rentals, error } = await this.supabase
+      .from('Rentals')
+      .select(
+        `
+        id,
+        date_borrow,
+        date_return,
+        deposit,
+        payment_method,
+        RentedGear(
+          id,
+          GearItems(
+            name
+          ),
+          rented_amount,
+          actual_amount
+        ),
+        RentedTopos(
+          id,
+          Topos(
+            id,
+            title
+          ),
+          rented_amount,
+          actual_amount
+        )
+        `,
+      )
+      .eq('member_id', userId)
+      .neq('status', 'returned');
+
+    if (error || rentals === null) {
+      console.warn('failed to load rentals', error);
+      return undefined;
+    }
+
+    return rentals.map((rental) => ({
+      id: rental.id,
+      dateBorrow: rental.date_borrow,
+      dateReturn: rental.date_return,
+      depositFee: rental.deposit,
+      gear: rental.RentedGear.map((gearItem) => ({
+        id: gearItem.id,
+        name: gearItem.GearItems!.name,
+        rentedAmount: gearItem.rented_amount,
+        actualAmount: gearItem.actual_amount,
+      })),
+      topos: rental.RentedTopos.map((topo) => ({
+        rentedToposId: topo.id,
+        title: topo.Topos!.title,
+        rentedAmount: topo.rented_amount,
+        actualAmount: topo.actual_amount,
+      })),
+      paymentMethod: rental.payment_method,
+    }));
+  }
+
+  public async getReturnedRentalsForUser(
+    userId: string,
+  ): Promise<PublicRentalDetails[] | undefined> {
+    const { data: rentals, error } = await this.supabase
+      .from('Rentals')
+      .select(
+        `
+        id,
+        date_borrow,
+        date_return,
+        deposit,
+        payment_method,
+        RentedGear(
+          id,
+          GearItems(
+            name
+          ),
+          rented_amount,
+          actual_amount
+        ),
+        RentedTopos(
+          id,
+          Topos(
+            id,
+            title
+          ),
+          rented_amount,
+          actual_amount
+        )
+        `,
+      )
+      .eq('member_id', userId)
+      .eq('status', 'returned');
+
+    if (error || rentals === null) {
+      console.warn('failed to load rentals', error);
+      return undefined;
+    }
+
+    return rentals.map((rental) => ({
+      id: rental.id,
+      dateBorrow: rental.date_borrow,
+      dateReturn: rental.date_return,
+      depositFee: rental.deposit,
+      gear: rental.RentedGear.map((gearItem) => ({
+        id: gearItem.id,
+        name: gearItem.GearItems!.name,
+        rentedAmount: gearItem.rented_amount,
+        actualAmount: gearItem.actual_amount,
+      })),
+      topos: rental.RentedTopos.map((topo) => ({
+        rentedToposId: topo.id,
+        title: topo.Topos!.title,
+        rentedAmount: topo.rented_amount,
+        actualAmount: topo.actual_amount,
+      })),
+      paymentMethod: rental.payment_method,
+    }));
   }
 }
 

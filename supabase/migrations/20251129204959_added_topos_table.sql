@@ -107,3 +107,18 @@ using ((( SELECT auth.uid() AS uid) IN ( SELECT "BoardMembers".user_id
    FROM "BoardMembers")))
 with check ((( SELECT auth.uid() AS uid) IN ( SELECT "BoardMembers".user_id
    FROM "BoardMembers")));
+
+
+create policy "Enable read access on Topos for all users"
+on "public"."Topos"
+as permissive
+for select
+to authenticated
+using (true);
+
+create policy "Enable users to view their own RentedTopos"
+on "public"."RentedTopos"
+as permissive
+for select
+to authenticated
+using (exists ( select 1 from "Rentals" where "Rentals".id = rental_id and "Rentals".member_id = auth.uid() ));

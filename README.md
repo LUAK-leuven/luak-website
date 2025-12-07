@@ -25,7 +25,7 @@ next set the right env variables to connect with supabase. check `.env.example` 
 
 # Test users
 
-Some test users are created when setting up the database [seed.sql](supabase/seed.sql):
+Some test users are created when setting up the database (when running `yarn supabase db reset` the db is populated with [seed.sql](supabase/seed.sql)):
 
 - non_member@test.com
 - unpaid_membership@test.com

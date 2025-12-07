@@ -128,7 +128,7 @@
 <template>
   <form @submit.prevent>
     <div class="grid grid-cols-2 gap-3">
-      <div class="flex flex-col">
+      <div v-if="rental.member" class="flex flex-col">
         <span>Member: {{ rental.member.fullName }}</span>
         <span v-if="rental.member.email" class="ml-3">
           ✉️: <MailTo :email="rental.member.email" />
@@ -137,7 +137,9 @@
           ☎️: <WhatsappLink :phone-number="rental.member.phoneNumber" />
         </span>
       </div>
-      <div>Board member: {{ rental.boardMember }}</div>
+      <div v-if="rental.boardMember">
+        Board member: {{ rental.boardMember }}
+      </div>
       <div class="flex flex-row gap-x-1 items-center flex-wrap">
         <span>Date borrow:</span>
         <span>{{ rental.dateBorrow }}</span>

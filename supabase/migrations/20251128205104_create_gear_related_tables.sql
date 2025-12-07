@@ -339,3 +339,10 @@ as permissive
 for select
 to authenticated
 using ((( SELECT auth.uid() AS uid) = member_id));
+
+create policy "Enable users to view their own RentedGear"
+on "public"."RentedGear"
+as permissive
+for select
+to authenticated
+using (exists ( select 1 from "Rentals" where "Rentals".id = rental_id and "Rentals".member_id = auth.uid() ));
