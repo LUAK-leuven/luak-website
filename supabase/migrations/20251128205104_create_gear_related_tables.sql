@@ -22,8 +22,8 @@ create table "public"."GearInventory" (
     "created_at" timestamp with time zone not null default now(),
     "gear_item_id" uuid not null,
     "details" text not null default ''::text,
-    "purchase_date" timestamp with time zone,
-    "production_date" timestamp with time zone,
+    "purchase_date" date,
+    "production_date" date,
     "amount" numeric not null,
     "status" gear_status not null
 );
