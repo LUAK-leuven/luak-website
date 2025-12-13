@@ -65,6 +65,7 @@ export type RentalDetails = PublicRentalDetails & {
   member: ContactInfo;
   boardMember: string;
   status: Enums<'rental_status'>;
+  comments: string | undefined;
 };
 
 export type RentalUpdate = {
@@ -74,6 +75,7 @@ export type RentalUpdate = {
   topos: Record<string, number>;
   depositFee: number;
   status: Enums<'rental_status'>;
+  comments: string | undefined;
 };
 
 export type GearDetails = {
@@ -314,7 +316,8 @@ class GearService {
           rented_amount,
           actual_amount
         ),
-        contact_info
+        contact_info,
+        comments
         `,
       )
       .eq('id', rental_id)
@@ -356,6 +359,7 @@ class GearService {
       })),
       paymentMethod: rental.payment_method,
       status: rental.status,
+      comments: rental.comments ?? undefined,
     };
   }
 
@@ -373,6 +377,7 @@ class GearService {
         id: id,
         actualAmount: amount,
       })),
+      p_comments: rentalUpdate.comments ?? null,
     });
     if (error) console.warn('updateRental: ', error);
     return error === null;

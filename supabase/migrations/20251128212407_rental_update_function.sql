@@ -1,6 +1,6 @@
 set check_function_bodies = off;
 
-CREATE OR REPLACE FUNCTION public.create_rental(p_board_member_id uuid, p_member_id uuid, p_date_borrow date, p_date_return date, p_deposit numeric, p_payment_method payment_method, p_status rental_status, p_gear jsonb, p_topos jsonb, p_contact_info text)
+CREATE OR REPLACE FUNCTION public.create_rental(p_board_member_id uuid, p_member_id uuid, p_date_borrow date, p_date_return date, p_deposit numeric, p_payment_method payment_method, p_status rental_status, p_gear jsonb, p_topos jsonb, p_contact_info text, p_comments text)
  RETURNS uuid
  LANGUAGE plpgsql
 AS $function$
@@ -11,8 +11,8 @@ DECLARE
   gear_item_amount numeric;
 BEGIN
   -- Create the Rental
-  insert into "Rentals" (board_member_id, member_id, date_borrow, date_return, deposit, payment_method, status, contact_info)
-  values (p_board_member_id, p_member_id, p_date_borrow, p_date_return, p_deposit, p_payment_method, p_status, p_contact_info)
+  insert into "Rentals" (board_member_id, member_id, date_borrow, date_return, deposit, payment_method, status, contact_info, comments)
+  values (p_board_member_id, p_member_id, p_date_borrow, p_date_return, p_deposit, p_payment_method, p_status, p_contact_info, p_comments)
   returning id into rental_id;
 
   -- Save the Gear
@@ -40,7 +40,7 @@ END;$function$
 ;
 
 
-CREATE OR REPLACE FUNCTION public.update_rental(p_rental_id uuid, p_date_return date, p_deposit_fee numeric, p_status rental_status, p_gear jsonb, p_topos jsonb)
+CREATE OR REPLACE FUNCTION public.update_rental(p_rental_id uuid, p_date_return date, p_deposit_fee numeric, p_status rental_status, p_gear jsonb, p_topos jsonb, p_comments text)
  RETURNS void
  LANGUAGE plpgsql
 AS $function$
@@ -60,7 +60,8 @@ BEGIN
   update "Rentals"
   set date_return = p_date_return,
     deposit = p_deposit_fee,
-    status = p_status
+    status = p_status,
+    comments = p_comments
   where id = p_rental_id;
 
   -- Update the Gear

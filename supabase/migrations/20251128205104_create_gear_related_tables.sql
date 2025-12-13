@@ -55,6 +55,7 @@ create table "public"."Rentals" (
     "payment_method" payment_method not null,
     "contact_info" text,
     "status" rental_status not null default 'not_returned'::rental_status
+    "comments" text,
 );
 alter table "public"."Rentals" enable row level security;
 

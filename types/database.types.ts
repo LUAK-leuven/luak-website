@@ -247,6 +247,7 @@ export type Database = {
       Rentals: {
         Row: {
           board_member_id: string;
+          comments: string | null;
           contact_info: string | null;
           created_at: string;
           date_borrow: string;
@@ -259,6 +260,7 @@ export type Database = {
         };
         Insert: {
           board_member_id?: string;
+          comments?: string | null;
           contact_info?: string | null;
           created_at?: string;
           date_borrow: string;
@@ -271,6 +273,7 @@ export type Database = {
         };
         Update: {
           board_member_id?: string;
+          comments?: string | null;
           contact_info?: string | null;
           created_at?: string;
           date_borrow?: string;
@@ -394,7 +397,7 @@ export type Database = {
           place_in_library: string;
           tags: string[] | null;
           title: string;
-          type_of_climbing: string[] | null;
+          types_of_climbing: string[] | null;
           year_published: number | null;
         };
         Insert: {
@@ -408,7 +411,7 @@ export type Database = {
           place_in_library: string;
           tags?: string[] | null;
           title: string;
-          type_of_climbing?: string[] | null;
+          types_of_climbing?: string[] | null;
           year_published?: number | null;
         };
         Update: {
@@ -422,7 +425,7 @@ export type Database = {
           place_in_library?: string;
           tags?: string[] | null;
           title?: string;
-          type_of_climbing?: string[] | null;
+          types_of_climbing?: string[] | null;
           year_published?: number | null;
         };
         Relationships: [];
@@ -468,7 +471,8 @@ export type Database = {
       create_rental: {
         Args: {
           p_board_member_id: string;
-          p_contact_info: Json;
+          p_comments: string;
+          p_contact_info: string;
           p_date_borrow: string;
           p_date_return: string;
           p_deposit: number;
@@ -490,6 +494,7 @@ export type Database = {
       };
       update_rental: {
         Args: {
+          p_comments: string;
           p_date_return: string;
           p_deposit_fee: number;
           p_gear: Json;

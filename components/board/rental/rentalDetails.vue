@@ -54,10 +54,12 @@
             ),
           otherwise: (deposit) => deposit.min(0).max(rental.depositFee),
         }),
+      depositReturned: yup.bool().default(false),
+      comments: yup.string(),
     }),
   );
 
-  const { setValues, handleSubmit, values } = useForm({
+  const { setValues, handleSubmit, values, errors } = useForm({
     validationSchema: toTypedSchema(formSchema.value),
   });
 
@@ -76,6 +78,8 @@
           : topo.rentedAmount - topo.actualAmount,
       ),
       depositFee: rental.depositFee,
+      depositReturned: rental.status === 'returned',
+      comments: rental.comments,
     });
   }
 
@@ -108,6 +112,7 @@
         gear: gear,
         topos: topos,
         status: computedStatus.value,
+        comments: formState.comments,
       });
 
       if (success) reloadNuxtApp();
@@ -134,7 +139,7 @@
         if (values.returnedTopos![i] !== rental.topos[i].rentedAmount)
           isAllReturned = false;
       }
-      if (isAllReturned) return 'returned';
+      if (isAllReturned && values.depositReturned) return 'returned';
       else if (isAnyReturned) return 'partially_returned';
       else return 'not_returned';
     }
@@ -172,19 +177,28 @@
       </div>
       <div class="flex flex-row gap-1 items-center">
         <span>Deposit:</span>
-        <InputNumber
+        <span>{{ rental.depositFee }}</span>
+        <Field
           v-if="editMode"
-          :class="{ 'animate-bounceInput': bouncing.depositFee }"
-          name="depositFee"
-          :clamp-input="true"
-          :hard-min="0"
-          :soft-max="rental.depositFee" />
-        <span v-else>{{ rental.depositFee }}</span>
+          class="checkbox checkbox-success border-2 ml-1"
+          name="depositReturned"
+          type="checkbox"
+          :value="true" />
       </div>
       <div>Payment: {{ rental.paymentMethod }}</div>
       <div class="flex flex-row gap-1 items-center">
         <span>Status:</span>
         <BoardRentalStatusBadge :status="computedStatus" />
+      </div>
+      <div
+        v-if="editMode || rental.comments"
+        class="col-span-full flex flex-col">
+        <span>Comments:</span>
+        <Field v-if="editMode" v-slot="{ field }" name="comments">
+          <textarea class="textarea textarea-bordered" v-bind="field" />
+        </Field>
+
+        <p v-else class="italic">{{ rental.comments }}</p>
       </div>
     </div>
     <hr class="my-3" />
@@ -234,10 +248,10 @@
         {{ rental.status === 'not_returned' ? 'Mark as returned' : 'Edit' }}
       </button>
     </div>
-    <!-- <p>Values: {{ values }}</p>
+    <p>Values: {{ values }}</p>
     <p>Errors: {{ errors }}</p>
     <hr />
-    <p>Rental: {{ rental }}</p> -->
+    <p>Rental: {{ rental }}</p>
   </form>
 
   <PopUp v-model:show="showPopup" type="error"> Failed to save changes </PopUp>
