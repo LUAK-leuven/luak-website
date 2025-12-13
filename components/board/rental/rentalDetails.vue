@@ -54,11 +54,10 @@
             ),
           otherwise: (deposit) => deposit.min(0).max(rental.depositFee),
         }),
-      status: yup.string<Enums<'rental_status'>>().required(),
     }),
   );
 
-  const { setValues, handleSubmit } = useForm({
+  const { setValues, handleSubmit, values } = useForm({
     validationSchema: toTypedSchema(formSchema.value),
   });
 
@@ -66,7 +65,6 @@
     editMode.value = true;
     setValues({
       dateReturn: rental.dateReturn,
-      status: rental.status === 'not_returned' ? 'returned' : rental.status,
       returnedGear: rental.gear.map((gearItem) =>
         rental.status === 'not_returned'
           ? gearItem.rentedAmount
@@ -109,7 +107,7 @@
         depositFee: formState.depositFee,
         gear: gear,
         topos: topos,
-        status: formState.status,
+        status: computedStatus.value,
       });
 
       if (success) reloadNuxtApp();
@@ -121,6 +119,27 @@
       }
     },
   );
+
+  const computedStatus: ComputedRef<Enums<'rental_status'>> = computed(() => {
+    if (editMode.value) {
+      let isAllReturned = true;
+      let isAnyReturned = false;
+      for (let i = 0; i < rental.gear.length; i++) {
+        if (values.returnedGear![i] > 0) isAnyReturned = true;
+        if (values.returnedGear![i] !== rental.gear[i].rentedAmount)
+          isAllReturned = false;
+      }
+      for (let i = 0; i < rental.topos.length; i++) {
+        if (values.returnedTopos![i] > 0) isAnyReturned = true;
+        if (values.returnedTopos![i] !== rental.topos[i].rentedAmount)
+          isAllReturned = false;
+      }
+      if (isAllReturned) return 'returned';
+      else if (isAnyReturned) return 'partially_returned';
+      else return 'not_returned';
+    }
+    return rental.status;
+  });
 
   const editMode = ref(false);
 </script>
@@ -165,19 +184,7 @@
       <div>Payment: {{ rental.paymentMethod }}</div>
       <div class="flex flex-row gap-1 items-center">
         <span>Status:</span>
-        <InputSelect
-          v-if="editMode"
-          name="status"
-          :options="
-            [
-              { value: 'not_returned', label: 'Not returned' },
-              { value: 'partially_returned', label: 'Partially returned' },
-              { value: 'returned', label: 'Returned' },
-            ] as const
-          "
-          default-option="not_returned"
-          disabled-option="Select the status" />
-        <BoardRentalStatusBadge v-else :status="rental.status" />
+        <BoardRentalStatusBadge :status="computedStatus" />
       </div>
     </div>
     <hr class="my-3" />
