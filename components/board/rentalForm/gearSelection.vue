@@ -61,7 +61,7 @@
     selectedGear.value[gearItem.id] = {
       id: gearItem.id,
       name: gearItem.name,
-      amount: gearItem.name === 'quickdraw' ? 6 : 1,
+      amount: gearItem.name === 'quickdraw' ? 12 : 1,
       depositFee: gearItem.depositFee,
     };
   }

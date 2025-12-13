@@ -229,8 +229,8 @@
       </div>
     </form>
 
-    <p>Values: {{ values }}</p>
-    <p>Errors: {{ errors }}</p>
+    <!-- <p>Values: {{ values }}</p>
+    <p>Errors: {{ errors }}</p> -->
 
     <pop-up v-model:show="submitError" type="error">{{ errorMessage }}</pop-up>
   </FullPageCard>

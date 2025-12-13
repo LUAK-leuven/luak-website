@@ -61,14 +61,17 @@
         <ul class="p-2 bg-base-200 rounded-t-none w-52">
           <li>
             <NuxtLink to="/board/subscriptions-overview">
-              Subscriptions
+              👥 Subscriptions
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/board/rental-form"> Rental form </NuxtLink>
+            <NuxtLink to="/board/rental-form"> 🧗 Rental form </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/board/rentals"> Rental overview </NuxtLink>
+            <NuxtLink to="/board/rentals"> 👀 Rental overview </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink to="/board/gear-overview"> ⚙️ Gear overview </NuxtLink>
           </li>
         </ul>
       </details>

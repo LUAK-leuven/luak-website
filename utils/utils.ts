@@ -2,9 +2,9 @@ export function sum(array: number[]): number {
   return array.reduce((sum, current) => sum + current, 0);
 }
 
-export function sumOf<T extends { [k: string]: number }>(
+export function sumOf<T extends Record<K, number>, K extends keyof T>(
   array: T[],
-  key: keyof T,
+  key: K,
 ): number {
   return array.reduce((sum, current) => sum + current[key], 0);
 }

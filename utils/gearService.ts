@@ -76,6 +76,23 @@ export type RentalUpdate = {
   status: Enums<'rental_status'>;
 };
 
+export type GearDetails = {
+  categoryName: string;
+  lifespan: number;
+  gearItems: {
+    name: string;
+    totalAmount: number;
+    availableAmount: number;
+    gearInventory: {
+      id: string;
+      details: string;
+      purchaseDate: string | undefined;
+      productionDate: string | undefined;
+      amount: number;
+    }[];
+  }[];
+};
+
 class GearService {
   private readonly supabase = useSupabaseClient<Database>();
 
@@ -114,6 +131,54 @@ class GearService {
         };
       })
       .filter((gearItem) => gearItem.totalAmount > 0);
+  }
+
+  public async getGearInventory(): Promise<GearDetails[]> {
+    const { data: gear, error } = await this.supabase
+      .from('GearCategories')
+      .select(
+        `
+      name,
+      lifespan,
+      GearItems (
+        name,
+        GearInventory (
+          id,
+          details,
+          purchase_date,
+          production_date,
+          amount
+        ),
+        RentedGear (
+          actual_amount
+        )
+      )
+    `,
+      )
+      .eq('GearItems.GearInventory.status', 'available');
+    if (gear === null) {
+      console.warn(error);
+      return [];
+    }
+
+    return gear.map((gearCategory) => ({
+      categoryName: gearCategory.name,
+      lifespan: gearCategory.lifespan,
+      gearItems: gearCategory.GearItems.map((gearItem) => ({
+        name: gearItem.name,
+        totalAmount: sumOf(gearItem.GearInventory, 'amount'),
+        availableAmount:
+          sumOf(gearItem.GearInventory, 'amount') -
+          sumOf(gearItem.RentedGear, 'actual_amount'),
+        gearInventory: gearItem.GearInventory.map((x) => ({
+          id: x.id,
+          details: x.details,
+          purchaseDate: x.purchase_date ?? undefined,
+          productionDate: x.production_date ?? undefined,
+          amount: x.amount,
+        })),
+      })),
+    }));
   }
 
   public async getAllTopos(): Promise<TopoSumary[]> {
