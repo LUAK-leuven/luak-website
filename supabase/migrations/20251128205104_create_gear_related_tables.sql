@@ -4,7 +4,7 @@ create type "public"."gear_status" as enum ('available', 'archived');
 
 create type "public"."payment_method" as enum ('cash', 'transfer');
 
-create type "public"."rental_status" as enum ('returned', 'partially_returned', 'not_returned');
+create type "public"."rental_status" as enum ('returned', 'partially_returned', 'not_returned', 'reserved');
 
 
 -- New tables
@@ -346,4 +346,4 @@ on "public"."RentedGear"
 as permissive
 for select
 to authenticated
-using (exists ( select 1 from "Rentals" where "Rentals".id = rental_id and "Rentals".member_id = auth.uid() ));
+using (exists ( select 1 from "Rentals" where "Rentals".id = rental_id and "Rentals".member_id = ( SELECT auth.uid() AS uid) ));

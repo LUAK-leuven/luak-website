@@ -121,4 +121,4 @@ on "public"."RentedTopos"
 as permissive
 for select
 to authenticated
-using (exists ( select 1 from "Rentals" where "Rentals".id = rental_id and "Rentals".member_id = auth.uid() ));
+using (exists ( select 1 from "Rentals" where "Rentals".id = rental_id and "Rentals".member_id = ( SELECT auth.uid() AS uid) ));

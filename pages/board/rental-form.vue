@@ -25,7 +25,6 @@
 
   const formSchema = yup
     .object({
-      boardMemberId: yup.string().required(),
       memberId: yup.string().when('contactInfo', {
         is: (x: unknown) => {
           return x === undefined;
@@ -103,6 +102,7 @@
           }
           return true;
         }),
+      markAsReserved: yup.bool().default(false),
     })
     .test('require gear', function (value) {
       if (
@@ -133,11 +133,20 @@
   const errorMessage = ref<string>();
 
   const onSubmit = handleSubmit(async (formState) => {
-    formState.boardMemberId = boardMember.id;
-    if (formState.memberId === '') formState.memberId = undefined;
     console.log(formState);
     // TODO: Show preview
-    const { id, error } = await gearService().saveRental(formState);
+    const { id, error } = await gearService().saveRental({
+      memberId: formState.memberId === '' ? undefined : formState.memberId,
+      boardMemberId: boardMember.id,
+      dateBorrow: formState.dateBorrow,
+      dateReturn: formState.dateReturn,
+      gear: formState.gear,
+      topos: formState.topos,
+      depositFee: formState.depositFee,
+      paymentMethod: formState.paymentMethod,
+      contactInfo: formState.contactInfo,
+      status: formState.markAsReserved ? 'reserved' : 'not_returned',
+    });
     submitError.value = !!error;
     errorMessage.value = error;
     if (!error) {
@@ -179,6 +188,16 @@
 
         <InputText label="Date borrow *" name="dateBorrow" type="date" />
         <InputText label="Date return *" name="dateReturn" type="date" />
+
+        <div class="flex flex-col w-fit">
+          <label class="my-2" for="markAsReserved">Mark as reserved</label>
+          <Field
+            id="markAsReserved"
+            class="toggle toggle-primary"
+            name="markAsReserved"
+            :value="true"
+            type="checkbox" />
+        </div>
       </div>
 
       <hr />

@@ -38,11 +38,7 @@
   const filteredRentals = computed(() => {
     const selectedRentals = showReturned.value
       ? rentals.value
-      : rentals.value?.filter(
-          (rental) =>
-            rental.status === 'not_returned' ||
-            rental.status === 'partially_returned',
-        );
+      : rentals.value?.filter((rental) => rental.status !== 'returned');
     if (selectedRentals === undefined) return undefined;
     const term = searchTerm.value;
     if (term === undefined) return selectedRentals;

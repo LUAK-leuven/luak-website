@@ -56,6 +56,7 @@
         }),
       depositReturned: yup.bool().default(false),
       comments: yup.string(),
+      statusReserved: yup.bool().default(false),
     }),
   );
 
@@ -80,6 +81,7 @@
       depositFee: rental.depositFee,
       depositReturned: rental.status === 'returned',
       comments: rental.comments,
+      statusReserved: rental.status === 'reserved',
     });
   }
 
@@ -127,6 +129,7 @@
 
   const computedStatus: ComputedRef<Enums<'rental_status'>> = computed(() => {
     if (editMode.value) {
+      if (values.statusReserved) return 'reserved';
       let isAllReturned = true;
       let isAnyReturned = false;
       for (let i = 0; i < rental.gear.length; i++) {
@@ -189,6 +192,12 @@
       <div class="flex flex-row gap-1 items-center">
         <span>Status:</span>
         <BoardRentalStatusBadge :status="computedStatus" />
+        <Field
+          v-if="editMode"
+          class="toggle toggle-primary"
+          name="statusReserved"
+          type="checkbox"
+          :value="true" />
       </div>
       <div
         v-if="editMode || rental.comments"

@@ -509,7 +509,11 @@ export type Database = {
       gear_status: 'available' | 'archived';
       kbf_uiaa: 'not' | 'kbf_luak' | 'kbf_other' | 'uiaa';
       payment_method: 'cash' | 'transfer';
-      rental_status: 'returned' | 'partially_returned' | 'not_returned';
+      rental_status:
+        | 'returned'
+        | 'partially_returned'
+        | 'not_returned'
+        | 'reserved';
       student: 'student_kul' | 'phd_kul' | 'student_other' | 'not_student';
       topo_condition: 'as_good_as_new' | 'good' | 'used' | 'damaged';
     };
@@ -1180,7 +1184,12 @@ export const Constants = {
       gear_status: ['available', 'archived'],
       kbf_uiaa: ['not', 'kbf_luak', 'kbf_other', 'uiaa'],
       payment_method: ['cash', 'transfer'],
-      rental_status: ['returned', 'partially_returned', 'not_returned'],
+      rental_status: [
+        'returned',
+        'partially_returned',
+        'not_returned',
+        'reserved',
+      ],
       student: ['student_kul', 'phd_kul', 'student_other', 'not_student'],
       topo_condition: ['as_good_as_new', 'good', 'used', 'damaged'],
     },
