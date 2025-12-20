@@ -32,9 +32,9 @@
         </div>
         <div class="flex flex-row gap-1 items-center flex-wrap">
           <span>Deposit: {{ rental.depositFee }}</span>
-          <span v-if="rental.depositReturned" class="badge badge-success"
-            >returned</span
-          >
+          <span v-if="rental.depositReturned" class="badge badge-success">
+            returned
+          </span>
         </div>
         <div>Payment: {{ rental.paymentMethod }}</div>
         <div v-if="rental.status" class="flex flex-row gap-1 items-center">
@@ -43,8 +43,7 @@
         </div>
       </div>
       <hr class="my-3" />
-      <div
-        class="grid grid-cols-[max-content_min-content_1fr] border rounded-sm">
+      <div class="grid grid-cols-[3fr_1fr_1fr] border rounded-sm">
         <b class="border px-1">Gear</b>
         <b class="border px-1">Amount</b>
         <b class="border px-1">Returned amount</b>
