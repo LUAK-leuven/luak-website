@@ -3,6 +3,7 @@
   import type { Enums } from '~/types/database.types';
 
   const { rental } = defineProps<{ rental: RentalDetails }>();
+  const popup = usePopup();
 
   const formSchema = computed(() =>
     yup.object({
@@ -63,20 +64,19 @@
   const { setValues, handleSubmit, values, errors } = useForm({
     validationSchema: toTypedSchema(formSchema.value),
   });
+  const { update: updateReturnedGear } = useFieldArray<number>('returnedGear');
+  const { update: updateReturnedTopos } =
+    useFieldArray<number>('returnedTopos');
 
-  function markReturned() {
+  function edit() {
     editMode.value = true;
     setValues({
       dateReturn: rental.dateReturn,
-      returnedGear: rental.gear.map((gearItem) =>
-        rental.status === 'not_returned'
-          ? gearItem.rentedAmount
-          : gearItem.rentedAmount - gearItem.actualAmount,
+      returnedGear: rental.gear.map(
+        (gearItem) => gearItem.rentedAmount - gearItem.actualAmount,
       ),
-      returnedTopos: rental.topos.map((topo) =>
-        rental.status === 'not_returned'
-          ? topo.rentedAmount
-          : topo.rentedAmount - topo.actualAmount,
+      returnedTopos: rental.topos.map(
+        (topo) => topo.rentedAmount - topo.actualAmount,
       ),
       depositFee: rental.depositFee,
       depositReturned: rental.status === 'returned',
@@ -86,7 +86,6 @@
   }
 
   const { bouncing, triggerBounce } = useBounce();
-  const showPopup = ref(false);
 
   const save = handleSubmit(
     async (formState) => {
@@ -106,7 +105,6 @@
           topos[rental.topos[i].rentedToposId] = updatedAmount;
         }
       }
-      // TODO: feedback on success/fail
       const success = await gearService().updateRental({
         id: rental.id,
         dateReturn: formState.dateReturn,
@@ -117,8 +115,18 @@
         comments: formState.comments,
       });
 
-      if (success) reloadNuxtApp();
-      else showPopup.value = true;
+      if (success) {
+        reloadNuxtApp();
+        popup.value = {
+          type: 'success',
+          message: 'Your changes have been saved.',
+        };
+      } else {
+        popup.value = {
+          type: 'error',
+          message: 'Failed to save changes',
+        };
+      }
     },
     (result) => {
       for (const field in result.errors) {
@@ -218,8 +226,16 @@
       <template
         v-for="({ title, rentedAmount, actualAmount }, idx) of rental.topos"
         :key="idx">
-        <div class="border p-1">{{ title }}</div>
-        <div class="border p-1">{{ rentedAmount }}</div>
+        <div class="border p-1 flex items-center">{{ title }}</div>
+        <div class="border p-1 flex flex-row justify-between items-center">
+          {{ rentedAmount }}
+          <button
+            v-if="editMode"
+            class="btn btn-circle btn-xs btn-outline"
+            @click="updateReturnedTopos(idx, rentedAmount)">
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </button>
+        </div>
         <div class="border p-1">
           <span v-if="editMode">
             <InputNumber
@@ -234,8 +250,16 @@
       <template
         v-for="({ name, rentedAmount, actualAmount }, idx) of rental.gear"
         :key="idx">
-        <div class="border p-1">{{ name }}</div>
-        <div class="border p-1">{{ rentedAmount }}</div>
+        <div class="border p-1 flex items-center">{{ name }}</div>
+        <div class="flex flex-row justify-between items-center border p-1">
+          {{ rentedAmount }}
+          <button
+            v-if="editMode"
+            class="btn btn-circle btn-xs btn-outline"
+            @click="updateReturnedGear(idx, rentedAmount)">
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </button>
+        </div>
         <div class="border p-1">
           <span v-if="editMode">
             <InputNumber
@@ -249,19 +273,21 @@
       </template>
     </div>
     <hr class="my-3" />
-    <div class="flex justify-end">
+    <div class="flex justify-end gap-3">
+      <button
+        v-if="editMode"
+        class="btn btn-error btn-outline"
+        @click="editMode = false">
+        Cancel
+      </button>
       <button v-if="editMode" class="btn btn-primary" @click="save()">
         Save changes
       </button>
-      <button v-else class="btn btn-primary" @click="markReturned()">
-        {{ rental.status === 'not_returned' ? 'Mark as returned' : 'Edit' }}
-      </button>
+      <button v-else class="btn btn-primary" @click="edit()">Edit</button>
     </div>
     <!-- <p>Values: {{ values }}</p>
     <p>Errors: {{ errors }}</p>
     <hr />
     <p>Rental: {{ rental }}</p> -->
   </form>
-
-  <PopUp v-model:show="showPopup" type="error"> Failed to save changes </PopUp>
 </template>
