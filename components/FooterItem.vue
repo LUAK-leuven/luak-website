@@ -2,7 +2,7 @@
 
 <template>
   <footer
-    class="footer footer-center p-10 bg-primary text-primary-content relative">
+    class="footer footer-center p-10 bg-primary text-primary-content relative z-10">
     <aside>
       <NuxtImg src="/luak-logo-white.png" :quality="50" sizes="150px" />
       <p class="font-bold">Leuvens Universitaire Alpinisten Klub vzw</p>

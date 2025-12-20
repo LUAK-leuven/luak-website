@@ -1,11 +1,10 @@
 <script setup lang="ts">
   import * as yup from 'yup';
-  import { yup_password } from '~/utils/yup';
 
   const supabase = useSupabaseClient();
   const formSchema = yup.object({
     email: yup.string().required().email(),
-    password: yup_password.required(),
+    password: yup.string().required(),
   });
   const { handleSubmit, isSubmitting, setFieldError } = useForm({
     validationSchema: toTypedSchema(formSchema),
@@ -37,15 +36,15 @@
           placeholder="*******"
           type="password" />
         <div class="flex flex-row justify-end">
-          <NuxtLink class="underline my-2" to="/resetpassword"
-            >Forgot password?</NuxtLink
-          >
+          <NuxtLink class="underline my-2" to="/resetpassword">
+            Forgot password?
+          </NuxtLink>
         </div>
         <div>
           <button class="btn btn-primary w-full p-5">
-            <span v-if="isSubmitting" class="loading loading-spinner"
-              >loading</span
-            >
+            <span v-if="isSubmitting" class="loading loading-spinner">
+              loading
+            </span>
             <span v-else>Sign in</span>
           </button>
         </div>
