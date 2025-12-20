@@ -32,7 +32,9 @@
         </div>
         <div class="flex flex-row gap-1 items-center flex-wrap">
           <span>Deposit: {{ rental.depositFee }}</span>
-          <span class="badge badge-success">returned</span>
+          <span v-if="rental.depositReturned" class="badge badge-success"
+            >returned</span
+          >
         </div>
         <div>Payment: {{ rental.paymentMethod }}</div>
         <div v-if="rental.status" class="flex flex-row gap-1 items-center">

@@ -176,6 +176,11 @@
       <div class="flex flex-row gap-1 items-center">
         <span>Deposit:</span>
         <span>{{ rental.depositFee }}</span>
+        <span
+          v-if="!editMode && rental.depositReturned"
+          class="badge badge-success"
+          >returned</span
+        >
         <Field
           v-if="editMode"
           class="checkbox checkbox-success border-2 ml-1"
