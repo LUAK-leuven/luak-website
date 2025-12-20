@@ -1,6 +1,6 @@
 ---
 title: Ettringen Weekend
-image: /luak-logo.png
+image: /activities/ettringen.jpg
 date: 2026-04-18T00:00:00.000Z
 price: 0
 ---

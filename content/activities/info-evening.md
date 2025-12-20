@@ -3,7 +3,6 @@ title: Info Evening
 image: /luak_outside.jpg
 date: 2026-02-26T00:00:00.000Z
 price: 0
-tag: info
 ---
 
 New to climbing, or a seasoned climber? LUAK is a climbing community in Leuven open to everyone with an interest in (outdoor) climbing. Our main focus is on the outdoor climbing sport, but our members regularly go to the climbing gym.
