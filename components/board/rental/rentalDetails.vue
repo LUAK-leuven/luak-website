@@ -42,19 +42,6 @@
           }
           return true;
         }),
-      depositFee: yup
-        .number()
-        .integer()
-        .required()
-        .when('status', {
-          is: 'returned',
-          then: (deposit) =>
-            deposit.equals(
-              [0],
-              "When a rental is marked as 'Returned', the deposit fee must be returned and set to 0",
-            ),
-          otherwise: (deposit) => deposit.min(0).max(rental.depositFee),
-        }),
       depositReturned: yup.bool().default(false),
       comments: yup.string(),
       statusReserved: yup.bool().default(false),
@@ -78,8 +65,7 @@
       returnedTopos: rental.topos.map(
         (topo) => topo.rentedAmount - topo.actualAmount,
       ),
-      depositFee: rental.depositFee,
-      depositReturned: rental.status === 'returned',
+      depositReturned: rental.depositReturned,
       comments: rental.comments,
       statusReserved: rental.status === 'reserved',
     });
@@ -108,7 +94,7 @@
       const success = await gearService().updateRental({
         id: rental.id,
         dateReturn: formState.dateReturn,
-        depositFee: formState.depositFee,
+        depositReturned: formState.depositReturned,
         gear: gear,
         topos: topos,
         status: computedStatus.value,
@@ -151,7 +137,8 @@
           isAllReturned = false;
       }
       if (isAllReturned && values.depositReturned) return 'returned';
-      else if (isAnyReturned) return 'partially_returned';
+      else if (isAnyReturned || values.depositReturned)
+        return 'partially_returned';
       else return 'not_returned';
     }
     return rental.status;
@@ -219,7 +206,7 @@
       </div>
     </div>
     <hr class="my-3" />
-    <div class="grid grid-cols-[max-content_max-content_1fr] border rounded-sm">
+    <div class="grid grid-cols-[3fr_1fr_1fr] border rounded-sm">
       <b class="border px-1">Gear</b>
       <b class="border px-1">Amount</b>
       <b class="border px-1">Returned amount</b>
@@ -236,14 +223,13 @@
             <span class="material-symbols-outlined text-sm">arrow_forward</span>
           </button>
         </div>
-        <div class="border p-1">
-          <span v-if="editMode">
-            <InputNumber
-              :class="{
-                'animate-bounceInput': bouncing[`returnedTopos[${idx}]`],
-              }"
-              :name="`returnedTopos[${idx}]`" />
-          </span>
+        <div class="border p-1 flex flex-row items-center">
+          <InputNumber
+            v-if="editMode"
+            :class="{
+              'animate-bounceInput': bouncing[`returnedTopos[${idx}]`],
+            }"
+            :name="`returnedTopos[${idx}]`" />
           <span v-else>{{ rentedAmount - actualAmount }}</span>
         </div>
       </template>
@@ -260,14 +246,13 @@
             <span class="material-symbols-outlined text-sm">arrow_forward</span>
           </button>
         </div>
-        <div class="border p-1">
-          <span v-if="editMode">
-            <InputNumber
-              :class="{
-                'animate-bounceInput': bouncing[`returnedGear[${idx}]`],
-              }"
-              :name="`returnedGear[${idx}]`" />
-          </span>
+        <div class="border p-1 flex flex-row items-center">
+          <InputNumber
+            v-if="editMode"
+            :class="{
+              'animate-bounceInput': bouncing[`returnedGear[${idx}]`],
+            }"
+            :name="`returnedGear[${idx}]`" />
           <span v-else>{{ rentedAmount - actualAmount }}</span>
         </div>
       </template>

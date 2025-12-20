@@ -60,6 +60,7 @@ export type PublicRentalDetails = {
     actualAmount: number;
   }[];
   depositFee: number;
+  depositReturned: boolean;
   paymentMethod: Enums<'payment_method'>;
 };
 
@@ -75,7 +76,7 @@ export type RentalUpdate = {
   dateReturn: string;
   gear: Record<string, number>;
   topos: Record<string, number>;
-  depositFee: number;
+  depositReturned: boolean;
   status: Enums<'rental_status'>;
   comments: string | undefined;
 };
@@ -301,6 +302,7 @@ class GearService {
         date_borrow,
         date_return,
         deposit,
+        deposit_returned,
         payment_method,
         status,
         RentedGear(
@@ -349,6 +351,7 @@ class GearService {
       dateBorrow: rental.date_borrow,
       dateReturn: rental.date_return,
       depositFee: rental.deposit,
+      depositReturned: rental.deposit_returned,
       gear: rental.RentedGear.map((gearItem) => ({
         id: gearItem.id,
         name: gearItem.GearItems!.name,
@@ -371,7 +374,7 @@ class GearService {
     const { error } = await this.supabase.rpc('update_rental', {
       p_rental_id: rentalUpdate.id,
       p_date_return: rentalUpdate.dateReturn,
-      p_deposit_fee: rentalUpdate.depositFee,
+      p_deposit_returned: rentalUpdate.depositReturned,
       p_status: rentalUpdate.status,
       p_gear: Object.entries(rentalUpdate.gear).map(([id, amount]) => ({
         id: id,
@@ -398,6 +401,7 @@ class GearService {
         date_borrow,
         date_return,
         deposit,
+        deposit_returned,
         payment_method,
         RentedGear(
           id,
@@ -431,6 +435,7 @@ class GearService {
       dateBorrow: rental.date_borrow,
       dateReturn: rental.date_return,
       depositFee: rental.deposit,
+      depositReturned: rental.deposit_returned,
       gear: rental.RentedGear.map((gearItem) => ({
         id: gearItem.id,
         name: gearItem.GearItems!.name,
@@ -458,6 +463,7 @@ class GearService {
         date_borrow,
         date_return,
         deposit,
+        deposit_returned,
         payment_method,
         RentedGear(
           id,
@@ -491,6 +497,7 @@ class GearService {
       dateBorrow: rental.date_borrow,
       dateReturn: rental.date_return,
       depositFee: rental.deposit,
+      depositReturned: rental.deposit_returned,
       gear: rental.RentedGear.map((gearItem) => ({
         id: gearItem.id,
         name: gearItem.GearItems!.name,

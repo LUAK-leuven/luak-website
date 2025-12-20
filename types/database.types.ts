@@ -253,6 +253,7 @@ export type Database = {
           date_borrow: string;
           date_return: string;
           deposit: number;
+          deposit_returned: boolean;
           id: string;
           member_id: string | null;
           payment_method: Database['public']['Enums']['payment_method'];
@@ -266,6 +267,7 @@ export type Database = {
           date_borrow: string;
           date_return: string;
           deposit: number;
+          deposit_returned?: boolean;
           id?: string;
           member_id?: string | null;
           payment_method: Database['public']['Enums']['payment_method'];
@@ -279,6 +281,7 @@ export type Database = {
           date_borrow?: string;
           date_return?: string;
           deposit?: number;
+          deposit_returned?: boolean;
           id?: string;
           member_id?: string | null;
           payment_method?: Database['public']['Enums']['payment_method'];

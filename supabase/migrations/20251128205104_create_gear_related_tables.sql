@@ -52,6 +52,7 @@ create table "public"."Rentals" (
     "date_borrow" date not null,
     "date_return" date not null,
     "deposit" numeric not null,
+    "deposit_returned" bool not null default false,
     "payment_method" payment_method not null,
     "contact_info" text,
     "status" rental_status not null default 'not_returned'::rental_status,

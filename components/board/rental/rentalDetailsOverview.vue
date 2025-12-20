@@ -7,7 +7,7 @@
 <template>
   <div class="card border shadow">
     <div class="card-body">
-      <div class="grid grid-cols-2 gap-3">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div v-if="rental.member" class="flex flex-col">
           <span>Member: {{ rental.member.fullName }}</span>
           <span v-if="rental.member.email" class="ml-3">
@@ -30,8 +30,9 @@
             <BoardRentalReturnDate :date="rental.dateReturn" />
           </span>
         </div>
-        <div class="flex flex-row gap-1 items-center">
+        <div class="flex flex-row gap-1 items-center flex-wrap">
           <span>Deposit: {{ rental.depositFee }}</span>
+          <span class="badge badge-success">returned</span>
         </div>
         <div>Payment: {{ rental.paymentMethod }}</div>
         <div v-if="rental.status" class="flex flex-row gap-1 items-center">

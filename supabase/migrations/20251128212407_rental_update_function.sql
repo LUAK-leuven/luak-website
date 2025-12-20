@@ -40,7 +40,7 @@ END;$function$
 ;
 
 
-CREATE OR REPLACE FUNCTION public.update_rental(p_rental_id uuid, p_date_return date, p_deposit_fee numeric, p_status rental_status, p_gear jsonb, p_topos jsonb, p_comments text)
+CREATE OR REPLACE FUNCTION public.update_rental(p_rental_id uuid, p_date_return date, p_deposit_returned boolean, p_status rental_status, p_gear jsonb, p_topos jsonb, p_comments text)
  RETURNS void
  LANGUAGE plpgsql
 AS $function$
@@ -59,7 +59,7 @@ BEGIN
   -- Update the Rental
   update "Rentals"
   set date_return = p_date_return,
-    deposit = p_deposit_fee,
+    deposit_returned = p_deposit_returned,
     status = p_status,
     comments = p_comments
   where id = p_rental_id;
