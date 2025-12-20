@@ -154,7 +154,7 @@
 
 <template>
   <form @submit.prevent>
-    <div class="grid grid-cols-2 gap-3">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
       <div v-if="rental.member" class="flex flex-col">
         <span>Member: {{ rental.member.fullName }}</span>
         <span v-if="rental.member.email" class="ml-3">
@@ -211,7 +211,7 @@
       </div>
     </div>
     <hr class="my-3" />
-    <div class="grid grid-cols-[max-content_min-content_1fr] border rounded-sm">
+    <div class="grid grid-cols-[max-content_max-content_1fr] border rounded-sm">
       <b class="border px-1">Gear</b>
       <b class="border px-1">Amount</b>
       <b class="border px-1">Returned amount</b>
@@ -257,10 +257,10 @@
         {{ rental.status === 'not_returned' ? 'Mark as returned' : 'Edit' }}
       </button>
     </div>
-    <p>Values: {{ values }}</p>
+    <!-- <p>Values: {{ values }}</p>
     <p>Errors: {{ errors }}</p>
     <hr />
-    <p>Rental: {{ rental }}</p>
+    <p>Rental: {{ rental }}</p> -->
   </form>
 
   <PopUp v-model:show="showPopup" type="error"> Failed to save changes </PopUp>

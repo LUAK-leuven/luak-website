@@ -23,6 +23,30 @@
   }));
   const topoMap = Object.fromEntries(allTopos.map((topo) => [topo.id, topo]));
 
+  const selectionFrom = (
+    selection: Record<string, { name: string; totalAmount: number }>,
+  ) =>
+    yup
+      .mixed<Record<string, number>>()
+      .required()
+      .test(function (selected) {
+        for (const [id, amount] of Object.entries(selected)) {
+          if (amount <= 0) {
+            return this.createError({
+              path: `${this.path}.${id}`,
+              message: `Value for ${selection[id].name} must be a positive number`,
+            });
+          }
+          if (amount > selection[id].totalAmount) {
+            return this.createError({
+              path: `${this.path}.${id}`,
+              message: `Value for ${selection[id].name} cannot exceed ${selection[id].totalAmount}`,
+            });
+          }
+        }
+        return true;
+      });
+
   const formSchema = yup
     .object({
       memberId: yup.string().when('contactInfo', {
@@ -43,46 +67,8 @@
           },
         )
         .label('return date'),
-      gear: yup
-        .mixed<Record<string, number>>()
-        .required()
-        .test(function (gear) {
-          for (const [id, amount] of Object.entries(gear)) {
-            if (amount <= 0) {
-              return this.createError({
-                path: `${this.path}.${id}`,
-                message: `Value for ${gearMap[id].name} must be a positive number`,
-              });
-            }
-            if (amount > gearMap[id].totalAmount) {
-              return this.createError({
-                path: `${this.path}.${id}`,
-                message: `Value for ${gearMap[id].name} cannot exceed ${gearMap[id].totalAmount}`,
-              });
-            }
-          }
-          return true;
-        }),
-      topos: yup
-        .mixed<Record<string, number>>()
-        .required()
-        .test(function (topos) {
-          for (const [id, amount] of Object.entries(topos)) {
-            if (amount <= 0) {
-              return this.createError({
-                path: `${this.path}.${id}`,
-                message: `Value for ${topoMap[id].name} must be a positive number`,
-              });
-            }
-            if (amount > topoMap[id].totalAmount) {
-              return this.createError({
-                path: `${this.path}.${id}`,
-                message: `Value for ${topoMap[id].name} cannot exceed ${topoMap[id].totalAmount}`,
-              });
-            }
-          }
-          return true;
-        }),
+      gear: selectionFrom(gearMap),
+      topos: selectionFrom(topoMap),
       depositFee: yup.number().required().min(0),
       paymentMethod: yup.string<'transfer' | 'cash'>().required(),
       contactInfo: yup
