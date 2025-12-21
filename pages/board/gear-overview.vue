@@ -5,13 +5,20 @@
   definePageMeta({ middleware: 'board-member-guard' });
 
   const isLoading = ref(true);
-  const gear = ref<GearDetails[]>([]);
+  const gear = ref<
+    (GearDetails & {
+      gearInventory: {
+        retirementDate: string;
+        badgeColor: string;
+      }[];
+    })[]
+  >([]);
   const searchTerm = ref('');
 
   // Computed property for filtered and sorted subscriptions
   const filteredGear = computed(() => {
     return gear.value.filter((sub) => {
-      const matchesSearch = sub.categoryName
+      const matchesSearch = sub.name
         .toLowerCase()
         .includes(searchTerm.value.toLowerCase());
       return matchesSearch;
@@ -20,18 +27,61 @@
 
   // Load data on component mount
   onMounted(async () => {
-    gear.value = await gearService().getGearInventory();
+    const data = await gearService().getGearInventory();
+    gear.value = data.map((gearItem) => ({
+      ...gearItem,
+      gearInventory: gearItem.gearInventory.map((g) => {
+        const { date, color } = getRetirementDateAndBadgeColor(
+          g.purchaseDate,
+          g.productionDate,
+          gearItem.lifespan,
+        );
+        return {
+          ...g,
+          retirementDate: date,
+          badgeColor: color,
+        };
+      }),
+    }));
     isLoading.value = false;
   });
 
-  function getRetirementDate(
+  function getRetirementDateAndBadgeColor(
     purchaseDate: string | undefined,
     productionDate: string | undefined,
     lifespan: number,
-  ): string {
-    const date = purchaseDate === undefined ? productionDate : purchaseDate;
-    if (date === undefined) return '⚠';
-    return dayjs(date).add(lifespan, 'years').format('DD MMM YYYY').toString();
+  ): {
+    date: string;
+    color: string;
+  } {
+    const startDate =
+      purchaseDate !== undefined
+        ? dayjs(purchaseDate)
+        : productionDate !== undefined
+          ? dayjs(productionDate).add(1, 'year')
+          : undefined;
+
+    if (startDate === undefined) {
+      return {
+        date: '⚠',
+        color: 'badge-warning',
+      };
+    }
+
+    const retirementDate = startDate.add(lifespan, 'years');
+    const today = dayjs().toISOString();
+
+    const color =
+      retirementDate.toISOString() <= today
+        ? 'badge-error'
+        : retirementDate.subtract(1, 'year').toISOString() <= today
+          ? 'badge-warning'
+          : 'bg-opacity-0 border-opacity-0';
+
+    return {
+      date: retirementDate.format('DD MMM YYYY').toString(),
+      color,
+    };
   }
 </script>
 
@@ -74,29 +124,21 @@
             </tr>
           </thead>
           <tbody>
-            <template
-              v-for="gearCat of filteredGear"
-              :key="gearCat.categoryName">
-              <template
-                v-for="gearItem of gearCat.gearItems"
-                :key="gearItem.name">
-                <tr v-for="g of gearItem.gearInventory" :key="g.id">
-                  <td>{{ gearItem.name }}</td>
-                  <td>{{ g.amount }}</td>
-                  <td>{{ g.details }}</td>
-                  <td>{{ g.purchaseDate }}</td>
-                  <td>{{ g.productionDate }}</td>
-                  <td>
-                    {{
-                      getRetirementDate(
-                        g.purchaseDate,
-                        g.productionDate,
-                        gearCat.lifespan,
-                      )
-                    }}
-                  </td>
-                </tr>
-              </template>
+            <template v-for="gearItem of filteredGear" :key="gearItem.name">
+              <tr v-for="g of gearItem.gearInventory" :key="g.id">
+                <td>{{ gearItem.name }}</td>
+                <td>{{ g.amount }}</td>
+                <td>{{ g.details }}</td>
+                <td>{{ g.purchaseDate }}</td>
+                <td>{{ g.productionDate }}</td>
+                <td>
+                  <div class="flex justify-center items-center">
+                    <span class="badge w-max" :class="g.badgeColor">
+                      {{ g.retirementDate }}
+                    </span>
+                  </div>
+                </td>
+              </tr>
             </template>
           </tbody>
         </table>

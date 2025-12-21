@@ -82,19 +82,16 @@ export type RentalUpdate = {
 };
 
 export type GearDetails = {
-  categoryName: string;
   lifespan: number;
-  gearItems: {
-    name: string;
-    totalAmount: number;
-    availableAmount: number;
-    gearInventory: {
-      id: string;
-      details: string;
-      purchaseDate: string | undefined;
-      productionDate: string | undefined;
-      amount: number;
-    }[];
+  name: string;
+  totalAmount: number;
+  availableAmount: number;
+  gearInventory: {
+    id: string;
+    details: string;
+    purchaseDate: string | undefined;
+    productionDate: string | undefined;
+    amount: number;
   }[];
 };
 
@@ -166,10 +163,9 @@ class GearService {
       return [];
     }
 
-    return gear.map((gearCategory) => ({
-      categoryName: gearCategory.name,
-      lifespan: gearCategory.lifespan,
-      gearItems: gearCategory.GearItems.map((gearItem) => ({
+    return gear.flatMap((gearCategory) =>
+      gearCategory.GearItems.map((gearItem) => ({
+        lifespan: gearCategory.lifespan,
         name: gearItem.name,
         totalAmount: sumOf(gearItem.GearInventory, 'amount'),
         availableAmount:
@@ -183,7 +179,7 @@ class GearService {
           amount: x.amount,
         })),
       })),
-    }));
+    );
   }
 
   public async getAllTopos(): Promise<TopoSumary[]> {
