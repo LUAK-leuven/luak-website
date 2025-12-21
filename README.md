@@ -60,3 +60,7 @@ Esport DB types
 To push db changes to prod
 
 > supabase db push -- DON'T USE!!! (if you don't know what you are doing)
+
+### Backup
+
+To make a (manual) backup or restore the backup, see the supabase [docs](https://supabase.com/docs/guides/platform/migrating-within-supabase/backup-restore)
