@@ -17,12 +17,14 @@
 
   // Computed property for filtered and sorted subscriptions
   const filteredGear = computed(() => {
-    return gear.value.filter((sub) => {
-      const matchesSearch = sub.name
-        .toLowerCase()
-        .includes(searchTerm.value.toLowerCase());
-      return matchesSearch;
-    });
+    return gear.value.map((gearItem) => ({
+      ...gearItem,
+      gearInventory: gearItem.gearInventory.filter(
+        (g) =>
+          g.details.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
+          gearItem.name.toLowerCase().includes(searchTerm.value.toLowerCase()),
+      ),
+    }));
   });
 
   // Load data on component mount
