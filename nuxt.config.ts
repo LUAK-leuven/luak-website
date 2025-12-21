@@ -5,6 +5,7 @@ export default defineNuxtConfig({
     head: {
       htmlAttrs: {
         'data-theme': 'nord',
+        lang: 'en',
       },
       link: [
         {

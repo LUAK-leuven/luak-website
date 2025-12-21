@@ -6,7 +6,7 @@
     'pages_navigation',
     () => fetchContentNavigation(queryContent('/pages')),
   );
-  const user = useSupabaseUser();
+  const user = await useLuakMember();
 
   const closeDrawer = () => {
     const drawerToggle = document.getElementById(
@@ -17,62 +17,73 @@
     }
   };
 
-  function closeInfo() {
-    const infoToggle = document.getElementById(
-      'info-toggle',
-    ) as HTMLDetailsElement;
-    if (infoToggle) {
-      infoToggle.open = false;
-    }
-  }
+  onMounted(() => {
+    useToggleCloseFix('info-toggle');
+    useToggleCloseFix('board-toggle');
 
-  function infoToggleEventListener(event: Event) {
-    if (event instanceof ToggleEvent) {
-      if (event.newState === 'open') {
-        window.addEventListener('click', closeInfo);
-      } else {
-        window.removeEventListener('click', closeInfo);
+    // Fix drawer closing by closing drawer on click
+    const links = document
+      .getElementById('luak_menu')
+      ?.getElementsByTagName('a');
+    if (links) {
+      for (const link of links) {
+        link.addEventListener('click', closeDrawer);
       }
     }
-  }
+  });
 </script>
+
 <template>
-  <ul class="menu">
-    <li><NuxtLink to="/news" @click="closeDrawer">News</NuxtLink></li>
+  <ul id="luak_menu" class="menu">
+    <li><NuxtLink to="/news">News</NuxtLink></li>
     <li>
-      <NuxtLink to="/activities" @click="closeDrawer">Activities</NuxtLink>
+      <NuxtLink to="/activities">Activities</NuxtLink>
     </li>
     <li>
-      <details id="info-toggle" @toggle="infoToggleEventListener">
+      <details id="info-toggle">
         <summary>Info</summary>
         <ul class="p-2 bg-base-200 rounded-t-none">
           <li v-for="nav in info_navigation?.[0]?.children" :key="nav._path">
-            <NuxtLink :to="nav._path" @click="closeDrawer">{{
-              nav.title
-            }}</NuxtLink>
+            <NuxtLink :to="nav._path">{{ nav.title }}</NuxtLink>
           </li>
         </ul>
       </details>
     </li>
     <li v-for="nav in pages_navigation?.[0]?.children" :key="nav._path">
-      <NuxtLink :to="nav._path" @click="closeDrawer">{{ nav.title }}</NuxtLink>
+      <NuxtLink :to="nav._path">{{ nav.title }}</NuxtLink>
     </li>
-    <li v-if="user">
-      <NuxtLink to="/stories" @click="closeDrawer">Stories</NuxtLink>
+    <li v-if="user.isMember">
+      <NuxtLink to="/stories">Stories</NuxtLink>
+    </li>
+    <li v-if="user.isBoard">
+      <details id="board-toggle">
+        <summary>Board</summary>
+        <ul class="p-2 bg-base-200 rounded-t-none w-52">
+          <li>
+            <NuxtLink to="/board/subscriptions-overview">
+              👥 Subscriptions
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink to="/board/rental-form"> 🧗 Rental form </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink to="/board/rentals"> 👀 Rental overview </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink to="/board/gear-overview"> ⚙️ Gear overview </NuxtLink>
+          </li>
+        </ul>
+      </details>
     </li>
     <NuxtLink
-      v-if="!user"
+      v-if="user.membershipType === 'unauthenticated'"
       class="btn btn-primary btn-outline"
-      to="/profile/overview"
-      @click="closeDrawer"
-      >Log In</NuxtLink
-    >
-    <NuxtLink
-      v-else
-      class="btn btn-primary btn-outline"
-      to="/profile/overview"
-      @click="closeDrawer"
-      >My Profile</NuxtLink
-    >
+      to="/profile/overview">
+      Log In
+    </NuxtLink>
+    <NuxtLink v-else class="btn btn-primary btn-outline" to="/profile/overview">
+      My Profile
+    </NuxtLink>
   </ul>
 </template>

@@ -18,5 +18,7 @@
   },
   "prettier.configPath": ".prettierrc",
   "prettier.useEditorConfig": false,
-  "scss.lint.unknownAtRules": "ignore"
+  "scss.lint.unknownAtRules": "ignore",
+  "editor.autoIndentOnPaste": true,
+  "editor.indentSize": 2
 }

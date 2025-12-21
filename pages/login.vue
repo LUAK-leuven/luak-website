@@ -17,7 +17,7 @@
     });
     if (error) {
       setFieldError('password', error.message);
-    } else await navigateTo('/confirmLogin');
+    } else await reloadNuxtApp({ path: '/profile/overview' });
   });
 </script>
 <template>

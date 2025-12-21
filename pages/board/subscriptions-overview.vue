@@ -5,8 +5,9 @@
     formatKbfUiaaStatus,
   } from '~/components/profile/helpers';
 
+  definePageMeta({ middleware: 'board-member-guard' });
+
   const supabase = useSupabaseClient<Database>();
-  const user = useSupabaseUser();
   const isLoading = ref(true);
   const error = ref<string | null>(null);
   const subscriptions = ref<
@@ -22,6 +23,7 @@
       kbf_uiaa_member: Database['public']['Enums']['kbf_uiaa'];
       created_at: string;
       year: number;
+      has_paid: boolean;
     }>
   >([]);
   const searchTerm = ref('');
@@ -30,29 +32,6 @@
   const sortDirection = ref('desc');
   const currentYear = getLuakYear();
   const selectedYear = ref(0);
-
-  // Check if user is a board member
-  const checkBoardMemberAccess = async () => {
-    if (!user.value) {
-      error.value = 'You must be logged in to view this page.';
-      isLoading.value = false;
-      return false;
-    }
-
-    const { data, error: boardError } = await supabase
-      .from('BoardMembers')
-      .select('*')
-      .eq('user_id', user.value.id)
-      .single();
-
-    if (boardError || !data) {
-      error.value = 'You do not have permission to view this page.';
-      isLoading.value = false;
-      return false;
-    }
-
-    return true;
-  };
 
   // Fetch all active subscriptions
   const fetchSubscriptions = async () => {
@@ -99,6 +78,7 @@
             kbf_uiaa_member: membership.kbf_uiaa_member,
             created_at: membership.created_at,
             year: membership.year,
+            has_paid: membership.Payments.some((payment) => payment.approved),
           })),
         )
         .filter((sub) => sub.name); // Ensure we have a name
@@ -115,10 +95,7 @@
 
   // Initialize data
   const initData = async () => {
-    const hasAccess = await checkBoardMemberAccess();
-    if (hasAccess) {
-      await fetchSubscriptions();
-    }
+    await fetchSubscriptions();
   };
 
   // Toggle sort direction
@@ -202,7 +179,7 @@
     <div v-else>
       <!-- Filters -->
       <div class="flex flex-col md:flex-row gap-4 mb-6">
-        <div class="form-control flex-1">
+        <div class="form-control flex-1 min-w-48">
           <label class="label">
             <span class="label-text">Search by name</span>
           </label>
@@ -213,17 +190,20 @@
             placeholder="Search by name" />
         </div>
 
-        <div class="form-control w-full md:w-64">
+        <div class="form-control w-full md:max-w-64">
           <label class="label">
             <span class="label-text">Select year</span>
           </label>
           <select v-model="selectedYear" class="select select-bordered w-full">
             <option value="0">{{ currentYear }}-{{ currentYear + 1 }}</option>
             <option value="1">{{ currentYear - 1 }}-{{ currentYear }}</option>
+            <option value="2">
+              {{ currentYear - 2 }}-{{ currentYear - 1 }}
+            </option>
           </select>
         </div>
 
-        <div class="form-control w-full md:w-64">
+        <div class="form-control w-full md:max-w-64">
           <label class="label">
             <span class="label-text">Filter by</span>
           </label>
@@ -244,6 +224,7 @@
       <!-- Subscription count and export button -->
       <div class="flex justify-between items-center mb-4">
         <p>Total active subscriptions: {{ filteredSubscriptions.length }}</p>
+        <!-- TODO: add has_paid to export -->
         <ProfileCsvExport
           :data="filteredSubscriptions"
           filename="subscriptions"
@@ -251,7 +232,7 @@
       </div>
 
       <!-- Table -->
-      <div class="overflow-x-auto w-full">
+      <div class="overflow-x-auto max-w-[90vw]">
         <table class="table table-zebra">
           <thead>
             <tr>
@@ -266,6 +247,7 @@
                 }}
               </th>
               <th>Email</th>
+              <th>Has Paid</th>
               <th>Phone</th>
               <th>WhatsApp</th>
               <th>Student Status</th>
@@ -287,6 +269,13 @@
             <tr v-for="sub in filteredSubscriptions" :key="sub.id">
               <td>{{ sub.name }}</td>
               <td>{{ sub.email }}</td>
+              <td>
+                <div
+                  class="badge"
+                  :class="sub.has_paid ? 'badge-success' : 'badge-error'">
+                  {{ sub.has_paid ? 'Yes' : 'No' }}
+                </div>
+              </td>
               <td>{{ sub.phone_number || '-' }}</td>
               <td>
                 <div

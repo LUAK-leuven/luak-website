@@ -1,40 +1,64 @@
 <script setup lang="ts">
   import { useField } from 'vee-validate';
+  import type { InputTypeHTMLAttribute } from 'vue';
 
-  const props = defineProps({
-    label: {
-      type: String,
-      default: 'text',
+  const props = withDefaults(
+    defineProps<{
+      label?: string | undefined;
+      type?: InputTypeHTMLAttribute;
+      name: string;
+      placeholder?: string;
+      disabled?: boolean;
+      autoFillWithPlaceholder?: boolean;
+      round?: boolean;
+    }>(),
+    {
+      type: 'text',
+      placeholder: 'text',
+      disabled: false,
+      autoFillWithPlaceholder: false,
+      label: undefined,
+      round: false,
     },
-    type: {
-      type: String,
-      default: 'text',
-    },
-    name: {
-      type: String,
-      default: 'text',
-    },
-    placeholder: {
-      type: String,
-      default: 'text',
-    },
+  );
+
+  const model = defineModel<string>();
+
+  const { value, errorMessage } = useField<string | undefined>(
+    () => props.name,
+  );
+  effect(() => {
+    if (value.value === '') value.value = undefined;
+    model.value = value.value;
   });
-
-  // The `name` is returned in a function because we want to make sure it stays reactive
-  // If the name changes you want `useField` to be able to pick it up
-  const { value, errorMessage } = useField(() => props.name);
+  onBeforeMount(() => {
+    if (model.value !== undefined) {
+      value.value = model.value;
+    }
+  });
 </script>
 
 <template>
-  <label class="form-control w-full mb-2">
-    <div class="label">
+  <div class="form-control w-full">
+    <div v-if="label" class="label">
       <span class="label-text">{{ label }}</span>
     </div>
-    <input
-      v-model="value"
-      class="input input-bordered w-full"
-      :type="type"
-      :placeholder="placeholder" />
-    <span class="text-error">{{ errorMessage }}</span>
-  </label>
+    <label
+      class="input input-bordered w-full flex items-center"
+      :class="(disabled ? 'bg-gray-300' : '') + (round ? ' rounded-full' : '')">
+      <slot name="label1" />
+      <input
+        v-model="value"
+        class="w-full"
+        :class="disabled ? 'bg-gray-300' : ''"
+        :type="type"
+        :placeholder="placeholder"
+        :disabled="disabled"
+        @focus="
+          if (autoFillWithPlaceholder && value === undefined)
+            value = placeholder;
+        " />
+    </label>
+    <span v-if="errorMessage" class="text-error">{{ errorMessage }}</span>
+  </div>
 </template>
