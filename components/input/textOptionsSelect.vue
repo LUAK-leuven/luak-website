@@ -4,7 +4,7 @@
     options: T[];
     placeholder: string;
     searchFn: (options: T[], input: string | undefined) => T[];
-    showSelectedItem?: boolean;
+    selectedItem?: T;
     errorMessage?: string;
   }>();
 
@@ -20,18 +20,14 @@
     return props.searchFn(props.options, textValue.value);
   });
 
-  const selectedOption = ref<T>();
-
   function onSelect(option: T) {
     hidden.value = true;
     emit('selected', option);
-    selectedOption.value = option;
   }
 
   function onFocus() {
     textValue.value = '';
     hidden.value = false;
-    selectedOption.value = undefined;
   }
 </script>
 
@@ -41,12 +37,12 @@
       <span class="label-text">{{ label }}</span>
     </div>
     <label class="input input-bordered flex w-full relative">
-      <span v-if="selectedOption && showSelectedItem" class="label w-fit">
-        <slot name="item" :data="selectedOption" />
+      <span v-if="hidden && selectedItem !== undefined" class="label w-max">
+        <slot name="item" :data="selectedItem" />
       </span>
       <input
         v-model="textValue"
-        :class="selectedOption && showSelectedItem ? 'w-0' : ''"
+        :class="hidden && selectedItem !== undefined ? 'w-0' : ''"
         type="text"
         :placeholder="placeholder"
         popovertarget="popover-1"
@@ -56,7 +52,7 @@
 
       <ul
         id="popover-1"
-        class="absolute dropdown menu w-52 rounded-box bg-base-100 shadow-md gap-y-1 top-12 z-10"
+        class="absolute dropdown menu w-fit rounded-box bg-base-100 shadow-md gap-y-1 top-12 z-10"
         :class="hidden ? 'hidden' : ''"
         popover
         style="position-anchor: --anchor-1"

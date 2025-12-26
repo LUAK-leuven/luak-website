@@ -17,16 +17,19 @@
     computedDepositFee: [value: number];
   }>();
 
-  const selectedGear = ref<Record<string, GearInfo | undefined>>({});
-  const selectedGearList = computed(() => {
-    return Object.values(selectedGear.value).filter(
-      (item) => item !== undefined,
-    );
-  });
+  const {
+    fields: selectedGear,
+    push,
+    remove,
+  } = useFieldArray<{ id: string; amount: number }>(props.fieldName);
 
-  const availableGearList = computed(() =>
-    props.allGear
-      .filter((item) => selectedGear.value[item.id] === undefined)
+  const availableGearList = computed(() => {
+    return props.allGear
+      .filter((item) =>
+        selectedGear.value.every(
+          (selectedItem) => item.id !== selectedItem.value.id,
+        ),
+      )
       .map(
         (item) =>
           ({
@@ -35,8 +38,8 @@
             amount: item.availableAmount,
             depositFee: item.depositFee,
           }) satisfies GearInfo,
-      ),
-  );
+      );
+  });
 
   function filterGear(options: GearInfo[], input: string | undefined) {
     if (input === undefined) return options;
@@ -47,35 +50,20 @@
       .slice(0, 5);
   }
 
-  const { value, errorMessage } = useField<Record<string, number>>(
-    () => props.fieldName,
-  );
-
-  effect(() => {
-    value.value = Object.fromEntries(
-      selectedGearList.value.map((item) => [item.id, item.amount]),
-    );
-  });
-
   function addSelection(gearItem: GearInfo) {
-    selectedGear.value[gearItem.id] = {
-      id: gearItem.id,
-      name: gearItem.name,
-      amount: gearItem.name === 'quickdraw' ? 12 : 1,
-      depositFee: gearItem.depositFee,
-    };
+    push({ id: gearItem.id, amount: gearItem.name === 'quickdraw' ? 12 : 1 });
   }
 
   effect(() => {
     emit(
       'computedDepositFee',
-      sum(selectedGearList.value.map((item) => item.depositFee * item.amount)),
+      sum(
+        selectedGear.value.map(
+          ({ value: item }) => props.gearMap[item.id].depositFee * item.amount,
+        ),
+      ),
     );
   });
-
-  function putItemBack(item: GearInfo) {
-    selectedGear.value[item.id] = undefined;
-  }
 </script>
 
 <template>
@@ -83,12 +71,10 @@
     :options="availableGearList"
     :placeholder="placeholder"
     :search-fn="filterGear"
-    :show-selected-item="false"
-    :error-message="errorMessage"
     @selected="addSelection">
     <template #item="{ data }">
       <div
-        class="p-3 rounded-md w-full flex flex-row justify-between"
+        class="p-3 rounded-md w-full flex flex-row justify-between gap-6"
         :class="
           data.amount === 0
             ? 'bg-red-100'
@@ -104,33 +90,33 @@
 
   <div class="flex flex-col gap-1">
     <div
-      v-for="item in selectedGearList"
-      :key="item.id"
+      v-for="({ value: item }, idx) in selectedGear"
+      :key="idx"
       class="p-1 rounded-2xl w-full grid grid-cols-[max-content_1fr_1fr_min-content] items-center gap-y-3 bg-stone-200"
       :class="item.amount === 0 ? 'bg-red-100' : ''">
       <span class="mx-3">
         {{ item.amount > props.gearMap[item.id].availableAmount ? '⚠️ ' : '' }}
-        {{ item.name }}
+        {{ gearMap[item.id].name }}
       </span>
       <span>
         <InputNumber
-          :name="`${fieldName}.${item.id}`"
-          :soft-max="props.gearMap[item.id].availableAmount"
-          @value-change="(value) => (item.amount = value)" />
+          :name="`${fieldName}[${idx}].amount`"
+          :soft-max="props.gearMap[item.id].availableAmount" />
       </span>
-      <div>Deposit: {{ (item.amount * item.depositFee) / 100 }}€</div>
+      <div>
+        Deposit: {{ (item.amount * gearMap[item.id].depositFee) / 100 }}€
+      </div>
       <button
         class="btn btn-sm btn-circle btn-ghost justify-self-end mr-2"
-        @click="() => putItemBack(item)">
+        @click="() => remove(idx)">
         ✕
       </button>
     </div>
   </div>
 
   <!-- <div>
-    <p>total: {{ gearMap }}</p>
+    <p>gearMap: {{ gearMap }}</p>
     <p>availableGearList: {{ availableGearList }}</p>
     <p>selected: {{ selectedGear }}</p>
-    <p>selectedList: {{ selectedGearList }}</p>
   </div> -->
 </template>

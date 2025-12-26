@@ -31,6 +31,9 @@
     () => props.name,
   );
 
+  const selectedUser = computed(() =>
+    selectableUsers.find((user) => user.id === value.value),
+  );
   function onSelect(selectedMember: {
     id: string;
     name: string;
@@ -47,12 +50,12 @@
       :options="selectableUsers"
       placeholder="select member"
       :search-fn="filterMember"
-      :show-selected-item="true"
       :error-message="errorMessage"
+      :selected-item="selectedUser"
       @selected="onSelect">
       <template #item="{ data }">
         <div
-          class="px-3 py-1 rounded-md"
+          class="px-3 py-1 rounded-md w-full min-w-max"
           :class="
             data.id === ''
               ? 'bg-blue-100'

@@ -48,7 +48,7 @@ export type PublicRentalDetails = {
   dateBorrow: string;
   dateReturn: string;
   gear: {
-    id: string;
+    rentedGearId: string;
     name: string;
     rentedAmount: number;
     actualAmount: number;
@@ -65,7 +65,7 @@ export type PublicRentalDetails = {
 };
 
 export type RentalDetails = PublicRentalDetails & {
-  member: ContactInfo;
+  member: ContactInfo & { id?: string };
   boardMember: string;
   status: Enums<'rental_status'>;
   comments: string | undefined;
@@ -293,7 +293,8 @@ class GearService {
           first_name,
           last_name,
           email,
-          phone_number
+          phone_number,
+          id
         ),
         date_borrow,
         date_return,
@@ -312,7 +313,6 @@ class GearService {
         RentedTopos(
           id,
           Topos(
-            id,
             title
           ),
           rented_amount,
@@ -335,6 +335,7 @@ class GearService {
           fullName: getFullName(rental.member),
           email: rental.member.email,
           phoneNumber: rental.member.phone_number,
+          id: rental.member.id,
         }
       : rental.contact_info
         ? JSON.parse(rental.contact_info)
@@ -349,7 +350,7 @@ class GearService {
       depositFee: rental.deposit,
       depositReturned: rental.deposit_returned,
       gear: rental.RentedGear.map((gearItem) => ({
-        id: gearItem.id,
+        rentedGearId: gearItem.id,
         name: gearItem.GearItems!.name,
         rentedAmount: gearItem.rented_amount,
         actualAmount: gearItem.actual_amount,
@@ -410,7 +411,6 @@ class GearService {
         RentedTopos(
           id,
           Topos(
-            id,
             title
           ),
           rented_amount,
@@ -433,7 +433,7 @@ class GearService {
       depositFee: rental.deposit,
       depositReturned: rental.deposit_returned,
       gear: rental.RentedGear.map((gearItem) => ({
-        id: gearItem.id,
+        rentedGearId: gearItem.id,
         name: gearItem.GearItems!.name,
         rentedAmount: gearItem.rented_amount,
         actualAmount: gearItem.actual_amount,
@@ -472,7 +472,6 @@ class GearService {
         RentedTopos(
           id,
           Topos(
-            id,
             title
           ),
           rented_amount,
@@ -495,7 +494,7 @@ class GearService {
       depositFee: rental.deposit,
       depositReturned: rental.deposit_returned,
       gear: rental.RentedGear.map((gearItem) => ({
-        id: gearItem.id,
+        rentedGearId: gearItem.id,
         name: gearItem.GearItems!.name,
         rentedAmount: gearItem.rented_amount,
         actualAmount: gearItem.actual_amount,

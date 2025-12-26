@@ -27,25 +27,33 @@
     selection: Record<string, { name: string; totalAmount: number }>,
   ) =>
     yup
-      .mixed<Record<string, number>>()
-      .required()
-      .test(function (selected) {
-        for (const [id, amount] of Object.entries(selected)) {
-          if (amount <= 0) {
-            return this.createError({
-              path: `${this.path}.${id}`,
-              message: `Value for ${selection[id].name} must be a positive number`,
-            });
-          }
-          if (amount > selection[id].totalAmount) {
-            return this.createError({
-              path: `${this.path}.${id}`,
-              message: `Value for ${selection[id].name} cannot exceed ${selection[id].totalAmount}`,
-            });
-          }
-        }
-        return true;
-      });
+      .array()
+      .of(
+        yup.object({
+          id: yup.string().required(),
+          amount: yup
+            .number()
+            .required()
+            .test(function (amount) {
+              const { id } = this.parent as { id: string };
+              if (amount <= 0) {
+                return this.createError({
+                  path: `${this.path}`,
+                  message: `Value for ${selection[id].name} must be a positive number`,
+                });
+              }
+              if (amount > selection[id].totalAmount) {
+                return this.createError({
+                  path: `${this.path}`,
+                  message: `Value for ${selection[id].name} cannot exceed ${selection[id].totalAmount}`,
+                });
+              }
+              return true;
+            }),
+        }),
+      )
+      .default([])
+      .required();
 
   const formSchema = yup
     .object({
@@ -107,7 +115,9 @@
     boardMemberId: boardMember.name,
     dateBorrow: dayjs().format('YYYY-MM-DD').toString(),
     dateReturn: dayjs().add(3, 'w').format('YYYY-MM-DD').toString(),
-  } as const;
+    gear: [],
+    topos: [],
+  };
 
   const { meta, handleSubmit, errors, validateField, values } = useForm({
     validationSchema: toTypedSchema(formSchema),
@@ -120,14 +130,17 @@
 
   const onSubmit = handleSubmit(async (formState) => {
     console.log(formState);
-    // TODO: Show preview
     const { id, error } = await gearService().saveRental({
       memberId: formState.memberId === '' ? undefined : formState.memberId,
       boardMemberId: boardMember.id,
       dateBorrow: formState.dateBorrow,
       dateReturn: formState.dateReturn,
-      gear: formState.gear,
-      topos: formState.topos,
+      gear: Object.fromEntries(
+        formState.gear.map(({ id, amount }) => [id, amount]),
+      ),
+      topos: Object.fromEntries(
+        formState.topos.map(({ id, amount }) => [id, amount]),
+      ),
       depositFee: formState.depositFee,
       paymentMethod: formState.paymentMethod,
       contactInfo: formState.contactInfo,
