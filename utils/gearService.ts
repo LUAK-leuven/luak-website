@@ -49,12 +49,14 @@ export type PublicRentalDetails = {
   dateReturn: string;
   gear: {
     rentedGearId: string;
+    gearItemId?: string;
     name: string;
     rentedAmount: number;
     actualAmount: number;
   }[];
   topos: {
     rentedToposId: string;
+    topoId?: string;
     title: string;
     rentedAmount: number;
     actualAmount: number;
@@ -305,6 +307,7 @@ class GearService {
         RentedGear(
           id,
           GearItems(
+            id,
             name
           ),
           rented_amount,
@@ -313,6 +316,7 @@ class GearService {
         RentedTopos(
           id,
           Topos(
+            id,
             title
           ),
           rented_amount,
@@ -351,12 +355,14 @@ class GearService {
       depositReturned: rental.deposit_returned,
       gear: rental.RentedGear.map((gearItem) => ({
         rentedGearId: gearItem.id,
+        gearItemId: gearItem.GearItems!.id,
         name: gearItem.GearItems!.name,
         rentedAmount: gearItem.rented_amount,
         actualAmount: gearItem.actual_amount,
       })),
       topos: rental.RentedTopos.map((topo) => ({
         rentedToposId: topo.id,
+        topoId: topo.Topos!.id,
         title: topo.Topos!.title,
         rentedAmount: topo.rented_amount,
         actualAmount: topo.actual_amount,

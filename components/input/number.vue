@@ -9,7 +9,7 @@
     (e: 'valueChange', value: number): void;
   }>();
 
-  const { value, errorMessage } = useField<number>(props.name);
+  const { value, errorMessage } = useField<number>(() => props.name);
   effect(() => emit('valueChange', value.value));
 
   const getTextboxColor: (value: number) => string = (value: number) => {

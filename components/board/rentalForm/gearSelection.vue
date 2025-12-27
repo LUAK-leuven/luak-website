@@ -91,7 +91,7 @@
   <div class="flex flex-col gap-1">
     <div
       v-for="({ value: item }, idx) in selectedGear"
-      :key="idx"
+      :key="item.id"
       class="p-1 rounded-2xl w-full grid grid-cols-[max-content_1fr_1fr_min-content] items-center gap-y-3 bg-stone-200"
       :class="item.amount === 0 ? 'bg-red-100' : ''">
       <span class="mx-3">
@@ -108,6 +108,7 @@
       </div>
       <button
         class="btn btn-sm btn-circle btn-ghost justify-self-end mr-2"
+        type="button"
         @click="() => remove(idx)">
         ✕
       </button>
