@@ -48,8 +48,13 @@
         <b class="border px-1">Amount</b>
         <b class="border px-1">Returned amount</b>
         <template
-          v-for="({ title, rentedAmount, actualAmount }, idx) of rental.topos"
-          :key="idx">
+          v-for="{
+            topoId: id,
+            title,
+            rentedAmount,
+            actualAmount,
+          } of rental.topos"
+          :key="id">
           <div class="border p-1">{{ title }}</div>
           <div class="border p-1">{{ rentedAmount }}</div>
           <div class="border p-1">
@@ -57,8 +62,13 @@
           </div>
         </template>
         <template
-          v-for="({ name, rentedAmount, actualAmount }, idx) of rental.gear"
-          :key="idx">
+          v-for="{
+            gearItemId: id,
+            name,
+            rentedAmount,
+            actualAmount,
+          } of rental.gear"
+          :key="id">
           <div class="border p-1">{{ name }}</div>
           <div class="border p-1">{{ rentedAmount }}</div>
           <div class="border p-1">

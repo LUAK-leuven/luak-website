@@ -308,7 +308,6 @@ export type Database = {
         Row: {
           actual_amount: number;
           gear_item_id: string;
-          id: string;
           last_edited_date: string;
           rental_id: string;
           rented_amount: number;
@@ -316,7 +315,6 @@ export type Database = {
         Insert: {
           actual_amount: number;
           gear_item_id: string;
-          id?: string;
           last_edited_date?: string;
           rental_id: string;
           rented_amount: number;
@@ -324,7 +322,6 @@ export type Database = {
         Update: {
           actual_amount?: number;
           gear_item_id?: string;
-          id?: string;
           last_edited_date?: string;
           rental_id?: string;
           rented_amount?: number;
@@ -349,7 +346,6 @@ export type Database = {
       RentedTopos: {
         Row: {
           actual_amount: number;
-          id: string;
           last_edited_date: string;
           rental_id: string;
           rented_amount: number;
@@ -357,7 +353,6 @@ export type Database = {
         };
         Insert: {
           actual_amount: number;
-          id?: string;
           last_edited_date?: string;
           rental_id: string;
           rented_amount: number;
@@ -365,7 +360,6 @@ export type Database = {
         };
         Update: {
           actual_amount?: number;
-          id?: string;
           last_edited_date?: string;
           rental_id?: string;
           rented_amount?: number;
@@ -487,6 +481,21 @@ export type Database = {
         };
         Returns: string;
       };
+      edit_rental: {
+        Args: {
+          p_comments: string;
+          p_contact_info: string;
+          p_date_borrow: string;
+          p_date_return: string;
+          p_deposit: number;
+          p_gear: Json;
+          p_payment_method: Database['public']['Enums']['payment_method'];
+          p_rental_id: string;
+          p_status: Database['public']['Enums']['rental_status'];
+          p_topos: Json;
+        };
+        Returns: string;
+      };
       get_luak_year: {
         Args: Record<PropertyKey, never>;
         Returns: number;
@@ -499,7 +508,7 @@ export type Database = {
         Args: {
           p_comments: string;
           p_date_return: string;
-          p_deposit_fee: number;
+          p_deposit_returned: boolean;
           p_gear: Json;
           p_rental_id: string;
           p_status: Database['public']['Enums']['rental_status'];

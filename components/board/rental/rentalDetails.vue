@@ -80,7 +80,7 @@
         const updatedAmount =
           rental.gear[i].rentedAmount - formState.returnedGear[i];
         if (updatedAmount !== rental.gear[i].actualAmount) {
-          gear[rental.gear[i].id] = updatedAmount;
+          gear[rental.gear[i].gearItemId] = updatedAmount;
         }
       }
       const topos: Record<string, number> = {};
@@ -88,7 +88,7 @@
         const updatedAmount =
           rental.topos[i].rentedAmount - formState.returnedTopos[i];
         if (updatedAmount !== rental.topos[i].actualAmount) {
-          topos[rental.topos[i].rentedToposId] = updatedAmount;
+          topos[rental.topos[i].topoId] = updatedAmount;
         }
       }
       const success = await gearService().updateRental({

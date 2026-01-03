@@ -48,15 +48,13 @@ export type PublicRentalDetails = {
   dateBorrow: string;
   dateReturn: string;
   gear: {
-    rentedGearId: string;
-    gearItemId?: string;
+    gearItemId: string;
     name: string;
     rentedAmount: number;
     actualAmount: number;
   }[];
   topos: {
-    rentedToposId: string;
-    topoId?: string;
+    topoId: string;
     title: string;
     rentedAmount: number;
     actualAmount: number;
@@ -305,7 +303,6 @@ class GearService {
         payment_method,
         status,
         RentedGear(
-          id,
           GearItems(
             id,
             name
@@ -314,7 +311,6 @@ class GearService {
           actual_amount
         ),
         RentedTopos(
-          id,
           Topos(
             id,
             title
@@ -354,14 +350,12 @@ class GearService {
       depositFee: rental.deposit,
       depositReturned: rental.deposit_returned,
       gear: rental.RentedGear.map((gearItem) => ({
-        rentedGearId: gearItem.id,
         gearItemId: gearItem.GearItems!.id,
         name: gearItem.GearItems!.name,
         rentedAmount: gearItem.rented_amount,
         actualAmount: gearItem.actual_amount,
       })),
       topos: rental.RentedTopos.map((topo) => ({
-        rentedToposId: topo.id,
         topoId: topo.Topos!.id,
         title: topo.Topos!.title,
         rentedAmount: topo.rented_amount,
@@ -393,6 +387,8 @@ class GearService {
     return error === null;
   }
 
+  public async editRental(rental: UnsavedRental & { id: string }) {}
+
   public async getActiveRentalsForUser(
     userId: string,
   ): Promise<PublicRentalDetails[] | undefined> {
@@ -407,16 +403,16 @@ class GearService {
         deposit_returned,
         payment_method,
         RentedGear(
-          id,
           GearItems(
+            id,
             name
           ),
           rented_amount,
           actual_amount
         ),
         RentedTopos(
-          id,
           Topos(
+            id,
             title
           ),
           rented_amount,
@@ -439,13 +435,13 @@ class GearService {
       depositFee: rental.deposit,
       depositReturned: rental.deposit_returned,
       gear: rental.RentedGear.map((gearItem) => ({
-        rentedGearId: gearItem.id,
+        gearItemId: gearItem.GearItems!.id,
         name: gearItem.GearItems!.name,
         rentedAmount: gearItem.rented_amount,
         actualAmount: gearItem.actual_amount,
       })),
       topos: rental.RentedTopos.map((topo) => ({
-        rentedToposId: topo.id,
+        topoId: topo.Topos!.id,
         title: topo.Topos!.title,
         rentedAmount: topo.rented_amount,
         actualAmount: topo.actual_amount,
@@ -468,16 +464,16 @@ class GearService {
         deposit_returned,
         payment_method,
         RentedGear(
-          id,
           GearItems(
+            id,
             name
           ),
           rented_amount,
           actual_amount
         ),
         RentedTopos(
-          id,
           Topos(
+            id,
             title
           ),
           rented_amount,
@@ -500,13 +496,13 @@ class GearService {
       depositFee: rental.deposit,
       depositReturned: rental.deposit_returned,
       gear: rental.RentedGear.map((gearItem) => ({
-        rentedGearId: gearItem.id,
+        gearItemId: gearItem.GearItems!.id,
         name: gearItem.GearItems!.name,
         rentedAmount: gearItem.rented_amount,
         actualAmount: gearItem.actual_amount,
       })),
       topos: rental.RentedTopos.map((topo) => ({
-        rentedToposId: topo.id,
+        topoId: topo.Topos!.id,
         title: topo.Topos!.title,
         rentedAmount: topo.rented_amount,
         actualAmount: topo.actual_amount,
