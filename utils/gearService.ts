@@ -387,7 +387,31 @@ class GearService {
     return error === null;
   }
 
-  public async editRental(rental: UnsavedRental & { id: string }) {}
+  public async editRental(rental: UnsavedRental & { id: string }) {
+    const { error } = await this.supabase.rpc('edit_rental', {
+      p_rental_id: rental.id,
+      // p_member_id: rental.memberId ?? null,
+      p_contact_info: rental.contactInfo
+        ? JSON.stringify(rental.contactInfo)
+        : null,
+      p_date_borrow: rental.dateBorrow,
+      p_date_return: rental.dateReturn,
+      p_deposit: rental.depositFee,
+      p_gear: Object.entries(rental.gear).map(([id, amount]) => ({
+        gear_item_id: id,
+        rented_amount: amount,
+      })),
+      p_topos: Object.entries(rental.topos).map(([id, amount]) => ({
+        topo_id: id,
+        rented_amount: amount,
+      })),
+      p_payment_method: rental.paymentMethod,
+      p_status: rental.status,
+      p_comments: null,
+    });
+    if (error) console.warn('editRental: ', error);
+    return error === null;
+  }
 
   public async getActiveRentalsForUser(
     userId: string,

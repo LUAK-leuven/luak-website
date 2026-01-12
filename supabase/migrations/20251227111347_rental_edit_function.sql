@@ -85,7 +85,7 @@ DECLARE
   item_id uuid;
   item_amount numeric;
 BEGIN
-  -- Make sure the rental exists (optional but helpful)
+  -- Make sure the rental exists
   if not exists (
     select 1 from "Rentals" r where r.id = p_rental_id
   ) then
@@ -113,8 +113,8 @@ BEGIN
       where rental_id = p_rental_id and gear_item_id = item_id;
     else
       insert into "RentedGear" (gear_item_id, rental_id, rented_amount, actual_amount)
-      values (item_id, rental_id, item_amount, item_amount)
-      on conflict ("RentedGear_pkey")
+      values (item_id, p_rental_id, item_amount, item_amount)
+      on conflict (gear_item_id, rental_id)
       do update set
         rented_amount = item_amount,
         actual_amount = item_amount,
@@ -132,9 +132,9 @@ BEGIN
       delete from "RentedTopos"
       where rental_id = p_rental_id and topo_id = item_id;
     else
-      insert into "RentedGear" (topo_id, rental_id, rented_amount, actual_amount)
-      values (item_id, rental_id, item_amount, item_amount)
-      on conflict ("RentedGear_pkey")
+      insert into "RentedTopos" (topo_id, rental_id, rented_amount, actual_amount)
+      values (item_id, p_rental_id, item_amount, item_amount)
+      on conflict (topo_id, rental_id)
       do update set
         rented_amount = item_amount,
         actual_amount = item_amount,
@@ -142,6 +142,6 @@ BEGIN
     end if;
   end loop;
   
-  return rental_id;
+  return p_rental_id;
 END;$$
 ;

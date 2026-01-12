@@ -14,7 +14,26 @@
   }));
 
   async function handleSubmit(state: UnsavedRental) {
-    return { error: 'not implemented' };
+    if (rental.value !== undefined) {
+      for (const { gearItemId: id } of rental.value.gear) {
+        if (!(id in state.gear)) {
+          state.gear[id] = 0;
+        }
+      }
+      for (const { topoId: id } of rental.value.topos) {
+        if (!(id! in state.topos)) {
+          state.topos[id] = 0;
+        }
+      }
+      const success = await gearService().editRental({
+        ...state,
+        id: rental.value.id,
+      });
+      if (success) navigateTo(`/board/rentals/${rental.value.id}`);
+      return { error: success ? undefined : 'Failed to save rental' };
+    } else {
+      return { error: 'Failed to save rental' };
+    }
   }
 
   onMounted(async () => {
