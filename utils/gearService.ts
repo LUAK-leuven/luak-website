@@ -407,7 +407,7 @@ class GearService {
       })),
       p_payment_method: rental.paymentMethod,
       p_status: rental.status,
-      p_comments: null,
+      p_comments: rental.comments ?? null,
     });
     if (error) console.warn('editRental: ', error);
     return error === null;

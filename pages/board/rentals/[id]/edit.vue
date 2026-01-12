@@ -78,6 +78,7 @@
         depositFee: rental.depositFee,
         paymentMethod: rental.paymentMethod,
         markAsReserved: rental.status === 'reserved',
+        comments: rental.comments,
       }" />
 
     <!-- <p>Values: {{ values }}</p>

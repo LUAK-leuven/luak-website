@@ -17,6 +17,7 @@
       depositFee: number;
       paymentMethod: Enums<'payment_method'>;
       markAsReserved: boolean;
+      comments: string;
     }>;
     handleSubmit: (
       rentalState: UnsavedRental,
@@ -104,6 +105,7 @@
           return true;
         }),
       markAsReserved: yup.bool().default(false),
+      comments: yup.string(),
     })
     .test('require gear', function (value) {
       if (
@@ -118,7 +120,7 @@
       return true;
     });
 
-  const { meta, handleSubmit, errors, validateField } = useForm({
+  const { meta, handleSubmit, errors, validateField, values } = useForm({
     validationSchema: toTypedSchema(formSchema),
     initialValues: {
       boardMemberId: props.boardMember.name,
@@ -144,6 +146,7 @@
       paymentMethod: formState.paymentMethod,
       contactInfo: formState.contactInfo,
       status: formState.markAsReserved ? 'reserved' : 'not_returned',
+      comments: formState.comments,
     });
     if (error !== undefined)
       popup.value = {
@@ -191,6 +194,13 @@
           name="markAsReserved"
           :value="true"
           type="checkbox" />
+      </div>
+
+      <div class="flex flex-col w-full col-span-full">
+        <span>Comments:</span>
+        <Field v-slot="{ field }" name="comments">
+          <textarea class="textarea textarea-bordered" v-bind="field" />
+        </Field>
       </div>
     </div>
 
@@ -242,6 +252,6 @@
     </div>
   </form>
 
-  <!-- <p>Values: {{ values }}</p>
-    <p>Errors: {{ errors }}</p> -->
+  <p>Values: {{ values }}</p>
+  <p>Errors: {{ errors }}</p>
 </template>
