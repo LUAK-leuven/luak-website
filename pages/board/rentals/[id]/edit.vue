@@ -2,16 +2,9 @@
   definePageMeta({ middleware: 'board-member-guard' });
 
   const rental = ref<RentalDetails>();
+  const allGear = ref<PublicGearInfo[]>();
+  const allTopos = ref<PublicGearInfo[]>();
   const loading = ref(true);
-
-  const allGear = await gearService().getPublicGearInfo();
-  const allTopos = (await gearService().getAllTopos()).map((topo) => ({
-    id: topo.id,
-    name: topo.title,
-    totalAmount: topo.totalAmount,
-    availableAmount: topo.availableAmount,
-    depositFee: 500,
-  }));
 
   async function handleSubmit(state: UnsavedRental) {
     if (rental.value !== undefined) {
@@ -40,6 +33,30 @@
     rental.value = await gearService().getRental(
       useRoute().params.id as string,
     );
+
+    allGear.value = (await gearService().getPublicGearInfo()).map(
+      (gearItem) => ({
+        id: gearItem.id,
+        name: gearItem.name,
+        totalAmount: gearItem.totalAmount,
+        availableAmount:
+          gearItem.availableAmount +
+          (rental.value?.gear.find((g) => g.gearItemId === gearItem.id)
+            ?.rentedAmount ?? 0),
+        depositFee: gearItem.depositFee,
+      }),
+    );
+    allTopos.value = (await gearService().getAllTopos()).map((topo) => ({
+      id: topo.id,
+      name: topo.title,
+      totalAmount: topo.totalAmount,
+      availableAmount:
+        topo.availableAmount +
+        (rental.value?.topos.find((t) => t.topoId === topo.id)?.rentedAmount ??
+          0),
+      depositFee: 500,
+    }));
+
     loading.value = false;
   });
 </script>
@@ -55,7 +72,12 @@
       <span class="loading loading-spinner loading-lg" />
     </div>
 
-    <div v-else-if="rental === undefined">ERROR!</div>
+    <div
+      v-else-if="
+        rental === undefined || allGear === undefined || allTopos === undefined
+      ">
+      ERROR!
+    </div>
 
     <BoardRentalForm
       v-else

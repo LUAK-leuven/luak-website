@@ -264,16 +264,20 @@
     </div>
     <hr class="my-3" />
     <div class="flex justify-end gap-3">
-      <button
-        v-if="editMode"
-        class="btn btn-error btn-outline"
-        @click="editMode = false">
-        Cancel
-      </button>
-      <button v-if="editMode" class="btn btn-primary" @click="save()">
-        Save changes
-      </button>
-      <button v-else class="btn btn-primary" @click="edit()">Edit</button>
+      <template v-if="editMode">
+        <button class="btn btn-error btn-outline" @click="editMode = false">
+          Cancel
+        </button>
+        <button class="btn btn-primary" @click="save()">Save changes</button>
+      </template>
+      <template v-else>
+        <button
+          class="btn btn-secondary"
+          @click="() => navigateTo(`/board/rentals/${rental.id}/edit`)">
+          Edit
+        </button>
+        <button class="btn btn-primary" @click="edit()">Return</button>
+      </template>
     </div>
     <!-- <p>Values: {{ values }}</p>
     <p>Errors: {{ errors }}</p>

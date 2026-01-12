@@ -174,7 +174,9 @@
     <h2>General info</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-2 mb-3">
       <div class="w-full self-end">
-        <BoardRentalFormSelectMember name="memberId" />
+        <BoardRentalFormSelectMember
+          name="memberId"
+          :disable="props.initialValues.memberId !== undefined" />
       </div>
 
       <InputText
@@ -219,7 +221,8 @@
       field-name="topos"
       placeholder="select topos"
       @computed-deposit-fee="(value) => (computedTopoDeposit = value)" />
-    <hr />
+
+    <hr class="mt-4" />
 
     <h2>Payment</h2>
     <div class="flex flex-row items-end gap-5">
@@ -252,6 +255,6 @@
     </div>
   </form>
 
-  <p>Values: {{ values }}</p>
-  <p>Errors: {{ errors }}</p>
+  <!-- <p>Values: {{ values }}</p>
+  <p>Errors: {{ errors }}</p> -->
 </template>

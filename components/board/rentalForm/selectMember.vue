@@ -1,22 +1,28 @@
 <script setup lang="ts">
-  const props = withDefaults(defineProps<{ name?: string }>(), {
-    name: 'member',
-  });
+  const props = withDefaults(
+    defineProps<{
+      name?: string;
+      disable?: boolean;
+    }>(),
+    {
+      name: 'member',
+      disable: false,
+    },
+  );
 
-  const users = await userService().getAllUsers();
-  const selectableUsers = users.map((user) => ({
-    name: user.first_name + ' ' + user.last_name,
-    id: user.id,
-    hasPaid: user.paid_membership,
-  }));
-  selectableUsers.push({
-    name: 'Add a non-member',
-    id: '',
-    hasPaid: true,
-  });
+  const users = await useAsyncData('users', (_nuxtApp) =>
+    userService().getAllUsers(),
+  );
+  const selectableUsers = computed(() =>
+    users.data.value?.map((user) => ({
+      name: user.first_name + ' ' + user.last_name,
+      id: user.id,
+      hasPaid: user.paid_membership,
+    })),
+  );
 
   function filterMember(
-    options: typeof selectableUsers,
+    options: { name: string; id: string; hasPaid: boolean }[],
     input: string | undefined,
   ) {
     if (input === undefined) return options;
@@ -32,7 +38,7 @@
   );
 
   const selectedUser = computed(() =>
-    selectableUsers.find((user) => user.id === value.value),
+    selectableUsers.value?.find((user) => user.id === value.value),
   );
   function onSelect(selectedMember: {
     id: string;
@@ -41,6 +47,14 @@
   }) {
     value.value = selectedMember.id;
   }
+
+  onMounted(() => {
+    selectableUsers.value?.push({
+      name: 'Add a non-member',
+      id: '',
+      hasPaid: true,
+    });
+  });
 </script>
 
 <template>
@@ -52,6 +66,8 @@
       :search-fn="filterMember"
       :error-message="errorMessage"
       :selected-item="selectedUser"
+      loading-message="Loading members"
+      :disable="disable"
       @selected="onSelect">
       <template #item="{ data }">
         <div
