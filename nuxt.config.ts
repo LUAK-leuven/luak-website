@@ -49,7 +49,6 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/tailwindcss',
     '@nuxt/content',
-    '@nuxthq/studio',
     '@nuxt/image',
     '@nuxtjs/supabase',
     '@vee-validate/nuxt',
