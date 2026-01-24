@@ -21,7 +21,7 @@ export default defineNuxtConfig({
       login: '/login',
       callback: '/confirmLogin',
       include: ['/profile(/*)?', '/stories(/*)?'],
-      cookieRedirect: true,
+      saveRedirectToCookie: true,
     },
   },
   runtimeConfig: {
