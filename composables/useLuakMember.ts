@@ -52,9 +52,7 @@ export default async function (): Promise<{
   };
 
   const isBoard = data.BoardMembers !== null;
-  console.log(`isBoard: ${isBoard}`);
   const membership = single(data.Memberships);
-  console.log(`Membership:`, membership);
 
   if (membership === undefined)
     return {

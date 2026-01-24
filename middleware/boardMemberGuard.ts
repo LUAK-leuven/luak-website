@@ -4,7 +4,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const supabase = useSupabaseClient<Database>();
   const user = useSupabaseUser();
 
-  if (user.value === undefined) {
+  if (!user.value) {
     return navigateTo({
       path: '/login',
       query: {
@@ -16,11 +16,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const { data } = await supabase
     .from('BoardMembers')
     .select('user_id')
-    .eq('user_id', user.value!.id)
+    .eq('user_id', user.value.id)
     .single();
 
   if (data === null) {
-    return abortNavigation(`Unauthorized`);
+    return navigateTo('/');
   }
   return;
 });
