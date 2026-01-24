@@ -4,7 +4,7 @@
   });
   const NR_OF_ARTICLES = 3;
   const { data } = await useAsyncData(() =>
-    queryCollection('news').order('date', 'ASC').limit(NR_OF_ARTICLES).all(),
+    queryCollection('news').order('date', 'DESC').limit(NR_OF_ARTICLES).all(),
   );
 </script>
 <template>

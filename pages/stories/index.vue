@@ -1,7 +1,7 @@
 <script setup lang="ts">
   const NR_OF_STORIES = 20;
   const { data } = await useAsyncData(() =>
-    queryCollection('stories').order('date', 'ASC').limit(NR_OF_STORIES).all(),
+    queryCollection('stories').order('date', 'DESC').limit(NR_OF_STORIES).all(),
   );
 </script>
 
@@ -13,8 +13,8 @@
       <a
         class="link"
         href="mailto:luak.bestuur@gmail.com?subject=I would like to add a story to the LUAK website&body=Don't forget to also include a title, the author and a picture for the card and background.">
-        luak.bestuur@gmail.com</a
-      >
+        luak.bestuur@gmail.com
+      </a>
       and we will put it on the website. Don't forget to also include some cool
       pictures 😉!
     </template>

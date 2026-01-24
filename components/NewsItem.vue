@@ -20,7 +20,9 @@
       </NuxtLink>
       <div>
         <h1 class="text-4xl text-gray-600">{{ data.title }}</h1>
+        <p v-if="data.teaser">{{ data.teaser }}</p>
         <ContentRenderer
+          v-else-if="data.excerpt"
           class="py-6 nuxt-content"
           :value="data"
           :excerpt="true">
@@ -32,9 +34,9 @@
           </template>
         </ContentRenderer>
         <div class="flex justify-center">
-          <NuxtLink :key="data.path" class="btn btn-outline" :to="data.path"
-            >read more</NuxtLink
-          >
+          <NuxtLink :key="data.path" class="btn btn-outline" :to="data.path">
+            read more
+          </NuxtLink>
         </div>
       </div>
     </div>

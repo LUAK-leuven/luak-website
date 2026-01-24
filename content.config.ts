@@ -23,6 +23,12 @@ export default defineContentConfig({
         title: z.string(),
         date: z.date(),
         teaser: z.string().optional(),
+        excerpt: z
+          .object({
+            type: z.string(),
+            children: z.any(),
+          })
+          .optional(),
       }),
     }),
     pages: defineCollection({
@@ -42,6 +48,12 @@ export default defineContentConfig({
         date: z.date(),
         author: z.string(),
         teaser: z.string().optional(),
+        excerpt: z
+          .object({
+            type: z.string(),
+            children: z.any(),
+          })
+          .optional(),
       }),
     }),
   },
