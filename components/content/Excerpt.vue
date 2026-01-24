@@ -1,4 +1,0 @@
-<template>
-  <!--more-->
-  <div />
-</template>
