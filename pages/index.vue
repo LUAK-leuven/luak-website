@@ -1,15 +1,10 @@
 <script setup lang="ts">
-  import type { NewsContent } from '~/types/content.types';
-
   definePageMeta({
     layout: 'picture',
   });
   const NR_OF_ARTICLES = 3;
   const { data } = await useAsyncData(() =>
-    queryContent<NewsContent>('/news')
-      .sort({ date: -1 })
-      .limit(NR_OF_ARTICLES)
-      .find(),
+    queryCollection('news').order('date', 'DESC').limit(NR_OF_ARTICLES).all(),
   );
 </script>
 <template>
@@ -45,16 +40,14 @@
         </NuxtLink>
         <NewsItem
           v-for="(newsItem, index) in data"
-          :key="newsItem._path"
+          :key="newsItem.path"
           v-bind="{ data: newsItem, reversed: !!((index + 1) % 2) }" />
       </div>
       <div
         class="bg-base-100 shadow-md md:basis-9/12 basis-11/12 shrink-0 grow-0 rounded my-5">
-        <NuxtLink to="/activities"
-          ><h1 class="w-full text-center text-6xl my-10">
-            Activities
-          </h1></NuxtLink
-        >
+        <NuxtLink to="/activities">
+          <h1 class="w-full text-center text-6xl my-10">Activities</h1>
+        </NuxtLink>
         <div class="p-5">
           <GoogleCalendar />
         </div>

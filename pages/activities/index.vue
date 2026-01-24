@@ -1,14 +1,13 @@
 <script setup lang="ts">
   import dayjs from 'dayjs';
-  import type { ActivityContent } from '~/types/content.types';
 
   const NR_OF_ACTIVITIES = 20;
-  const { data } = await useAsyncData(() =>
-    queryContent<ActivityContent>('/activities')
-      .where({ date: { $gte: dayjs().startOf('day').toISOString() } })
-      .sort({ date: 1 })
+  const { data } = await useAsyncData('activities_page', () =>
+    queryCollection('activities')
+      .where('date', '>=', dayjs().startOf('day').toISOString())
+      .order('date', 'ASC')
       .limit(NR_OF_ACTIVITIES)
-      .find(),
+      .all(),
   );
 </script>
 
@@ -21,7 +20,7 @@
     <div v-else class="flex flex-wrap justify-center">
       <ActivityItem
         v-for="newsItem in data"
-        :key="newsItem._path"
+        :key="newsItem.path"
         v-bind="{ data: newsItem }" />
     </div>
     <div class="divider my-5" />

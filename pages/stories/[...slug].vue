@@ -2,11 +2,16 @@
   definePageMeta({
     layout: 'picture',
   });
+
+  const route = useRoute();
+  const { data: doc } = await useAsyncData(route.path, () => {
+    return queryCollection('stories').path(route.path).first();
+  });
 </script>
 
 <template>
   <main>
-    <ContentDoc v-slot="{ doc }">
+    <template v-if="doc">
       <div
         class="hero min-h-[80vh] fixed z-10"
         :style="`background-image: url(${doc.image}); background-size: cover`">
@@ -46,6 +51,13 @@
           </div>
         </div>
       </div>
-    </ContentDoc>
+    </template>
+    <template v-else>
+      <FullPageCard>
+        <template #title> Page Not Found </template>
+        <p>Oops! The content you're looking for doesn't exist.</p>
+        <NuxtLink to="/">Go back home</NuxtLink>
+      </FullPageCard>
+    </template>
   </main>
 </template>
