@@ -9,7 +9,9 @@ export default defineContentConfig({
         image: z.string(),
         title: z.string(),
         date: z.date(),
-        price: z.number(),
+        price: z
+          .number()
+          .refine((v) => Number.isFinite(v), 'price must be a valid number'),
         tag: z.string().optional(),
       }),
     }),
