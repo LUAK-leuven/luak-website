@@ -2,6 +2,8 @@
   import * as yup from 'yup';
 
   const supabase = useSupabaseClient();
+  const redirect = useRoute().query['redirect'] as string;
+
   const formSchema = yup.object({
     email: yup.string().required().email(),
     password: yup.string().required(),
@@ -17,7 +19,10 @@
     });
     if (error) {
       setFieldError('password', error.message);
-    } else await reloadNuxtApp({ path: '/profile/overview' });
+    } else {
+      const path = redirect ?? '/profile/overview';
+      return reloadNuxtApp({ path });
+    }
   });
 </script>
 <template>
