@@ -1282,13 +1282,13 @@
     unwasm "^0.5.3"
     vfile "^6.0.3"
 
-"@nuxtjs/supabase@^2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@nuxtjs/supabase/-/supabase-2.0.3.tgz#0e508403ddbde04433c47720a961fb106eaffba8"
-  integrity sha512-zfhuOqhbQUijMd5rXS9qzzuVqBMU00gcJyvxFuTBXdS9TAk/gboQZxxX7EQp6eAi5asvtJNM+mwBKqzQwtZi7g==
+"@nuxtjs/supabase@^1.6.2":
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/@nuxtjs/supabase/-/supabase-1.6.2.tgz#6fc284c02c57ea71fff8c3ed485b596062875545"
+  integrity sha512-/ugHRSWfPncCc2F6z5haa/L0hISrPNpfzciOlvSaCKi9079c+75ghf/TbFbjNn2YLu6396f5HTJlROypYyczeA==
   dependencies:
-    "@supabase/ssr" "^0.8.0"
-    "@supabase/supabase-js" "^2.86.0"
+    "@supabase/ssr" "^0.7.0"
+    "@supabase/supabase-js" "^2.57.2"
     defu "^6.1.4"
     pathe "^2.0.3"
 
@@ -1335,7 +1335,7 @@
   dependencies:
     "@opentelemetry/api" "^1.3.0"
 
-"@opentelemetry/api@^1.0.0", "@opentelemetry/api@^1.3.0", "@opentelemetry/api@^1.8", "@opentelemetry/api@^1.9.0":
+"@opentelemetry/api@1.9.0", "@opentelemetry/api@^1.0.0", "@opentelemetry/api@^1.3.0", "@opentelemetry/api@^1.8", "@opentelemetry/api@^1.9.0":
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/@opentelemetry/api/-/api-1.9.0.tgz#d03eba68273dc0f7509e2a3d5cba21eae10379fe"
   integrity sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg==
@@ -2737,10 +2737,10 @@
     tslib "2.8.1"
     ws "^8.18.2"
 
-"@supabase/ssr@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@supabase/ssr/-/ssr-0.8.0.tgz#2b4e7380ebf5a204506bbff0e0cb4a529fdfd015"
-  integrity sha512-/PKk8kNFSs8QvvJ2vOww1mF5/c5W8y42duYtXvkOSe+yZKRgTTZywYG2l41pjhNomqESZCpZtXuWmYjFRMV+dw==
+"@supabase/ssr@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@supabase/ssr/-/ssr-0.7.0.tgz#5e7a476153f3628752f03844635ee0c4f0b23393"
+  integrity sha512-G65t5EhLSJ5c8hTCcXifSL9Q/ZRXvqgXeNo+d3P56f4U1IxwTqjB64UfmfixvmMcjuxnq2yGqEWVJqUcO+AzAg==
   dependencies:
     cookie "^1.0.2"
 
@@ -2752,7 +2752,7 @@
     iceberg-js "^0.8.1"
     tslib "2.8.1"
 
-"@supabase/supabase-js@^2.86.0":
+"@supabase/supabase-js@^2.57.2":
   version "2.91.1"
   resolved "https://registry.yarnpkg.com/@supabase/supabase-js/-/supabase-js-2.91.1.tgz#28f57f577df11ed20b8c6771b3fb471332fb80d1"
   integrity sha512-57Fb4s5nfLn5ed2a1rPtl+LI1Wbtms8MS4qcUa0w6luaStBlFhmSeD2TLBgJWdMIupWRF6iFTH4QTrO2+pG/ZQ==
