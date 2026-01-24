@@ -97,6 +97,8 @@
       </div>
     </dialog>
 
-    <pop-up :show="success">Password updated successfully</pop-up>
+    <pop-up v-model:show="success" type="success"
+      >Password updated successfully</pop-up
+    >
   </div>
 </template>

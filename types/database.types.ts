@@ -57,6 +57,123 @@ export type Database = {
           },
         ];
       };
+      GearCategories: {
+        Row: {
+          deposit_fee: number;
+          id: string;
+          lifespan: number;
+          name: string;
+        };
+        Insert: {
+          deposit_fee: number;
+          id?: string;
+          lifespan: number;
+          name: string;
+        };
+        Update: {
+          deposit_fee?: number;
+          id?: string;
+          lifespan?: number;
+          name?: string;
+        };
+        Relationships: [];
+      };
+      GearInventory: {
+        Row: {
+          amount: number;
+          created_at: string;
+          details: string;
+          gear_item_id: string;
+          id: string;
+          production_date: string | null;
+          purchase_date: string | null;
+          status: Database['public']['Enums']['gear_status'];
+        };
+        Insert: {
+          amount: number;
+          created_at?: string;
+          details?: string;
+          gear_item_id: string;
+          id?: string;
+          production_date?: string | null;
+          purchase_date?: string | null;
+          status: Database['public']['Enums']['gear_status'];
+        };
+        Update: {
+          amount?: number;
+          created_at?: string;
+          details?: string;
+          gear_item_id?: string;
+          id?: string;
+          production_date?: string | null;
+          purchase_date?: string | null;
+          status?: Database['public']['Enums']['gear_status'];
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'GearInventory_gear_item_id_fkey';
+            columns: ['gear_item_id'];
+            isOneToOne: false;
+            referencedRelation: 'GearItems';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      GearItems: {
+        Row: {
+          gear_category_id: string;
+          id: string;
+          name: string;
+        };
+        Insert: {
+          gear_category_id: string;
+          id?: string;
+          name: string;
+        };
+        Update: {
+          gear_category_id?: string;
+          id?: string;
+          name?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'GearItems_gear_category_id_fkey';
+            columns: ['gear_category_id'];
+            isOneToOne: false;
+            referencedRelation: 'GearCategories';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      GearLogs: {
+        Row: {
+          comment: string;
+          created_at: string;
+          gear_inventory_id: string;
+          id: string;
+        };
+        Insert: {
+          comment?: string;
+          created_at?: string;
+          gear_inventory_id: string;
+          id?: string;
+        };
+        Update: {
+          comment?: string;
+          created_at?: string;
+          gear_inventory_id?: string;
+          id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'GearLogs_gear_inventory_id_fkey';
+            columns: ['gear_inventory_id'];
+            isOneToOne: false;
+            referencedRelation: 'GearInventory';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       Memberships: {
         Row: {
           created_at: string;
@@ -101,21 +218,21 @@ export type Database = {
           approved: boolean;
           created_at: string;
           id: string;
-          membership_id: string | null;
+          membership_id: string;
         };
         Insert: {
           amount?: number | null;
           approved: boolean;
           created_at?: string;
           id: string;
-          membership_id?: string | null;
+          membership_id: string;
         };
         Update: {
           amount?: number | null;
           approved?: boolean;
           created_at?: string;
           id?: string;
-          membership_id?: string | null;
+          membership_id?: string;
         };
         Relationships: [
           {
@@ -127,10 +244,193 @@ export type Database = {
           },
         ];
       };
+      Rentals: {
+        Row: {
+          board_member_id: string;
+          comments: string | null;
+          contact_info: string | null;
+          created_at: string;
+          date_borrow: string;
+          date_return: string;
+          deposit: number;
+          deposit_returned: boolean;
+          id: string;
+          member_id: string | null;
+          payment_method: Database['public']['Enums']['payment_method'];
+          status: Database['public']['Enums']['rental_status'];
+        };
+        Insert: {
+          board_member_id?: string;
+          comments?: string | null;
+          contact_info?: string | null;
+          created_at?: string;
+          date_borrow: string;
+          date_return: string;
+          deposit: number;
+          deposit_returned?: boolean;
+          id?: string;
+          member_id?: string | null;
+          payment_method: Database['public']['Enums']['payment_method'];
+          status?: Database['public']['Enums']['rental_status'];
+        };
+        Update: {
+          board_member_id?: string;
+          comments?: string | null;
+          contact_info?: string | null;
+          created_at?: string;
+          date_borrow?: string;
+          date_return?: string;
+          deposit?: number;
+          deposit_returned?: boolean;
+          id?: string;
+          member_id?: string | null;
+          payment_method?: Database['public']['Enums']['payment_method'];
+          status?: Database['public']['Enums']['rental_status'];
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'Rentals_board_member_id_fkey';
+            columns: ['board_member_id'];
+            isOneToOne: false;
+            referencedRelation: 'Users';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'Rentals_member_id_fkey';
+            columns: ['member_id'];
+            isOneToOne: false;
+            referencedRelation: 'Users';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      RentedGear: {
+        Row: {
+          actual_amount: number;
+          gear_item_id: string;
+          last_edited_date: string;
+          rental_id: string;
+          rented_amount: number;
+        };
+        Insert: {
+          actual_amount: number;
+          gear_item_id: string;
+          last_edited_date?: string;
+          rental_id: string;
+          rented_amount: number;
+        };
+        Update: {
+          actual_amount?: number;
+          gear_item_id?: string;
+          last_edited_date?: string;
+          rental_id?: string;
+          rented_amount?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'RentedGear_gear_item_id_fkey';
+            columns: ['gear_item_id'];
+            isOneToOne: false;
+            referencedRelation: 'GearItems';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'RentedGear_rental_id_fkey';
+            columns: ['rental_id'];
+            isOneToOne: false;
+            referencedRelation: 'Rentals';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      RentedTopos: {
+        Row: {
+          actual_amount: number;
+          last_edited_date: string;
+          rental_id: string;
+          rented_amount: number;
+          topo_id: string;
+        };
+        Insert: {
+          actual_amount: number;
+          last_edited_date?: string;
+          rental_id: string;
+          rented_amount: number;
+          topo_id: string;
+        };
+        Update: {
+          actual_amount?: number;
+          last_edited_date?: string;
+          rental_id?: string;
+          rented_amount?: number;
+          topo_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'RentedTopos_rental_id_fkey';
+            columns: ['rental_id'];
+            isOneToOne: false;
+            referencedRelation: 'Rentals';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'RentedTopos_topo_id_fkey';
+            columns: ['topo_id'];
+            isOneToOne: false;
+            referencedRelation: 'Topos';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      Topos: {
+        Row: {
+          amount: number;
+          authors: string[] | null;
+          condition: Database['public']['Enums']['topo_condition'];
+          countries: string[] | null;
+          details: string | null;
+          id: string;
+          languages: string[] | null;
+          place_in_library: string;
+          tags: string[] | null;
+          title: string;
+          types_of_climbing: string[] | null;
+          year_published: number | null;
+        };
+        Insert: {
+          amount: number;
+          authors?: string[] | null;
+          condition: Database['public']['Enums']['topo_condition'];
+          countries?: string[] | null;
+          details?: string | null;
+          id?: string;
+          languages?: string[] | null;
+          place_in_library: string;
+          tags?: string[] | null;
+          title: string;
+          types_of_climbing?: string[] | null;
+          year_published?: number | null;
+        };
+        Update: {
+          amount?: number;
+          authors?: string[] | null;
+          condition?: Database['public']['Enums']['topo_condition'];
+          countries?: string[] | null;
+          details?: string | null;
+          id?: string;
+          languages?: string[] | null;
+          place_in_library?: string;
+          tags?: string[] | null;
+          title?: string;
+          types_of_climbing?: string[] | null;
+          year_published?: number | null;
+        };
+        Relationships: [];
+      };
       Users: {
         Row: {
           created_at: string;
-          email: string | null;
+          email: string;
           first_name: string;
           has_newsletter: boolean;
           has_whatsapp: boolean;
@@ -140,7 +440,7 @@ export type Database = {
         };
         Insert: {
           created_at?: string;
-          email?: string | null;
+          email: string;
           first_name: string;
           has_newsletter?: boolean;
           has_whatsapp?: boolean;
@@ -150,7 +450,7 @@ export type Database = {
         };
         Update: {
           created_at?: string;
-          email?: string | null;
+          email?: string;
           first_name?: string;
           has_newsletter?: boolean;
           has_whatsapp?: boolean;
@@ -165,6 +465,37 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      create_rental: {
+        Args: {
+          p_board_member_id: string;
+          p_comments: string;
+          p_contact_info: string;
+          p_date_borrow: string;
+          p_date_return: string;
+          p_deposit: number;
+          p_gear: Json;
+          p_member_id: string;
+          p_payment_method: Database['public']['Enums']['payment_method'];
+          p_status: Database['public']['Enums']['rental_status'];
+          p_topos: Json;
+        };
+        Returns: string;
+      };
+      edit_rental: {
+        Args: {
+          p_comments: string;
+          p_contact_info: string;
+          p_date_borrow: string;
+          p_date_return: string;
+          p_deposit: number;
+          p_gear: Json;
+          p_payment_method: Database['public']['Enums']['payment_method'];
+          p_rental_id: string;
+          p_status: Database['public']['Enums']['rental_status'];
+          p_topos: Json;
+        };
+        Returns: string;
+      };
       get_luak_year: {
         Args: Record<PropertyKey, never>;
         Returns: number;
@@ -173,10 +504,30 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: string;
       };
+      update_rental: {
+        Args: {
+          p_comments: string;
+          p_date_return: string;
+          p_deposit_returned: boolean;
+          p_gear: Json;
+          p_rental_id: string;
+          p_status: Database['public']['Enums']['rental_status'];
+          p_topos: Json;
+        };
+        Returns: undefined;
+      };
     };
     Enums: {
+      gear_status: 'available' | 'archived';
       kbf_uiaa: 'not' | 'kbf_luak' | 'kbf_other' | 'uiaa';
+      payment_method: 'cash' | 'transfer';
+      rental_status:
+        | 'returned'
+        | 'partially_returned'
+        | 'not_returned'
+        | 'reserved';
       student: 'student_kul' | 'phd_kul' | 'student_other' | 'not_student';
+      topo_condition: 'as_good_as_new' | 'good' | 'used' | 'damaged';
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -842,8 +1193,17 @@ export const Constants = {
   },
   public: {
     Enums: {
+      gear_status: ['available', 'archived'],
       kbf_uiaa: ['not', 'kbf_luak', 'kbf_other', 'uiaa'],
+      payment_method: ['cash', 'transfer'],
+      rental_status: [
+        'returned',
+        'partially_returned',
+        'not_returned',
+        'reserved',
+      ],
       student: ['student_kul', 'phd_kul', 'student_other', 'not_student'],
+      topo_condition: ['as_good_as_new', 'good', 'used', 'damaged'],
     },
   },
   storage: {

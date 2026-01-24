@@ -1,51 +1,17 @@
 <script setup lang="ts">
-  import type { Database } from '~/types/database.types';
-
-  const user = useSupabaseUser();
-
-  const supabase = useSupabaseClient<Database>();
-  const has_membership = ref(await getHasMembership());
-  const isBoardMember = ref(false);
-
-  // Check if user is a board member
-  const checkBoardMemberStatus = async () => {
-    if (!user.value) return;
-
-    const { data } = await supabase
-      .from('BoardMembers')
-      .select('*')
-      .eq('user_id', user.value.id)
-      .single();
-
-    isBoardMember.value = !!data;
-  };
-
-  const { data: userData } = await useAsyncData('userData', async () => {
-    if (!user.value) throw createError({ statusCode: 401 });
-    const { data } = await supabase
-      .from('Users')
-      .select('*')
-      .eq('id', user.value.id)
-      .single();
-    return data;
-  });
-
-  // Check board member status when component is mounted
-  onMounted(() => {
-    checkBoardMemberStatus();
-  });
+  const user = await useLuakMember();
 </script>
 <template>
   <FullPageCard>
     <template #title> My Profile </template>
     <span v-if="!user">Not logged in yet</span>
     <template v-else>
-      <h2>Hi {{ userData?.first_name ?? 'LUAK member' }} 👋</h2>
+      <h2>Hi {{ user.userInfo?.first_name ?? 'LUAK member' }} 👋</h2>
       Welcome to your profile page. Here you can manage your membership! In the
       future more functionaity will be added.
-      <div class="my-5 mx-2 flex flex-wrap justify-around">
-        <UserBuyMembershipCard v-if="has_membership !== 'paid_membership'" />
-        <UserMembershipCard v-else />
+      <div class="my-5 mx-2 flex flex-wrap justify-evenly gap-x-4">
+        <UserMembershipCard v-if="user.hasActiveMembership" />
+        <UserBuyMembershipCard v-else />
         <UserCard image="/IMG_20240410_125659.jpg">
           <template #title> Profile Settings 🔧 </template>
           <template #description>
@@ -55,20 +21,17 @@
             <NuxtLink class="btn" to="/profile/settings"> settings </NuxtLink>
           </template>
         </UserCard>
-        <!-- Board Member Card - Only visible to board members -->
-        <UserCard v-if="isBoardMember" image="/IMG_20240410_125659.jpg">
-          <template #title> Members Overview 👥 </template>
+        <!-- <UserCard image="/20241102_134927[1].jpg">
+          <template #title> My gear ⚙️ </template>
           <template #description>
-            View and export all active club memberships
+            View the status of your active rental(s)
           </template>
           <template #actions>
-            <NuxtLink
-              class="btn btn-primary"
-              to="/profile/subscriptions-overview">
-              View Members
+            <NuxtLink class="btn btn-accent" to="/profile/gear">
+              my gear
             </NuxtLink>
           </template>
-        </UserCard>
+        </UserCard> -->
         <UserLogOutCard />
       </div>
     </template>

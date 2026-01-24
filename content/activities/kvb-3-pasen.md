@@ -2,7 +2,7 @@
 title: KVB3 course Easter
 image: /activities/afbeelding1.png
 date: 2026-04-12T00:00:00.000Z
-price: €370
+price: 37000
 tag: intermediate
 ---
 

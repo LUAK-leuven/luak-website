@@ -11,7 +11,7 @@
     password: yup_password.required(),
     newsletter: yup.bool().default(true),
     whatsapp: yup.bool().default(true),
-    phoneNumber: yup_phone,
+    phoneNumber: yup_phone.transform((v: string) => (v ? v : undefined)),
   });
   const { handleSubmit, isSubmitting, setFieldError } = useForm({
     validationSchema: toTypedSchema(formSchema),
@@ -42,22 +42,22 @@
 <template>
   <div class="relative flex flex-wrap justify-center z-2 bg-base-300">
     <div
-      class="bg-base-100 shadow-md rounded w-10/12 lg:w-8/12 xl:w-1/3 mb-28 z-10 mt-8 p-5 sm:p-20">
+      class="bg-base-100 shadow-md rounded w-10/12 lg:w-8/12 xl:w-1/2 mb-28 z-10 mt-8 p-5 sm:p-20">
       <form @submit="onSubmit">
         <div class="flex flex-row justify-stretch">
           <InputText
             class="mr-1"
-            label="First name"
+            label="First name *"
             name="firstName"
             placeholder="Alex" />
           <InputText
             class="ml-1"
-            label="Last name"
+            label="Last name *"
             name="lastName"
             placeholder="Megos" />
         </div>
         <InputText
-          label="Email"
+          label="Email *"
           name="email"
           placeholder="youremail@example.com"
           type="email" />
@@ -67,14 +67,14 @@
           placeholder="+32468123123"
           type="tel" />
         <InputText
-          label="Password"
+          label="Password *"
           name="password"
           placeholder="*******"
           type="password" />
         <InputBool name="whatsapp">Can we contact you via whatsapp?</InputBool>
-        <InputBool name="newsletter"
-          >Subscribe to monthly newsletter?</InputBool
-        >
+        <InputBool name="newsletter">
+          Subscribe to monthly newsletter?
+        </InputBool>
 
         <div class="flex justify-center">
           <button class="btn btn-primary w-full p-5">

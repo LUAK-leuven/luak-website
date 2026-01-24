@@ -2,7 +2,8 @@
   const supabase = useSupabaseClient();
   const logout = async () => {
     await supabase.auth.signOut();
-    navigateTo('/login');
+    return reloadNuxtApp({ path: '/login' });
+    // return navigateTo('/login');
   };
   const user = useSupabaseUser();
 </script>

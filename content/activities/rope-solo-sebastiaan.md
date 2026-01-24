@@ -1,6 +1,6 @@
 ---
 title: Rope solo klimmen
-date: 2026-3-21T00:00:00.000Z
+date: 2026-03-21T00:00:00.000Z
 image: /activities/LRS_TRS_Maart2026.jpg
 price: 7000
 ---
