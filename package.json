@@ -14,7 +14,7 @@
     "lintfix": "eslint . --fix && prettier --write --list-different ."
   },
   "devDependencies": {
-    "@nuxt/devtools": "latest",
+    "@nuxt/devtools": "^3.1.1",
     "@nuxt/eslint": "^0.3.13",
     "@nuxthq/studio": "^2.0.3",
     "@nuxtjs/supabase": "^2.0.3",
@@ -44,7 +44,10 @@
     "yup": "^1.4.0"
   },
   "resolutions": {
-    "string-width": "4.2.3"
+    "string-width": "4.2.3",
+    "@opentelemetry/core": "1.27.0",
+    "@opentelemetry/instrumentation-http": "0.52.0",
+    "@opentelemetry/api": "1.9.0"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

@@ -32,11 +32,6 @@ export default defineNuxtConfig({
         'https://buy.stripe.com/4gwbKnfctdokdgYcMM',
     },
   },
-  content: {
-    markdown: {
-      anchorLinks: false,
-    },
-  },
   sentry: {
     sourceMapsUploadOptions: {
       org: 'luak',
