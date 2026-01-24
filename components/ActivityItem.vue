@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import type { ActivityContent } from '~/types/content.types';
+  import type { ActivitiesCollectionItem } from '@nuxt/content';
 
   const props = defineProps<{
-    data: ActivityContent;
+    data: ActivitiesCollectionItem;
   }>();
   const priceString = computed(() => {
     if (props.data.price === 0) {
@@ -17,9 +17,9 @@
 
 <template>
   <NuxtLink
-    :key="data._path"
+    :key="data.path"
     class="card card-compact bg-base-200 w-full sm:w-80 shadow-xl my-5 md:mx-5 hover:shadow-2xl"
-    :to="data._path">
+    :to="data.path">
     <figure>
       <NuxtImg class="h-56 object-cover w-full" :src="data.image" />
       <figcaption v-if="data.tag" class="absolute top-3 right-3">

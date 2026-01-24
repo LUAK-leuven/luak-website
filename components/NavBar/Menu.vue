@@ -1,10 +1,10 @@
 <script setup lang="ts">
   const { data: info_navigation } = await useAsyncData('info_navigation', () =>
-    fetchContentNavigation(queryContent('/info')),
+    queryCollectionNavigation('info_'),
   );
   const { data: pages_navigation } = await useAsyncData(
     'pages_navigation',
-    () => fetchContentNavigation(queryContent('/pages')),
+    () => queryCollectionNavigation('pages'),
   );
   const user = useSupabaseUser();
 
@@ -46,16 +46,16 @@
       <details id="info-toggle" @toggle="infoToggleEventListener">
         <summary>Info</summary>
         <ul class="p-2 bg-base-200 rounded-t-none">
-          <li v-for="nav in info_navigation?.[0]?.children" :key="nav._path">
-            <NuxtLink :to="nav._path" @click="closeDrawer">{{
+          <li v-for="nav in info_navigation?.[0]?.children" :key="nav.path">
+            <NuxtLink :to="nav.path" @click="closeDrawer">{{
               nav.title
             }}</NuxtLink>
           </li>
         </ul>
       </details>
     </li>
-    <li v-for="nav in pages_navigation?.[0]?.children" :key="nav._path">
-      <NuxtLink :to="nav._path" @click="closeDrawer">{{ nav.title }}</NuxtLink>
+    <li v-for="nav in pages_navigation?.[0]?.children" :key="nav.path">
+      <NuxtLink :to="nav.path" @click="closeDrawer">{{ nav.title }}</NuxtLink>
     </li>
     <li v-if="user">
       <NuxtLink to="/stories" @click="closeDrawer">Stories</NuxtLink>

@@ -1,12 +1,7 @@
 <script setup lang="ts">
-  import type { NewsContent } from '~/types/content.types';
-
   const NR_OF_STORIES = 20;
   const { data } = await useAsyncData(() =>
-    queryContent<NewsContent>('/stories')
-      .sort({ date: -1 })
-      .limit(NR_OF_STORIES)
-      .find(),
+    queryCollection('stories').order('date', 'ASC').limit(NR_OF_STORIES).all(),
   );
 </script>
 
@@ -25,7 +20,7 @@
     </template>
     <NewsItem
       v-for="(newsItem, index) in data"
-      :key="newsItem._path"
+      :key="newsItem.path"
       v-bind="{ data: newsItem, reversed: !!((index + 1) % 2) }" />
   </FullPageCard>
 </template>

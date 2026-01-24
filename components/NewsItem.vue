@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import type { NewsContent } from '~/types/content.types';
+  import type { NewsCollectionItem } from '@nuxt/content';
 
   defineProps<{
-    data: NewsContent;
+    data: NewsCollectionItem;
     reversed?: boolean;
   }>();
 </script>
@@ -12,7 +12,7 @@
     <div
       class="flex justify-center items-center align-middle flex-col"
       :class="[reversed ? 'md:flex-row' : 'md:flex-row-reverse']">
-      <NuxtLink :key="data._path" class="m-5" :to="data._path">
+      <NuxtLink :key="data.path" class="m-5" :to="data.path">
         <NuxtImg
           class="rounded-lg shadow-2xl max-w-72 max-h-72 md:max-w-80 md:max-h-80"
           :src="data.image"
@@ -32,7 +32,7 @@
           </template>
         </ContentRenderer>
         <div class="flex justify-center">
-          <NuxtLink :key="data._path" class="btn btn-outline" :to="data._path"
+          <NuxtLink :key="data.path" class="btn btn-outline" :to="data.path"
             >read more</NuxtLink
           >
         </div>
