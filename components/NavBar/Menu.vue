@@ -77,7 +77,7 @@
       </details>
     </li>
     <NuxtLink
-      v-if="user.membershipType === 'unauthenticated'"
+      v-if="user.userInfo === undefined"
       class="btn btn-primary btn-outline"
       to="/profile/overview">
       Log In

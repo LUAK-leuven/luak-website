@@ -10,9 +10,8 @@
       Welcome to your profile page. Here you can manage your membership! In the
       future more functionaity will be added.
       <div class="my-5 mx-2 flex flex-wrap justify-evenly gap-x-4">
-        <UserBuyMembershipCard
-          v-if="user.membershipType !== 'paid_membership'" />
-        <UserMembershipCard v-else />
+        <UserMembershipCard v-if="user.hasActiveMembership" />
+        <UserBuyMembershipCard v-else />
         <UserCard image="/IMG_20240410_125659.jpg">
           <template #title> Profile Settings 🔧 </template>
           <template #description>
@@ -22,7 +21,7 @@
             <NuxtLink class="btn" to="/profile/settings"> settings </NuxtLink>
           </template>
         </UserCard>
-        <UserCard image="/20241102_134927[1].jpg">
+        <!-- <UserCard image="/20241102_134927[1].jpg">
           <template #title> My gear ⚙️ </template>
           <template #description>
             View the status of your active rental(s)
@@ -32,7 +31,7 @@
               my gear
             </NuxtLink>
           </template>
-        </UserCard>
+        </UserCard> -->
         <UserLogOutCard />
       </div>
     </template>

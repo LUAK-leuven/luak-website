@@ -8,28 +8,20 @@ type UserInfo = {
   phone_number?: string;
 };
 
-type MemberType =
-  | 'unauthenticated'
-  | 'no_membership'
-  | 'unpaid_membership'
-  | 'paid_membership'
-  | 'board_member';
-
 export default async function (): Promise<{
-  membershipType: MemberType;
   userInfo: UserInfo | undefined;
   isBoard: boolean;
+  hasActiveMembership: boolean;
   isMember: boolean;
 }> {
-  const isBoard = false;
   const supabase = useSupabaseClient<Database>();
   const user = useSupabaseUser();
 
   if (!user.value) {
     return {
-      membershipType: 'unauthenticated',
-      isBoard,
+      isBoard: false,
       isMember: false,
+      hasActiveMembership: false,
       userInfo: undefined,
     };
   }
@@ -40,14 +32,15 @@ export default async function (): Promise<{
       'id, first_name, last_name, email, BoardMembers (user_id), Memberships (year, Payments( approved )) ',
     )
     .eq('id', user.value.id)
+    .eq('Memberships.year', getLuakYear())
     .single();
 
   if (error || !data) {
     console.error(error);
     return {
-      membershipType: 'unauthenticated',
-      isBoard,
+      isBoard: false,
       isMember: false,
+      hasActiveMembership: false,
       userInfo: undefined,
     };
   }
@@ -58,36 +51,30 @@ export default async function (): Promise<{
     email: data.email,
   };
 
-  if (data.BoardMembers)
-    return {
-      membershipType: 'board_member',
-      userInfo,
-      isMember: true,
-      isBoard: true,
-    };
+  const isBoard = data.BoardMembers !== null;
+  console.log(`isBoard: ${isBoard}`);
+  const membership = single(data.Memberships);
+  console.log(`Membership:`, membership);
 
-  const membership = data.Memberships.filter(
-    (membership) => membership.year === getLuakYear(),
-  );
-  if (membership.length === 0)
+  if (membership === undefined)
     return {
-      membershipType: 'no_membership',
       userInfo,
       isBoard,
       isMember: false,
+      hasActiveMembership: false,
     };
-  if (membership[0].Payments.filter((payment) => payment.approved).length === 0)
+  if (membership.Payments.filter((payment) => payment.approved).length === 0)
     return {
-      membershipType: 'unpaid_membership',
       userInfo,
       isBoard,
       isMember: true,
+      hasActiveMembership: false,
     };
 
   return {
-    membershipType: 'paid_membership',
     userInfo,
     isBoard,
     isMember: true,
+    hasActiveMembership: true,
   };
 }
