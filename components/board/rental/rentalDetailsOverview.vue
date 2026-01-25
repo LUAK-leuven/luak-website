@@ -11,10 +11,10 @@
         <div v-if="rental.member" class="flex flex-col">
           <span>Member: {{ rental.member.fullName }}</span>
           <span v-if="rental.member.email" class="ml-3">
-            ✉️: <MailTo :email="rental.member.email" />
+            ✉️: <SharedMailTo :email="rental.member.email" />
           </span>
           <span v-if="rental.member.phoneNumber" class="ml-3">
-            ☎️: <WhatsappLink :phone-number="rental.member.phoneNumber" />
+            ☎️: <SharedWhatsappLink :phone-number="rental.member.phoneNumber" />
           </span>
         </div>
         <div v-if="rental.boardMember">

@@ -64,7 +64,7 @@ BEGIN
 
     update "RentedTopos"
     set actual_amount = item_amount, last_edited_date = now()
-    where gear_item_id = item_id and rental_id = p_rental_id;
+    where topo_id = item_id and rental_id = p_rental_id;
 
     if not found then
       raise exception 'Topo % does not belong to Rental % or does not exist',

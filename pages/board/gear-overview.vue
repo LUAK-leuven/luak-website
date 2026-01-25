@@ -118,17 +118,19 @@
           <thead>
             <tr>
               <th>Name</th>
-              <th>Amount</th>
-              <th>Details</th>
+              <th class="pl-0">Amount</th>
+              <th class="min-w-64">Details</th>
               <th>Purchase Date</th>
-              <th>Production Date</th>
+              <th class="pr-0">Production Date</th>
               <th>Retirement Date</th>
             </tr>
           </thead>
           <tbody>
             <template v-for="gearItem of filteredGear" :key="gearItem.name">
               <tr v-for="g of gearItem.gearInventory" :key="g.id">
-                <td>{{ gearItem.name }}</td>
+                <td class="whitespace-nowrap">
+                  {{ gearItem.name }}
+                </td>
                 <td>{{ g.amount }}</td>
                 <td>{{ g.details }}</td>
                 <td>{{ g.purchaseDate }}</td>
