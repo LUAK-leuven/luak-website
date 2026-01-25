@@ -3,11 +3,9 @@
 </script>
 
 <template>
-  <NavBar class="absolute">
-    <div class="h-20 w-full bg-base-300" />
-    <main class="overflow-hidden w-full">
+  <NavBar class="absolute bg-base-300">
+    <main class="overflow-hidden w-full mt-20">
       <slot />
-
       <PopUpV2
         v-if="popup !== undefined"
         :type="popup.type"
