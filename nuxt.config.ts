@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  compatibilityDate: '2026-01-25',
   app: {
     head: {
       htmlAttrs: {
@@ -46,6 +47,19 @@ export default defineNuxtConfig({
       anchorLinks: false,
     },
   },
+  studio: {
+    // Studio admin route (default: '/_studio')
+    route: '/_studio',
+    
+    // Git repository configuration
+    repository: {
+      provider: 'github',
+      owner: 'LUAK-leuven',
+      repo: 'luak-website',
+      branch: 'main',
+      private: true,
+    },
+  },
   modules: [
     '@nuxtjs/tailwindcss',
     '@nuxt/content',
@@ -54,5 +68,6 @@ export default defineNuxtConfig({
     '@vee-validate/nuxt',
     '@nuxt/eslint',
     '@sentry/nuxt/module',
+    'nuxt-studio',
   ],
 });
