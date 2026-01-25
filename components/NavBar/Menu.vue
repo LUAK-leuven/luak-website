@@ -74,7 +74,7 @@
             <NuxtLink to="/board/gear-overview"> ⚙️ Gear overview </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/_studio"> ✏️ Edit Content </NuxtLink>
+            <a href="/_studio"> ✏️ Edit Content </a>
           </li>
         </ul>
       </details>
