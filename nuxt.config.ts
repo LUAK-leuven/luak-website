@@ -56,7 +56,7 @@ export default defineNuxtConfig({
       provider: 'github',
       owner: 'LUAK-leuven',
       repo: 'luak-website',
-      branch: 'main',
+      branch: 'master',
       private: true,
     },
   },
