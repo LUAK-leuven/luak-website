@@ -73,6 +73,9 @@
           <li>
             <NuxtLink to="/board/gear-overview"> ⚙️ Gear overview </NuxtLink>
           </li>
+          <li>
+            <a href="/_studio"> 📝 Studio Mode </a>
+          </li>
         </ul>
       </details>
     </li>
