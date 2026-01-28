@@ -143,6 +143,16 @@
                   </div>
                 </td>
               </tr>
+              <tr v-if="gearItem.gearInventory.length === 0">
+                <td class="whitespace-nowrap">
+                  {{ gearItem.name }}
+                </td>
+                <td>⚠️0</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
             </template>
           </tbody>
         </table>
