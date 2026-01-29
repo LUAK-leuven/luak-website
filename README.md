@@ -3,7 +3,7 @@
 The techstack used for this project is:
 
 - nuxt 3
-- nuxt content
+- nuxt content v3 + nuxt studio (visual content editing)
 - tailwindcss + daisyui
 
 - supabase for the backend
@@ -23,7 +23,16 @@ The easiest way to get started is using vscode with devcontainers. a devcontaine
 
 next set the right env variables to connect with supabase. check `.env.example` and the [Supabase Docs](https://supabase.com/docs/guides/getting-started)
 
-# Test users
+## Nuxt Studio
+
+Visual content editing is available through Nuxt Studio.
+
+**Quick start (dev mode):**
+- Run `yarn dev`
+- Look for the floating Studio button in the bottom-left corner
+- Click to edit content visually
+
+## Test users
 
 Some test users are created when setting up the database (when running `yarn supabase db reset` the db is populated with [seed.sql](supabase/seed.sql)):
 
@@ -35,7 +44,7 @@ Some test users are created when setting up the database (when running `yarn sup
 
 All the users have the same password: 123456789
 
-# Supabase
+## Supabase
 
 - supabase start
 - supabase login
