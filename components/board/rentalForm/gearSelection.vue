@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+  import { fuzzySearch } from '~/utils/utils';
+
   type GearInfo = {
     id: string;
     name: string;
@@ -46,13 +48,16 @@
       );
   });
 
-  function filterGear(options: GearInfo[], input: string | undefined) {
+  function filterGear(
+    options: GearInfo[],
+    input: string | undefined,
+  ): GearInfo[] {
     if (input === undefined) return options;
     return options
-      .filter((option) =>
-        option.name.toLowerCase().includes(input.toLowerCase()),
-      )
-      .slice(0, 5);
+      .map((option) => [option, fuzzySearch(option.name, input)] as const)
+      .filter((x) => x[1] > 0)
+      .sort((a, b) => b[1] - a[1])
+      .map((x) => x[0]);
   }
 
   function addSelection(gearItem: GearInfo) {
@@ -73,26 +78,26 @@
 </script>
 
 <template>
-  <InputTextOptionsSelect
+  <InputSearchableSelect
     :options="availableGearList"
     :placeholder="placeholder"
     :search-fn="filterGear"
     @selected="addSelection">
     <template #item="{ data }">
       <div
-        class="p-3 rounded-md w-full flex flex-row justify-between gap-6"
+        class="px-3 py-2 rounded-md w-full flex flex-row justify-between gap-6 shadow-sm"
         :class="
           data.amount === 0
             ? 'bg-red-100'
             : data.amount < 0
               ? 'bg-yellow-300'
-              : ''
+              : 'bg-base-100'
         ">
         <span>{{ data.amount < 0 ? '⚠️ ' : '' }}{{ data.name }}</span>
         <span>{{ data.amount }}</span>
       </div>
     </template>
-  </InputTextOptionsSelect>
+  </InputSearchableSelect>
 
   <div class="flex flex-col gap-1">
     <div

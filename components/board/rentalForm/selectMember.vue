@@ -21,16 +21,27 @@
     })),
   );
 
+  function matchFirstLetters(name: string, input: string) {
+    return (
+      input.toLowerCase() ===
+      name
+        .split(' ')
+        .map((x) => x.at(0))
+        .join('')
+        .toLowerCase()
+    );
+  }
+
   function filterMember(
     options: { name: string; id: string; hasPaid: boolean }[],
     input: string | undefined,
   ) {
     if (input === undefined) return options;
-    return options
-      .filter((option) =>
-        option.name.toLowerCase().includes(input.toLowerCase()),
-      )
-      .slice(0, 5);
+    return options.filter(
+      (option) =>
+        fuzzySearch(option.name, input) > 0 ||
+        matchFirstLetters(option.name, input),
+    );
   }
 
   const { value, errorMessage } = useField<string | undefined>(
@@ -59,7 +70,7 @@
 
 <template>
   <div class="flex flex-col">
-    <InputTextOptionsSelect
+    <InputSearchableSelect
       label="Member name *"
       :options="selectableUsers"
       placeholder="select member"
@@ -82,7 +93,7 @@
           {{ data.hasPaid ? '' : '⚠️ ' }}{{ data.name }}
         </div>
       </template>
-    </InputTextOptionsSelect>
+    </InputSearchableSelect>
     <div v-if="value === ''">
       <InputText
         name="contactInfo.fullName"
