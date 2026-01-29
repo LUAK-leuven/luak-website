@@ -26,11 +26,9 @@
     input: string | undefined,
   ) {
     if (input === undefined) return options;
-    return options
-      .filter((option) =>
-        option.name.toLowerCase().includes(input.toLowerCase()),
-      )
-      .slice(0, 5);
+    return options.filter((option) =>
+      option.name.toLowerCase().includes(input.toLowerCase()),
+    );
   }
 
   const { value, errorMessage } = useField<string | undefined>(
@@ -59,7 +57,7 @@
 
 <template>
   <div class="flex flex-col">
-    <InputTextOptionsSelect
+    <InputSearchableSelect
       label="Member name *"
       :options="selectableUsers"
       placeholder="select member"
@@ -82,7 +80,7 @@
           {{ data.hasPaid ? '' : '⚠️ ' }}{{ data.name }}
         </div>
       </template>
-    </InputTextOptionsSelect>
+    </InputSearchableSelect>
     <div v-if="value === ''">
       <InputText
         name="contactInfo.fullName"

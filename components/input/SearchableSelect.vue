@@ -50,7 +50,7 @@
       <span class="label-text">{{ label }}</span>
     </div>
     <label
-      class="input input-bordered flex w-full relative"
+      class="input input-bordered flex w-full dropdown"
       :class="{ 'bg-gray-300': disable }">
       <span v-if="hidden && selectedItem !== undefined" class="label w-max">
         <slot name="item" :data="selectedItem" />
@@ -60,20 +60,17 @@
         :class="{
           'w-0': hidden && selectedItem !== undefined,
         }"
+        tabindex="0"
         type="text"
         :placeholder="placeholder"
-        popovertarget="popover-1"
-        style="anchor-name: --anchor-1"
         :disabled="disable"
         @focus="onFocus()"
         @blur="if (!mouseOnSelection) hidden = true;" />
 
       <ul
-        id="popover-1"
-        class="absolute dropdown menu w-fit rounded-box bg-base-100 shadow-md gap-y-1 top-12 z-10"
+        class="dropdown-content menu w-fit max-h-52 overflow-scroll rounded-box bg-base-100 shadow-md gap-y-1 top-12 z-10 flex-nowrap border-8 p-0 border-base-100"
         :class="hidden ? 'hidden' : ''"
-        popover
-        style="position-anchor: --anchor-1"
+        tabindex="0"
         @mouseenter="mouseOnSelection = true"
         @mouseleave="mouseOnSelection = false">
         <li v-if="filteredOptions === undefined">
