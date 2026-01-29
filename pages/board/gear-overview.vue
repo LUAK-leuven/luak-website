@@ -143,7 +143,8 @@
                   </div>
                 </td>
               </tr>
-              <tr v-if="gearItem.gearInventory.length === 0">
+              <!-- For now don't display this becuase it doesn't work with the filter -->
+              <!-- <tr v-if="gearItem.gearInventory.length === 0">
                 <td class="whitespace-nowrap">
                   {{ gearItem.name }}
                 </td>
@@ -152,7 +153,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-              </tr>
+              </tr> -->
             </template>
           </tbody>
         </table>
