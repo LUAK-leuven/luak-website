@@ -9,6 +9,9 @@ The techstack used for this project is:
 - supabase for the backend
 - vercel for deployment
 
+- Sentry?
+- Stripe for payments
+
 ## Setup
 
 The easiest way to get started is using vscode with devcontainers. a devcontainer is defined including all the necessarry dependencies.
