@@ -16,6 +16,17 @@ export function search(content: string, searchTerm: string): boolean {
   return content.toLowerCase().includes(searchTerm.toLowerCase());
 }
 
+export function fuzzySearch(content: string, searchTerm: string): number {
+  if (!content) return 0;
+  content = content.toLowerCase();
+  const searchTerms = searchTerm.toLowerCase().split(' ');
+  const matches = searchTerms
+    .map((term) => content.match(term))
+    .filter((v) => v !== null);
+
+  return matches.length == searchTerms.length ? 1 : 0;
+}
+
 export function single<T>(array: T[]): T | undefined {
   if (array.length > 1)
     throw Error(

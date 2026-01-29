@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+  import { fuzzySearch } from '~/utils/utils';
+
   type GearInfo = {
     id: string;
     name: string;
@@ -46,11 +48,16 @@
       );
   });
 
-  function filterGear(options: GearInfo[], input: string | undefined) {
+  function filterGear(
+    options: GearInfo[],
+    input: string | undefined,
+  ): GearInfo[] {
     if (input === undefined) return options;
-    return options.filter((option) =>
-      option.name.toLowerCase().includes(input.toLowerCase()),
-    );
+    return options
+      .map((option) => [option, fuzzySearch(option.name, input)] as const)
+      .filter((x) => x[1] > 0)
+      .sort((a, b) => b[1] - a[1])
+      .map((x) => x[0]);
   }
 
   function addSelection(gearItem: GearInfo) {

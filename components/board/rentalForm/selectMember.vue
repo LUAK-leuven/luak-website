@@ -21,13 +21,26 @@
     })),
   );
 
+  function matchFirstLetters(name: string, input: string) {
+    return (
+      input.toLowerCase() ===
+      name
+        .split(' ')
+        .map((x) => x.at(0))
+        .join('')
+        .toLowerCase()
+    );
+  }
+
   function filterMember(
     options: { name: string; id: string; hasPaid: boolean }[],
     input: string | undefined,
   ) {
     if (input === undefined) return options;
-    return options.filter((option) =>
-      option.name.toLowerCase().includes(input.toLowerCase()),
+    return options.filter(
+      (option) =>
+        fuzzySearch(option.name, input) > 0 ||
+        matchFirstLetters(option.name, input),
     );
   }
 
