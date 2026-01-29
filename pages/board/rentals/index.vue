@@ -69,7 +69,7 @@
         class="w-full"
         type="text"
         name="search"
-        placeholder="'m:' to search members"
+        placeholder="Search by name ..."
         round />
       <div class="flex flex-col items-center">
         <label class="italic text-xs w-max" for="showReturned">

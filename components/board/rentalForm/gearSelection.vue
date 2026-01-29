@@ -8,7 +8,6 @@
 
   const props = defineProps<{
     allGear: PublicGearInfo[];
-    gearMap: Record<string, PublicGearInfo>;
     fieldName: string;
     placeholder: string;
   }>();
@@ -22,6 +21,12 @@
     push,
     remove,
   } = useFieldArray<{ id: string; amount: number }>(props.fieldName);
+
+  const gearMap = computed<
+    Record<string, Omit<PublicGearInfo, 'id'> | undefined>
+  >(() =>
+    Object.fromEntries(props.allGear.map(({ id, ...rest }) => [id, rest])),
+  );
 
   const availableGearList = computed(() => {
     return props.allGear
@@ -59,7 +64,8 @@
       'computedDepositFee',
       sum(
         selectedGear.value.map(
-          ({ value: item }) => props.gearMap[item.id].depositFee * item.amount,
+          ({ value: item }) =>
+            (gearMap.value[item.id]?.depositFee ?? 0) * item.amount,
         ),
       ),
     );
@@ -95,16 +101,19 @@
       class="p-1 rounded-2xl w-full grid grid-cols-[max-content_1fr_1fr_min-content] items-center gap-y-3 bg-stone-200"
       :class="item.amount === 0 ? 'bg-red-100' : ''">
       <span class="mx-3">
-        {{ item.amount > props.gearMap[item.id].availableAmount ? '⚠️ ' : '' }}
-        {{ gearMap[item.id].name }}
+        {{
+          item.amount > (gearMap[item.id]?.availableAmount ?? 0) ? '⚠️ ' : ''
+        }}
+        {{ gearMap[item.id]?.name ?? 'Error: Could not find item!' }}
       </span>
       <span>
         <InputNumber
           :name="`${fieldName}[${idx}].amount`"
-          :soft-max="props.gearMap[item.id].availableAmount" />
+          :soft-max="gearMap[item.id]?.availableAmount" />
       </span>
       <div>
-        Deposit: {{ (item.amount * gearMap[item.id].depositFee) / 100 }}€
+        Deposit:
+        {{ (item.amount * (gearMap[item.id]?.depositFee ?? 0)) / 100 }}€
       </div>
       <button
         class="btn btn-sm btn-circle btn-ghost justify-self-end mr-2"

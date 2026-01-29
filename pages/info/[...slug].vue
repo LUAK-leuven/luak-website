@@ -14,12 +14,6 @@
         <ContentRenderer class="nuxt-content w-full" :value="doc" />
       </FullPageCard>
     </template>
-    <template v-else>
-      <FullPageCard>
-        <template #title> Page Not Found </template>
-        <p>Oops! The content you're looking for doesn't exist.</p>
-        <NuxtLink to="/">Go back home</NuxtLink>
-      </FullPageCard>
-    </template>
+    <PagesPageNotFound v-else />
   </main>
 </template>

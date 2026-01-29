@@ -1,13 +1,50 @@
 <script setup lang="ts">
   definePageMeta({ middleware: 'board-member-guard' });
 
-  const rental = ref<RentalDetails>();
-  const allGear = ref<PublicGearInfo[]>();
-  const allTopos = ref<PublicGearInfo[]>();
-  const loading = ref(true);
+  const route = useRoute();
+  const rentalId = route.params.id as string;
+
+  const { data: rental, pending: rentalPending } = useAsyncData(
+    `rental-${rentalId}`,
+    async () => await gearService().getRental(rentalId as string),
+  );
+  const { data: _allGear, pending: gearPending } = useAsyncData(
+    'allGear',
+    async () => await gearService().getPublicGearInfo(),
+  );
+  const { data: _allTopos, pending: toposPending } = useAsyncData(
+    'allTopos',
+    async () => await gearService().getAllTopos(),
+  );
+
+  const allGear = computed(() =>
+    _allGear.value?.map((gearItem) => ({
+      id: gearItem.id,
+      name: gearItem.name,
+      totalAmount: gearItem.totalAmount,
+      availableAmount:
+        gearItem.availableAmount +
+        (rental.value?.gear.find((g) => g.gearItemId === gearItem.id)
+          ?.rentedAmount ?? 0),
+      depositFee: gearItem.depositFee,
+    })),
+  );
+
+  const allTopos = computed(() =>
+    _allTopos.value?.map((topo) => ({
+      id: topo.id,
+      name: topo.title,
+      totalAmount: topo.totalAmount,
+      availableAmount:
+        topo.availableAmount +
+        (rental.value?.topos.find((t) => t.topoId === topo.id)?.rentedAmount ??
+          0),
+      depositFee: 500,
+    })),
+  );
 
   async function handleSubmit(state: UnsavedRental) {
-    if (rental.value !== undefined) {
+    if (!!rental.value) {
       for (const { gearItemId: id } of rental.value.gear) {
         if (!(id in state.gear)) {
           state.gear[id] = 0;
@@ -28,37 +65,6 @@
       return { error: 'Failed to save rental' };
     }
   }
-
-  onMounted(async () => {
-    rental.value = await gearService().getRental(
-      useRoute().params.id as string,
-    );
-
-    allGear.value = (await gearService().getPublicGearInfo()).map(
-      (gearItem) => ({
-        id: gearItem.id,
-        name: gearItem.name,
-        totalAmount: gearItem.totalAmount,
-        availableAmount:
-          gearItem.availableAmount +
-          (rental.value?.gear.find((g) => g.gearItemId === gearItem.id)
-            ?.rentedAmount ?? 0),
-        depositFee: gearItem.depositFee,
-      }),
-    );
-    allTopos.value = (await gearService().getAllTopos()).map((topo) => ({
-      id: topo.id,
-      name: topo.title,
-      totalAmount: topo.totalAmount,
-      availableAmount:
-        topo.availableAmount +
-        (rental.value?.topos.find((t) => t.topoId === topo.id)?.rentedAmount ??
-          0),
-      depositFee: 500,
-    }));
-
-    loading.value = false;
-  });
 </script>
 
 <template>
@@ -68,16 +74,19 @@
       Rental-id: <i>{{ rental?.id }}</i>
     </template>
 
-    <div v-if="loading" class="flex justify-center">
+    <NuxtLink
+      class="absolute btn btn-circle btn-sm btn-outline top-10 left-10"
+      to="/board/rentals">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </NuxtLink>
+
+    <div
+      v-if="rentalPending || gearPending || toposPending"
+      class="flex justify-center">
       <span class="loading loading-spinner loading-lg" />
     </div>
 
-    <div
-      v-else-if="
-        rental === undefined || allGear === undefined || allTopos === undefined
-      ">
-      ERROR!
-    </div>
+    <div v-else-if="!rental || !allGear || !allTopos">ERROR!</div>
 
     <BoardRentalForm
       v-else
@@ -90,11 +99,11 @@
         dateReturn: rental.dateReturn,
         memberId: rental.member.id,
         gear: rental.gear.map((g) => ({
-          id: g.gearItemId ?? 'error',
+          id: g.gearItemId,
           amount: g.rentedAmount,
         })),
         topos: rental.topos.map((g) => ({
-          id: g.topoId ?? 'error',
+          id: g.topoId,
           amount: g.rentedAmount,
         })),
         depositFee: rental.depositFee,
@@ -102,8 +111,5 @@
         markAsReserved: rental.status === 'reserved',
         comments: rental.comments,
       }" />
-
-    <!-- <p>Values: {{ values }}</p>
-    <p>Errors: {{ errors }}</p> -->
   </FullPageCard>
 </template>

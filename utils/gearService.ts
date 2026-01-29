@@ -120,19 +120,17 @@ class GearService {
       .eq('GearInventory.status', 'available');
     if (gear === null) return [];
 
-    return gear
-      .map((gearItem) => {
-        const totalAmount = sumOf(gearItem.GearInventory, 'amount');
-        return {
-          id: gearItem.id,
-          name: gearItem.name,
-          totalAmount: totalAmount,
-          availableAmount:
-            totalAmount - sumOf(gearItem.RentedGear, 'actual_amount'),
-          depositFee: gearItem.GearCategories!.deposit_fee,
-        };
-      })
-      .filter((gearItem) => gearItem.totalAmount > 0);
+    return gear.map((gearItem) => {
+      const totalAmount = sumOf(gearItem.GearInventory, 'amount');
+      return {
+        id: gearItem.id,
+        name: gearItem.name,
+        totalAmount: totalAmount,
+        availableAmount:
+          totalAmount - sumOf(gearItem.RentedGear, 'actual_amount'),
+        depositFee: gearItem.GearCategories!.deposit_fee,
+      };
+    });
   }
 
   public async getGearInventory(): Promise<GearDetails[]> {
@@ -213,7 +211,6 @@ class GearService {
   public async saveRental(
     rental: UnsavedRental,
   ): Promise<{ id: string | undefined; error: string | undefined }> {
-    console.log(rental);
     const { error, data } = await this.supabase.rpc('create_rental', {
       p_board_member_id: rental.boardMemberId,
       p_member_id: rental.memberId ?? null,

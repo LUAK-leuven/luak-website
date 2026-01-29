@@ -24,15 +24,8 @@
     ) => Promise<{ error: string | undefined }>;
   }>();
 
-  const gearMap = Object.fromEntries(
-    props.allGear.map((gearItem) => [gearItem.id, gearItem]),
-  );
-  const topoMap = Object.fromEntries(
-    props.allTopos.map((topo) => [topo.id, topo]),
-  );
-
   const selectionFrom = (
-    selection: Record<string, { name: string; totalAmount: number }>,
+    selection: { id: string; name: string; totalAmount: number }[],
   ) =>
     yup
       .array()
@@ -44,16 +37,26 @@
             .required()
             .test(function (amount) {
               const { id } = this.parent as { id: string };
+              const item = selection.find((x) => x.id === id);
+              if (item === undefined) {
+                console.warn(
+                  `Could not find item ${id} in ${selection.map((x) => x.id).toString()}!`,
+                );
+                return this.createError({
+                  path: `${this.path}`,
+                  message: `Error: item with id ${id} cannot be found in the inventory.`,
+                });
+              }
               if (amount <= 0) {
                 return this.createError({
                   path: `${this.path}`,
-                  message: `Value for ${selection[id].name} must be a positive number`,
+                  message: `Value for ${item.name} must be a positive number.`,
                 });
               }
-              if (amount > selection[id].totalAmount) {
+              if (amount > item.totalAmount) {
                 return this.createError({
                   path: `${this.path}`,
-                  message: `Value for ${selection[id].name} cannot exceed ${selection[id].totalAmount}`,
+                  message: `Value for ${item.name} cannot exceed ${item.totalAmount}`,
                 });
               }
               return true;
@@ -83,8 +86,8 @@
           },
         )
         .label('return date'),
-      gear: selectionFrom(gearMap),
-      topos: selectionFrom(topoMap),
+      gear: selectionFrom(props.allGear),
+      topos: selectionFrom(props.allTopos),
       depositFee: yup.number().required().min(0),
       paymentMethod: yup.string<'transfer' | 'cash'>().required(),
       contactInfo: yup
@@ -130,7 +133,6 @@
   });
 
   const onSubmit = handleSubmit(async (formState) => {
-    console.log(formState);
     const { error } = await props.handleSubmit({
       memberId: formState.memberId === '' ? undefined : formState.memberId,
       boardMemberId: props.boardMember.id,
@@ -210,14 +212,12 @@
     <h2>Gear list</h2>
     <BoardRentalFormGearSelection
       :all-gear="allGear"
-      :gear-map="gearMap"
       field-name="gear"
       placeholder="select gear"
       @computed-deposit-fee="(value) => (computedGearDeposit = value)" />
     <div class="h-4"></div>
     <BoardRentalFormGearSelection
       :all-gear="allTopos"
-      :gear-map="topoMap"
       field-name="topos"
       placeholder="select topos"
       @computed-deposit-fee="(value) => (computedTopoDeposit = value)" />
@@ -255,6 +255,6 @@
     </div>
   </form>
 
-  <!-- <p>Values: {{ values }}</p>
-  <p>Errors: {{ errors }}</p> -->
+  <!-- <p>Topos: {{ allTopos }}</p>
+  <p>TopoMap: {{ topoMap }}</p> -->
 </template>

@@ -58,7 +58,7 @@ export default async function (): Promise<{
     return {
       userInfo,
       isBoard,
-      isMember: false,
+      isMember: false || isBoard,
       hasActiveMembership: false,
     };
   if (membership.Payments.filter((payment) => payment.approved).length === 0)

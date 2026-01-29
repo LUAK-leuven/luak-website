@@ -9,7 +9,7 @@
     <div class="drawer-content flex flex-col">
       <!-- Navbar -->
       <div class="flex justify-center top-3 z-40 w-full fixed">
-        <div class="navbar bg-base-200 w-11/12 rounded-md">
+        <div class="navbar bg-base-200 w-11/12 rounded-xl">
           <div class="flex-1">
             <NuxtLink class="btn btn-ghost p-1" to="/">
               <NuxtImg class="h-full" src="/luak-logo.png" :quality="50" />

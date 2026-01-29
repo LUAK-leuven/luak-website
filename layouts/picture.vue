@@ -1,5 +1,5 @@
 <template>
-  <NavBar class="absolute">
+  <NavBar class="absolute bg-base-300">
     <main class="overflow-hidden w-full">
       <slot />
     </main>
