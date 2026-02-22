@@ -1,4 +1,5 @@
 import type { Database, Enums } from '~/types/database.types';
+import { groupBy } from './utils';
 
 export type PublicGearInfo = {
   id: string;
@@ -134,50 +135,49 @@ class GearService {
   }
 
   public async getGearInventory(): Promise<GearDetails[]> {
-    const { data: gear, error } = await this.supabase
-      .from('GearCategories')
+    const { data, error } = await this.supabase
+      .from('GearInventory')
       .select(
         `
-      name,
-      lifespan,
-      GearItems (
-        name,
-        GearInventory (
-          id,
-          details,
-          purchase_date,
-          production_date,
-          amount
-        ),
-        RentedGear (
-          actual_amount
+        id,
+        details,
+        purchase_date,
+        production_date,
+        amount,
+        GearItems(
+          name,
+          RentedGear(
+            actual_amount
+          ),
+          GearCategories(
+            lifespan
+          )
         )
+        `,
       )
-    `,
-      )
-      .eq('GearItems.GearInventory.status', 'available');
-    if (gear === null) {
+      .eq('status', 'available');
+    if (data === null) {
       console.warn(error);
       return [];
     }
 
-    return gear.flatMap((gearCategory) =>
-      gearCategory.GearItems.map((gearItem) => ({
-        lifespan: gearCategory.lifespan,
-        name: gearItem.name,
-        totalAmount: sumOf(gearItem.GearInventory, 'amount'),
-        availableAmount:
-          sumOf(gearItem.GearInventory, 'amount') -
-          sumOf(gearItem.RentedGear, 'actual_amount'),
-        gearInventory: gearItem.GearInventory.map((x) => ({
-          id: x.id,
-          details: x.details,
-          purchaseDate: x.purchase_date ?? undefined,
-          productionDate: x.production_date ?? undefined,
-          amount: x.amount,
-        })),
+    const gear = Object.entries(groupBy(data, (x) => x.GearItems?.name ?? ''));
+
+    return gear.map(([k, v]) => ({
+      lifespan: v[0].GearItems?.GearCategories?.lifespan ?? 0,
+      name: k,
+      totalAmount: sumOf(v, 'amount'),
+      availableAmount:
+        sumOf(v, 'amount') -
+        sumOf(v[0].GearItems?.RentedGear ?? [], 'actual_amount'),
+      gearInventory: v.map((x) => ({
+        id: x.id,
+        details: x.details,
+        purchaseDate: x.purchase_date ?? undefined,
+        productionDate: x.production_date ?? undefined,
+        amount: x.amount,
       })),
-    );
+    }));
   }
 
   public async getAllTopos(): Promise<TopoSumary[]> {
