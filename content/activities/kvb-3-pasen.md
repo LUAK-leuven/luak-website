@@ -1,9 +1,16 @@
 ---
-title: KVB3 course Easter
-image: /activities/afbeelding1.png
+title: KVB3 course Easter - FULL
+description: This course is already fully booked.
 date: 2026-04-12T00:00:00.000Z
+image: /activities/afbeelding1.png
 price: 37000
 tag: intermediate
+---
+
+---
+
+❗️This course is already fully booked.❗️
+
 ---
 
 ## **INFO STAGE KVB 3 (OUTDOOR VOORKLIMMEN BASIS MULTIPITCH)– 2026**
