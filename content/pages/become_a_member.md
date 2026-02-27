@@ -3,7 +3,7 @@ title: Become a member
 description: advanteges and how to become a member
 ---
 
-## 🗒️ Want to know what the LUAK is all about and register?
+## 🗒 Want to know what the LUAK is all about and register?
 
 Every year during October we organize **info nights** to explain and show everything the LUAK does. (Check the news section or our socials to stay up to date)
 
@@ -32,14 +32,12 @@ Having some trouble or questions? contact us at <luak.bestuur@gmail.com> or pass
 
 Membership costs only 20€ per year. Which gives you access to the gear rental, our activities and the Kariboe discount. If you're also a member of the KBF (Klimbergsportfederatie) and you chose luak as your main club. you'll get a 5€ discount on your membership.
 
-## ⛰️ Can I climb Belgian rock now?
+## ⛰ Can I climb Belgian rock now?
 
 Not just yet. To climb Belgian rock, joining LUAK is not enough. You'll have to become a member of the KBF to be allowed to do so. If you become KBF member you'll have to select a club. If you chose LUAK in that list you'll receive 5€ discount on your membership. Visit their website at: <http://www.klimenbergsportfederatie.be/>
 
-<!-- ## More information...
+## More information...
 
-More information can be found in [this presentation](https://docs.google.com/presentation/d/1MOb7rF6Kz8xd2dRu9nDj39vMU4NzeJc7/edit?usp=sharing&ouid=104743637768050835321&rtpof=true&sd=true), This is the information that is being shown on the info evenings
+More information can be found in [this presentation](https://docs.google.com/presentation/d/18bSGUa5a3fSaa2gAHQ-6Z4ZKsSOiLthDixuDhXKJHLY/edit?usp=sharing). This is the information that was shown on the info evening.
 
----
-
-:responsive-iframe{url="https://docs.google.com/presentation/d/1MOb7rF6Kz8xd2dRu9nDj39vMU4NzeJc7/embed?start=false&loop=true&delayms=3000" } -->
+:responsive-iframe{url="https://docs.google.com/presentation/d/18bSGUa5a3fSaa2gAHQ-6Z4ZKsSOiLthDixuDhXKJHLY/embed?start=false&loop=true&delayms=3000"}
