@@ -62,7 +62,7 @@ export type Database = {
           amount: number;
           created_at: string;
           details: string;
-          gear_item_id: string;
+          gear_item_id: string | null;
           id: string;
           production_date: string | null;
           purchase_date: string | null;
@@ -72,7 +72,7 @@ export type Database = {
           amount: number;
           created_at?: string;
           details?: string;
-          gear_item_id: string;
+          gear_item_id?: string | null;
           id?: string;
           production_date?: string | null;
           purchase_date?: string | null;
@@ -82,7 +82,7 @@ export type Database = {
           amount?: number;
           created_at?: string;
           details?: string;
-          gear_item_id?: string;
+          gear_item_id?: string | null;
           id?: string;
           production_date?: string | null;
           purchase_date?: string | null;

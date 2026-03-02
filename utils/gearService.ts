@@ -160,7 +160,7 @@ class GearService {
     const gear = Object.entries(groupBy(data, (x) => x.GearItems?.name ?? ''));
 
     return gear.map(([k, v]) => ({
-      lifespan: v[0].GearItems.lifespan,
+      lifespan: v[0].GearItems?.lifespan ?? 0,
       name: k,
       totalAmount: sumOf(v, 'amount'),
       availableAmount:

@@ -18,3 +18,7 @@ alter table "public"."GearItems"
 drop column gear_category_id;
 
 drop table "public"."GearCategories";
+
+-- Little fix for stuff that was done on prod directly
+alter table "public"."GearInventory"
+alter column gear_item_id drop not null;
