@@ -106,9 +106,7 @@ class GearService {
         `
       id,
       name,
-      GearCategories (
-        deposit_fee
-      ),
+      deposit_fee,
       GearInventory (
         amount
       ),
@@ -129,7 +127,7 @@ class GearService {
         totalAmount: totalAmount,
         availableAmount:
           totalAmount - sumOf(gearItem.RentedGear, 'actual_amount'),
-        depositFee: gearItem.GearCategories!.deposit_fee,
+        depositFee: gearItem.deposit_fee,
       };
     });
   }
@@ -149,9 +147,7 @@ class GearService {
           RentedGear(
             actual_amount
           ),
-          GearCategories(
-            lifespan
-          )
+          lifespan
         )
         `,
       )
@@ -164,7 +160,7 @@ class GearService {
     const gear = Object.entries(groupBy(data, (x) => x.GearItems?.name ?? ''));
 
     return gear.map(([k, v]) => ({
-      lifespan: v[0].GearItems?.GearCategories?.lifespan ?? 0,
+      lifespan: v[0].GearItems.lifespan,
       name: k,
       totalAmount: sumOf(v, 'amount'),
       availableAmount:
