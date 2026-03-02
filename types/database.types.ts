@@ -57,7 +57,48 @@ export type Database = {
           },
         ];
       };
-      GearCategories: {
+      GearInventory: {
+        Row: {
+          amount: number;
+          created_at: string;
+          details: string;
+          gear_item_id: string | null;
+          id: string;
+          production_date: string | null;
+          purchase_date: string | null;
+          status: Database['public']['Enums']['gear_status'];
+        };
+        Insert: {
+          amount: number;
+          created_at?: string;
+          details?: string;
+          gear_item_id?: string | null;
+          id?: string;
+          production_date?: string | null;
+          purchase_date?: string | null;
+          status: Database['public']['Enums']['gear_status'];
+        };
+        Update: {
+          amount?: number;
+          created_at?: string;
+          details?: string;
+          gear_item_id?: string | null;
+          id?: string;
+          production_date?: string | null;
+          purchase_date?: string | null;
+          status?: Database['public']['Enums']['gear_status'];
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'GearInventory_gear_item_id_fkey';
+            columns: ['gear_item_id'];
+            isOneToOne: false;
+            referencedRelation: 'GearItems';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      GearItems: {
         Row: {
           deposit_fee: number;
           id: string;
@@ -77,73 +118,6 @@ export type Database = {
           name?: string;
         };
         Relationships: [];
-      };
-      GearInventory: {
-        Row: {
-          amount: number;
-          created_at: string;
-          details: string;
-          gear_item_id: string;
-          id: string;
-          production_date: string | null;
-          purchase_date: string | null;
-          status: Database['public']['Enums']['gear_status'];
-        };
-        Insert: {
-          amount: number;
-          created_at?: string;
-          details?: string;
-          gear_item_id: string;
-          id?: string;
-          production_date?: string | null;
-          purchase_date?: string | null;
-          status: Database['public']['Enums']['gear_status'];
-        };
-        Update: {
-          amount?: number;
-          created_at?: string;
-          details?: string;
-          gear_item_id?: string;
-          id?: string;
-          production_date?: string | null;
-          purchase_date?: string | null;
-          status?: Database['public']['Enums']['gear_status'];
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'GearInventory_gear_item_id_fkey';
-            columns: ['gear_item_id'];
-            isOneToOne: false;
-            referencedRelation: 'GearItems';
-            referencedColumns: ['id'];
-          },
-        ];
-      };
-      GearItems: {
-        Row: {
-          gear_category_id: string;
-          id: string;
-          name: string;
-        };
-        Insert: {
-          gear_category_id: string;
-          id?: string;
-          name: string;
-        };
-        Update: {
-          gear_category_id?: string;
-          id?: string;
-          name?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'GearItems_gear_category_id_fkey';
-            columns: ['gear_category_id'];
-            isOneToOne: false;
-            referencedRelation: 'GearCategories';
-            referencedColumns: ['id'];
-          },
-        ];
       };
       GearLogs: {
         Row: {
@@ -496,14 +470,8 @@ export type Database = {
         };
         Returns: string;
       };
-      get_luak_year: {
-        Args: Record<PropertyKey, never>;
-        Returns: number;
-      };
-      has_membership: {
-        Args: Record<PropertyKey, never>;
-        Returns: string;
-      };
+      get_luak_year: { Args: never; Returns: number };
+      has_membership: { Args: never; Returns: string };
       update_rental: {
         Args: {
           p_comments: string;
@@ -580,21 +548,48 @@ export type Database = {
       buckets_analytics: {
         Row: {
           created_at: string;
+          deleted_at: string | null;
           format: string;
+          id: string;
+          name: string;
+          type: Database['storage']['Enums']['buckettype'];
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          deleted_at?: string | null;
+          format?: string;
+          id?: string;
+          name: string;
+          type?: Database['storage']['Enums']['buckettype'];
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          deleted_at?: string | null;
+          format?: string;
+          id?: string;
+          name?: string;
+          type?: Database['storage']['Enums']['buckettype'];
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      buckets_vectors: {
+        Row: {
+          created_at: string;
           id: string;
           type: Database['storage']['Enums']['buckettype'];
           updated_at: string;
         };
         Insert: {
           created_at?: string;
-          format?: string;
           id: string;
           type?: Database['storage']['Enums']['buckettype'];
           updated_at?: string;
         };
         Update: {
           created_at?: string;
-          format?: string;
           id?: string;
           type?: Database['storage']['Enums']['buckettype'];
           updated_at?: string;
@@ -603,30 +598,36 @@ export type Database = {
       };
       iceberg_namespaces: {
         Row: {
-          bucket_id: string;
+          bucket_name: string;
+          catalog_id: string;
           created_at: string;
           id: string;
+          metadata: Json;
           name: string;
           updated_at: string;
         };
         Insert: {
-          bucket_id: string;
+          bucket_name: string;
+          catalog_id: string;
           created_at?: string;
           id?: string;
+          metadata?: Json;
           name: string;
           updated_at?: string;
         };
         Update: {
-          bucket_id?: string;
+          bucket_name?: string;
+          catalog_id?: string;
           created_at?: string;
           id?: string;
+          metadata?: Json;
           name?: string;
           updated_at?: string;
         };
         Relationships: [
           {
-            foreignKeyName: 'iceberg_namespaces_bucket_id_fkey';
-            columns: ['bucket_id'];
+            foreignKeyName: 'iceberg_namespaces_catalog_id_fkey';
+            columns: ['catalog_id'];
             isOneToOne: false;
             referencedRelation: 'buckets_analytics';
             referencedColumns: ['id'];
@@ -635,36 +636,48 @@ export type Database = {
       };
       iceberg_tables: {
         Row: {
-          bucket_id: string;
+          bucket_name: string;
+          catalog_id: string;
           created_at: string;
           id: string;
           location: string;
           name: string;
           namespace_id: string;
+          remote_table_id: string | null;
+          shard_id: string | null;
+          shard_key: string | null;
           updated_at: string;
         };
         Insert: {
-          bucket_id: string;
+          bucket_name: string;
+          catalog_id: string;
           created_at?: string;
           id?: string;
           location: string;
           name: string;
           namespace_id: string;
+          remote_table_id?: string | null;
+          shard_id?: string | null;
+          shard_key?: string | null;
           updated_at?: string;
         };
         Update: {
-          bucket_id?: string;
+          bucket_name?: string;
+          catalog_id?: string;
           created_at?: string;
           id?: string;
           location?: string;
           name?: string;
           namespace_id?: string;
+          remote_table_id?: string | null;
+          shard_id?: string | null;
+          shard_key?: string | null;
           updated_at?: string;
         };
         Relationships: [
           {
-            foreignKeyName: 'iceberg_tables_bucket_id_fkey';
-            columns: ['bucket_id'];
+            foreignKeyName: 'iceberg_tables_catalog_id_fkey';
+            columns: ['catalog_id'];
             isOneToOne: false;
             referencedRelation: 'buckets_analytics';
             referencedColumns: ['id'];
@@ -885,6 +898,50 @@ export type Database = {
           },
         ];
       };
+      vector_indexes: {
+        Row: {
+          bucket_id: string;
+          created_at: string;
+          data_type: string;
+          dimension: number;
+          distance_metric: string;
+          id: string;
+          metadata_configuration: Json | null;
+          name: string;
+          updated_at: string;
+        };
+        Insert: {
+          bucket_id: string;
+          created_at?: string;
+          data_type: string;
+          dimension: number;
+          distance_metric: string;
+          id?: string;
+          metadata_configuration?: Json | null;
+          name: string;
+          updated_at?: string;
+        };
+        Update: {
+          bucket_id?: string;
+          created_at?: string;
+          data_type?: string;
+          dimension?: number;
+          distance_metric?: string;
+          id?: string;
+          metadata_configuration?: Json | null;
+          name?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'vector_indexes_bucket_id_fkey';
+            columns: ['bucket_id'];
+            isOneToOne: false;
+            referencedRelation: 'buckets_vectors';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
@@ -906,32 +963,14 @@ export type Database = {
         Args: { _bucket_id: string; _name: string };
         Returns: boolean;
       };
-      extension: {
-        Args: { name: string };
-        Returns: string;
-      };
-      filename: {
-        Args: { name: string };
-        Returns: string;
-      };
-      foldername: {
-        Args: { name: string };
-        Returns: string[];
-      };
-      get_level: {
-        Args: { name: string };
-        Returns: number;
-      };
-      get_prefix: {
-        Args: { name: string };
-        Returns: string;
-      };
-      get_prefixes: {
-        Args: { name: string };
-        Returns: string[];
-      };
+      extension: { Args: { name: string }; Returns: string };
+      filename: { Args: { name: string }; Returns: string };
+      foldername: { Args: { name: string }; Returns: string[] };
+      get_level: { Args: { name: string }; Returns: number };
+      get_prefix: { Args: { name: string }; Returns: string };
+      get_prefixes: { Args: { name: string }; Returns: string[] };
       get_size_by_bucket: {
-        Args: Record<PropertyKey, never>;
+        Args: never;
         Returns: {
           bucket_id: string;
           size: number;
@@ -972,30 +1011,45 @@ export type Database = {
         Args: { bucket_ids: string[]; names: string[] };
         Returns: undefined;
       };
-      operation: {
-        Args: Record<PropertyKey, never>;
-        Returns: string;
-      };
-      search: {
-        Args: {
-          bucketname: string;
-          levels?: number;
-          limits?: number;
-          offsets?: number;
-          prefix: string;
-          search?: string;
-          sortcolumn?: string;
-          sortorder?: string;
-        };
-        Returns: {
-          created_at: string;
-          id: string;
-          last_accessed_at: string;
-          metadata: Json;
-          name: string;
-          updated_at: string;
-        }[];
-      };
+      operation: { Args: never; Returns: string };
+      search:
+        | {
+            Args: {
+              bucketname: string;
+              levels?: number;
+              limits?: number;
+              offsets?: number;
+              prefix: string;
+            };
+            Returns: {
+              created_at: string;
+              id: string;
+              last_accessed_at: string;
+              metadata: Json;
+              name: string;
+              updated_at: string;
+            }[];
+          }
+        | {
+            Args: {
+              bucketname: string;
+              levels?: number;
+              limits?: number;
+              offsets?: number;
+              prefix: string;
+              search?: string;
+              sortcolumn?: string;
+              sortorder?: string;
+            };
+            Returns: {
+              created_at: string;
+              id: string;
+              last_accessed_at: string;
+              metadata: Json;
+              name: string;
+              updated_at: string;
+            }[];
+          };
       search_legacy_v1: {
         Args: {
           bucketname: string;
@@ -1036,30 +1090,48 @@ export type Database = {
           updated_at: string;
         }[];
       };
-      search_v2: {
-        Args: {
-          bucket_name: string;
-          levels?: number;
-          limits?: number;
-          prefix: string;
-          sort_column?: string;
-          sort_column_after?: string;
-          sort_order?: string;
-          start_after?: string;
-        };
-        Returns: {
-          created_at: string;
-          id: string;
-          key: string;
-          last_accessed_at: string;
-          metadata: Json;
-          name: string;
-          updated_at: string;
-        }[];
-      };
+      search_v2:
+        | {
+            Args: {
+              bucket_name: string;
+              levels?: number;
+              limits?: number;
+              prefix: string;
+              start_after?: string;
+            };
+            Returns: {
+              created_at: string;
+              id: string;
+              key: string;
+              metadata: Json;
+              name: string;
+              updated_at: string;
+            }[];
+          }
+        | {
+            Args: {
+              bucket_name: string;
+              levels?: number;
+              limits?: number;
+              prefix: string;
+              sort_column?: string;
+              sort_column_after?: string;
+              sort_order?: string;
+              start_after?: string;
+            };
+            Returns: {
+              created_at: string;
+              id: string;
+              key: string;
+              last_accessed_at: string;
+              metadata: Json;
+              name: string;
+              updated_at: string;
+            }[];
+          };
     };
     Enums: {
-      buckettype: 'STANDARD' | 'ANALYTICS';
+      buckettype: 'STANDARD' | 'ANALYTICS' | 'VECTOR';
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -1208,7 +1280,7 @@ export const Constants = {
   },
   storage: {
     Enums: {
-      buckettype: ['STANDARD', 'ANALYTICS'],
+      buckettype: ['STANDARD', 'ANALYTICS', 'VECTOR'],
     },
   },
 } as const;
