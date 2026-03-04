@@ -32,12 +32,9 @@
     );
   }
 
-  function filterMember(
-    options: { name: string; id: string; hasPaid: boolean }[],
-    input: string | undefined,
-  ) {
-    if (input === undefined) return options;
-    return options.filter(
+  function filterMember(input: string | undefined) {
+    if (input === undefined) return selectableUsers.value;
+    return selectableUsers.value?.filter(
       (option) =>
         fuzzySearch(option.name, input) > 0 ||
         matchFirstLetters(option.name, input),
@@ -72,14 +69,13 @@
   <div class="flex flex-col">
     <InputSearchableSelect
       label="Member name *"
-      :options="selectableUsers"
       placeholder="select member"
-      :search-fn="filterMember"
+      :options-provider="filterMember"
       :error-message="errorMessage"
       :selected-item="selectedUser"
       loading-message="Loading members"
       :disable="disable"
-      @selected="onSelect">
+      @on-select="onSelect">
       <template #item="{ data }">
         <div
           class="px-3 py-1 rounded-md w-full min-w-max"

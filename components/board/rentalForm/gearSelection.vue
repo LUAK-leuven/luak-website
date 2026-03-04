@@ -48,12 +48,9 @@
       );
   });
 
-  function filterGear(
-    options: GearInfo[],
-    input: string | undefined,
-  ): GearInfo[] {
-    if (input === undefined) return options;
-    return options
+  function filterGear(input: string | undefined): GearInfo[] {
+    if (input === undefined) return availableGearList.value;
+    return availableGearList.value
       .map((option) => [option, fuzzySearch(option.name, input)] as const)
       .filter((x) => x[1] > 0)
       .sort((a, b) => b[1] - a[1])
@@ -79,10 +76,9 @@
 
 <template>
   <InputSearchableSelect
-    :options="availableGearList"
     :placeholder="placeholder"
-    :search-fn="filterGear"
-    @selected="addSelection">
+    :options-provider="filterGear"
+    @on-select="addSelection">
     <template #item="{ data }">
       <div
         class="px-3 py-2 rounded-md w-full flex flex-row justify-between gap-6 shadow-sm"
