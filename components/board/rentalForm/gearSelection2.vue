@@ -62,13 +62,18 @@
       }
     } else {
       const gearItem = getBy(props.allGear, 'name', name);
-      selectedGear.value.push({
-        name: gearItem.name,
-        selectedAmount: defaultAmount,
-        availableAmount: gearItem.availableAmount,
-        totalAmount: gearItem.totalAmount,
-        depositFee: gearItem.depositFee,
-      });
+      const selectedItem = findBy(selectedGear.value, 'name', name);
+      if (selectedItem === undefined) {
+        selectedGear.value.push({
+          name: gearItem.name,
+          selectedAmount: defaultAmount,
+          availableAmount: gearItem.availableAmount,
+          totalAmount: gearItem.totalAmount,
+          depositFee: gearItem.depositFee,
+        });
+      } else {
+        selectedItem.selectedAmount += defaultAmount;
+      }
     }
   };
 
