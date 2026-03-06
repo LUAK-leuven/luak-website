@@ -61,7 +61,7 @@
         <ul class="p-2 bg-base-200 rounded-t-none w-52">
           <li>
             <NuxtLink to="/board/subscriptions-overview">
-              👥 Subscriptions
+              👥 Members overview
             </NuxtLink>
           </li>
           <li>
