@@ -527,6 +527,32 @@ class GearService {
       paymentMethod: rental.payment_method,
     }));
   }
+
+  public async getCompositeGearItems() {
+    const { data, error } = await this.supabase
+      .from('CompositeGearItems')
+      .select(
+        `
+        name,
+        CompositeGearItems_GearItems (
+          gear_item_id,
+          amount
+        )
+      `,
+      );
+    if (data === null) {
+      if (error) console.warn('getCompositeGearItems: ', error);
+      return [];
+    }
+
+    return data.map((it) => ({
+      name: it.name,
+      gearItemIds: it.CompositeGearItems_GearItems.map((it) => ({
+        id: it.gear_item_id,
+        amount: it.amount,
+      })),
+    }));
+  }
 }
 
 let gearServiceInstance: GearService | undefined = undefined;

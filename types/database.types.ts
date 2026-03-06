@@ -57,6 +57,54 @@ export type Database = {
           },
         ];
       };
+      CompositeGearItems: {
+        Row: {
+          id: string;
+          name: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+        };
+        Relationships: [];
+      };
+      CompositeGearItems_GearItems: {
+        Row: {
+          amount: number;
+          composite_gear_item_id: string;
+          gear_item_id: string;
+        };
+        Insert: {
+          amount: number;
+          composite_gear_item_id: string;
+          gear_item_id: string;
+        };
+        Update: {
+          amount?: number;
+          composite_gear_item_id?: string;
+          gear_item_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'CompositeGearItems_GearItems_composite_gear_item_id_fkey';
+            columns: ['composite_gear_item_id'];
+            isOneToOne: false;
+            referencedRelation: 'CompositeGearItems';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'CompositeGearItems_GearItems_gear_item_id_fkey';
+            columns: ['gear_item_id'];
+            isOneToOne: false;
+            referencedRelation: 'GearItems';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       GearInventory: {
         Row: {
           amount: number;

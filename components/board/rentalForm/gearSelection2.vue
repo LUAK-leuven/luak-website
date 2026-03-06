@@ -6,7 +6,6 @@
 
   const emit = defineEmits<{
     computedDeposit: [value: number];
-    // 'update:modelValue': [selectedGear: { id: string; amount: number }[]];
   }>();
 
   const model = defineModel<{ id: string; amount: number }[]>({ default: [] });
@@ -82,13 +81,6 @@
         0,
       );
       emit('computedDeposit', depositFee);
-      // emit(
-      //   'update:modelValue',
-      //   selectedGear.map((gearItem) => ({
-      //     id: getBy(props.allGear, 'name', gearItem.name).id,
-      //     amount: gearItem.selectedAmount,
-      //   })),
-      // );
       model.value = selectedGear.map((gearItem) => ({
         id: getBy(props.allGear, 'name', gearItem.name).id,
         amount: gearItem.selectedAmount,

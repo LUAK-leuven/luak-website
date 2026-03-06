@@ -24,6 +24,18 @@
     ) => Promise<{ error: string | undefined }>;
   }>();
 
+  const { data } = await useAsyncData(
+    async () => await gearService().getCompositeGearItems(),
+  );
+  const compositeGearItems = computed(() =>
+    Object.fromEntries(
+      data.value?.map((it) => [
+        it.name,
+        it.gearItemIds.map((it) => ({ itemId: it.id, amount: it.amount })),
+      ]) ?? [],
+    ),
+  );
+
   const selectionFrom = (
     selection: { id: string; name: string; totalAmount: number }[],
   ) =>
@@ -66,62 +78,49 @@
       .default([])
       .required();
 
-  const formSchema = yup
-    .object({
-      memberId: yup.string().when('contactInfo', {
-        is: (x: unknown) => {
-          return x === undefined;
+  const formSchema = yup.object({
+    memberId: yup.string().when('contactInfo', {
+      is: (x: unknown) => {
+        return x === undefined;
+      },
+      then: (s) => s.required(),
+    }),
+    dateBorrow: yup.string().required().label('date borrow'),
+    dateReturn: yup
+      .string()
+      .required()
+      .test(
+        'isAfter',
+        'Return date must be after borrow date',
+        (date, context) => {
+          return context.parent.dateBorrow < date;
         },
-        then: (s) => s.required(),
+      )
+      .label('return date'),
+    gear: selectionFrom(props.allGear),
+    topos: selectionFrom(props.allTopos),
+    depositFee: yup.number().required().min(0),
+    paymentMethod: yup.string<'transfer' | 'cash'>().required(),
+    contactInfo: yup
+      .object({
+        fullName: yup.string().required(),
+        email: yup.string().email(),
+        phone: yup_phone,
+      })
+      .optional()
+      .default(undefined)
+      .test('email and phone', function (contact) {
+        if (contact && !contact.email && !contact.phone) {
+          return this.createError({
+            path: `${this.path}`,
+            message: `One of email or phone number is required`,
+          });
+        }
+        return true;
       }),
-      dateBorrow: yup.string().required().label('date borrow'),
-      dateReturn: yup
-        .string()
-        .required()
-        .test(
-          'isAfter',
-          'Return date must be after borrow date',
-          (date, context) => {
-            return context.parent.dateBorrow < date;
-          },
-        )
-        .label('return date'),
-      gear: selectionFrom(props.allGear),
-      topos: selectionFrom(props.allTopos),
-      depositFee: yup.number().required().min(0),
-      paymentMethod: yup.string<'transfer' | 'cash'>().required(),
-      contactInfo: yup
-        .object({
-          fullName: yup.string().required(),
-          email: yup.string().email(),
-          phone: yup_phone,
-        })
-        .optional()
-        .default(undefined)
-        .test('email and phone', function (contact) {
-          if (contact && !contact.email && !contact.phone) {
-            return this.createError({
-              path: `${this.path}`,
-              message: `One of email or phone number is required`,
-            });
-          }
-          return true;
-        }),
-      markAsReserved: yup.bool().default(false),
-      comments: yup.string(),
-    })
-    .test('require gear', function (value) {
-      if (
-        Object.keys(value.gear).length + Object.keys(value.topos).length ==
-        0
-      ) {
-        return this.createError({
-          path: `${this.path}topos`,
-          message: `You must select gear for the rental`,
-        });
-      }
-      return true;
-    });
+    markAsReserved: yup.bool().default(false),
+    comments: yup.string(),
+  });
 
   const { meta, handleSubmit, errors, validateField, values, defineField } =
     useForm({
@@ -133,7 +132,7 @@
       validateOnMount: false,
     });
 
-  const [selectedGear, selectedGearProps] = defineField('gear');
+  const [selectedGear] = defineField('gear');
 
   const onSubmit = handleSubmit(async (formState) => {
     const { error } = await props.handleSubmit({
@@ -216,13 +215,7 @@
     <BoardRentalFormGearSelection2
       v-model="selectedGear"
       :all-gear="allGear"
-      :composite-gear="{
-        AQD: [
-          { itemId: 'a7d54980-cda7-414c-b32d-96f8a9ab9588', amount: 1 },
-          { itemId: '09d49c65-a206-4464-82da-5eb7c4b740e6', amount: 2 },
-        ],
-      }"
-      v-bind="selectedGearProps"
+      :composite-gear="compositeGearItems"
       @computed-deposit="(value) => (computedGearDeposit = value)" />
     <div class="h-4"></div>
     <BoardRentalFormGearSelection
@@ -264,6 +257,7 @@
     </div>
   </form>
 
-  <p>SelectedGear: {{ selectedGear }}</p>
+  <!-- <p>SelectedGear: {{ selectedGear }}</p>
   <p>Values: {{ values }}</p>
+  <p>Comp: {{ data }}</p> -->
 </template>
