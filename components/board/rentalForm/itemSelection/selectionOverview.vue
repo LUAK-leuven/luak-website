@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   defineProps<{
-    selectedGear: {
+    selectedItems: {
       name: string;
       selectedAmount: number;
       availableAmount: number;
@@ -18,7 +18,7 @@
 <template>
   <div class="flex flex-col gap-1">
     <div
-      v-for="item in selectedGear"
+      v-for="item in selectedItems"
       :key="item.name"
       class="p-1 rounded-2xl w-full grid grid-cols-[max-content_1fr_1fr_min-content] items-center gap-y-3 bg-stone-200"
       :class="item.selectedAmount === 0 ? 'bg-red-100' : ''">
@@ -51,6 +51,5 @@
         ✕
       </button>
     </div>
-    <p>selectedGear: {{ selectedGear }}</p>
   </div>
 </template>

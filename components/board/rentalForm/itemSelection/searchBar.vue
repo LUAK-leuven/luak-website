@@ -1,25 +1,23 @@
 <script setup lang="ts">
   const props = defineProps<{
-    availableGear: {
+    availableItems: {
       name: string;
       availableAmount: number;
     }[];
+    placeholder: string;
   }>();
 
   const emit = defineEmits<{
-    onSelect: [gearItemId: string];
+    onSelect: [itemId: string];
   }>();
 
-  const filterGear = (searchTerm: string | undefined) => {
-    if (searchTerm === undefined) return props.availableGear;
-    return props.availableGear
-      .map(
-        (gearItem) =>
-          [gearItem, fuzzySearch(gearItem.name, searchTerm)] as const,
-      )
-      .filter((x) => x[1] > 0)
+  const filterItemsByName = (searchTerm: string | undefined) => {
+    if (searchTerm === undefined) return props.availableItems;
+    return props.availableItems
+      .map((it) => [it, fuzzySearch(it.name, searchTerm)] as const)
+      .filter((it) => it[1] > 0)
       .sort((a, b) => b[1] - a[1])
-      .map((x) => x[0]);
+      .map((it) => it[0]);
   };
 
   const addSelection = (item: { name: string; availableAmount: number }) => {
@@ -28,8 +26,8 @@
 </script>
 <template>
   <InputSearchableSelect
-    placeholder="Search gear to add ..."
-    :options-provider="filterGear"
+    :placeholder="placeholder"
+    :options-provider="filterItemsByName"
     @on-select="addSelection">
     <template #item="{ data }">
       <div

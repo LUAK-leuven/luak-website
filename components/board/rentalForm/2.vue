@@ -133,6 +133,7 @@
     });
 
   const [selectedGear] = defineField('gear');
+  const [selectedTopos] = defineField('topos');
 
   const onSubmit = handleSubmit(async (formState) => {
     const { error } = await props.handleSubmit({
@@ -212,17 +213,18 @@
 
     <hr />
     <h2>Gear list</h2>
-    <BoardRentalFormGearSelection2
+    <BoardRentalFormItemSelection
       v-model="selectedGear"
-      :all-gear="allGear"
-      :composite-gear="compositeGearItems"
+      placeholder="Search gear to add ..."
+      :all-items="allGear"
+      :composite-items="compositeGearItems"
       @computed-deposit="(value) => (computedGearDeposit = value)" />
     <div class="h-4"></div>
-    <BoardRentalFormGearSelection
-      :all-gear="allTopos"
-      field-name="topos"
-      placeholder="select topos"
-      @computed-deposit-fee="(value) => (computedTopoDeposit = value)" />
+    <BoardRentalFormItemSelection
+      v-model="selectedTopos"
+      :all-items="allTopos"
+      placeholder="Search topos ..."
+      @computed-deposit="(value) => (computedTopoDeposit = value)" />
 
     <hr class="mt-4" />
 
