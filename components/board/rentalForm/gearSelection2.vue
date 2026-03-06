@@ -6,7 +6,10 @@
 
   const emit = defineEmits<{
     computedDeposit: [value: number];
+    // 'update:modelValue': [selectedGear: { id: string; amount: number }[]];
   }>();
+
+  const model = defineModel<{ id: string; amount: number }[]>({ default: [] });
 
   const availableGear = computed(() =>
     props.allGear
@@ -36,10 +39,7 @@
   ) =>
     Math.min(
       ...subItems.map(({ itemId, amount }) => {
-        const gearItem = props.allGear.find(
-          (gearItem) => gearItem.id === itemId,
-        );
-        if (gearItem === undefined) throw Error('Ooopsie, its broken ...');
+        const gearItem = getBy(props.allGear, 'id', itemId);
         return Math.floor(gearItem.availableAmount / amount);
       }),
     );
@@ -73,14 +73,29 @@
     }
   };
 
-  watch(selectedGear, (selectedGear) => {
-    const depositFee = selectedGear.reduce(
-      (sum, { depositFee, selectedAmount }) =>
-        sum + depositFee * selectedAmount,
-      0,
-    );
-    emit('computedDeposit', depositFee);
-  });
+  watch(
+    selectedGear,
+    (selectedGear) => {
+      const depositFee = selectedGear.reduce(
+        (sum, { depositFee, selectedAmount }) =>
+          sum + depositFee * selectedAmount,
+        0,
+      );
+      emit('computedDeposit', depositFee);
+      // emit(
+      //   'update:modelValue',
+      //   selectedGear.map((gearItem) => ({
+      //     id: getBy(props.allGear, 'name', gearItem.name).id,
+      //     amount: gearItem.selectedAmount,
+      //   })),
+      // );
+      model.value = selectedGear.map((gearItem) => ({
+        id: getBy(props.allGear, 'name', gearItem.name).id,
+        amount: gearItem.selectedAmount,
+      }));
+    },
+    { deep: true },
+  );
 </script>
 
 <template>

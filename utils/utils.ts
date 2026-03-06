@@ -61,7 +61,9 @@ export function getBy<T extends Record<K, V>, K extends keyof T, V>(
 ): T {
   const res = arr.find((x) => x[key] === value);
   if (res === undefined)
-    throw Error(`Could not find by ${key} with value ${value} in ${arr}`);
+    throw Error(
+      `Could not find by ${key} with value ${value} in ${arr.join()}`,
+    );
   return res;
 }
 

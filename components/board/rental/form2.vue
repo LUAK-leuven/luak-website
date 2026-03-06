@@ -123,14 +123,17 @@
       return true;
     });
 
-  const { meta, handleSubmit, errors, validateField, values } = useForm({
-    validationSchema: toTypedSchema(formSchema),
-    initialValues: {
-      boardMemberId: props.boardMember.name,
-      ...props.initialValues,
-    },
-    validateOnMount: false,
-  });
+  const { meta, handleSubmit, errors, validateField, values, defineField } =
+    useForm({
+      validationSchema: toTypedSchema(formSchema),
+      initialValues: {
+        boardMemberId: props.boardMember.name,
+        ...props.initialValues,
+      },
+      validateOnMount: false,
+    });
+
+  const [selectedGear, selectedGearProps] = defineField('gear');
 
   const onSubmit = handleSubmit(async (formState) => {
     const { error } = await props.handleSubmit({
@@ -211,6 +214,7 @@
     <hr />
     <h2>Gear list</h2>
     <BoardRentalFormGearSelection2
+      v-model="selectedGear"
       :all-gear="allGear"
       :composite-gear="{
         AQD: [
@@ -218,6 +222,7 @@
           { itemId: '09d49c65-a206-4464-82da-5eb7c4b740e6', amount: 2 },
         ],
       }"
+      v-bind="selectedGearProps"
       @computed-deposit="(value) => (computedGearDeposit = value)" />
     <div class="h-4"></div>
     <BoardRentalFormGearSelection
@@ -259,6 +264,6 @@
     </div>
   </form>
 
-  <!-- <p>Topos: {{ allTopos }}</p>
-  <p>TopoMap: {{ topoMap }}</p> -->
+  <p>SelectedGear: {{ selectedGear }}</p>
+  <p>Values: {{ values }}</p>
 </template>

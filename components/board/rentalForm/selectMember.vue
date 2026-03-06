@@ -10,9 +10,7 @@
     },
   );
 
-  const users = await useAsyncData('users', (_nuxtApp) =>
-    userService().getAllUsers(),
-  );
+  const users = await useAsyncData('users', () => userService().getAllUsers());
   const selectableUsers = computed(() =>
     users.data.value?.map((user) => ({
       name: user.first_name + ' ' + user.last_name,
