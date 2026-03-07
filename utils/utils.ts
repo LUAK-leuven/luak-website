@@ -1,3 +1,5 @@
+import type { K } from 'vue-router/dist/router-CWoNjPRp.mjs';
+
 export function sum(array: number[]): number {
   return array.reduce((sum, current) => sum + current, 0);
 }
@@ -50,4 +52,29 @@ export function groupBy<T, K extends keyof any>(
     },
     {} as Record<K, T[]>,
   );
+}
+
+export function getBy<T extends Record<K, V>, K extends keyof T, V>(
+  arr: T[],
+  key: K,
+  value: V,
+): T {
+  const res = arr.find((x) => x[key] === value);
+  if (res === undefined)
+    throw Error(
+      `Could not find by ${key} with value ${value} in ${arr.join()}`,
+    );
+  return res;
+}
+
+export function findBy<T extends Record<K, V>, K extends keyof T, V>(
+  arr: T[],
+  key: K,
+  value: V,
+): T | undefined {
+  return arr.find((x) => x[key] === value);
+}
+
+export async function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

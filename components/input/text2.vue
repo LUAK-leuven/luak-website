@@ -1,12 +1,11 @@
 <script setup lang="ts">
-  import { useField } from 'vee-validate';
   import type { InputTypeHTMLAttribute } from 'vue';
 
-  const props = withDefaults(
+  withDefaults(
     defineProps<{
       label?: string | undefined;
       type?: InputTypeHTMLAttribute;
-      name: string;
+      error?: string;
       placeholder?: string;
       disabled?: boolean;
       autoFillWithPlaceholder?: boolean;
@@ -14,27 +13,19 @@
     }>(),
     {
       type: 'text',
-      placeholder: 'text',
+      placeholder: '',
       disabled: false,
       autoFillWithPlaceholder: false,
       label: undefined,
       round: false,
+      error: undefined,
     },
   );
 
-  const model = defineModel<string>();
+  const model = defineModel<string | number>();
 
-  const { value, errorMessage } = useField<string | undefined>(
-    () => props.name,
-  );
-  effect(() => {
-    if (value.value === '') value.value = undefined;
-    model.value = value.value;
-  });
-  onBeforeMount(() => {
-    if (model.value !== undefined) {
-      value.value = model.value;
-    }
+  watch(model, (value) => {
+    if (value === '') model.value = undefined;
   });
 </script>
 
@@ -48,17 +39,14 @@
       :class="{ 'bg-gray-300': disabled, ' rounded-full': round }">
       <slot name="label1" />
       <input
-        v-model="value"
+        v-model="model"
         class="w-full"
         :class="{ 'bg-gray-300': disabled }"
         :type="type"
         :placeholder="placeholder"
         :disabled="disabled"
-        @focus="
-          if (autoFillWithPlaceholder && value === undefined)
-            value = placeholder;
-        " />
+        @focus="if (autoFillWithPlaceholder && !model) model = placeholder;" />
     </label>
-    <span v-if="errorMessage" class="text-error">{{ errorMessage }}</span>
+    <span v-if="error" class="text-error">{{ error }}</span>
   </div>
 </template>

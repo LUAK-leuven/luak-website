@@ -99,109 +99,130 @@ export type GearDetails = {
 class GearService {
   private readonly supabase = useSupabaseClient<Database>();
 
-  public async getPublicGearInfo(): Promise<PublicGearInfo[]> {
-    const { data: gear } = await this.supabase
-      .from('GearItems')
-      .select(
-        `
-      id,
-      name,
-      deposit_fee,
-      GearInventory (
-        amount
-      ),
-      RentedGear (
-        actual_amount
-      )
-    `,
-      )
-      .gt('RentedGear.actual_amount', 0)
-      .eq('GearInventory.status', 'available');
-    if (gear === null) return [];
+  public async getPublicGearInfo() {
+    return useAsyncData(
+      'allGear',
+      async () => {
+        const { data: gear } = await this.supabase
+          .from('GearItems')
+          .select(
+            `
+            id,
+            name,
+            deposit_fee,
+            GearInventory (
+              amount
+            ),
+            RentedGear (
+              actual_amount
+            )
+          `,
+          )
+          .gt('RentedGear.actual_amount', 0)
+          .eq('GearInventory.status', 'available');
+        if (gear === null) return [];
 
-    return gear.map((gearItem) => {
-      const totalAmount = sumOf(gearItem.GearInventory, 'amount');
-      return {
-        id: gearItem.id,
-        name: gearItem.name,
-        totalAmount: totalAmount,
-        availableAmount:
-          totalAmount - sumOf(gearItem.RentedGear, 'actual_amount'),
-        depositFee: gearItem.deposit_fee,
-      };
-    });
+        return gear.map((gearItem) => {
+          const totalAmount = sumOf(gearItem.GearInventory, 'amount');
+          return {
+            id: gearItem.id,
+            name: gearItem.name,
+            totalAmount: totalAmount,
+            availableAmount:
+              totalAmount - sumOf(gearItem.RentedGear, 'actual_amount'),
+            depositFee: gearItem.deposit_fee,
+          } satisfies PublicGearInfo;
+        });
+      },
+      { lazy: true },
+    );
   }
 
-  public async getGearInventory(): Promise<GearDetails[]> {
-    const { data, error } = await this.supabase
-      .from('GearInventory')
-      .select(
-        `
-        id,
-        details,
-        purchase_date,
-        production_date,
-        amount,
-        GearItems(
-          name,
-          RentedGear(
-            actual_amount
-          ),
-          lifespan
-        )
-        `,
-      )
-      .eq('status', 'available');
-    if (data === null) {
-      console.warn(error);
-      return [];
-    }
+  public async getGearInventory() {
+    return useAsyncData(
+      'gearInventory',
+      async () => {
+        const { data, error } = await this.supabase
+          .from('GearInventory')
+          .select(
+            `
+          id,
+          details,
+          purchase_date,
+          production_date,
+          amount,
+          GearItems(
+            name,
+            RentedGear(
+              actual_amount
+            ),
+            lifespan
+          )
+          `,
+          )
+          .eq('status', 'available');
+        if (data === null) {
+          console.warn(error);
+          return [];
+        }
 
-    const gear = Object.entries(groupBy(data, (x) => x.GearItems?.name ?? ''));
+        const gear = Object.entries(
+          groupBy(data, (x) => x.GearItems?.name ?? ''),
+        );
 
-    return gear.map(([k, v]) => ({
-      lifespan: v[0].GearItems?.lifespan ?? 0,
-      name: k,
-      totalAmount: sumOf(v, 'amount'),
-      availableAmount:
-        sumOf(v, 'amount') -
-        sumOf(v[0].GearItems?.RentedGear ?? [], 'actual_amount'),
-      gearInventory: v.map((x) => ({
-        id: x.id,
-        details: x.details,
-        purchaseDate: x.purchase_date ?? undefined,
-        productionDate: x.production_date ?? undefined,
-        amount: x.amount,
-      })),
-    }));
+        return gear.map(([k, v]) => ({
+          lifespan: v[0].GearItems?.lifespan ?? 0,
+          name: k,
+          totalAmount: sumOf(v, 'amount'),
+          availableAmount:
+            sumOf(v, 'amount') -
+            sumOf(v[0].GearItems?.RentedGear ?? [], 'actual_amount'),
+          gearInventory: v.map((x) => ({
+            id: x.id,
+            details: x.details,
+            purchaseDate: x.purchase_date ?? undefined,
+            productionDate: x.production_date ?? undefined,
+            amount: x.amount,
+          })),
+        }));
+      },
+      { lazy: true },
+    );
   }
 
-  public async getAllTopos(): Promise<TopoSumary[]> {
-    const { data: topos, error } = await this.supabase
-      .from('Topos')
-      .select(
-        `
-      id,
-      title,
-      amount,
-      RentedTopos (
-        actual_amount
-      )
-      `,
-      )
-      .gt('RentedTopos.actual_amount', 0);
+  public async getAllTopos() {
+    return useAsyncData(
+      'allTopos',
+      async () => {
+        const { data: topos, error } = await this.supabase
+          .from('Topos')
+          .select(
+            `
+            id,
+            title,
+            amount,
+            RentedTopos (
+              actual_amount
+            )
+            `,
+          )
+          .gt('RentedTopos.actual_amount', 0);
 
-    if (topos === null) {
-      console.warn('getAllTopos', error);
-      return [];
-    }
+        if (topos === null) {
+          console.warn('getAllTopos', error);
+          return [];
+        }
 
-    return topos.map((topo) => ({
-      id: topo.id,
-      title: topo.title,
-      totalAmount: topo.amount,
-      availableAmount: topo.amount - sumOf(topo.RentedTopos, 'actual_amount'),
-    }));
+        return topos.map((topo) => ({
+          id: topo.id,
+          title: topo.title,
+          totalAmount: topo.amount,
+          availableAmount:
+            topo.amount - sumOf(topo.RentedTopos, 'actual_amount'),
+        }));
+      },
+      { lazy: true },
+    );
   }
 
   public async saveRental(
@@ -232,132 +253,142 @@ class GearService {
     return { id: data ?? undefined, error: error?.message };
   }
 
-  public async getRentals(): Promise<RentalSummary[]> {
-    const { data, error } = await this.supabase.from('Rentals').select(
-      `
-      id,
-      member:Users!Rentals_member_id_fkey (
-        first_name,
-        last_name
-      ),
-      date_return,
-      date_borrow,
-      status,
-      contact_info
-      `,
+  public async getRentals() {
+    return useAsyncData(
+      'rentals',
+      async () => {
+        const { data, error } = await this.supabase.from('Rentals').select(
+          `
+          id,
+          member:Users!Rentals_member_id_fkey (
+            first_name,
+            last_name
+          ),
+          date_return,
+          date_borrow,
+          status,
+          contact_info
+          `,
+        );
+
+        if (error || data === null) {
+          console.warn('failed to load rentals', error);
+          return [];
+        }
+
+        return data.map((rental) => {
+          const contactInfo: ContactInfo = rental.contact_info
+            ? JSON.parse(rental.contact_info)
+            : undefined;
+          return {
+            id: rental.id,
+            memberName: rental.member
+              ? getFullName(rental.member)
+              : contactInfo
+                ? contactInfo.fullName
+                : 'Failed to load name',
+            dateReturn: rental.date_return,
+            dateBorrow: rental.date_borrow,
+            status: rental.status,
+          };
+        });
+      },
+      { lazy: true },
     );
-
-    if (error || data === null) {
-      console.warn('failed to load rentals', error);
-      return [];
-    }
-
-    return data.map((rental) => {
-      const contactInfo: ContactInfo = rental.contact_info
-        ? JSON.parse(rental.contact_info)
-        : undefined;
-      return {
-        id: rental.id,
-        memberName: rental.member
-          ? getFullName(rental.member)
-          : contactInfo
-            ? contactInfo.fullName
-            : 'Failed to load name',
-        dateReturn: rental.date_return,
-        dateBorrow: rental.date_borrow,
-        status: rental.status,
-      };
-    });
   }
 
-  public async getRental(
-    rental_id: string,
-  ): Promise<RentalDetails | undefined> {
-    const { data: rental, error } = await this.supabase
-      .from('Rentals')
-      .select(
-        `
-        id,
-        board_member:Users!Rentals_board_member_id_fkey(
-          first_name,
-          last_name
-        ),
-        member:Users!Rentals_member_id_fkey(
-          first_name,
-          last_name,
-          email,
-          phone_number,
-          id
-        ),
-        date_borrow,
-        date_return,
-        deposit,
-        deposit_returned,
-        payment_method,
-        status,
-        RentedGear(
-          GearItems(
-            id,
-            name
+  public async getRental(rental_id: string) {
+    return useAsyncData(
+      `rental-${rental_id}`,
+      async () => {
+        const { data: rental, error } = await this.supabase
+          .from('Rentals')
+          .select(
+            `
+          id,
+          board_member:Users!Rentals_board_member_id_fkey(
+            first_name,
+            last_name
           ),
-          rented_amount,
-          actual_amount
-        ),
-        RentedTopos(
-          Topos(
-            id,
-            title
+          member:Users!Rentals_member_id_fkey(
+            first_name,
+            last_name,
+            email,
+            phone_number,
+            id
           ),
-          rented_amount,
-          actual_amount
-        ),
-        contact_info,
-        comments
-        `,
-      )
-      .eq('id', rental_id)
-      .single();
+          date_borrow,
+          date_return,
+          deposit,
+          deposit_returned,
+          payment_method,
+          status,
+          RentedGear(
+            GearItems(
+              id,
+              name
+            ),
+            rented_amount,
+            actual_amount
+          ),
+          RentedTopos(
+            Topos(
+              id,
+              title
+            ),
+            rented_amount,
+            actual_amount
+          ),
+          contact_info,
+          comments
+          `,
+          )
+          .eq('id', rental_id)
+          .single();
 
-    if (error || rental === null) {
-      console.warn('failed to load rentals', error);
-      return undefined;
-    }
-
-    const contactInfo: ContactInfo = rental.member
-      ? {
-          fullName: getFullName(rental.member),
-          email: rental.member.email,
-          phoneNumber: rental.member.phone_number,
-          id: rental.member.id,
+        if (error || rental === null) {
+          console.warn('failed to load rentals', error);
+          return undefined;
         }
-      : rental.contact_info
-        ? JSON.parse(rental.contact_info)
-        : { fullName: 'Failed to load name' };
 
-    return {
-      id: rental.id,
-      member: contactInfo,
-      boardMember: getFullName(rental.board_member!),
-      dateBorrow: rental.date_borrow,
-      dateReturn: rental.date_return,
-      depositFee: rental.deposit,
-      depositReturned: rental.deposit_returned,
-      gear: rental.RentedGear.map((gearItem) => ({
-        gearItemId: gearItem.GearItems!.id,
-        name: gearItem.GearItems!.name,
-        rentedAmount: gearItem.rented_amount,
-        actualAmount: gearItem.actual_amount,
-      })),
-      topos: rental.RentedTopos.map((topo) => ({
-        topoId: topo.Topos!.id,
-        title: topo.Topos!.title,
-        rentedAmount: topo.rented_amount,
-        actualAmount: topo.actual_amount,
-      })),
-      paymentMethod: rental.payment_method,
-      status: rental.status,
-      comments: rental.comments ?? undefined,
-    };
+        const contactInfo: ContactInfo = rental.member
+          ? {
+              fullName: getFullName(rental.member),
+              email: rental.member.email,
+              phoneNumber: rental.member.phone_number,
+              id: rental.member.id,
+            }
+          : rental.contact_info
+            ? JSON.parse(rental.contact_info)
+            : { fullName: 'Failed to load name' };
+
+        return {
+          id: rental.id,
+          member: contactInfo,
+          boardMember: getFullName(rental.board_member!),
+          dateBorrow: rental.date_borrow,
+          dateReturn: rental.date_return,
+          depositFee: rental.deposit,
+          depositReturned: rental.deposit_returned,
+          gear: rental.RentedGear.map((gearItem) => ({
+            gearItemId: gearItem.GearItems!.id,
+            name: gearItem.GearItems!.name,
+            rentedAmount: gearItem.rented_amount,
+            actualAmount: gearItem.actual_amount,
+          })),
+          topos: rental.RentedTopos.map((topo) => ({
+            topoId: topo.Topos!.id,
+            title: topo.Topos!.title,
+            rentedAmount: topo.rented_amount,
+            actualAmount: topo.actual_amount,
+          })),
+          paymentMethod: rental.payment_method,
+          status: rental.status,
+          comments: rental.comments ?? undefined,
+        };
+      },
+      { lazy: true },
+    );
   }
 
   public async updateRental(rentalUpdate: RentalUpdate): Promise<boolean> {
@@ -406,126 +437,102 @@ class GearService {
     return error === null;
   }
 
-  public async getActiveRentalsForUser(
-    userId: string,
-  ): Promise<PublicRentalDetails[] | undefined> {
-    const { data: rentals, error } = await this.supabase
-      .from('Rentals')
-      .select(
-        `
-        id,
-        date_borrow,
-        date_return,
-        deposit,
-        deposit_returned,
-        payment_method,
-        RentedGear(
-          GearItems(
-            id,
-            name
+  public async getRentalsForUser(userId: string) {
+    return useAsyncData(
+      `rentalsForUser-${userId}`,
+      async () => {
+        const { data: rentals, error } = await this.supabase
+          .from('Rentals')
+          .select(
+            `
+          id,
+          date_borrow,
+          date_return,
+          deposit,
+          deposit_returned,
+          payment_method,
+          status,
+          RentedGear(
+            GearItems(
+              id,
+              name
+            ),
+            rented_amount,
+            actual_amount
           ),
-          rented_amount,
-          actual_amount
-        ),
-        RentedTopos(
-          Topos(
-            id,
-            title
-          ),
-          rented_amount,
-          actual_amount
-        )
-        `,
-      )
-      .eq('member_id', userId)
-      .neq('status', 'returned');
+          RentedTopos(
+            Topos(
+              id,
+              title
+            ),
+            rented_amount,
+            actual_amount
+          )
+          `,
+          )
+          .eq('member_id', userId);
 
-    if (error || rentals === null) {
-      console.warn('failed to load rentals', error);
-      return undefined;
-    }
+        if (error || rentals === null) {
+          console.warn('failed to load rentals', error);
+          return undefined;
+        }
 
-    return rentals.map((rental) => ({
-      id: rental.id,
-      dateBorrow: rental.date_borrow,
-      dateReturn: rental.date_return,
-      depositFee: rental.deposit,
-      depositReturned: rental.deposit_returned,
-      gear: rental.RentedGear.map((gearItem) => ({
-        gearItemId: gearItem.GearItems!.id,
-        name: gearItem.GearItems!.name,
-        rentedAmount: gearItem.rented_amount,
-        actualAmount: gearItem.actual_amount,
-      })),
-      topos: rental.RentedTopos.map((topo) => ({
-        topoId: topo.Topos!.id,
-        title: topo.Topos!.title,
-        rentedAmount: topo.rented_amount,
-        actualAmount: topo.actual_amount,
-      })),
-      paymentMethod: rental.payment_method,
-    }));
+        return rentals.map((rental) => ({
+          id: rental.id,
+          dateBorrow: rental.date_borrow,
+          dateReturn: rental.date_return,
+          depositFee: rental.deposit,
+          depositReturned: rental.deposit_returned,
+          status: rental.status,
+          gear: rental.RentedGear.map((gearItem) => ({
+            gearItemId: gearItem.GearItems!.id,
+            name: gearItem.GearItems!.name,
+            rentedAmount: gearItem.rented_amount,
+            actualAmount: gearItem.actual_amount,
+          })),
+          topos: rental.RentedTopos.map((topo) => ({
+            topoId: topo.Topos!.id,
+            title: topo.Topos!.title,
+            rentedAmount: topo.rented_amount,
+            actualAmount: topo.actual_amount,
+          })),
+          paymentMethod: rental.payment_method,
+        }));
+      },
+      { lazy: true },
+    );
   }
 
-  public async getReturnedRentalsForUser(
-    userId: string,
-  ): Promise<PublicRentalDetails[] | undefined> {
-    const { data: rentals, error } = await this.supabase
-      .from('Rentals')
-      .select(
-        `
-        id,
-        date_borrow,
-        date_return,
-        deposit,
-        deposit_returned,
-        payment_method,
-        RentedGear(
-          GearItems(
-            id,
-            name
-          ),
-          rented_amount,
-          actual_amount
-        ),
-        RentedTopos(
-          Topos(
-            id,
-            title
-          ),
-          rented_amount,
-          actual_amount
-        )
-        `,
-      )
-      .eq('member_id', userId)
-      .eq('status', 'returned');
+  public async getCompositeGearItems() {
+    return useAsyncData(
+      'compositeGearItems',
+      async () => {
+        const { data, error } = await this.supabase
+          .from('CompositeGearItems')
+          .select(
+            `
+            name,
+            CompositeGearItems_GearItems (
+              gear_item_id,
+              amount
+            )
+          `,
+          );
+        if (data === null) {
+          if (error) console.warn('getCompositeGearItems: ', error);
+          return [];
+        }
 
-    if (error || rentals === null) {
-      console.warn('failed to load rentals', error);
-      return undefined;
-    }
-
-    return rentals.map((rental) => ({
-      id: rental.id,
-      dateBorrow: rental.date_borrow,
-      dateReturn: rental.date_return,
-      depositFee: rental.deposit,
-      depositReturned: rental.deposit_returned,
-      gear: rental.RentedGear.map((gearItem) => ({
-        gearItemId: gearItem.GearItems!.id,
-        name: gearItem.GearItems!.name,
-        rentedAmount: gearItem.rented_amount,
-        actualAmount: gearItem.actual_amount,
-      })),
-      topos: rental.RentedTopos.map((topo) => ({
-        topoId: topo.Topos!.id,
-        title: topo.Topos!.title,
-        rentedAmount: topo.rented_amount,
-        actualAmount: topo.actual_amount,
-      })),
-      paymentMethod: rental.payment_method,
-    }));
+        return data.map((it) => ({
+          name: it.name,
+          gearItemIds: it.CompositeGearItems_GearItems.map((it) => ({
+            id: it.gear_item_id,
+            amount: it.amount,
+          })),
+        }));
+      },
+      { lazy: true },
+    );
   }
 }
 

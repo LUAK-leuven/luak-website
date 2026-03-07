@@ -24,6 +24,16 @@
     ) => Promise<{ error: string | undefined }>;
   }>();
 
+  const { data } = await gearService().getCompositeGearItems();
+  const compositeGearItems = computed(() =>
+    Object.fromEntries(
+      data.value?.map((it) => [
+        it.name,
+        it.gearItemIds.map((it) => ({ itemId: it.id, amount: it.amount })),
+      ]) ?? [],
+    ),
+  );
+
   const selectionFrom = (
     selection: { id: string; name: string; totalAmount: number }[],
   ) =>
@@ -110,14 +120,23 @@
     comments: yup.string(),
   });
 
-  const { meta, handleSubmit, errors, validateField, values } = useForm({
-    validationSchema: toTypedSchema(formSchema),
-    initialValues: {
-      boardMemberId: props.boardMember.name,
-      ...props.initialValues,
-    },
-    validateOnMount: false,
-  });
+  const { meta, handleSubmit, errors, validateField, values, defineField } =
+    useForm({
+      validationSchema: toTypedSchema(formSchema),
+      initialValues: props.initialValues,
+      validateOnMount: false,
+    });
+
+  const errorAttr = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    props: (state: any) => ({ error: state.errors[0] }),
+  };
+
+  const [selectedGear] = defineField('gear');
+  const [selectedTopos] = defineField('topos');
+  const [dateBorrow, dateBorrowAttr] = defineField('dateBorrow', errorAttr);
+  const [dateReturn, dateReturnAttr] = defineField('dateReturn', errorAttr);
+  const [depositFee, depositFeeAttr] = defineField('depositFee', errorAttr);
 
   const onSubmit = handleSubmit(async (formState) => {
     const { error } = await props.handleSubmit({
@@ -168,14 +187,22 @@
           :disable="props.initialValues.memberId !== undefined" />
       </div>
 
-      <InputText
+      <InputText2
         class="w-full"
         label="Board member *"
-        name="boardMemberId"
+        :model-value="boardMember.name"
         :disabled="true" />
 
-      <InputText label="Date borrow *" name="dateBorrow" type="date" />
-      <InputText label="Date return *" name="dateReturn" type="date" />
+      <InputText2
+        v-model="dateBorrow"
+        label="Date borrow *"
+        type="date"
+        v-bind="dateBorrowAttr" />
+      <InputText2
+        v-model="dateReturn"
+        label="Date return *"
+        type="date"
+        v-bind="dateReturnAttr" />
 
       <div class="flex flex-col w-fit">
         <label class="my-2" for="markAsReserved">Mark as reserved</label>
@@ -197,30 +224,32 @@
 
     <hr />
     <h2>Gear list</h2>
-    <BoardRentalFormGearSelection
-      :all-gear="allGear"
-      field-name="gear"
-      placeholder="select gear"
-      @computed-deposit-fee="(value) => (computedGearDeposit = value)" />
+    <BoardRentalFormItemSelection
+      v-model="selectedGear"
+      placeholder="Search gear to add ..."
+      :all-items="allGear"
+      :composite-items="compositeGearItems"
+      @computed-deposit="(value) => (computedGearDeposit = value)" />
     <div class="h-4"></div>
-    <BoardRentalFormGearSelection
-      :all-gear="allTopos"
-      field-name="topos"
-      placeholder="select topos"
-      @computed-deposit-fee="(value) => (computedTopoDeposit = value)" />
+    <BoardRentalFormItemSelection
+      v-model="selectedTopos"
+      :all-items="allTopos"
+      placeholder="Search topos ..."
+      @computed-deposit="(value) => (computedTopoDeposit = value)" />
 
     <hr class="mt-4" />
 
     <h2>Payment</h2>
     <div class="flex flex-row items-end gap-5">
-      <InputText
+      <InputText2
+        v-model="depositFee"
         label="Deposit fee *"
-        name="depositFee"
         type="number"
         :placeholder="computedDeposit?.toString()"
-        :auto-fill-with-placeholder="true">
+        :auto-fill-with-placeholder="true"
+        v-bind="depositFeeAttr">
         <template #label1><span class="mr-1">€</span></template>
-      </InputText>
+      </InputText2>
       <Field
         class="select select-bordered w-min"
         :class="errors.paymentMethod ? 'select-error border-4' : ''"
@@ -242,6 +271,6 @@
     </div>
   </form>
 
-  <!-- <p>Topos: {{ allTopos }}</p>
-  <p>TopoMap: {{ topoMap }}</p> -->
+  <!-- <p>SelectedGear: {{ selectedGear }}</p>
+  <p>Values: {{ values }}</p> -->
 </template>

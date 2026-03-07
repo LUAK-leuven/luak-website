@@ -1,15 +1,8 @@
 <script setup lang="ts">
   definePageMeta({ middleware: 'board-member-guard' });
 
-  const rental = ref<RentalDetails>();
-  const loading = ref(true);
-
-  onMounted(async () => {
-    rental.value = await gearService().getRental(
-      useRoute().params.id as string,
-    );
-    loading.value = false;
-  });
+  const retnalId = useRoute().params.id as string;
+  const { data: rental, pending } = await gearService().getRental(retnalId);
 </script>
 
 <template>
@@ -27,10 +20,10 @@
 
     <div class="h-2"></div>
 
-    <div v-if="loading" class="flex justify-center">
+    <div v-if="pending" class="flex justify-center">
       <span class="loading loading-spinner loading-lg" />
     </div>
-    <div v-else-if="rental === undefined">ERROR!</div>
+    <div v-else-if="!rental">ERROR!</div>
     <BoardRentalDetails v-else :rental="rental" />
   </FullPageCard>
 </template>

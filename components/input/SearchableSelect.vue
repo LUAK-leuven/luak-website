@@ -2,9 +2,8 @@
   const props = withDefaults(
     defineProps<{
       label?: string;
-      options: T[] | undefined;
+      optionsProvider: (searchTerm: string | undefined) => T[] | undefined;
       placeholder: string;
-      searchFn: (options: T[], input: string | undefined) => T[];
       selectedItem?: T;
       errorMessage?: string;
       loadingMessage?: string;
@@ -20,22 +19,18 @@
   );
 
   const emit = defineEmits<{
-    selected: [value: T];
+    onSelect: [value: T];
   }>();
+
+  const options = computed(() => props.optionsProvider(textValue.value));
 
   const textValue = ref<string>();
   const hidden = ref(true);
   const mouseOnSelection = ref(false);
 
-  const filteredOptions = computed(() => {
-    return props.options === undefined
-      ? undefined
-      : props.searchFn(props.options, textValue.value);
-  });
-
   function onSelect(option: T) {
     hidden.value = true;
-    emit('selected', option);
+    emit('onSelect', option);
   }
 
   function onFocus() {
@@ -73,14 +68,14 @@
         tabindex="0"
         @mouseenter="mouseOnSelection = true"
         @mouseleave="mouseOnSelection = false">
-        <li v-if="filteredOptions === undefined">
+        <li v-if="options === undefined">
           <div>
             {{ loadingMessage }} <span class="loading loading-dots"></span>
           </div>
         </li>
         <template v-else>
           <li
-            v-for="(option, idx) in filteredOptions"
+            v-for="(option, idx) in options"
             :key="idx"
             class="hover:opacity-60">
             <button
@@ -90,7 +85,7 @@
               <slot name="item" :data="option" />
             </button>
           </li>
-          <li v-if="filteredOptions.length === 0">
+          <li v-if="options.length === 0">
             <div>No results found</div>
           </li>
         </template>

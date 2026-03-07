@@ -9,14 +9,19 @@
     id: user.userInfo!.id,
   };
 
-  const allGear = await gearService().getPublicGearInfo();
-  const allTopos = (await gearService().getAllTopos()).map((topo) => ({
-    id: topo.id,
-    name: topo.title,
-    totalAmount: topo.totalAmount,
-    availableAmount: topo.availableAmount,
-    depositFee: 500,
-  }));
+  const { data: allGear, pending: gearPending } =
+    await gearService().getPublicGearInfo();
+  const { data: allTopos_, pending: toposPending } =
+    await gearService().getAllTopos();
+  const allTopos = computed(() =>
+    allTopos_.value?.map((topo) => ({
+      id: topo.id,
+      name: topo.title,
+      totalAmount: topo.totalAmount,
+      availableAmount: topo.availableAmount,
+      depositFee: 500,
+    })),
+  );
 
   async function handleSubmit(state: UnsavedRental) {
     const { error, id } = await gearService().saveRental(state);
@@ -32,7 +37,14 @@
   <FullPageCard>
     <template #title>Rental form 🧗</template>
 
+    <div v-if="gearPending || toposPending" class="flex justify-center">
+      <span class="loading loading-spinner loading-lg" />
+    </div>
+
+    <div v-else-if="!allGear || !allTopos">ERROR!</div>
+
     <BoardRentalForm
+      v-else
       :board-member="boardMember"
       :all-gear="allGear"
       :all-topos="allTopos"
