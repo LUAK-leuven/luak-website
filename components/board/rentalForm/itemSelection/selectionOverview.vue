@@ -1,6 +1,7 @@
 <script lang="ts" setup>
   defineProps<{
     selectedItems: {
+      id: string;
       name: string;
       selectedAmount: number;
       availableAmount: number;
@@ -10,8 +11,8 @@
   }>();
 
   const emit = defineEmits<{
-    removeItem: [itemName: string];
-    updateSelectedItemAmount: [itemName: string, amount: number];
+    removeItem: [itemId: string];
+    updateSelectedItemAmount: [itemId: string, amount: number];
   }>();
 </script>
 
@@ -37,7 +38,7 @@
           "
           :model-value="item.selectedAmount"
           @update:model-value="
-            (value) => emit('updateSelectedItemAmount', item.name, value ?? 0)
+            (value) => emit('updateSelectedItemAmount', item.id, value ?? 0)
           " />
       </span>
       <div>
@@ -47,7 +48,7 @@
       <button
         class="btn btn-sm btn-circle btn-ghost justify-self-end mr-2"
         type="button"
-        @click="() => emit('removeItem', item.name)">
+        @click="() => emit('removeItem', item.id)">
         ✕
       </button>
     </div>

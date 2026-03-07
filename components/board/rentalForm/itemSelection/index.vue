@@ -13,15 +13,19 @@
 
   const model = defineModel<{ id: string; amount: number }[]>({ default: [] });
 
-  const selectedItems = ref<
-    {
-      name: string;
-      selectedAmount: number;
-      availableAmount: number;
-      totalAmount: number;
-      depositFee: number;
-    }[]
-  >([]);
+  const selectedItems = computed(() =>
+    model.value.map((it) => {
+      const item = getBy(allItems, 'id', it.id);
+      return {
+        id: it.id,
+        name: item.name,
+        selectedAmount: it.amount,
+        availableAmount: item.availableAmount,
+        totalAmount: item.totalAmount,
+        depositFee: item.depositFee,
+      };
+    }),
+  );
 
   const availableItems = computed(() =>
     allItems
@@ -71,17 +75,14 @@
       }
     } else {
       const item = getBy(allItems, 'name', name);
-      const selectedItem = findBy(selectedItems.value, 'name', name);
+      const selectedItem = findBy(model.value, 'id', item.id);
       if (selectedItem === undefined) {
-        selectedItems.value.push({
-          name: item.name,
-          selectedAmount: defaultAmount,
-          availableAmount: item.availableAmount,
-          totalAmount: item.totalAmount,
-          depositFee: item.depositFee,
+        model.value.push({
+          id: item.id,
+          amount: defaultAmount,
         });
       } else {
-        selectedItem.selectedAmount += defaultAmount;
+        selectedItem.amount += defaultAmount;
       }
     }
   };
@@ -95,10 +96,6 @@
         0,
       );
       emit('computedDeposit', depositFee);
-      model.value = selectedItem.map((it) => ({
-        id: getBy(allItems, 'name', it.name).id,
-        amount: it.selectedAmount,
-      }));
     },
     { deep: true },
   );
@@ -113,16 +110,11 @@
 
   <BoardRentalFormItemSelectionOverview
     :selected-items="selectedItems"
-    @remove-item="
-      (name) =>
-        (selectedItems = selectedItems.filter(
-          (gearItem) => name !== gearItem.name,
-        ))
-    "
+    @remove-item="(id) => (model = model.filter((it) => id !== it.id))"
     @update-selected-item-amount="
-      (name, amount) => {
-        const gearItem = findBy(selectedItems, 'name', name);
-        if (gearItem !== undefined) gearItem.selectedAmount = amount;
+      (id, amount) => {
+        const item = findBy(model, 'id', id);
+        if (item !== undefined) item.amount = amount;
       }
     ">
   </BoardRentalFormItemSelectionOverview>

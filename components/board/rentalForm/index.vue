@@ -125,15 +125,20 @@
   const { meta, handleSubmit, errors, validateField, values, defineField } =
     useForm({
       validationSchema: toTypedSchema(formSchema),
-      initialValues: {
-        boardMemberId: props.boardMember.name,
-        ...props.initialValues,
-      },
+      initialValues: props.initialValues,
       validateOnMount: false,
     });
 
+  const errorAttr = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    props: (state: any) => ({ error: state.errors[0] }),
+  };
+
   const [selectedGear] = defineField('gear');
   const [selectedTopos] = defineField('topos');
+  const [dateBorrow, dateBorrowAttr] = defineField('dateBorrow', errorAttr);
+  const [dateReturn, dateReturnAttr] = defineField('dateReturn', errorAttr);
+  const [depositFee, depositFeeAttr] = defineField('depositFee', errorAttr);
 
   const onSubmit = handleSubmit(async (formState) => {
     const { error } = await props.handleSubmit({
@@ -184,14 +189,22 @@
           :disable="props.initialValues.memberId !== undefined" />
       </div>
 
-      <InputText
+      <InputText2
         class="w-full"
         label="Board member *"
-        name="boardMemberId"
+        :model-value="boardMember.name"
         :disabled="true" />
 
-      <InputText label="Date borrow *" name="dateBorrow" type="date" />
-      <InputText label="Date return *" name="dateReturn" type="date" />
+      <InputText2
+        v-model="dateBorrow"
+        label="Date borrow *"
+        type="date"
+        v-bind="dateBorrowAttr" />
+      <InputText2
+        v-model="dateReturn"
+        label="Date return *"
+        type="date"
+        v-bind="dateReturnAttr" />
 
       <div class="flex flex-col w-fit">
         <label class="my-2" for="markAsReserved">Mark as reserved</label>
@@ -230,14 +243,15 @@
 
     <h2>Payment</h2>
     <div class="flex flex-row items-end gap-5">
-      <InputText
+      <InputText2
+        v-model="depositFee"
         label="Deposit fee *"
-        name="depositFee"
         type="number"
         :placeholder="computedDeposit?.toString()"
-        :auto-fill-with-placeholder="true">
+        :auto-fill-with-placeholder="true"
+        v-bind="depositFeeAttr">
         <template #label1><span class="mr-1">€</span></template>
-      </InputText>
+      </InputText2>
       <Field
         class="select select-bordered w-min"
         :class="errors.paymentMethod ? 'select-error border-4' : ''"
@@ -260,6 +274,5 @@
   </form>
 
   <!-- <p>SelectedGear: {{ selectedGear }}</p>
-  <p>Values: {{ values }}</p>
-  <p>Comp: {{ data }}</p> -->
+  <p>Values: {{ values }}</p> -->
 </template>
