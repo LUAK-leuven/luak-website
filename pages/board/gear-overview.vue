@@ -1,36 +1,11 @@
 <script lang="ts" setup>
   import dayjs from 'dayjs';
-  import type { GearDetails } from '~/utils/gearService';
 
   definePageMeta({ middleware: 'board-member-guard' });
 
-  const isLoading = ref(true);
-  const gear = ref<
-    (GearDetails & {
-      gearInventory: {
-        retirementDate: string;
-        badgeColor: string;
-      }[];
-    })[]
-  >([]);
-  const searchTerm = ref('');
-
-  // Computed property for filtered and sorted subscriptions
-  const filteredGear = computed(() => {
-    return gear.value.map((gearItem) => ({
-      ...gearItem,
-      gearInventory: gearItem.gearInventory.filter(
-        (g) =>
-          g.details.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-          gearItem.name.toLowerCase().includes(searchTerm.value.toLowerCase()),
-      ),
-    }));
-  });
-
-  // Load data on component mount
-  onMounted(async () => {
-    const data = await gearService().getGearInventory();
-    gear.value = data.map((gearItem) => ({
+  const { data, pending } = await gearService().getGearInventory();
+  const gear = computed(() =>
+    data.value?.map((gearItem) => ({
       ...gearItem,
       gearInventory: gearItem.gearInventory.map((g) => {
         const { date, color } = getRetirementDateAndBadgeColor(
@@ -44,8 +19,20 @@
           badgeColor: color,
         };
       }),
+    })),
+  );
+  const searchTerm = ref('');
+
+  // Computed property for filtered and sorted subscriptions
+  const filteredGear = computed(() => {
+    return gear.value?.map((gearItem) => ({
+      ...gearItem,
+      gearInventory: gearItem.gearInventory.filter(
+        (g) =>
+          g.details.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
+          gearItem.name.toLowerCase().includes(searchTerm.value.toLowerCase()),
+      ),
     }));
-    isLoading.value = false;
   });
 
   function getRetirementDateAndBadgeColor(
@@ -92,9 +79,12 @@
     <template #title>Gear Overview </template>
 
     <!-- Loading state -->
-    <div v-if="isLoading" class="flex justify-center items-center py-10">
+    <div v-if="pending" class="flex justify-center items-center py-10">
       <span class="loading loading-spinner loading-lg"></span>
     </div>
+
+    <!-- Error state -->
+    <div v-else-if="!filteredGear">ERROR!</div>
 
     <!-- Data display -->
     <div v-else>

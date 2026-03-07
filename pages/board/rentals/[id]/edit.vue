@@ -4,18 +4,12 @@
   const route = useRoute();
   const rentalId = route.params.id as string;
 
-  const { data: rental, pending: rentalPending } = useAsyncData(
-    `rental-${rentalId}`,
-    async () => await gearService().getRental(rentalId as string),
-  );
-  const { data: _allGear, pending: gearPending } = useAsyncData(
-    'allGear',
-    async () => await gearService().getPublicGearInfo(),
-  );
-  const { data: _allTopos, pending: toposPending } = useAsyncData(
-    'allTopos',
-    async () => await gearService().getAllTopos(),
-  );
+  const { data: rental, pending: rentalPending } =
+    await gearService().getRental(rentalId);
+  const { data: _allGear, pending: gearPending } =
+    await gearService().getPublicGearInfo();
+  const { data: _allTopos, pending: toposPending } =
+    await gearService().getAllTopos();
 
   const allGear = computed(() =>
     _allGear.value?.map((gearItem) => ({

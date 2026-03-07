@@ -1,32 +1,19 @@
 <script setup lang="ts">
-  const activeRentals = ref<PublicRentalDetails[]>();
-  const returnedRentals = ref<PublicRentalDetails[]>();
-  const loading = ref(true);
-  const loadingReturned = ref(true);
-  const showReturned = ref(false);
-
   const user = await useLuakMember();
 
-  onMounted(async () => {
-    if (user.userInfo && user.isMember) {
-      activeRentals.value = await gearService().getActiveRentalsForUser(
-        user.userInfo.id,
-      );
-    }
-    loading.value = false;
-  });
+  const { data: rentals, pending: loading } =
+    await gearService().getRentalsForUser(user.userInfo?.id ?? '');
+  const activeRentals = computed(() =>
+    rentals.value?.filter((it) => it.status !== 'returned'),
+  );
+  const returnedRentals = computed(() =>
+    rentals.value?.filter((it) => it.status === 'returned'),
+  );
+
+  const showReturned = ref(false);
 
   async function onShowReturned() {
     showReturned.value = true;
-    if (returnedRentals.value === undefined) {
-      if (user.userInfo && user.isMember) {
-        console.log('fetch');
-        returnedRentals.value = await gearService().getReturnedRentalsForUser(
-          user.userInfo.id,
-        );
-      }
-    }
-    loadingReturned.value = false;
   }
 </script>
 <template>
@@ -65,7 +52,7 @@
       </div>
       <template v-if="showReturned">
         <!-- TODO: fix spinner position not in center (for some reason styles fail to apply or I'm missing something here ...) -->
-        <div v-if="loadingReturned" class="felx flex-row justify-center">
+        <div v-if="loading" class="felx flex-row justify-center">
           <span class="loading loading-spinner loading-lg" />
         </div>
         <div v-else-if="returnedRentals === undefined">

@@ -74,3 +74,7 @@ export function findBy<T extends Record<K, V>, K extends keyof T, V>(
 ): T | undefined {
   return arr.find((x) => x[key] === value);
 }
+
+export async function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

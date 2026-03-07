@@ -24,9 +24,7 @@
     ) => Promise<{ error: string | undefined }>;
   }>();
 
-  const { data } = await useAsyncData(
-    async () => await gearService().getCompositeGearItems(),
-  );
+  const { data } = await gearService().getCompositeGearItems();
   const compositeGearItems = computed(() =>
     Object.fromEntries(
       data.value?.map((it) => [
