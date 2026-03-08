@@ -107,3 +107,10 @@ using ((( SELECT auth.uid() AS uid) IN ( SELECT "BoardMembers".user_id
    FROM "BoardMembers")))
 with check ((( SELECT auth.uid() AS uid) IN ( SELECT "BoardMembers".user_id
    FROM "BoardMembers")));
+
+-- Little fix for stuff that was done on prod directly
+alter table "public"."Topos" alter column authors set not null;
+alter table "public"."Topos" alter column countries set not null;
+alter table "public"."Topos" alter column tags set not null;
+alter table "public"."Topos" alter column languages set not null;
+alter table "public"."Topos" alter column types_of_climbing drop not null;

@@ -11,7 +11,7 @@
   };
 
   const { data: allGear, pending: gearPending } =
-    await gearService().getPublicGearInfo();
+    await gearService().getAllGearItems();
   const { data: allTopos_, pending: toposPending } =
     await gearService().getAllTopos();
   const allTopos = computed(() =>

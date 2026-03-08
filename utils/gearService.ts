@@ -12,7 +12,7 @@ import type { UserId } from '~/types/user';
 class GearService {
   private readonly supabase = useSupabaseClient<Database>();
 
-  public async getPublicGearInfo() {
+  public async getAllGearItems() {
     return useAsyncData(
       'allGear',
       async () => {
@@ -32,7 +32,8 @@ class GearService {
           `,
           )
           .gt('RentedGear.actual_amount', 0)
-          .eq('GearInventory.status', 'available');
+          .eq('GearInventory.status', 'available')
+          .order('name');
         if (gear === null) return [];
 
         return gear.map((gearItem) => {
@@ -119,7 +120,8 @@ class GearService {
             )
             `,
           )
-          .gt('RentedTopos.actual_amount', 0);
+          .gt('RentedTopos.actual_amount', 0)
+          .order('title');
 
         if (topos === null) {
           console.warn('getAllTopos', error);

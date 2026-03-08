@@ -10,7 +10,7 @@
   const { data: rental, pending: rentalPending } =
     await gearService().getRental(rentalId);
   const { data: _allGear, pending: gearPending } =
-    await gearService().getPublicGearInfo();
+    await gearService().getAllGearItems();
   const { data: _allTopos, pending: toposPending } =
     await gearService().getAllTopos();
 
