@@ -40,6 +40,11 @@
         v-for="(newsItem, index) in data"
         :key="newsItem.path"
         v-bind="{ data: newsItem, reversed: !!((index + 1) % 2) }" />
+      <div class="flex flex-row justify-center mb-2">
+        <NuxtLink class="btn btn-primary btn-outline" to="/news">
+          See all news posts
+        </NuxtLink>
+      </div>
     </PageCard>
     <PageCard class="p-5 mt-5">
       <NuxtLink to="/activities">

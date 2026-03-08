@@ -2,10 +2,6 @@
   const { data: info_navigation } = await useAsyncData('info_navigation', () =>
     queryCollectionNavigation('info_'),
   );
-  const { data: pages_navigation } = await useAsyncData(
-    'pages_navigation',
-    () => queryCollectionNavigation('pages'),
-  );
   const user = await useLuakMember();
 
   const closeDrawer = () => {
@@ -20,6 +16,7 @@
   onMounted(() => {
     useToggleCloseFix('info-toggle');
     useToggleCloseFix('board-toggle');
+    useToggleCloseFix('member-toggle');
 
     // Fix drawer closing by closing drawer on click
     const links = document
@@ -35,7 +32,6 @@
 
 <template>
   <ul id="luak_menu" class="menu">
-    <li><NuxtLink to="/news">News</NuxtLink></li>
     <li>
       <NuxtLink to="/activities">Activities</NuxtLink>
     </li>
@@ -49,11 +45,19 @@
         </ul>
       </details>
     </li>
-    <li v-for="nav in pages_navigation?.[0]?.children" :key="nav.path">
-      <NuxtLink :to="nav.path">{{ nav.title }}</NuxtLink>
+    <li v-if="!user.isMember">
+      <NuxtLink to="/pages/become_a_member">Become a member</NuxtLink>
     </li>
     <li v-if="user.isMember">
-      <NuxtLink to="/stories">Stories</NuxtLink>
+      <details id="member-toggle">
+        <summary>Member section</summary>
+        <ul class="p-2 bg-base-200 rounded-t-none w-52">
+          <li>
+            <NuxtLink to="/pages/become_a_member">Become a member</NuxtLink>
+          </li>
+          <li><NuxtLink to="/stories">Stories</NuxtLink></li>
+        </ul>
+      </details>
     </li>
     <li v-if="user.isBoard">
       <details id="board-toggle">
