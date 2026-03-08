@@ -1,8 +1,11 @@
 <script setup lang="ts">
+  import type { RentalId, UnsavedRental } from '~/types/renal';
+  import type { UserId } from '~/types/user';
+
   definePageMeta({ middleware: 'board-member-guard' });
 
   const route = useRoute();
-  const rentalId = route.params.id as string;
+  const rentalId = route.params.id as RentalId;
 
   const { data: rental, pending: rentalPending } =
     await gearService().getRental(rentalId);
@@ -84,14 +87,15 @@
 
     <BoardRentalForm
       v-else
-      :board-member="{ id: '0000', name: rental.boardMember }"
+      :board-member="{ id: '0000' as UserId, name: rental.boardMember }"
       :all-gear="allGear"
       :all-topos="allTopos"
       :handle-submit="handleSubmit"
       :initial-values="{
         dateBorrow: rental.dateBorrow,
         dateReturn: rental.dateReturn,
-        memberId: rental.member.id,
+        memberId: rental.memberId,
+        contactInfo: rental.memberId === undefined ? rental.member : undefined,
         gear: rental.gear.map((g) => ({
           id: g.gearItemId,
           amount: g.rentedAmount,

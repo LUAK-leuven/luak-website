@@ -1,19 +1,36 @@
 <script setup lang="ts">
   import * as yup from 'yup';
+  import type { EntityId } from '~/types/common';
   import type { Enums } from '~/types/database.types';
+  import type { GearItemId, TopoId } from '~/types/gear';
+  import type { UnsavedRental } from '~/types/renal';
+  import type { UserId } from '~/types/user';
+
+  type GearInfo<T extends EntityId<unknown>> = {
+    id: T;
+    name: string;
+    totalAmount: number;
+    availableAmount: number;
+    depositFee: number;
+  };
 
   const popup = usePopup();
 
   const props = defineProps<{
-    boardMember: { id: string; name: string };
-    allGear: PublicGearInfo[];
-    allTopos: PublicGearInfo[];
+    boardMember: { id: UserId; name: string };
+    allGear: GearInfo<GearItemId>[];
+    allTopos: GearInfo<TopoId>[];
     initialValues: Partial<{
-      memberId: string;
+      memberId: UserId;
+      contactInfo: {
+        fullName: string;
+        email?: string;
+        phone?: string;
+      };
       dateBorrow: string;
       dateReturn: string;
-      gear: { id: string; amount: number }[];
-      topos: { id: string; amount: number }[];
+      gear: { id: GearItemId; amount: number }[];
+      topos: { id: TopoId; amount: number }[];
       depositFee: number;
       paymentMethod: Enums<'payment_method'>;
       markAsReserved: boolean;
@@ -34,14 +51,14 @@
     ),
   );
 
-  const selectionFrom = (
-    selection: { id: string; name: string; totalAmount: number }[],
+  const selectionFrom = <T extends EntityId<unknown>>(
+    selection: { id: T; name: string; totalAmount: number }[],
   ) =>
     yup
       .array()
       .of(
         yup.object({
-          id: yup.string().required(),
+          id: entityIdSchema<T>().required(),
           amount: yup
             .number()
             .required()
@@ -77,7 +94,7 @@
       .required();
 
   const formSchema = yup.object({
-    memberId: yup.string().when('contactInfo', {
+    memberId: entityIdSchema<UserId>().when('contactInfo', {
       is: (x: unknown) => {
         return x === undefined;
       },

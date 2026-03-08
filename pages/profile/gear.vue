@@ -2,7 +2,7 @@
   const user = await useLuakMember();
 
   const { data: rentals, pending: loading } =
-    await gearService().getRentalsForUser(user.userInfo?.id ?? '');
+    await gearService().getRentalsForUser(user.userInfo!.id); // TODO fix usafe !
   const activeRentals = computed(() =>
     rentals.value?.filter((it) => it.status !== 'returned'),
   );

@@ -1,100 +1,13 @@
-import type { Database, Enums } from '~/types/database.types';
+import type { Database } from '~/types/database.types';
 import { groupBy } from './utils';
-
-export type PublicGearInfo = {
-  id: string;
-  name: string;
-  totalAmount: number;
-  availableAmount: number;
-  depositFee: number;
-};
-
-export type UnsavedRental = {
-  memberId?: string;
-  boardMemberId: string;
-  dateBorrow: string;
-  dateReturn: string;
-  gear: Record<string, number>;
-  topos: Record<string, number>;
-  depositFee: number;
-  paymentMethod: Enums<'payment_method'>;
-  contactInfo?: ContactInfo;
-  status: Enums<'rental_status'>;
-  comments?: string;
-};
-
-type ContactInfo = {
-  fullName: string;
-  email?: string;
-  phoneNumber?: string;
-};
-
-export type RentalSummary = {
-  id: string;
-  memberName: string;
-  dateReturn: string;
-  dateBorrow: string;
-  status: Enums<'rental_status'>;
-};
-
-export type TopoSumary = {
-  id: string;
-  title: string;
-  totalAmount: number;
-  availableAmount: number;
-};
-
-export type PublicRentalDetails = {
-  id: string;
-  dateBorrow: string;
-  dateReturn: string;
-  gear: {
-    gearItemId: string;
-    name: string;
-    rentedAmount: number;
-    actualAmount: number;
-  }[];
-  topos: {
-    topoId: string;
-    title: string;
-    rentedAmount: number;
-    actualAmount: number;
-  }[];
-  depositFee: number;
-  depositReturned: boolean;
-  paymentMethod: Enums<'payment_method'>;
-};
-
-export type RentalDetails = PublicRentalDetails & {
-  member: ContactInfo & { id?: string };
-  boardMember: string;
-  status: Enums<'rental_status'>;
-  comments: string | undefined;
-};
-
-export type RentalUpdate = {
-  id: string;
-  dateReturn: string;
-  gear: Record<string, number>;
-  topos: Record<string, number>;
-  depositReturned: boolean;
-  status: Enums<'rental_status'>;
-  comments: string | undefined;
-};
-
-export type GearDetails = {
-  lifespan: number;
-  name: string;
-  totalAmount: number;
-  availableAmount: number;
-  gearInventory: {
-    id: string;
-    details: string;
-    purchaseDate: string | undefined;
-    productionDate: string | undefined;
-    amount: number;
-  }[];
-};
+import type {
+  ContactInfo,
+  RentalId,
+  RentalUpdate,
+  UnsavedRental,
+} from '~/types/renal';
+import type { GearInventoryId, GearItemId, TopoId } from '~/types/gear';
+import type { UserId } from '~/types/user';
 
 class GearService {
   private readonly supabase = useSupabaseClient<Database>();
@@ -125,13 +38,13 @@ class GearService {
         return gear.map((gearItem) => {
           const totalAmount = sumOf(gearItem.GearInventory, 'amount');
           return {
-            id: gearItem.id,
+            id: gearItem.id as GearItemId,
             name: gearItem.name,
             totalAmount: totalAmount,
             availableAmount:
               totalAmount - sumOf(gearItem.RentedGear, 'actual_amount'),
             depositFee: gearItem.deposit_fee,
-          } satisfies PublicGearInfo;
+          };
         });
       },
       { lazy: true },
@@ -178,7 +91,7 @@ class GearService {
             sumOf(v, 'amount') -
             sumOf(v[0].GearItems?.RentedGear ?? [], 'actual_amount'),
           gearInventory: v.map((x) => ({
-            id: x.id,
+            id: x.id as GearInventoryId,
             details: x.details,
             purchaseDate: x.purchase_date ?? undefined,
             productionDate: x.production_date ?? undefined,
@@ -214,7 +127,7 @@ class GearService {
         }
 
         return topos.map((topo) => ({
-          id: topo.id,
+          id: topo.id as TopoId,
           title: topo.title,
           totalAmount: topo.amount,
           availableAmount:
@@ -227,7 +140,7 @@ class GearService {
 
   public async saveRental(
     rental: UnsavedRental,
-  ): Promise<{ id: string | undefined; error: string | undefined }> {
+  ): Promise<{ id: RentalId | undefined; error: string | undefined }> {
     const { error, data } = await this.supabase.rpc('create_rental', {
       p_board_member_id: rental.boardMemberId,
       p_member_id: rental.memberId ?? null,
@@ -250,7 +163,7 @@ class GearService {
       p_comments: rental.comments ?? null,
     });
 
-    return { id: data ?? undefined, error: error?.message };
+    return { id: (data as RentalId) ?? undefined, error: error?.message };
   }
 
   public async getRentals() {
@@ -281,7 +194,7 @@ class GearService {
             ? JSON.parse(rental.contact_info)
             : undefined;
           return {
-            id: rental.id,
+            id: rental.id as RentalId,
             memberName: rental.member
               ? getFullName(rental.member)
               : contactInfo
@@ -297,7 +210,7 @@ class GearService {
     );
   }
 
-  public async getRental(rental_id: string) {
+  public async getRental(rental_id: RentalId) {
     return useAsyncData(
       `rental-${rental_id}`,
       async () => {
@@ -356,28 +269,28 @@ class GearService {
               fullName: getFullName(rental.member),
               email: rental.member.email,
               phoneNumber: rental.member.phone_number,
-              id: rental.member.id,
             }
           : rental.contact_info
             ? JSON.parse(rental.contact_info)
             : { fullName: 'Failed to load name' };
 
         return {
-          id: rental.id,
+          id: rental.id as RentalId,
           member: contactInfo,
+          memberId: rental.member?.id as UserId | undefined,
           boardMember: getFullName(rental.board_member!),
           dateBorrow: rental.date_borrow,
           dateReturn: rental.date_return,
           depositFee: rental.deposit,
           depositReturned: rental.deposit_returned,
           gear: rental.RentedGear.map((gearItem) => ({
-            gearItemId: gearItem.GearItems!.id,
+            gearItemId: gearItem.GearItems!.id as GearItemId,
             name: gearItem.GearItems!.name,
             rentedAmount: gearItem.rented_amount,
             actualAmount: gearItem.actual_amount,
           })),
           topos: rental.RentedTopos.map((topo) => ({
-            topoId: topo.Topos!.id,
+            topoId: topo.Topos!.id as TopoId,
             title: topo.Topos!.title,
             rentedAmount: topo.rented_amount,
             actualAmount: topo.actual_amount,
@@ -411,10 +324,9 @@ class GearService {
     return error === null;
   }
 
-  public async editRental(rental: UnsavedRental & { id: string }) {
+  public async editRental(rental: UnsavedRental & { id: RentalId }) {
     const { error } = await this.supabase.rpc('edit_rental', {
       p_rental_id: rental.id,
-      // p_member_id: rental.memberId ?? null,
       p_contact_info: rental.contactInfo
         ? JSON.stringify(rental.contactInfo)
         : null,
@@ -437,7 +349,7 @@ class GearService {
     return error === null;
   }
 
-  public async getRentalsForUser(userId: string) {
+  public async getRentalsForUser(userId: UserId) {
     return useAsyncData(
       `rentalsForUser-${userId}`,
       async () => {
@@ -478,20 +390,20 @@ class GearService {
         }
 
         return rentals.map((rental) => ({
-          id: rental.id,
+          id: rental.id as RentalId,
           dateBorrow: rental.date_borrow,
           dateReturn: rental.date_return,
           depositFee: rental.deposit,
           depositReturned: rental.deposit_returned,
           status: rental.status,
           gear: rental.RentedGear.map((gearItem) => ({
-            gearItemId: gearItem.GearItems!.id,
+            gearItemId: gearItem.GearItems!.id as GearItemId,
             name: gearItem.GearItems!.name,
             rentedAmount: gearItem.rented_amount,
             actualAmount: gearItem.actual_amount,
           })),
           topos: rental.RentedTopos.map((topo) => ({
-            topoId: topo.Topos!.id,
+            topoId: topo.Topos!.id as TopoId,
             title: topo.Topos!.title,
             rentedAmount: topo.rented_amount,
             actualAmount: topo.actual_amount,
@@ -526,7 +438,7 @@ class GearService {
         return data.map((it) => ({
           name: it.name,
           gearItemIds: it.CompositeGearItems_GearItems.map((it) => ({
-            id: it.gear_item_id,
+            id: it.gear_item_id as GearItemId,
             amount: it.amount,
           })),
         }));
@@ -542,3 +454,15 @@ export function gearService(): GearService {
     gearServiceInstance = new GearService();
   return gearServiceInstance;
 }
+
+export type RentalDetails = ReturnType<'getRental'>;
+export type PublicRentalDetails = ReturnType<'getRentalsForUser'>;
+
+type ReturnType<K extends keyof GearService> = GearService[K] extends (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ...any: any
+) => Promise<{ data: { value: infer T | null | undefined } }>
+  ? T extends (infer T1)[]
+    ? T1
+    : T
+  : never;
