@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import * as yup from 'yup';
   import type { Enums } from '~/types/database.types';
+  import type { GearItemId, TopoId } from '~/types/gear';
 
   const { rental } = defineProps<{ rental: RentalDetails }>();
   const popup = usePopup();
@@ -59,12 +60,8 @@
     editMode.value = true;
     setValues({
       dateReturn: rental.dateReturn,
-      returnedGear: rental.gear.map(
-        (gearItem) => gearItem.rentedAmount - gearItem.actualAmount,
-      ),
-      returnedTopos: rental.topos.map(
-        (topo) => topo.rentedAmount - topo.actualAmount,
-      ),
+      returnedGear: rental.gear.map((gearItem) => gearItem.returnedAmount),
+      returnedTopos: rental.topos.map((topo) => topo.returnedAmount),
       depositReturned: rental.depositReturned,
       comments: rental.comments,
       statusReserved: rental.status === 'reserved',
@@ -75,20 +72,22 @@
 
   const save = handleSubmit(
     async (formState) => {
-      const gear: Record<string, number> = {};
+      const gear: { gear_item_id: GearItemId; returned_amount: number }[] = [];
       for (let i = 0; i < rental.gear.length; i++) {
-        const updatedAmount =
-          rental.gear[i].rentedAmount - formState.returnedGear[i];
-        if (updatedAmount !== rental.gear[i].actualAmount) {
-          gear[rental.gear[i].gearItemId] = updatedAmount;
+        if (formState.returnedGear[i] !== rental.gear[i].returnedAmount) {
+          gear.push({
+            gear_item_id: rental.gear[i].gearItemId,
+            returned_amount: formState.returnedGear[i],
+          });
         }
       }
-      const topos: Record<string, number> = {};
+      const topos: { topo_id: TopoId; returned_amount: number }[] = [];
       for (let i = 0; i < rental.topos.length; i++) {
-        const updatedAmount =
-          rental.topos[i].rentedAmount - formState.returnedTopos[i];
-        if (updatedAmount !== rental.topos[i].actualAmount) {
-          topos[rental.topos[i].topoId] = updatedAmount;
+        if (formState.returnedTopos[i] !== rental.topos[i].returnedAmount) {
+          topos.push({
+            topo_id: rental.topos[i].topoId,
+            returned_amount: formState.returnedTopos[i],
+          });
         }
       }
       const success = await gearService().updateRental({
@@ -216,7 +215,7 @@
       <b class="border px-1">Amount</b>
       <b class="border px-1">Returned amount</b>
       <template
-        v-for="({ title, rentedAmount, actualAmount }, idx) of rental.topos"
+        v-for="({ title, rentedAmount, returnedAmount }, idx) of rental.topos"
         :key="idx">
         <div class="border p-1 flex items-center">{{ title }}</div>
         <div class="border p-1 flex flex-row justify-between items-center">
@@ -235,11 +234,11 @@
               'animate-bounceInput': bouncing[`returnedTopos[${idx}]`],
             }"
             :name="`returnedTopos[${idx}]`" />
-          <span v-else>{{ rentedAmount - actualAmount }}</span>
+          <span v-else>{{ returnedAmount }}</span>
         </div>
       </template>
       <template
-        v-for="({ name, rentedAmount, actualAmount }, idx) of rental.gear"
+        v-for="({ name, rentedAmount, returnedAmount }, idx) of rental.gear"
         :key="idx">
         <div class="border p-1 flex items-center">{{ name }}</div>
         <div class="flex flex-row justify-between items-center border p-1">
@@ -258,7 +257,7 @@
               'animate-bounceInput': bouncing[`returnedGear[${idx}]`],
             }"
             :name="`returnedGear[${idx}]`" />
-          <span v-else>{{ rentedAmount - actualAmount }}</span>
+          <span v-else>{{ returnedAmount }}</span>
         </div>
       </template>
     </div>

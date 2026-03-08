@@ -28,8 +28,8 @@ export type ContactInfo = {
 export type RentalUpdate = {
   id: RentalId;
   dateReturn: string;
-  gear: Record<GearItemId, number>;
-  topos: Record<TopoId, number>;
+  gear: { gear_item_id: GearItemId; returned_amount: number }[];
+  topos: { topo_id: TopoId; returned_amount: number }[];
   depositReturned: boolean;
   status: Enums<'rental_status'>;
   comments: string | undefined;

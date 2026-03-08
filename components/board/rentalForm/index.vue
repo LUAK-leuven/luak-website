@@ -1,25 +1,18 @@
 <script setup lang="ts">
   import * as yup from 'yup';
+  import type { RentalItem } from '~/types/board/form/RentalItem';
   import type { EntityId } from '~/types/common';
   import type { Enums } from '~/types/database.types';
   import type { GearItemId, TopoId } from '~/types/gear';
   import type { UnsavedRental } from '~/types/renal';
   import type { UserId } from '~/types/user';
 
-  type GearInfo<T extends EntityId<unknown>> = {
-    id: T;
-    name: string;
-    totalAmount: number;
-    availableAmount: number;
-    depositFee: number;
-  };
-
   const popup = usePopup();
 
   const props = defineProps<{
     boardMember: { id: UserId; name: string };
-    allGear: GearInfo<GearItemId>[];
-    allTopos: GearInfo<TopoId>[];
+    allGear: RentalItem<GearItemId>[];
+    allTopos: RentalItem<TopoId>[];
     initialValues: Partial<{
       memberId: UserId;
       contactInfo: {

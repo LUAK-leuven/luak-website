@@ -16,7 +16,7 @@ class GearService {
     return useAsyncData(
       'allGear',
       async () => {
-        const { data: gear } = await this.supabase
+        const { data: gear, error } = await this.supabase
           .from('GearItems')
           .select(
             `
@@ -27,14 +27,18 @@ class GearService {
               amount
             ),
             RentedGear (
-              actual_amount
+              rented_amount,
+              returned_amount
             )
           `,
           )
-          .gt('RentedGear.actual_amount', 0)
           .eq('GearInventory.status', 'available')
           .order('name');
-        if (gear === null) return [];
+
+        if (error || gear === null) {
+          console.warn('getAllGearItems:', error);
+          return [];
+        }
 
         return gear.map((gearItem) => {
           const totalAmount = sumOf(gearItem.GearInventory, 'amount');
@@ -43,7 +47,7 @@ class GearService {
             name: gearItem.name,
             totalAmount: totalAmount,
             availableAmount:
-              totalAmount - sumOf(gearItem.RentedGear, 'actual_amount'),
+              totalAmount - getActualRentedAmount(gearItem.RentedGear),
             depositFee: gearItem.deposit_fee,
           };
         });
@@ -67,9 +71,6 @@ class GearService {
           amount,
           GearItems(
             name,
-            RentedGear(
-              actual_amount
-            ),
             lifespan
           )
           `,
@@ -88,9 +89,6 @@ class GearService {
           lifespan: v[0].GearItems?.lifespan ?? 0,
           name: k,
           totalAmount: sumOf(v, 'amount'),
-          availableAmount:
-            sumOf(v, 'amount') -
-            sumOf(v[0].GearItems?.RentedGear ?? [], 'actual_amount'),
           gearInventory: v.map((x) => ({
             id: x.id as GearInventoryId,
             details: x.details,
@@ -116,11 +114,11 @@ class GearService {
             title,
             amount,
             RentedTopos (
-              actual_amount
+              rented_amount,
+              returned_amount
             )
             `,
           )
-          .gt('RentedTopos.actual_amount', 0)
           .order('title');
 
         if (topos === null) {
@@ -133,7 +131,7 @@ class GearService {
           title: topo.title,
           totalAmount: topo.amount,
           availableAmount:
-            topo.amount - sumOf(topo.RentedTopos, 'actual_amount'),
+            topo.amount - getActualRentedAmount(topo.RentedTopos),
         }));
       },
       { lazy: true },
@@ -244,7 +242,7 @@ class GearService {
               name
             ),
             rented_amount,
-            actual_amount
+            returned_amount
           ),
           RentedTopos(
             Topos(
@@ -252,7 +250,7 @@ class GearService {
               title
             ),
             rented_amount,
-            actual_amount
+            returned_amount
           ),
           contact_info,
           comments
@@ -289,13 +287,13 @@ class GearService {
             gearItemId: gearItem.GearItems!.id as GearItemId,
             name: gearItem.GearItems!.name,
             rentedAmount: gearItem.rented_amount,
-            actualAmount: gearItem.actual_amount,
+            returnedAmount: gearItem.returned_amount,
           })),
           topos: rental.RentedTopos.map((topo) => ({
             topoId: topo.Topos!.id as TopoId,
             title: topo.Topos!.title,
             rentedAmount: topo.rented_amount,
-            actualAmount: topo.actual_amount,
+            returnedAmount: topo.returned_amount,
           })),
           paymentMethod: rental.payment_method,
           status: rental.status,
@@ -312,14 +310,8 @@ class GearService {
       p_date_return: rentalUpdate.dateReturn,
       p_deposit_returned: rentalUpdate.depositReturned,
       p_status: rentalUpdate.status,
-      p_gear: Object.entries(rentalUpdate.gear).map(([id, amount]) => ({
-        id: id,
-        actualAmount: amount,
-      })),
-      p_topos: Object.entries(rentalUpdate.topos).map(([id, amount]) => ({
-        id: id,
-        actualAmount: amount,
-      })),
+      p_gear: rentalUpdate.gear,
+      p_topos: rentalUpdate.topos,
       p_comments: rentalUpdate.comments ?? null,
     });
     if (error) console.warn('updateRental: ', error);
@@ -372,7 +364,7 @@ class GearService {
               name
             ),
             rented_amount,
-            actual_amount
+            returned_amount
           ),
           RentedTopos(
             Topos(
@@ -380,7 +372,7 @@ class GearService {
               title
             ),
             rented_amount,
-            actual_amount
+            returned_amount
           )
           `,
           )
@@ -402,13 +394,13 @@ class GearService {
             gearItemId: gearItem.GearItems!.id as GearItemId,
             name: gearItem.GearItems!.name,
             rentedAmount: gearItem.rented_amount,
-            actualAmount: gearItem.actual_amount,
+            returnedAmount: gearItem.returned_amount,
           })),
           topos: rental.RentedTopos.map((topo) => ({
             topoId: topo.Topos!.id as TopoId,
             title: topo.Topos!.title,
             rentedAmount: topo.rented_amount,
-            actualAmount: topo.actual_amount,
+            returnedAmount: topo.returned_amount,
           })),
           paymentMethod: rental.payment_method,
         }));
@@ -448,6 +440,16 @@ class GearService {
       { lazy: true },
     );
   }
+}
+
+function getActualRentedAmount(
+  arr: { rented_amount: number; returned_amount: number }[],
+): number {
+  return arr.reduce(
+    (sum, { rented_amount, returned_amount }) =>
+      sum + (rented_amount - returned_amount),
+    0,
+  );
 }
 
 let gearServiceInstance: GearService | undefined = undefined;

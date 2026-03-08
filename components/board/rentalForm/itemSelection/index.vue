@@ -1,9 +1,10 @@
-<script lang="ts" setup>
-  import type { RentalItem } from '~/types/board/form/RentaItem';
+<script lang="ts" setup generic="T extends EntityId<unknown>">
+  import type { RentalItem } from '~/types/board/form/RentalItem';
+  import type { EntityId } from '~/types/common';
 
   const { allItems, compositeItems = {} } = defineProps<{
-    allItems: RentalItem[];
-    compositeItems?: Record<string, { itemId: string; amount: number }[]>;
+    allItems: RentalItem<T>[];
+    compositeItems?: Record<string, { itemId: T; amount: number }[]>;
     placeholder: string;
   }>();
 
@@ -11,7 +12,9 @@
     computedDeposit: [value: number];
   }>();
 
-  const model = defineModel<{ id: string; amount: number }[]>({ default: [] });
+  const model = defineModel<{ id: T; amount: number }[]>({
+    default: [],
+  });
 
   const selectedItems = computed(() =>
     model.value.map((it) => {
@@ -49,7 +52,7 @@
 
   const computeAvailableAmountForCompositeItem = (
     subItems: {
-      itemId: string;
+      itemId: T;
       amount: number;
     }[],
   ) =>
