@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import dayjs from 'dayjs';
+  import type { UnsavedRental } from '~/types/renal';
 
   definePageMeta({ middleware: 'board-member-guard' });
 
@@ -10,7 +11,7 @@
   };
 
   const { data: allGear, pending: gearPending } =
-    await gearService().getPublicGearInfo();
+    await gearService().getAllGearItems();
   const { data: allTopos_, pending: toposPending } =
     await gearService().getAllTopos();
   const allTopos = computed(() =>
@@ -23,8 +24,11 @@
     })),
   );
 
-  async function handleSubmit(state: UnsavedRental) {
-    const { error, id } = await gearService().saveRental(state);
+  async function handleSubmit(state: Omit<UnsavedRental, 'boardMemberId'>) {
+    const { error, id } = await gearService().saveRental({
+      ...state,
+      boardMemberId: boardMember.id,
+    });
     if (!error) {
       if (id) navigateTo(`/board/rentals/${id}`);
       else navigateTo('/');
@@ -45,7 +49,7 @@
 
     <BoardRentalForm
       v-else
-      :board-member="boardMember"
+      :board-member-name="boardMember.name"
       :all-gear="allGear"
       :all-topos="allTopos"
       :handle-submit="handleSubmit"

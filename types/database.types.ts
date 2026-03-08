@@ -328,25 +328,25 @@ export type Database = {
       };
       RentedGear: {
         Row: {
-          actual_amount: number;
           gear_item_id: string;
           last_edited_date: string;
           rental_id: string;
           rented_amount: number;
+          returned_amount: number;
         };
         Insert: {
-          actual_amount: number;
           gear_item_id: string;
           last_edited_date?: string;
           rental_id: string;
           rented_amount: number;
+          returned_amount: number;
         };
         Update: {
-          actual_amount?: number;
           gear_item_id?: string;
           last_edited_date?: string;
           rental_id?: string;
           rented_amount?: number;
+          returned_amount?: number;
         };
         Relationships: [
           {
@@ -367,24 +367,24 @@ export type Database = {
       };
       RentedTopos: {
         Row: {
-          actual_amount: number;
           last_edited_date: string;
           rental_id: string;
           rented_amount: number;
+          returned_amount: number;
           topo_id: string;
         };
         Insert: {
-          actual_amount: number;
           last_edited_date?: string;
           rental_id: string;
           rented_amount: number;
+          returned_amount: number;
           topo_id: string;
         };
         Update: {
-          actual_amount?: number;
           last_edited_date?: string;
           rental_id?: string;
           rented_amount?: number;
+          returned_amount?: number;
           topo_id?: string;
         };
         Relationships: [
@@ -407,42 +407,42 @@ export type Database = {
       Topos: {
         Row: {
           amount: number;
-          authors: string[] | null;
+          authors: string[];
           condition: Database['public']['Enums']['topo_condition'];
-          countries: string[] | null;
+          countries: string[];
           details: string | null;
           id: string;
-          languages: string[] | null;
+          languages: string[];
           place_in_library: string;
-          tags: string[] | null;
+          tags: string[];
           title: string;
           types_of_climbing: string[] | null;
           year_published: number | null;
         };
         Insert: {
           amount: number;
-          authors?: string[] | null;
+          authors: string[];
           condition: Database['public']['Enums']['topo_condition'];
-          countries?: string[] | null;
+          countries: string[];
           details?: string | null;
           id?: string;
-          languages?: string[] | null;
+          languages: string[];
           place_in_library: string;
-          tags?: string[] | null;
+          tags: string[];
           title: string;
           types_of_climbing?: string[] | null;
           year_published?: number | null;
         };
         Update: {
           amount?: number;
-          authors?: string[] | null;
+          authors?: string[];
           condition?: Database['public']['Enums']['topo_condition'];
-          countries?: string[] | null;
+          countries?: string[];
           details?: string | null;
           id?: string;
-          languages?: string[] | null;
+          languages?: string[];
           place_in_library?: string;
-          tags?: string[] | null;
+          tags?: string[];
           title?: string;
           types_of_climbing?: string[] | null;
           year_published?: number | null;

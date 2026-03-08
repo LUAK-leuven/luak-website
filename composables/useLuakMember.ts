@@ -1,7 +1,8 @@
 import type { Database } from '~/types/database.types';
+import type { UserId } from '~/types/user';
 
 type UserInfo = {
-  id: string;
+  id: UserId;
   email: string;
   first_name: string;
   last_name: string;
@@ -45,7 +46,7 @@ export default async function (): Promise<{
     };
   }
   const userInfo: UserInfo = {
-    id: data.id,
+    id: data.id as UserId,
     first_name: data.first_name,
     last_name: data.last_name,
     email: data.email,
@@ -58,7 +59,7 @@ export default async function (): Promise<{
     return {
       userInfo,
       isBoard,
-      isMember: false || isBoard,
+      isMember: isBoard,
       hasActiveMembership: false,
     };
   if (membership.Payments.filter((payment) => payment.approved).length === 0)

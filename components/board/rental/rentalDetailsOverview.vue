@@ -52,13 +52,13 @@
             topoId: id,
             title,
             rentedAmount,
-            actualAmount,
+            returnedAmount,
           } of rental.topos"
           :key="id">
           <div class="border p-1">{{ title }}</div>
           <div class="border p-1">{{ rentedAmount }}</div>
           <div class="border p-1">
-            <span>{{ rentedAmount - actualAmount }}</span>
+            <span>{{ returnedAmount }}</span>
           </div>
         </template>
         <template
@@ -66,13 +66,13 @@
             gearItemId: id,
             name,
             rentedAmount,
-            actualAmount,
+            returnedAmount,
           } of rental.gear"
           :key="id">
           <div class="border p-1">{{ name }}</div>
           <div class="border p-1">{{ rentedAmount }}</div>
           <div class="border p-1">
-            <span>{{ rentedAmount - actualAmount }}</span>
+            <span>{{ returnedAmount }}</span>
           </div>
         </template>
       </div>

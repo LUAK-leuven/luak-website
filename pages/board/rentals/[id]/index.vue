@@ -1,7 +1,9 @@
 <script setup lang="ts">
+  import type { RentalId } from '~/types/renal';
+
   definePageMeta({ middleware: 'board-member-guard' });
 
-  const retnalId = useRoute().params.id as string;
+  const retnalId = useRoute().params.id as RentalId;
   const { data: rental, pending } = await gearService().getRental(retnalId);
 </script>
 

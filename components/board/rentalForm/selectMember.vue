@@ -1,22 +1,40 @@
 <script setup lang="ts">
-  const props = withDefaults(
+  import type { UserId } from '~/types/user';
+
+  withDefaults(
     defineProps<{
-      name?: string;
       disable?: boolean;
+      errorMessage?: string;
     }>(),
     {
-      name: 'member',
       disable: false,
+      errorMessage: undefined,
     },
   );
 
+  const model = defineModel<UserId | 'non-user' | undefined>();
+
   const users = await useAsyncData('users', () => userService().getAllUsers());
+  type SelectableUser = {
+    name: string;
+    id: UserId | 'non-user';
+    hasPaid: boolean;
+  };
   const selectableUsers = computed(() =>
-    users.data.value?.map((user) => ({
-      name: user.first_name + ' ' + user.last_name,
-      id: user.id,
-      hasPaid: user.paid_membership,
-    })),
+    users.data.value
+      ?.map(
+        (user) =>
+          ({
+            name: user.first_name + ' ' + user.last_name,
+            id: user.id,
+            hasPaid: user.paid_membership,
+          }) satisfies SelectableUser as SelectableUser,
+      )
+      .concat({
+        name: 'Add a non-member',
+        id: 'non-user',
+        hasPaid: true,
+      }),
   );
 
   function matchFirstLetters(name: string, input: string) {
@@ -30,7 +48,7 @@
     );
   }
 
-  function filterMember(input: string | undefined) {
+  function filterUser(input: string | undefined) {
     if (input === undefined) return selectableUsers.value;
     return selectableUsers.value?.filter(
       (option) =>
@@ -39,28 +57,16 @@
     );
   }
 
-  const { value, errorMessage } = useField<string | undefined>(
-    () => props.name,
-  );
-
   const selectedUser = computed(() =>
-    selectableUsers.value?.find((user) => user.id === value.value),
+    findBy(selectableUsers.value, 'id', model.value),
   );
-  function onSelect(selectedMember: {
-    id: string;
+  function onSelect(selectedUser: {
+    id: UserId | 'non-user';
     name: string;
     hasPaid: boolean;
   }) {
-    value.value = selectedMember.id;
+    model.value = selectedUser.id;
   }
-
-  onMounted(() => {
-    selectableUsers.value?.push({
-      name: 'Add a non-member',
-      id: '',
-      hasPaid: true,
-    });
-  });
 </script>
 
 <template>
@@ -68,17 +74,17 @@
     <InputSearchableSelect
       label="Member name *"
       placeholder="select member"
-      :options-provider="filterMember"
+      :options-provider="filterUser"
       :error-message="errorMessage"
       :selected-item="selectedUser"
-      loading-message="Loading members"
+      loading-message="Loading users"
       :disable="disable"
       @on-select="onSelect">
       <template #item="{ data }">
         <div
           class="px-3 py-1 rounded-md w-full min-w-max"
           :class="
-            data.id === ''
+            data.id === 'non-user'
               ? 'bg-blue-100'
               : data.hasPaid
                 ? 'bg-green-100'
@@ -88,7 +94,7 @@
         </div>
       </template>
     </InputSearchableSelect>
-    <div v-if="value === ''">
+    <div v-if="model === 'non-user'">
       <InputText
         name="contactInfo.fullName"
         placeholder="Adam Ondra"

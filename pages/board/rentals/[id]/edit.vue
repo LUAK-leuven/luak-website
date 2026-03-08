@@ -1,13 +1,15 @@
 <script setup lang="ts">
+  import type { RentalId, UnsavedRental } from '~/types/renal';
+
   definePageMeta({ middleware: 'board-member-guard' });
 
   const route = useRoute();
-  const rentalId = route.params.id as string;
+  const rentalId = route.params.id as RentalId;
 
   const { data: rental, pending: rentalPending } =
     await gearService().getRental(rentalId);
   const { data: _allGear, pending: gearPending } =
-    await gearService().getPublicGearInfo();
+    await gearService().getAllGearItems();
   const { data: _allTopos, pending: toposPending } =
     await gearService().getAllTopos();
 
@@ -37,7 +39,7 @@
     })),
   );
 
-  async function handleSubmit(state: UnsavedRental) {
+  async function handleSubmit(state: Omit<UnsavedRental, 'boardMemberId'>) {
     if (!!rental.value) {
       for (const { gearItemId: id } of rental.value.gear) {
         if (!(id in state.gear)) {
@@ -84,14 +86,15 @@
 
     <BoardRentalForm
       v-else
-      :board-member="{ id: '0000', name: rental.boardMember }"
+      :board-member-name="rental.boardMember"
       :all-gear="allGear"
       :all-topos="allTopos"
       :handle-submit="handleSubmit"
       :initial-values="{
         dateBorrow: rental.dateBorrow,
         dateReturn: rental.dateReturn,
-        memberId: rental.member.id,
+        memberId: rental.memberId ?? 'non-user',
+        contactInfo: rental.memberId === undefined ? rental.member : undefined,
         gear: rental.gear.map((g) => ({
           id: g.gearItemId,
           amount: g.rentedAmount,
