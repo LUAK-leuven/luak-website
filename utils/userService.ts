@@ -1,12 +1,13 @@
 import type { Database } from '~/types/database.types';
+import type { UserId } from '~/types/user';
 
 class UserService {
   private readonly user = useSupabaseUser();
   private readonly supabase = useSupabaseClient<Database>();
 
-  public async getUserInfo(userId?: string) {
+  public async getUserInfo(userId?: UserId) {
     if (userId === undefined) {
-      userId = this.user.value?.id;
+      userId = (this.user.value?.id ?? undefined) as UserId | undefined;
     }
     if (userId === undefined) return undefined;
     const { data } = await this.supabase
@@ -36,7 +37,7 @@ class UserService {
 
     if (users === null) return [];
     return users.map((user) => ({
-      id: user.id,
+      id: user.id as UserId,
       email: user.email,
       first_name: user.first_name,
       last_name: user.last_name,

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import type { UserId } from '~/types/user';
+
   const props = withDefaults(
     defineProps<{
       name?: string;
@@ -12,11 +14,17 @@
 
   const users = await useAsyncData('users', () => userService().getAllUsers());
   const selectableUsers = computed(() =>
-    users.data.value?.map((user) => ({
-      name: user.first_name + ' ' + user.last_name,
-      id: user.id,
-      hasPaid: user.paid_membership,
-    })),
+    users.data.value
+      ?.map((user) => ({
+        name: user.first_name + ' ' + user.last_name,
+        id: user.id,
+        hasPaid: user.paid_membership,
+      }))
+      .concat({
+        name: 'Add a non-member',
+        id: '' as UserId,
+        hasPaid: true,
+      }),
   );
 
   function matchFirstLetters(name: string, input: string) {
@@ -39,7 +47,7 @@
     );
   }
 
-  const { value, errorMessage } = useField<string | undefined>(
+  const { value, errorMessage } = useField<UserId | undefined>(
     () => props.name,
   );
 
@@ -47,20 +55,12 @@
     selectableUsers.value?.find((user) => user.id === value.value),
   );
   function onSelect(selectedMember: {
-    id: string;
+    id: UserId;
     name: string;
     hasPaid: boolean;
   }) {
     value.value = selectedMember.id;
   }
-
-  onMounted(() => {
-    selectableUsers.value?.push({
-      name: 'Add a non-member',
-      id: '',
-      hasPaid: true,
-    });
-  });
 </script>
 
 <template>

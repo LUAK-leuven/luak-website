@@ -94,7 +94,7 @@
       :initial-values="{
         dateBorrow: rental.dateBorrow,
         dateReturn: rental.dateReturn,
-        memberId: rental.memberId,
+        memberId: rental.memberId ?? ('' as UserId),
         contactInfo: rental.memberId === undefined ? rental.member : undefined,
         gear: rental.gear.map((g) => ({
           id: g.gearItemId,
