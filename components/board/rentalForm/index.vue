@@ -10,11 +10,11 @@
   const popup = usePopup();
 
   const props = defineProps<{
-    boardMember: { id: UserId; name: string };
+    boardMemberName: string;
     allGear: RentalItem<GearItemId>[];
     allTopos: RentalItem<TopoId>[];
     initialValues: Partial<{
-      memberId: UserId;
+      memberId: UserId | 'non-user';
       contactInfo: {
         fullName: string;
         email?: string;
@@ -30,7 +30,7 @@
       comments: string;
     }>;
     handleSubmit: (
-      rentalState: UnsavedRental,
+      rentalState: Omit<UnsavedRental, 'boardMemberId'>,
     ) => Promise<{ error: string | undefined }>;
   }>();
 
@@ -51,7 +51,7 @@
       .array()
       .of(
         yup.object({
-          id: entityIdSchema<T>().required(),
+          id: yup.string<T>().required(),
           amount: yup
             .number()
             .required()
@@ -87,7 +87,7 @@
       .required();
 
   const formSchema = yup.object({
-    memberId: entityIdSchema<UserId>().when('contactInfo', {
+    memberId: yup.string<UserId | 'non-user'>().when('contactInfo', {
       is: (x: unknown) => {
         return x === undefined;
       },
@@ -142,6 +142,7 @@
     props: (state: any) => ({ error: state.errors[0] }),
   };
 
+  const [selectedUser] = defineField('memberId');
   const [selectedGear] = defineField('gear');
   const [selectedTopos] = defineField('topos');
   const [dateBorrow, dateBorrowAttr] = defineField('dateBorrow', errorAttr);
@@ -150,8 +151,8 @@
 
   const onSubmit = handleSubmit(async (formState) => {
     const { error } = await props.handleSubmit({
-      memberId: formState.memberId === '' ? undefined : formState.memberId,
-      boardMemberId: props.boardMember.id,
+      memberId:
+        formState.memberId === 'non-user' ? undefined : formState.memberId,
       dateBorrow: formState.dateBorrow,
       dateReturn: formState.dateReturn,
       gear: Object.fromEntries(
@@ -193,14 +194,14 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-2 mb-3">
       <div class="w-full self-end">
         <BoardRentalFormSelectMember
-          name="memberId"
+          v-model="selectedUser"
           :disable="props.initialValues.memberId !== undefined" />
       </div>
 
       <InputText2
         class="w-full"
         label="Board member *"
-        :model-value="boardMember.name"
+        :model-value="boardMemberName"
         :disabled="true" />
 
       <InputText2

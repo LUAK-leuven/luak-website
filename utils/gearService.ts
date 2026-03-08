@@ -318,7 +318,11 @@ class GearService {
     return error === null;
   }
 
-  public async editRental(rental: UnsavedRental & { id: RentalId }) {
+  public async editRental(
+    rental: Omit<Omit<UnsavedRental, 'memberId'>, 'boardMemberId'> & {
+      id: RentalId;
+    },
+  ) {
     const { error } = await this.supabase.rpc('edit_rental', {
       p_rental_id: rental.id,
       p_contact_info: rental.contactInfo

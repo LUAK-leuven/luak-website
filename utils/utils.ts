@@ -66,11 +66,11 @@ export function getBy<T extends Record<K, V>, K extends keyof T, V>(
 }
 
 export function findBy<T extends Record<K, V>, K extends keyof T, V>(
-  arr: T[],
+  arr: T[] | undefined,
   key: K,
   value: V,
 ): T | undefined {
-  return arr.find((x) => x[key] === value);
+  return arr?.find((x) => x[key] === value);
 }
 
 export async function sleep(ms: number): Promise<void> {

@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import type { RentalId, UnsavedRental } from '~/types/renal';
-  import type { UserId } from '~/types/user';
 
   definePageMeta({ middleware: 'board-member-guard' });
 
@@ -40,7 +39,7 @@
     })),
   );
 
-  async function handleSubmit(state: UnsavedRental) {
+  async function handleSubmit(state: Omit<UnsavedRental, 'boardMemberId'>) {
     if (!!rental.value) {
       for (const { gearItemId: id } of rental.value.gear) {
         if (!(id in state.gear)) {
@@ -87,14 +86,14 @@
 
     <BoardRentalForm
       v-else
-      :board-member="{ id: '0000' as UserId, name: rental.boardMember }"
+      :board-member-name="rental.boardMember"
       :all-gear="allGear"
       :all-topos="allTopos"
       :handle-submit="handleSubmit"
       :initial-values="{
         dateBorrow: rental.dateBorrow,
         dateReturn: rental.dateReturn,
-        memberId: rental.memberId ?? ('' as UserId),
+        memberId: rental.memberId ?? 'non-user',
         contactInfo: rental.memberId === undefined ? rental.member : undefined,
         gear: rental.gear.map((g) => ({
           id: g.gearItemId,

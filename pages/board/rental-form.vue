@@ -24,8 +24,11 @@
     })),
   );
 
-  async function handleSubmit(state: UnsavedRental) {
-    const { error, id } = await gearService().saveRental(state);
+  async function handleSubmit(state: Omit<UnsavedRental, 'boardMemberId'>) {
+    const { error, id } = await gearService().saveRental({
+      ...state,
+      boardMemberId: boardMember.id,
+    });
     if (!error) {
       if (id) navigateTo(`/board/rentals/${id}`);
       else navigateTo('/');
@@ -46,7 +49,7 @@
 
     <BoardRentalForm
       v-else
-      :board-member="boardMember"
+      :board-member-name="boardMember.name"
       :all-gear="allGear"
       :all-topos="allTopos"
       :handle-submit="handleSubmit"
