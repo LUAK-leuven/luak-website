@@ -37,23 +37,12 @@
       }),
   );
 
-  function matchFirstLetters(name: string, input: string) {
-    return (
-      input.toLowerCase() ===
-      name
-        .split(' ')
-        .map((x) => x.at(0))
-        .join('')
-        .toLowerCase()
-    );
-  }
-
   function filterUser(input: string | undefined) {
     if (input === undefined) return selectableUsers.value;
     return selectableUsers.value?.filter(
       (option) =>
         fuzzySearch(option.name, input) > 0 ||
-        matchFirstLetters(option.name, input),
+        matchOnFirstLetters(option.name, input),
     );
   }
 

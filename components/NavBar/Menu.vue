@@ -56,6 +56,7 @@
             <NuxtLink to="/pages/become_a_member">Become a member</NuxtLink>
           </li>
           <li><NuxtLink to="/stories">Stories</NuxtLink></li>
+          <li><NuxtLink to="/topo-library">Topo Library</NuxtLink></li>
         </ul>
       </details>
     </li>

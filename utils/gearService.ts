@@ -444,6 +444,38 @@ class GearService {
       { lazy: true },
     );
   }
+
+  public async getTopoLibrary() {
+    return useAsyncData(
+      'allTopos',
+      async () => {
+        const { data: topos, error } = await this.supabase
+          .from('Topos')
+          .select('*');
+
+        if (topos === null) {
+          console.warn('getAllTopos', error);
+          return [];
+        }
+
+        return topos.map((topo) => ({
+          amount: topo.amount,
+          authors: topo.authors,
+          condition: topo.condition,
+          countries: topo.countries,
+          details: topo.details ?? undefined,
+          id: topo.id as TopoId,
+          languages: topo.languages,
+          place_in_library: topo.place_in_library,
+          tags: topo.tags,
+          title: topo.title,
+          types_of_climbing: topo.types_of_climbing,
+          year_published: topo.year_published,
+        }));
+      },
+      { lazy: true },
+    );
+  }
 }
 
 function getActualRentedAmount(

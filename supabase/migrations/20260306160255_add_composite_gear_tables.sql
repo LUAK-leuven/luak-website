@@ -113,4 +113,4 @@ alter table "public"."Topos" alter column authors set not null;
 alter table "public"."Topos" alter column countries set not null;
 alter table "public"."Topos" alter column tags set not null;
 alter table "public"."Topos" alter column languages set not null;
-alter table "public"."Topos" alter column types_of_climbing drop not null;
+alter table "public"."Topos" alter column types_of_climbing set not null;

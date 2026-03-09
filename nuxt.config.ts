@@ -22,7 +22,7 @@ export default defineNuxtConfig({
     redirectOptions: {
       login: '/login',
       callback: '/confirmLogin',
-      include: ['/profile(/*)?', '/stories(/*)?'],
+      include: ['/profile(/*)?', '/stories(/*)?', '/topo-library'],
       saveRedirectToCookie: true,
     },
   },
@@ -50,7 +50,7 @@ export default defineNuxtConfig({
   studio: {
     // Studio admin route (default: '/_studio')
     route: '/_studio',
-    
+
     // Git repository configuration
     repository: {
       provider: 'github',

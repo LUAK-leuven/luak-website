@@ -9,13 +9,21 @@ export function sumOf<T extends Record<K, number>, K extends keyof T>(
   return array.reduce((sum, current) => sum + current[key], 0);
 }
 
-export function search(content: string, searchTerm: string): boolean {
+export function search(
+  content: string,
+  searchTerm: string | undefined,
+): boolean {
+  if (!searchTerm) return true;
   if (!content) return false;
   return content.toLowerCase().includes(searchTerm.toLowerCase());
 }
 
-export function fuzzySearch(content: string, searchTerm: string): number {
+export function fuzzySearch(
+  content: string,
+  searchTerm: string | undefined,
+): number {
   if (!content) return 0;
+  if (!searchTerm) return 1;
   content = content.toLowerCase();
   const searchTerms = searchTerm.toLowerCase().split(' ');
   const matches = searchTerms
@@ -75,4 +83,20 @@ export function findBy<T extends Record<K, V>, K extends keyof T, V>(
 
 export async function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export function matchAny<T extends string>(tags: T[], selected: T[]): boolean {
+  if (selected.length === 0) return true;
+  return selected.some((it) => tags.includes(it));
+}
+
+export function matchOnFirstLetters(name: string, input: string) {
+  return (
+    input.toLowerCase() ===
+    name
+      .split(' ')
+      .map((x) => x.at(0))
+      .join('')
+      .toLowerCase()
+  );
 }
