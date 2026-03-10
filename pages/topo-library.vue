@@ -95,7 +95,6 @@
               :options="allCountries"
               placeholder="Select country">
             </TopoLibrarySearchableSelect>
-            <div class="h-10"></div>
           </div>
         </template>
       </Collapsable>
