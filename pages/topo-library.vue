@@ -11,25 +11,35 @@
   const allCountries = computed(() =>
     [...new Set(topos.value?.flatMap((it) => it.countries))].toSorted(),
   );
+  const allTags = computed(() => [
+    ...new Set(topos.value?.flatMap((it) => it.tags)),
+  ]);
 
   const searchTerm = ref<string>();
   const selectedTypesOfClimbing = ref<string[]>([]);
   const selectedCountries = ref<string[]>([]);
+
+  const matchedTags = computed(() =>
+    searchInArray(allTags.value, searchTerm.value),
+  );
 
   const filteredTopos = computed(() => {
     return (
       topos.value
         ?.filter((topo) => {
           const matchesSearch = !!fuzzySearch(topo.title, searchTerm.value);
-          const matchesTypesOfClimbing = matchAny(
-            topo.types_of_climbing,
-            selectedTypesOfClimbing.value,
+          const matchesTags = matchAny(topo.tags, matchedTags.value);
+          const matchesTypesOfClimbing =
+            selectedTypesOfClimbing.value.length == 0 ||
+            matchAny(topo.types_of_climbing, selectedTypesOfClimbing.value);
+          const matchesCountries =
+            selectedCountries.value.length == 0 ||
+            matchAny(topo.countries, selectedCountries.value);
+          return (
+            (matchesSearch || matchesTags) &&
+            matchesTypesOfClimbing &&
+            matchesCountries
           );
-          const matchesCountries = matchAny(
-            topo.countries,
-            selectedCountries.value,
-          );
-          return matchesSearch && matchesTypesOfClimbing && matchesCountries;
         })
         .sort((a, b) => {
           return a.title.localeCompare(b.title);
@@ -37,6 +47,7 @@
     );
   });
 </script>
+
 <template>
   <FullPageCard>
     <template #title>Topo Library</template>
@@ -54,16 +65,7 @@
     <!-- Data display -->
     <div v-else>
       <!-- Filters -->
-      <div class="flex flex-col md:flex-row gap-4 mb-6">
-        <InputText2
-          v-model="searchTerm"
-          label="Search by title"
-          type="text"
-          placeholder="Search by title">
-        </InputText2>
-      </div>
-
-      <Collapsable>
+      <Collapsable class="mt-0" open>
         <template #title>
           <div class="flex flex-row items-center gap-2">
             Filters
@@ -72,7 +74,13 @@
         </template>
         <template #content>
           <div class="flex flex-col">
-            <span class="font-bold">Type(s) of climbing:</span>
+            <span class="font-bold">Search:</span>
+            <InputText2
+              v-model="searchTerm"
+              type="text"
+              placeholder="Search by title">
+            </InputText2>
+            <span class="font-bold mt-3">Type(s) of climbing:</span>
             <div class="flex flex-row flex-wrap gap-x-1 gap-y-1">
               <InputSelectableBadge
                 v-for="typeOfClimbing of allTypesOfClimbing"
@@ -89,7 +97,7 @@
                 ">
               </InputSelectableBadge>
             </div>
-            <span class="font-bold">Countries:</span>
+            <span class="font-bold mt-3">Countries:</span>
             <TopoLibrarySearchableSelect
               v-model="selectedCountries"
               :options="allCountries"
@@ -98,6 +106,11 @@
           </div>
         </template>
       </Collapsable>
+
+      <!-- <div>Matched tags: {{ matchedTags }}</div> -->
+      <div>
+        <p>Found {{ filteredTopos.length }} out of {{ topos.length }} topos.</p>
+      </div>
 
       <!-- Table -->
       <div class="overflow-x-auto max-w-[80vw]">
@@ -132,8 +145,14 @@
       </div>
 
       <!-- No results message -->
-      <!-- <div v-if="filteredSubscriptions.length === 0" class="text-center py-10">
+      <div v-if="filteredTopos.length === 0" class="text-center pt-8">
         <p>No subscriptions found matching your criteria.</p>
+      </div>
+
+      <!-- <div>
+        <p>topos: {{ topos.length }}</p>
+        <p>pending: {{ isLoading }}</p>
+        <p>error: {{ error }}</p>
       </div> -->
     </div>
   </FullPageCard>

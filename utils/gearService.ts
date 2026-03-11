@@ -467,7 +467,7 @@ class GearService {
           id: topo.id as TopoId,
           languages: topo.languages,
           place_in_library: topo.place_in_library,
-          tags: topo.tags,
+          tags: topo.tags.map((it) => it.trimStart()),
           title: topo.title,
           types_of_climbing: topo.types_of_climbing,
           year_published: topo.year_published,
