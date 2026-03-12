@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  const user = await useLuakMember();
   const {
     data: topos,
     pending: isLoading,
@@ -118,27 +119,27 @@
           <thead>
             <tr>
               <th>Title</th>
+              <th v-if="user.isBoard">Place in library</th>
               <th>Year</th>
               <th>Countries</th>
-              <th>Amount</th>
               <th>Type(s) of climbing</th>
-              <th>Languages</th>
+              <!-- <th>Languages</th> -->
             </tr>
           </thead>
           <tbody>
             <tr v-for="topo in filteredTopos" :key="topo.id">
-              <td>{{ topo.title }}</td>
+              <td>
+                <NuxtLink :to="`/topos/${topo.id}`">{{ topo.title }}</NuxtLink>
+              </td>
+              <td v-if="user.isBoard">{{ topo.place_in_library }}</td>
               <td>{{ topo.year_published }}</td>
               <td>{{ topo.countries.join(', ') }}</td>
               <td>
-                {{ topo.amount }}
-              </td>
-              <td>
                 {{ topo.types_of_climbing.join(', ') }}
               </td>
-              <td>
+              <!-- <td>
                 {{ topo.languages.join(', ') }}
-              </td>
+              </td> -->
             </tr>
           </tbody>
         </table>
