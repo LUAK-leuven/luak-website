@@ -34,14 +34,14 @@ export default defineNuxtConfig({
         'https://buy.stripe.com/4gwbKnfctdokdgYcMM',
     },
   },
-  sentry: {
-    sourceMapsUploadOptions: {
-      org: 'luak',
-      project: 'luak-nuxt',
-      authToken:
-        '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',
-    },
-  },
+  // sentry: {
+  //   sourceMapsUploadOptions: {
+  //     org: 'luak',
+  //     project: 'luak-nuxt',
+  //     authToken:
+  //       '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',
+  //   },
+  // },
   content: {
     renderer: {
       anchorLinks: false,
@@ -67,7 +67,7 @@ export default defineNuxtConfig({
     '@nuxtjs/supabase',
     '@vee-validate/nuxt',
     '@nuxt/eslint',
-    '@sentry/nuxt/module',
+    // '@sentry/nuxt/module',
     'nuxt-studio',
   ],
 });
