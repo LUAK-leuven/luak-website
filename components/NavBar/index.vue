@@ -21,7 +21,9 @@
           <NavBarHamburgerButton />
         </div>
       </div>
+
       <slot />
+
       <div v-if="user.isBoard" class="fab">
         <!-- a focusable div with tabindex is necessary to work on all browsers. role="button" is necessary for accessibility -->
         <div
@@ -54,12 +56,15 @@
         </NuxtLink>
       </div>
     </div>
+
     <div class="drawer-side z-50">
       <label
         class="drawer-overlay"
         for="my-drawer-3"
         aria-label="close sidebar" />
-      <NavBarMenu class="p-4 w-80 min-h-full bg-base-200" />
+      <NavBarMenu
+        id="luak_menu_drawer"
+        class="p-4 w-80 min-h-full bg-base-200" />
     </div>
   </div>
 </template>

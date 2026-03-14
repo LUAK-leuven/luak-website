@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { idText } from 'typescript';
+  const props = defineProps<{ id?: string }>();
 
   const { data: info_navigation } = await useAsyncData('info_navigation', () =>
     queryCollectionNavigation('info_'),
@@ -20,20 +20,22 @@
     useToggleCloseFix('board-toggle');
     useToggleCloseFix('member-toggle');
 
-    // Fix drawer closing by closing drawer on click
-    const links = document
-      .getElementById('luak_menu')
-      ?.getElementsByTagName('a');
-    if (links) {
-      for (const link of links) {
-        link.addEventListener('click', closeDrawer);
+    if (props.id !== undefined) {
+      // Fix drawer closing by closing drawer on click
+      const links = document
+        .getElementById(props.id)
+        ?.getElementsByTagName('a');
+      if (links) {
+        for (const link of links) {
+          link.addEventListener('click', closeDrawer);
+        }
       }
     }
   });
 </script>
 
 <template>
-  <ul id="luak_menu" class="menu">
+  <ul :id="id" class="menu">
     <li>
       <NuxtLink to="/pages/about">About us</NuxtLink>
     </li>
