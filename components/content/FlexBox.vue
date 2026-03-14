@@ -25,7 +25,7 @@
       <slot name="item5" />
     </div>
     <div v-if="$slots.item6" class="max-w-60 md:max-w-80 mx-2">
-      <slot key="item6" />
+      <slot name="item6" />
     </div>
     <div v-if="$slots.item7" class="max-w-60 md:max-w-80 mx-2">
       <slot name="item7" />
