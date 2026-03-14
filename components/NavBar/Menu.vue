@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import { idText } from 'typescript';
+
   const { data: info_navigation } = await useAsyncData('info_navigation', () =>
     queryCollectionNavigation('info_'),
   );
@@ -33,13 +35,20 @@
 <template>
   <ul id="luak_menu" class="menu">
     <li>
+      <NuxtLink to="/pages/about">About us</NuxtLink>
+    </li>
+    <li>
       <NuxtLink to="/activities">Activities</NuxtLink>
     </li>
     <li>
       <details id="info-toggle">
         <summary>Info</summary>
-        <ul class="p-2 bg-base-200 rounded-t-none">
-          <li v-for="nav in info_navigation?.[0]?.children" :key="nav.path">
+        <ul class="p-2 bg-base-200 rounded-t-none w-48">
+          <li
+            v-for="nav in info_navigation?.[0]?.children?.filter(
+              (it) => it.title !== 'Contact',
+            )"
+            :key="nav.path">
             <NuxtLink :to="nav.path">{{ nav.title }}</NuxtLink>
           </li>
         </ul>
@@ -83,6 +92,9 @@
           </li>
         </ul>
       </details>
+    </li>
+    <li>
+      <NuxtLink to="/pages/contact">Contact</NuxtLink>
     </li>
     <NuxtLink
       v-if="user.userInfo === undefined"
