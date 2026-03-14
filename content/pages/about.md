@@ -60,4 +60,4 @@ Het hek is van de dam. De volgende jaren worden we getrakteerd op soms halve boe
 
 ## Rules and regulations
 
-\[TODO]: The boring stuff ...
+:include-content{content="rules_and_regulations"}

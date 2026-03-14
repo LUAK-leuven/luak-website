@@ -24,5 +24,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (data === null || data.length === 0) {
     return navigateTo('/');
   }
+
+  // const isActiveMember = data.some((it) => it.Payments.length > 0);
+  // if (!isActiveMember) return navigateTo('/pages/become_a_member');
   return;
 });
