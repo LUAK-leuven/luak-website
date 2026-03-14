@@ -5,9 +5,15 @@ description: Page about what LUAK is
 
 ## What is LUAK?
 
-\[TODO]: LUAK is ...
+LUAK is a climbing community full of enthusiast climbers. We are passionate about all outdoor climbing & mountain sports: boulder, sport climbing, trad climbing, alpinism, tourski, ice climbing, ...
 
-#### Our clubhouse 🏠
+We are a student club, but we are not limited to students, there are also a lot of non-studends in our club. LUAK is a great place for both beginners and experienced people. We organize climbing trips/weekends and members can borrow gear (for free).
+
+We also have a clubhouse where we hold a weekly club evening. This is the moment where we make our climbing plans for the weekend, borrow gear, exchange climbing stories and have fun ...
+
+Want to learn more about us? Don't hesitate to pass by on one of our club evenings :)
+
+### The LUAK clubhouse 🏠
 
 - Address: Minderbroederstraat 50, 3000 Leuven (opposite to nr. 25 behind the iron cast gate)
 - Open every Thursday evening (only during the academic year) starting from 20h30
