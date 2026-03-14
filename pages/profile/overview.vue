@@ -21,7 +21,7 @@
             <NuxtLink class="btn" to="/profile/settings"> settings </NuxtLink>
           </template>
         </UserCard>
-        <!-- <UserCard image="/20241102_134927[1].jpg">
+        <UserCard image="/20241102_134927[1].jpg">
           <template #title> My gear ⚙️ </template>
           <template #description>
             View the status of your active rental(s)
@@ -31,7 +31,7 @@
               my gear
             </NuxtLink>
           </template>
-        </UserCard> -->
+        </UserCard>
         <UserLogOutCard />
       </div>
     </template>

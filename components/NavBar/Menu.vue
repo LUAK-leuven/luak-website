@@ -63,9 +63,6 @@
       <details id="member-toggle">
         <summary>Member section</summary>
         <ul class="p-2 bg-base-200 rounded-t-none w-52">
-          <li>
-            <NuxtLink to="/pages/become_a_member">Become a member</NuxtLink>
-          </li>
           <li><NuxtLink to="/stories">Stories</NuxtLink></li>
           <li><NuxtLink to="/topos/library">Topo Library</NuxtLink></li>
         </ul>
