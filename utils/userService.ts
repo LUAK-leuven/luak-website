@@ -2,50 +2,6 @@ import type { Database } from '~/types/database.types';
 import type { UserId } from '~/types/user';
 
 class UserService {
-  // private readonly getMembershipInfo = async () => {
-  //   const { data, error } = await useAsyncData(
-  //     'membershipInfo',
-  //     async () => {
-  //       const user = useSupabaseUser();
-  //       if (user.value === null) return undefined;
-  //       const { data, error } = await useSupabaseClient<Database>()
-  //         .from('Users')
-  //         .select(
-  //           'first_name, last_name, Memberships(year, Payments(approved))',
-  //         )
-  //         .eq('id', user.value.id)
-  //         .eq('Memberships.Payments.approved', true)
-  //         .single();
-  //       if (error) {
-  //         console.warn('error', error);
-  //         throw error;
-  //       }
-  //       return data.Memberships.filter(({ Payments }) =>
-  //         Payments.some(({ approved }) => approved),
-  //       ).map(({ year }) => year);
-  //     },
-  //     { lazy: false },
-  //   );
-  //   if (error) console.warn('membershipInfo', error);
-  //   return data.value ?? undefined;
-  // };
-
-  // public async wasMemberLastYear() {
-  //   const paidMemberships = await this.getMembershipInfo();
-  //   if (paidMemberships === undefined) return false;
-  //   const currentYear = getLuakYear();
-  //   return (
-  //     !paidMemberships.includes(currentYear) &&
-  //     paidMemberships.includes(currentYear - 1)
-  //   );
-  // }
-
-  // public async isFirstTimeMember() {
-  //   const paidMemberships = await this.getMembershipInfo();
-  //   if (paidMemberships === undefined) return false;
-  //   return paidMemberships.length === 0;
-  // }
-
   public async getAllUsers() {
     return useAsyncData('allUsers', async () => {
       const { data: users, error } = await useSupabaseClient<Database>()

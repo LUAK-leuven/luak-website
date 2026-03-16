@@ -27,7 +27,9 @@
         <div class="flex flex-row gap-x-1 items-center flex-wrap">
           <span class="w-max flex-shrink-0">Return date:</span>
           <span class="flex-[44] flex-shrink">
-            <BoardRentalReturnDate :date="rental.dateReturn" />
+            <BoardRentalReturnDate
+              :date="rental.dateReturn"
+              :ghost="rental.status === 'returned'" />
           </span>
         </div>
         <div class="flex flex-row gap-1 items-center flex-wrap">

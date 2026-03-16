@@ -169,7 +169,10 @@
         <span class="w-max flex-shrink-0">Return date:</span>
         <span class="flex-[44] flex-shrink">
           <InputText v-if="editMode" name="dateReturn" type="date" />
-          <BoardRentalReturnDate v-else :date="rental.dateReturn" />
+          <BoardRentalReturnDate
+            v-else
+            :date="rental.dateReturn"
+            :ghost="rental.status === 'returned'" />
         </span>
       </div>
       <div class="flex flex-row gap-1 items-center">
