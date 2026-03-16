@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  const user = await useLuakMember();
+  const { data: user } = await useLuakMember();
 </script>
 
 <template>

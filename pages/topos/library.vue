@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  const user = await useLuakMember();
+  const { data: user } = await useLuakMember();
   const {
     data: topos,
     pending: isLoading,
@@ -123,7 +123,6 @@
               <th>Year</th>
               <th>Countries</th>
               <th>Type(s) of climbing</th>
-              <!-- <th>Languages</th> -->
             </tr>
           </thead>
           <tbody>
@@ -137,9 +136,6 @@
               <td>
                 {{ topo.types_of_climbing.join(', ') }}
               </td>
-              <!-- <td>
-                {{ topo.languages.join(', ') }}
-              </td> -->
             </tr>
           </tbody>
         </table>

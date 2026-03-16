@@ -14,7 +14,7 @@
 
   const model = defineModel<UserId | 'non-user' | undefined>();
 
-  const users = await useAsyncData('users', () => userService().getAllUsers());
+  const users = await userService().getAllUsers();
   type SelectableUser = {
     name: string;
     id: UserId | 'non-user';

@@ -10,6 +10,7 @@
   const supabase = useSupabaseClient<Database>();
   const user = useSupabaseUser();
   const env = useRuntimeConfig().public;
+  const { isFirstTimeMember } = await useMemberService();
 
   const buyMembership = handleSubmit(async (submitted) => {
     let membership;
@@ -53,40 +54,6 @@
     if (values.value.kbf_uiaa_member === 'kbf_luak' || isFirstTimeMember.value)
       return 15;
     else return 20;
-  });
-
-  const isFirstTimeMember = ref(false);
-  async function getIsFirstTimeMember(): Promise<boolean> {
-    if (user.value?.id) {
-      const { data: membershipIds } = await supabase
-        .from('Memberships')
-        .select('id')
-        .eq('user_id', user.value?.id)
-        .lte('year', luak_year);
-      if (membershipIds === null || membershipIds.length === 0) {
-        return true;
-      }
-
-      const { data: payments } = await supabase
-        .from('Payments')
-        .select('*')
-        .in(
-          'membership_id',
-          membershipIds.map((item) => item.id),
-        )
-        .eq('approved', true);
-      if (payments === null || payments.length === 0) {
-        return true;
-      }
-
-      return false;
-    }
-
-    return false;
-  }
-
-  onMounted(async () => {
-    isFirstTimeMember.value = await getIsFirstTimeMember();
   });
 </script>
 

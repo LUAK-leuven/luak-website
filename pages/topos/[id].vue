@@ -3,7 +3,7 @@
 
   definePageMeta({ middleware: 'active-member-guard' });
 
-  const user = await useLuakMember();
+  const { data: user } = await useLuakMember();
   const topoId = useRoute().params.id as TopoId;
   const { data: topo, pending } = await gearService().getTopo(topoId);
 </script>

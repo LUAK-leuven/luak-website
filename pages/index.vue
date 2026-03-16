@@ -6,6 +6,8 @@
   const { data } = await useAsyncData(() =>
     queryCollection('news').order('date', 'DESC').limit(NR_OF_ARTICLES).all(),
   );
+  const { data: user } = await useLuakMember();
+  const { wasMemberLastYear } = await useMemberService();
 </script>
 
 <template>
@@ -20,14 +22,23 @@
           Leuvense Universitaire Alpinisten Klub ⛰️ Alpine club in leuven for
           outdoors lovers from beginners to more seasoned climbers 🧗
         </p>
-        <NuxtLink class="btn btn-primary m-2" to="/activities">
-          Check our activities
-        </NuxtLink>
-        <NuxtLink
-          class="btn btn-outline m-2 text-white"
-          to="/pages/become_a_member">
-          Become a member
-        </NuxtLink>
+        <div class="flex flex-row flex-wrap justify-center">
+          <NuxtLink class="btn btn-primary m-2" to="/activities">
+            Check our activities
+          </NuxtLink>
+          <NuxtLink
+            v-if="!user.hasActiveMembership && !wasMemberLastYear"
+            class="btn btn-outline m-2 text-white"
+            to="/pages/become_a_member">
+            Become a member
+          </NuxtLink>
+          <NuxtLink
+            v-if="wasMemberLastYear"
+            class="btn m-2 text-white bg-orange-400 border-orange-400 hover:bg-orange-600 hover:border-orange-600"
+            to="/profile/overview">
+            Renew membership
+          </NuxtLink>
+        </div>
       </div>
     </div>
   </div>

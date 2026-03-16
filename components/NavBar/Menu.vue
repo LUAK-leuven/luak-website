@@ -4,7 +4,7 @@
   const { data: info_navigation } = await useAsyncData('info_navigation', () =>
     queryCollectionNavigation('info_'),
   );
-  const user = await useLuakMember();
+  const { data: user } = await useLuakMember();
 
   const closeDrawer = () => {
     const drawerToggle = document.getElementById(

@@ -4,10 +4,11 @@
 
   definePageMeta({ middleware: 'board-member-guard' });
 
-  const user = await useLuakMember();
+  const { data: user } = await useLuakMember();
   const boardMember = {
-    name: user.userInfo!.first_name + ' ' + user.userInfo!.last_name,
-    id: user.userInfo!.id,
+    name:
+      user.value.userInfo!.first_name + ' ' + user.value.userInfo!.last_name,
+    id: user.value.userInfo!.id,
   };
 
   const { data: allGear, pending: gearPending } =
