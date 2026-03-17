@@ -6,11 +6,11 @@
     layout: false,
   });
 
-  const { data: rentals, pending } = await gearService().getRentals();
+  const { data, pending } = await gearService().getRentals();
 
-  watch(rentals, (value, oldValue) => {
-    if (oldValue === null && value !== null) {
-      rentals.value?.sort((a, b) => {
+  const rentals = computed(() => {
+    if (data.value !== null) {
+      return data.value.toSorted((a, b) => {
         if (a.status !== 'returned' && b.status !== 'returned') {
           if (a.dateReturn === b.dateReturn) return 0;
           if (a.dateReturn < b.dateReturn) return -1;
@@ -24,6 +24,8 @@
         if (b.status === 'returned') return -1;
         return 1;
       });
+    } else {
+      return undefined;
     }
   });
 

@@ -284,18 +284,24 @@ class GearService {
           dateReturn: rental.date_return,
           depositFee: rental.deposit,
           depositReturned: rental.deposit_returned,
-          gear: rental.RentedGear.map((gearItem) => ({
-            gearItemId: gearItem.GearItems!.id as GearItemId,
-            name: gearItem.GearItems!.name,
-            rentedAmount: gearItem.rented_amount,
-            returnedAmount: gearItem.returned_amount,
-          })),
-          topos: rental.RentedTopos.map((topo) => ({
-            topoId: topo.Topos!.id as TopoId,
-            title: topo.Topos!.title,
-            rentedAmount: topo.rented_amount,
-            returnedAmount: topo.returned_amount,
-          })),
+          gear: sortBy(
+            rental.RentedGear.map((gearItem) => ({
+              gearItemId: gearItem.GearItems!.id as GearItemId,
+              name: gearItem.GearItems!.name,
+              rentedAmount: gearItem.rented_amount,
+              returnedAmount: gearItem.returned_amount,
+            })),
+            'name',
+          ),
+          topos: sortBy(
+            rental.RentedTopos.map((topo) => ({
+              topoId: topo.Topos!.id as TopoId,
+              title: topo.Topos!.title,
+              rentedAmount: topo.rented_amount,
+              returnedAmount: topo.returned_amount,
+            })),
+            'title',
+          ),
           paymentMethod: rental.payment_method,
           status: rental.status,
           comments: rental.comments ?? undefined,

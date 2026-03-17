@@ -1,3 +1,5 @@
+import type { K } from 'vue-router/dist/router-CWoNjPRp.mjs';
+
 export function sum(array: number[]): number {
   return array.reduce((sum, current) => sum + current, 0);
 }
@@ -59,4 +61,17 @@ export function findBy<T extends Record<K, V>, K extends keyof T, V>(
 
 export async function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export function sortBy<T extends Record<K, string>, K extends keyof T>(
+  arr: T[],
+  key: K,
+) {
+  return arr.toSorted((a, b) =>
+    a[key].toLowerCase() < b[key].toLowerCase()
+      ? -1
+      : a[key] === b[key]
+        ? 0
+        : 1,
+  );
 }
