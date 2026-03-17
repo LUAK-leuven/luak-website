@@ -2,7 +2,7 @@
   import * as yup from 'yup';
   import type { Enums } from '~/types/database.types';
   import type { GearItemId, TopoId } from '~/types/gear';
-  import { computeRentalStatus } from '~/utils/rental/computeStatus';
+  import { computeRentalStatusUnsafe } from '~/utils/rental/computeStatus';
 
   const { rental } = defineProps<{ rental: RentalDetails }>();
   const popup = usePopup();
@@ -124,7 +124,7 @@
   const computedStatus: ComputedRef<Enums<'rental_status'>> = computed(() => {
     if (editMode.value) {
       if (values.statusReserved) return 'reserved';
-      return computeRentalStatus(
+      return computeRentalStatusUnsafe(
         rental.gear.map((it) => it.rentedAmount),
         values.returnedGear!,
         rental.topos.map((it) => it.rentedAmount),

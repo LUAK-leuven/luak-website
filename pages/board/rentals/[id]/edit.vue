@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import type { RentalId, UnsavedRental } from '~/types/renal';
+  import { computeRentalStatus } from '~/utils/rental/computeStatus';
 
   definePageMeta({ middleware: 'board-member-guard' });
 
@@ -51,6 +52,20 @@
           state.topos[id] = 0;
         }
       }
+      state.status =
+        state.status === 'reserved'
+          ? 'reserved'
+          : computeRentalStatus(
+              state.gear,
+              Object.fromEntries(
+                rental.value.gear.map((g) => [g.gearItemId, g.returnedAmount]),
+              ),
+              state.topos,
+              Object.fromEntries(
+                rental.value.topos.map((t) => [t.topoId, t.returnedAmount]),
+              ),
+              rental.value.depositReturned,
+            );
       const success = await gearService().editRental({
         ...state,
         id: rental.value.id,
