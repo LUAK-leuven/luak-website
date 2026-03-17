@@ -80,14 +80,27 @@
       const item = getBy(allItems, 'name', name);
       const selectedItem = findBy(model.value, 'id', item.id);
       if (selectedItem === undefined) {
-        model.value.push({
-          id: item.id,
-          amount: defaultAmount,
-        });
+        model.value = [
+          ...model.value,
+          {
+            id: item.id,
+            amount: defaultAmount,
+          },
+        ];
       } else {
         selectedItem.amount += defaultAmount;
       }
     }
+  };
+
+  const removeItem = (itemId: T) => {
+    model.value = model.value.filter((it) => itemId !== it.id);
+  };
+
+  const updateItem = (itemId: T, amount: number) => {
+    model.value = model.value.map((it) =>
+      it.id === itemId ? { id: it.id, amount: amount } : it,
+    );
   };
 
   watch(
@@ -113,12 +126,7 @@
 
   <BoardRentalFormItemSelectionOverview
     :selected-items="selectedItems"
-    @remove-item="(id) => (model = model.filter((it) => id !== it.id))"
-    @update-selected-item-amount="
-      (id, amount) => {
-        const item = findBy(model, 'id', id);
-        if (item !== undefined) item.amount = amount;
-      }
-    ">
+    @remove-item="removeItem"
+    @update-selected-item-amount="updateItem">
   </BoardRentalFormItemSelectionOverview>
 </template>

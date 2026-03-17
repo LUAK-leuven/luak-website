@@ -282,6 +282,8 @@
     </div>
   </form>
 
-  <!-- <p>SelectedGear: {{ selectedGear }}</p>
-  <p>Values: {{ values }}</p> -->
+  <!-- <p>SelectedGear: {{ selectedGear }}</p> -->
+  <p>Values: {{ values }}</p>
+  <p>Errors: {{ errors }}</p>
+  <p>Meta: {{ meta }}</p>
 </template>

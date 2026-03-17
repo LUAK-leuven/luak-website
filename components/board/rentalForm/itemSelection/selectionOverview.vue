@@ -1,7 +1,9 @@
-<script lang="ts" setup>
+<script lang="ts" setup generic="T extends EntityId<unknown>">
+  import type { EntityId } from '~/types/common';
+
   defineProps<{
     selectedItems: {
-      id: string;
+      id: T;
       name: string;
       selectedAmount: number;
       availableAmount: number;
@@ -11,8 +13,8 @@
   }>();
 
   const emit = defineEmits<{
-    removeItem: [itemId: string];
-    updateSelectedItemAmount: [itemId: string, amount: number];
+    removeItem: [itemId: T];
+    updateSelectedItemAmount: [itemId: T, amount: number];
   }>();
 </script>
 

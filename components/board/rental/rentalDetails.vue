@@ -2,6 +2,7 @@
   import * as yup from 'yup';
   import type { Enums } from '~/types/database.types';
   import type { GearItemId, TopoId } from '~/types/gear';
+  import { computeRentalStatus } from '~/utils/rental/computeStatus';
 
   const { rental } = defineProps<{ rental: RentalDetails }>();
   const popup = usePopup();
@@ -123,22 +124,13 @@
   const computedStatus: ComputedRef<Enums<'rental_status'>> = computed(() => {
     if (editMode.value) {
       if (values.statusReserved) return 'reserved';
-      let isAllReturned = true;
-      let isAnyReturned = false;
-      for (let i = 0; i < rental.gear.length; i++) {
-        if (values.returnedGear![i] > 0) isAnyReturned = true;
-        if (values.returnedGear![i] !== rental.gear[i].rentedAmount)
-          isAllReturned = false;
-      }
-      for (let i = 0; i < rental.topos.length; i++) {
-        if (values.returnedTopos![i] > 0) isAnyReturned = true;
-        if (values.returnedTopos![i] !== rental.topos[i].rentedAmount)
-          isAllReturned = false;
-      }
-      if (isAllReturned && values.depositReturned) return 'returned';
-      else if (isAnyReturned || values.depositReturned)
-        return 'partially_returned';
-      else return 'not_returned';
+      return computeRentalStatus(
+        rental.gear.map((it) => it.rentedAmount),
+        values.returnedGear!,
+        rental.topos.map((it) => it.rentedAmount),
+        values.returnedTopos!,
+        values.depositReturned!,
+      );
     }
     return rental.status;
   });

@@ -4,7 +4,11 @@
   definePageMeta({ middleware: 'board-member-guard' });
 
   const retnalId = useRoute().params.id as RentalId;
-  const { data: rental, pending } = await gearService().getRental(retnalId);
+  const {
+    data: rental,
+    pending,
+    error,
+  } = await gearService().getRental(retnalId);
 </script>
 
 <template>
@@ -25,7 +29,7 @@
     <div v-if="pending" class="flex justify-center">
       <span class="loading loading-spinner loading-lg" />
     </div>
-    <div v-else-if="!rental">ERROR!</div>
+    <div v-else-if="!rental">ERROR: {{ error }}</div>
     <BoardRentalDetails v-else :rental="rental" />
   </FullPageCard>
 </template>

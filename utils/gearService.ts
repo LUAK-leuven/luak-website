@@ -261,6 +261,7 @@ class GearService {
 
         if (error || rental === null) {
           console.warn('failed to load rentals', error);
+          console.info('rental:', rental);
           return undefined;
         }
 
