@@ -110,14 +110,12 @@
         dateReturn: rental.dateReturn,
         memberId: rental.memberId ?? 'non-user',
         contactInfo: rental.memberId === undefined ? rental.member : undefined,
-        gear: rental.gear.map((g) => ({
-          id: g.gearItemId,
-          amount: g.rentedAmount,
-        })),
-        topos: rental.topos.map((g) => ({
-          id: g.topoId,
-          amount: g.rentedAmount,
-        })),
+        gear: Object.fromEntries(
+          rental.gear.map((it) => [it.gearItemId, it.rentedAmount]),
+        ),
+        topos: Object.fromEntries(
+          rental.topos.map((it) => [it.topoId, it.rentedAmount]),
+        ),
         depositFee: rental.depositFee,
         paymentMethod: rental.paymentMethod,
         markAsReserved: rental.status === 'reserved',

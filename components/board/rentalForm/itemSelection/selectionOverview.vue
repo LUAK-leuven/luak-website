@@ -1,5 +1,5 @@
 <script lang="ts" setup generic="T extends EntityId<unknown>">
-  import type { EntityId } from '~/types/common';
+  import type { EntityId } from '~/types/ddd';
 
   defineProps<{
     selectedItems: {

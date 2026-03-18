@@ -57,11 +57,6 @@
       :initial-values="{
         dateBorrow: dayjs().format('YYYY-MM-DD').toString(),
         dateReturn: dayjs().add(3, 'w').format('YYYY-MM-DD').toString(),
-        gear: [],
-        topos: [],
       }" />
-
-    <!-- <p>Values: {{ values }}</p>
-    <p>Errors: {{ errors }}</p> -->
   </FullPageCard>
 </template>

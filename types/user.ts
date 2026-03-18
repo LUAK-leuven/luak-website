@@ -1,3 +1,3 @@
-import type { EntityId } from './common';
+import type { EntityId } from './ddd';
 
 export type UserId = EntityId<'user'>;

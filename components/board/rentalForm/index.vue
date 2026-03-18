@@ -20,8 +20,8 @@
       };
       dateBorrow: string;
       dateReturn: string;
-      gear: { id: GearItemId; amount: number }[];
-      topos: { id: TopoId; amount: number }[];
+      gear: Record<GearItemId, number>;
+      topos: Record<TopoId, number>;
       depositFee: number;
       paymentMethod: Enums<'payment_method'>;
       markAsReserved: boolean;
@@ -56,7 +56,13 @@
     dateReturnAttr,
     depositFee,
     depositFeeAttr,
+    paymentMethod,
+    markAsReserved,
+    comments,
     validateField,
+    updateGear,
+    updateTopos,
+    contactInfo,
   } = useRentalForm(props.initialValues, props.allGear, props.allTopos);
 
   const onSubmit = handleSubmit(async (formState) => {
@@ -65,12 +71,8 @@
         formState.memberId === 'non-user' ? undefined : formState.memberId,
       dateBorrow: formState.dateBorrow,
       dateReturn: formState.dateReturn,
-      gear: Object.fromEntries(
-        formState.gear.map(({ id, amount }) => [id, amount]),
-      ),
-      topos: Object.fromEntries(
-        formState.topos.map(({ id, amount }) => [id, amount]),
-      ),
+      gear: formState.gear,
+      topos: formState.topos,
       depositFee: formState.depositFee,
       paymentMethod: formState.paymentMethod,
       contactInfo: formState.contactInfo,
@@ -104,7 +106,10 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-2 mb-3">
       <div class="w-full self-end">
         <BoardRentalFormSelectMember
-          v-model="selectedUser"
+          v-model:user-id="selectedUser"
+          v-model:full-name="contactInfo.fullName.value"
+          v-model:email="contactInfo.email.value"
+          v-model:phone="contactInfo.phone.value"
           :disable="props.initialValues.memberId !== undefined" />
       </div>
 
@@ -127,36 +132,37 @@
 
       <div class="flex flex-col w-fit">
         <label class="my-2" for="markAsReserved">Mark as reserved</label>
-        <Field
+        <input
           id="markAsReserved"
+          v-model="markAsReserved"
           class="toggle toggle-primary"
-          name="markAsReserved"
-          :value="true"
           type="checkbox" />
       </div>
 
       <div class="flex flex-col w-full col-span-full">
         <span>Comments:</span>
-        <Field v-slot="{ field }" name="comments">
-          <textarea class="textarea textarea-bordered" v-bind="field" />
-        </Field>
+        <textarea v-model="comments" class="textarea textarea-bordered" />
       </div>
     </div>
 
     <hr />
     <h2>Gear list</h2>
     <BoardRentalFormItemSelection
-      v-model="selectedGear"
+      :selected-items="selectedGear"
       placeholder="Search gear to add ..."
       :all-items="allGear"
       :composite-items="compositeGearItems"
-      @computed-deposit="(value) => (computedGearDeposit = value)" />
+      @computed-deposit="(value) => (computedGearDeposit = value)"
+      @set-item="(id, amount) => updateGear(id, amount)"
+      @remove-item="(id) => updateGear(id, undefined)" />
     <div class="h-4"></div>
     <BoardRentalFormItemSelection
-      v-model="selectedTopos"
+      :selected-items="selectedTopos"
       :all-items="allTopos"
       placeholder="Search topos ..."
-      @computed-deposit="(value) => (computedTopoDeposit = value)" />
+      @computed-deposit="(value) => (computedTopoDeposit = value)"
+      @set-item="(id, amount) => updateTopos(id, amount)"
+      @remove-item="(id) => updateTopos(id, undefined)" />
 
     <hr class="mt-4" />
 
@@ -171,15 +177,14 @@
         v-bind="depositFeeAttr">
         <template #label1><span class="mr-1">€</span></template>
       </InputText2>
-      <Field
+      <select
+        v-model="paymentMethod"
         class="select select-bordered w-min"
-        :class="errors.paymentMethod ? 'select-error border-4' : ''"
-        name="paymentMethod"
-        as="select">
+        :class="errors.paymentMethod ? 'select-error border-4' : ''">
         <option disabled selected>Payment method</option>
         <option value="cash">cash</option>
         <option value="transfer">transfer</option>
-      </Field>
+      </select>
     </div>
 
     <div class="flex justify-end">

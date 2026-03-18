@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 import type { RentalItem } from '~/types/board/form/RentalItem';
-import type { EntityId } from '~/types/common';
+import type { EntityId } from '~/types/ddd';
 import type { Enums } from '~/types/database.types';
 import type { GearItemId, TopoId } from '~/types/gear';
 import type { UserId } from '~/types/user';
@@ -16,8 +16,8 @@ type RentalFormState = {
     | undefined;
   dateBorrow: string;
   dateReturn: string;
-  gear: { id: GearItemId; amount: number }[];
-  topos: { id: TopoId; amount: number }[];
+  gear: Record<GearItemId, number>;
+  topos: Record<TopoId, number>;
   depositFee: number;
   paymentMethod: Enums<'payment_method'>;
   markAsReserved: boolean;
@@ -31,45 +31,39 @@ export default function (
 ) {
   const selectionFrom = <T extends EntityId<unknown>>(
     selection: { id: T; name: string; totalAmount: number }[],
-  ) =>
-    yup
-      .array()
-      .of(
-        yup.object({
-          id: yup.string<T>().required(),
-          amount: yup
-            .number()
-            .required()
-            .test(function (amount) {
-              const { id } = this.parent as { id: string };
-              const item = selection.find((x) => x.id === id);
-              if (item === undefined) {
-                console.warn(
-                  `Could not find item ${id} in ${selection.map((x) => x.id).toString()}!`,
-                );
-                return this.createError({
-                  path: `${this.path}`,
-                  message: `Error: item with id ${id} cannot be found in the inventory.`,
-                });
-              }
-              if (amount <= 0) {
-                return this.createError({
-                  path: `${this.path}`,
-                  message: `Value for ${item.name} must be a positive number.`,
-                });
-              }
-              if (amount > item.totalAmount) {
-                return this.createError({
-                  path: `${this.path}`,
-                  message: `Value for ${item.name} cannot exceed ${item.totalAmount}`,
-                });
-              }
-              return true;
-            }),
-        }),
-      )
-      .default([])
-      .required();
+  ) => {
+    return yup
+      .object<Record<T, number>>()
+      .default(() => ({}) as Record<T, number>)
+      .required()
+      .test(function (items: Record<T, number>) {
+        for (const [id, amount] of Object.entries(items) as [T, number][]) {
+          const item = selection.find((x) => x.id === id);
+          if (item === undefined) {
+            console.warn(
+              `Could not find item ${id} in ${selection.map((x) => x.id).toString()}!`,
+            );
+            return this.createError({
+              path: `${this.path}.${id}`,
+              message: `Error: item with id ${id} cannot be found in the inventory.`,
+            });
+          }
+          if (amount <= 0) {
+            return this.createError({
+              path: `${this.path}.${id}`,
+              message: `Value for ${item.name} must be a positive number.`,
+            });
+          }
+          if (amount > item.totalAmount) {
+            return this.createError({
+              path: `${this.path}.${id}`,
+              message: `Value for ${item.name} cannot exceed ${item.totalAmount}`,
+            });
+          }
+        }
+        return true;
+      });
+  };
 
   const formSchema: yup.ObjectSchema<RentalFormState> = yup.object({
     memberId: yup
@@ -118,35 +112,112 @@ export default function (
     comments: yup.string(),
   });
 
-  const { meta, handleSubmit, errors, validateField, values, defineField } =
-    useForm({
-      validationSchema: toTypedSchema(formSchema),
-      initialValues: initialState,
-      validateOnMount: false,
-    });
+  const {
+    meta,
+    handleSubmit,
+    errors,
+    validateField,
+    values,
+    defineField,
+    setFieldValue,
+  } = useForm({
+    validationSchema: toTypedSchema(formSchema),
+    initialValues: {
+      memberId: initialState.memberId,
+      contactInfo: initialState.contactInfo,
+      dateBorrow: initialState.dateBorrow,
+      dateReturn: initialState.dateReturn,
+      gear: initialState.gear ?? {},
+      topos: initialState.topos ?? {},
+      depositFee: initialState.depositFee,
+      paymentMethod: initialState.paymentMethod,
+      markAsReserved: initialState.markAsReserved ?? false,
+      comments: initialState.comments,
+    },
+    validateOnMount: false,
+  });
 
   const errorAttr = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     props: (state: any) => ({ error: state.errors[0] }),
   };
 
-  const [selectedUser] = defineField('memberId');
-  const [selectedGear] = defineField('gear');
-  const [selectedTopos] = defineField('topos');
+  const selectedUser = computed({
+    get: () => values.memberId,
+    set: (value: UserId | 'non-user') => {
+      setFieldValue('memberId', value);
+    },
+  });
+  const fullName = computed({
+    get: () => values.contactInfo?.fullName,
+    set: (value: string) => {
+      setFieldValue('contactInfo.fullName', value);
+    },
+  });
+  const email = computed({
+    get: () => values.contactInfo?.email,
+    set: (value: string) => {
+      setFieldValue('contactInfo.email', value);
+    },
+  });
+  const phone = computed({
+    get: () => values.contactInfo?.phone,
+    set: (value: string) => {
+      setFieldValue('contactInfo.phone', value);
+    },
+  });
   const [dateBorrow, dateBorrowAttr] = defineField('dateBorrow', errorAttr);
   const [dateReturn, dateReturnAttr] = defineField('dateReturn', errorAttr);
   const [depositFee, depositFeeAttr] = defineField('depositFee', errorAttr);
 
+  const updateGear = (id: GearItemId, amount: number | undefined) => {
+    setFieldValue('gear', { ...values.gear, [id]: amount });
+  };
+  const updateTopos = (id: TopoId, amount: number | undefined) => {
+    setFieldValue('topos', { ...values.topos, [id]: amount });
+  };
+
+  const paymentMethod = computed({
+    get: () => values.paymentMethod,
+    set: (value: Enums<'payment_method'>) => {
+      setFieldValue('paymentMethod', value);
+    },
+  });
+
+  const markAsReserved = computed({
+    get: () => values.markAsReserved ?? false,
+    set: (value: boolean) => {
+      setFieldValue('markAsReserved', value);
+    },
+  });
+
+  const comments = computed({
+    get: () => values.comments,
+    set: (value: string) => {
+      setFieldValue('comments', value);
+    },
+  });
+
   return {
     selectedUser,
-    selectedGear,
-    selectedTopos,
+    contactInfo: {
+      fullName,
+      email,
+      phone,
+    },
+    selectedGear: computed(() => values.gear ?? {}),
+    updateGear,
+    selectedTopos: computed(() => values.topos ?? {}),
+    updateTopos,
     dateBorrow,
     dateBorrowAttr,
     dateReturn,
     dateReturnAttr,
     depositFee,
     depositFeeAttr,
+    paymentMethod,
+    markAsReserved,
+    comments,
     meta,
     handleSubmit,
     errors,

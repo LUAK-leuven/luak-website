@@ -1,4 +1,4 @@
-import type { EntityId } from '~/types/common';
+import type { EntityId } from '~/types/ddd';
 
 export type RentalItem<T extends EntityId<unknown>> = {
   id: T;

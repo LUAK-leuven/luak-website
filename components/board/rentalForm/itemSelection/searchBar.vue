@@ -1,6 +1,9 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends EntityId<unknown>">
+  import type { EntityId } from '~/types/ddd';
+
   const props = defineProps<{
     availableItems: {
+      id: T;
       name: string;
       availableAmount: number;
     }[];
@@ -8,7 +11,7 @@
   }>();
 
   const emit = defineEmits<{
-    onSelect: [itemId: string];
+    onSelect: [itemId: T];
   }>();
 
   const filterItemsByName = (searchTerm: string | undefined) => {
@@ -19,16 +22,12 @@
       .sort((a, b) => b[1] - a[1])
       .map((it) => it[0]);
   };
-
-  const addSelection = (item: { name: string; availableAmount: number }) => {
-    emit('onSelect', item.name);
-  };
 </script>
 <template>
   <InputSearchableSelect
     :placeholder="placeholder"
     :options-provider="filterItemsByName"
-    @on-select="addSelection">
+    @on-select="(item) => emit('onSelect', item.id)">
     <template #item="{ data }">
       <div
         class="px-3 py-2 rounded-md w-full flex flex-row justify-between gap-6 shadow-sm"
