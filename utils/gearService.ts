@@ -351,7 +351,7 @@ class GearService {
       p_comments: rental.comments ?? null,
     });
     if (error) console.warn('editRental: ', error);
-    return error === null;
+    return error;
   }
 
   public async getRentalsForUser(userId: UserId) {

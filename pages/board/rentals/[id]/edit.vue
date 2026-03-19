@@ -4,6 +4,7 @@
 
   definePageMeta({ middleware: 'board-member-guard' });
 
+  const popup = usePopup();
   const route = useRoute();
   const rentalId = route.params.id as RentalId;
 
@@ -43,12 +44,12 @@
   async function handleSubmit(state: Omit<UnsavedRental, 'boardMemberId'>) {
     if (!!rental.value) {
       for (const { gearItemId: id } of rental.value.gear) {
-        if (!(id in state.gear)) {
+        if (!state.gear[id]) {
           state.gear[id] = 0;
         }
       }
       for (const { topoId: id } of rental.value.topos) {
-        if (!(id! in state.topos)) {
+        if (!state.topos[id]) {
           state.topos[id] = 0;
         }
       }
@@ -66,12 +67,26 @@
               ),
               rental.value.depositReturned,
             );
-      const success = await gearService().editRental({
+      const error = await gearService().editRental({
         ...state,
         id: rental.value.id,
       });
-      if (success) navigateTo(`/board/rentals/${rental.value.id}`);
-      return { error: success ? undefined : 'Failed to save rental' };
+      if (!error) {
+        popup.value = {
+          type: 'success',
+          message: 'Rental saved successfully!',
+        };
+        sleep(200);
+        await navigateTo(`/board/rentals/${rental.value.id}`);
+        return { error: undefined };
+      } else {
+        popup.value = {
+          type: 'error',
+          message:
+            "[500]: Failed to save rental. Stuff is broken, maybe you're not connected to the internet.",
+        };
+        return { error: 'Failed to save rental' };
+      }
     } else {
       return { error: 'Failed to save rental' };
     }

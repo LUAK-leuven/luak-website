@@ -5,8 +5,6 @@
   import type { UnsavedRental } from '~/types/renal';
   import type { UserId } from '~/types/user';
 
-  const popup = usePopup();
-
   const props = defineProps<{
     boardMemberName: string;
     allGear: RentalItem<GearItemId>[];
@@ -63,10 +61,11 @@
     updateGear,
     updateTopos,
     contactInfo,
+    isSubmitting,
   } = useRentalForm(props.initialValues, props.allGear, props.allTopos);
 
   const onSubmit = handleSubmit(async (formState) => {
-    const { error } = await props.handleSubmit({
+    await props.handleSubmit({
       memberId:
         formState.memberId === 'non-user' ? undefined : formState.memberId,
       dateBorrow: formState.dateBorrow,
@@ -79,11 +78,6 @@
       status: formState.markAsReserved ? 'reserved' : 'not_returned',
       comments: formState.comments,
     });
-    if (error !== undefined)
-      popup.value = {
-        type: 'error',
-        message: error,
-      };
   });
 
   const computedGearDeposit = ref<number>();
@@ -192,7 +186,8 @@
         class="btn btn-primary mt-3 w-fit"
         :class="{ 'btn-disabled': !meta.valid || !meta.dirty }"
         type="submit">
-        Submit
+        <span v-if="isSubmitting" class="loading loading-spinner">loading</span>
+        <span v-else>Submit</span>
       </button>
     </div>
   </form>

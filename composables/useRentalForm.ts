@@ -120,6 +120,7 @@ export default function (
     values,
     defineField,
     setFieldValue,
+    isSubmitting,
   } = useForm({
     validationSchema: toTypedSchema(formSchema),
     initialValues: {
@@ -223,5 +224,6 @@ export default function (
     errors,
     validateField,
     values,
+    isSubmitting,
   };
 }
