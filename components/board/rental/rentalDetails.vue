@@ -262,7 +262,7 @@
         <button class="btn btn-error btn-outline" @click="editMode = false">
           Cancel
         </button>
-        <button class="btn btn-primary" @click="save()">Save changes</button>
+        <SharedLoadingButton text="Save changes" :click-handler="save" />
       </template>
       <template v-else>
         <button

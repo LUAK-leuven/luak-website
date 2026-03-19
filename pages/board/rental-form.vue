@@ -39,6 +39,7 @@
       };
       sleep(200);
       await navigateTo(`/board/rentals/${id}`);
+      return { error: undefined };
     } else {
       popup.value = {
         type: 'error',

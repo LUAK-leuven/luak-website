@@ -15,7 +15,7 @@
   <FullPageCard>
     <template #subtitle>
       <h2>Rental</h2>
-      <i class="text-sm">{{ rental ? rental.id : '' }}</i>
+      <i class="text-sm">{{ retnalId }}</i>
     </template>
 
     <NuxtLink

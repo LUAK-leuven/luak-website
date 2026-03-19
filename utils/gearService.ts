@@ -210,9 +210,9 @@ class GearService {
     );
   }
 
-  public async getRental(rental_id: RentalId) {
+  public async getRental(rentalId: RentalId) {
     return useAsyncData(
-      `rental-${rental_id}`,
+      `rental-${rentalId}`,
       async () => {
         const { data: rental, error } = await this.supabase
           .from('Rentals')
@@ -256,11 +256,11 @@ class GearService {
           comments
           `,
           )
-          .eq('id', rental_id)
+          .eq('id', rentalId)
           .single();
 
         if (error || rental === null) {
-          console.warn('failed to load rentals', error);
+          console.warn(`failed to load rental ${rentalId}`, error);
           console.info('rental:', rental);
           return undefined;
         }

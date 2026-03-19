@@ -61,7 +61,6 @@
     updateGear,
     updateTopos,
     contactInfo,
-    isSubmitting,
   } = useRentalForm(props.initialValues, props.allGear, props.allTopos);
 
   const onSubmit = handleSubmit(async (formState) => {
@@ -95,7 +94,7 @@
 </script>
 
 <template>
-  <form @submit.prevent="onSubmit">
+  <form @submit.prevent>
     <h2>General info</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-2 mb-3">
       <div class="w-full self-end">
@@ -182,13 +181,11 @@
     </div>
 
     <div class="flex justify-end">
-      <button
-        class="btn btn-primary mt-3 w-fit"
-        :class="{ 'btn-disabled': !meta.valid || !meta.dirty }"
-        type="submit">
-        <span v-if="isSubmitting" class="loading loading-spinner">loading</span>
-        <span v-else>Submit</span>
-      </button>
+      <SharedLoadingButton
+        class="mt-3"
+        :text="'Submit'"
+        :disabled="!meta.valid || !meta.dirty"
+        :click-handler="onSubmit" />
     </div>
   </form>
 
