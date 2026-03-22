@@ -18,7 +18,7 @@
 <template>
   <NuxtLink
     :key="data.path"
-    class="card card-compact bg-base-200 w-full sm:w-80 shadow-xl my-5 md:mx-5 hover:shadow-2xl"
+    class="card card-compact bg-base-200 w-full max-w-80 shadow-xl my-5 md:mx-5 hover:shadow-2xl"
     :to="data.path">
     <figure>
       <NuxtImg class="h-56 object-cover w-full" :src="data.image" />
@@ -30,14 +30,6 @@
     </figure>
     <div class="card-body">
       <h2 class="card-title">{{ data.title }}</h2>
-      <!-- <ContentRenderer :value="data" :excerpt="true" class="py-6 nuxt-content">
-        <template #empty>
-          <p>Press the read more button to lean more!.</p>
-        </template>
-        <template #error>
-          <p>An error occurred while rendering the content.</p>
-        </template>
-      </ContentRenderer> -->
       <div class="flex justify-between my-2">
         <div class="flex flex-col">
           <span class="italic text-xs">Date</span>
@@ -59,9 +51,6 @@
         </div>
       </div>
       <div class="card-actions justify-center">
-        <!-- <NuxtLink class="btn btn-outline" :key="data._path" :to="data._path"
-          >More info</NuxtLink
-        > -->
         <div class="btn btn-outline">More info</div>
       </div>
     </div>
