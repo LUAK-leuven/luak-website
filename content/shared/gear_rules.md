@@ -8,7 +8,7 @@ title: GearRules
 - Students have priority to borrow gear;
 - **Gear cannot be transferred between members**
 - The borrower is responsible for evaluating the condition of the gear at the start of the loan and reporting any issue;
-- The maximum loan period for gear is 3 weeks, except in the summer break. Then the maximum loan period is defined by the board at the moment of pick-up by marking the latest permitted date of return of the loan contract;
+- The **maximum** loan period for gear is **3 weeks**, except in the summer break. Then the maximum loan period is defined by the board at the moment of pick-up by marking the latest permitted date of return of the loan contract;
 - After the exceedance of the maximum loan period, the borrower will be given a fine of 5 euros every two weeks, starting from week 4. The maximum fine can be the current value of the borrowed gear.
 - With the return of the gear, the gear has to be cleaned and serviced. Ropes have to be dry. Bivouac sacs have to be dry, without mud, leaves or spiders or snails.
 - At the moment of return, the borrower has the responsibility of reporting any damage incurred to the gear during the loan period;

@@ -22,13 +22,13 @@
           </template>
         </UserCard>
         <UserCard image="/20241102_134927[1].jpg">
-          <template #title> My gear ⚙️ </template>
+          <template #title> My rentals ⚙️ </template>
           <template #description>
             View the status of your active rental(s)
           </template>
           <template #actions>
             <NuxtLink class="btn btn-accent" to="/profile/gear">
-              my gear
+              my rentals
             </NuxtLink>
           </template>
         </UserCard>
