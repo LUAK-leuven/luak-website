@@ -190,7 +190,7 @@
   </form>
 
   <!-- <p>SelectedGear: {{ selectedGear }}</p> -->
-  <p>Values: {{ values }}</p>
+  <!-- <p>Values: {{ values }}</p>
   <p>Errors: {{ errors }}</p>
-  <p>Meta: {{ meta }}</p>
+  <p>Meta: {{ meta }}</p> -->
 </template>
