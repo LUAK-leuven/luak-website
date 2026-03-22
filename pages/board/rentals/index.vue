@@ -41,7 +41,7 @@
   const filteredRentals = computed(() => {
     const selectedRentals =
       (showReturned.value
-        ? rentals.value
+        ? rentals.value?.filter((rental) => rental.status === 'returned')
         : rentals.value?.filter((rental) => rental.status !== 'returned')) ??
       [];
     if (selectedRentals === undefined) return undefined;
