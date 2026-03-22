@@ -65,6 +65,9 @@
         <ul class="p-2 bg-base-200 rounded-t-none w-52">
           <li><NuxtLink to="/stories">Stories</NuxtLink></li>
           <li><NuxtLink to="/topos/library">Topo Library</NuxtLink></li>
+          <li>
+            <NuxtLink to="/pages/christmas_bets">Christmas Bets</NuxtLink>
+          </li>
         </ul>
       </details>
     </li>

@@ -141,6 +141,7 @@ class GearService {
   public async saveRental(
     rental: UnsavedRental,
   ): Promise<{ id: RentalId | undefined; error: string | undefined }> {
+    console.log('retnal', rental);
     const { error, data } = await this.supabase.rpc('create_rental', {
       p_board_member_id: rental.boardMemberId,
       p_member_id: rental.memberId ?? null,
@@ -148,14 +149,18 @@ class GearService {
       p_date_return: rental.dateReturn,
       p_deposit: rental.depositFee,
       p_status: rental.status,
-      p_gear: Object.entries(rental.gear).map(([id, amount]) => ({
-        gear_item_id: id,
-        rented_amount: amount,
-      })),
-      p_topos: Object.entries(rental.topos).map(([id, amount]) => ({
-        topo_id: id,
-        rented_amount: amount,
-      })),
+      p_gear: Object.entries(rental.gear)
+        .filter(([_, amount]) => amount !== undefined)
+        .map(([id, amount]) => ({
+          gear_item_id: id,
+          rented_amount: amount,
+        })),
+      p_topos: Object.entries(rental.topos)
+        .filter(([_, amount]) => amount !== undefined)
+        .map(([id, amount]) => ({
+          topo_id: id,
+          rented_amount: amount,
+        })),
       p_payment_method: rental.paymentMethod,
       p_contact_info: rental.contactInfo
         ? JSON.stringify(rental.contactInfo)
