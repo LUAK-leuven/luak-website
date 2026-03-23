@@ -1,24 +1,19 @@
 <script setup lang="ts">
-  import { toCanvas } from 'qrcode';
-
-  const canvasRef = ref<HTMLCanvasElement | null>(null);
+  const { canvasRef, renderToCanvas } = useEpcQrCodeGenerator();
 
   onMounted(async () => {
-    if (!canvasRef.value) {
-      return;
-    }
-
-    await toCanvas(canvasRef.value, 'Hello world!', {
-      errorCorrectionLevel: 'M',
-      width: 220,
-      margin: 1,
+    renderToCanvas({
+      name: 'LUAK',
+      iban: 'BE03 7340 3133 8584',
+      amount: 12.09,
+      message: 'Deposit fee',
     });
   });
 </script>
 
 <template>
   <FullPageCard>
-    <template #title>Test</template>
+    <template #title>QR-Test</template>
     <canvas ref="canvasRef" />
   </FullPageCard>
 </template>
