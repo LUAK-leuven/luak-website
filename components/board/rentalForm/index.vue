@@ -30,6 +30,8 @@
     ) => Promise<{ error: string | undefined }>;
   }>();
 
+  const { show: showPopup } = usePopup();
+
   const { data } = await gearService().getCompositeGearItems();
   const compositeGearItems = computed(() =>
     Object.fromEntries(
@@ -46,6 +48,7 @@
     meta,
     errors,
     selectedUser,
+    userAttr,
     selectedGear,
     selectedTopos,
     dateBorrow,
@@ -63,21 +66,26 @@
     contactInfo,
   } = useRentalForm(props.initialValues, props.allGear, props.allTopos);
 
-  const onSubmit = handleSubmit(async (formState) => {
-    await props.handleSubmit({
-      memberId:
-        formState.memberId === 'non-user' ? undefined : formState.memberId,
-      dateBorrow: formState.dateBorrow,
-      dateReturn: formState.dateReturn,
-      gear: formState.gear,
-      topos: formState.topos,
-      depositFee: formState.depositFee,
-      paymentMethod: formState.paymentMethod,
-      contactInfo: formState.contactInfo,
-      status: formState.markAsReserved ? 'reserved' : 'not_returned',
-      comments: formState.comments,
-    });
-  });
+  const onSubmit = handleSubmit(
+    async (formState) => {
+      await props.handleSubmit({
+        memberId:
+          formState.memberId === 'non-user' ? undefined : formState.memberId,
+        dateBorrow: formState.dateBorrow,
+        dateReturn: formState.dateReturn,
+        gear: formState.gear,
+        topos: formState.topos,
+        depositFee: formState.depositFee,
+        paymentMethod: formState.paymentMethod,
+        contactInfo: formState.contactInfo,
+        status: formState.markAsReserved ? 'reserved' : 'not_returned',
+        comments: formState.comments,
+      });
+    },
+    (ctx) => {
+      showPopup('error', `${Object.values(ctx.errors)[0]}`);
+    },
+  );
 
   const computedGearDeposit = ref<number>();
   const computedTopoDeposit = ref<number>();
@@ -103,7 +111,8 @@
           v-model:full-name="contactInfo.fullName.value"
           v-model:email="contactInfo.email.value"
           v-model:phone="contactInfo.phone.value"
-          :disable="props.initialValues.memberId !== undefined" />
+          :disable="props.initialValues.memberId !== undefined"
+          v-bind="userAttr" />
       </div>
 
       <InputText2
@@ -184,7 +193,7 @@
       <SharedLoadingButton
         class="mt-3"
         :text="'Submit'"
-        :disabled="!meta.valid || !meta.dirty"
+        :disabled="!meta.dirty"
         :click-handler="onSubmit" />
     </div>
   </form>

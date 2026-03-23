@@ -68,13 +68,7 @@ export default function (
   const formSchema: yup.ObjectSchema<RentalFormState> = yup.object({
     memberId: yup
       .string<UserId | 'non-user'>()
-      .when('contactInfo', {
-        is: (x: unknown) => {
-          return x === undefined;
-        },
-        then: (s) => s.required(),
-      })
-      .required(),
+      .required('You must select a member.'),
     dateBorrow: yup.string().required().label('date borrow'),
     dateReturn: yup
       .string()
@@ -89,13 +83,15 @@ export default function (
       .label('return date'),
     gear: selectionFrom(allGear),
     topos: selectionFrom(allTopos),
-    depositFee: yup.number().required().min(0),
-    paymentMethod: yup.string<'transfer' | 'cash'>().required(),
+    depositFee: yup.number().label('deposit fee').required().min(0),
+    paymentMethod: yup
+      .string<'transfer' | 'cash'>()
+      .required('You must select a payment method.'),
     contactInfo: yup
       .object({
-        fullName: yup.string().required(),
-        email: yup.string().email(),
-        phone: yup_phone,
+        fullName: yup.string().required().label('full name'),
+        email: yup.string().email().label('email'),
+        phone: yup_phone.label('phone number'),
       })
       .optional()
       .default(undefined)
@@ -143,12 +139,8 @@ export default function (
     props: (state: any) => ({ error: state.errors[0] }),
   };
 
-  const selectedUser = computed({
-    get: () => values.memberId,
-    set: (value: UserId | 'non-user') => {
-      setFieldValue('memberId', value);
-    },
-  });
+  const [selectedUser, userAttr] = defineField('memberId', errorAttr);
+
   const fullName = computed({
     get: () => values.contactInfo?.fullName,
     set: (value: string) => {
@@ -201,6 +193,7 @@ export default function (
 
   return {
     selectedUser,
+    userAttr,
     contactInfo: {
       fullName,
       email,

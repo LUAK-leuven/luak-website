@@ -4,7 +4,7 @@
 
   definePageMeta({ middleware: 'board-member-guard' });
 
-  const popup = usePopup();
+  const { show: showPopup } = usePopup();
   const route = useRoute();
   const rentalId = route.params.id as RentalId;
 
@@ -72,19 +72,15 @@
         id: rental.value.id,
       });
       if (!error) {
-        popup.value = {
-          type: 'success',
-          message: 'Rental saved successfully!',
-        };
+        showPopup('success', 'Rental saved successfully!');
         sleep(200);
         await navigateTo(`/board/rentals/${rental.value.id}`);
         return { error: undefined };
       } else {
-        popup.value = {
-          type: 'error',
-          message:
-            "[500]: Failed to save rental. Stuff is broken, maybe you're not connected to the internet.",
-        };
+        showPopup(
+          'error',
+          "[500]: Failed to save rental. Stuff is broken, maybe you're not connected to the internet.",
+        );
         return { error: 'Failed to save rental' };
       }
     } else {

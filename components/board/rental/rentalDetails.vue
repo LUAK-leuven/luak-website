@@ -5,7 +5,7 @@
   import { computeRentalStatusUnsafe } from '~/utils/rental/computeStatus';
 
   const { rental } = defineProps<{ rental: RentalDetails }>();
-  const popup = usePopup();
+  const { show: showPopup } = usePopup();
 
   const formSchema = computed(() =>
     yup.object({
@@ -103,15 +103,9 @@
 
       if (success) {
         reloadNuxtApp();
-        popup.value = {
-          type: 'success',
-          message: 'Your changes have been saved.',
-        };
+        showPopup('success', 'Your changes have been saved.');
       } else {
-        popup.value = {
-          type: 'error',
-          message: 'Failed to save changes',
-        };
+        showPopup('error', 'Failed to save changes');
       }
     },
     (result) => {

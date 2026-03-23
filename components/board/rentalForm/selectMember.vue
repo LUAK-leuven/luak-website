@@ -4,11 +4,11 @@
   withDefaults(
     defineProps<{
       disable?: boolean;
-      errorMessage?: string;
+      error?: string;
     }>(),
     {
       disable: false,
-      errorMessage: undefined,
+      error: undefined,
     },
   );
 
@@ -65,7 +65,7 @@
       label="Member name *"
       placeholder="select member"
       :options-provider="filterUser"
-      :error-message="errorMessage"
+      :error-message="error"
       :selected-item="selectedUser"
       loading-message="Loading users"
       :disable="disable"

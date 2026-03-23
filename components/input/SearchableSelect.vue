@@ -57,7 +57,7 @@
     <label
       ref="reference"
       class="input input-bordered flex w-full dropdown"
-      :class="{ 'bg-gray-300': disable }">
+      :class="{ 'bg-gray-300': disable, 'input-error': errorMessage }">
       <span v-if="hidden && selectedItem !== undefined" class="label w-max">
         <slot name="item" :data="selectedItem" />
       </span>

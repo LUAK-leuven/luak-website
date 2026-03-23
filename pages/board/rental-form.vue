@@ -4,7 +4,7 @@
 
   definePageMeta({ middleware: 'board-member-guard' });
 
-  const popup = usePopup();
+  const { show: showPopup } = usePopup();
 
   const { data: user } = await useLuakMember();
   const boardMember = {
@@ -33,18 +33,12 @@
       boardMemberId: boardMember.id,
     });
     if (!error && id) {
-      popup.value = {
-        type: 'success',
-        message: 'Rental saved successfully!',
-      };
+      showPopup('success', 'Rental saved successfully!');
       sleep(200);
       await navigateTo(`/board/rentals/${id}`);
       return { error: undefined };
     } else {
-      popup.value = {
-        type: 'error',
-        message: error ?? 'An unknown error occurred.',
-      };
+      showPopup('error', error ?? 'An unknown error occurred.');
       return { error };
     }
   }
