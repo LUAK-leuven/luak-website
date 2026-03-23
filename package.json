@@ -18,6 +18,7 @@
     "@nuxt/eslint": "^0.3.13",
     "@nuxtjs/supabase": "^1.6.2",
     "@nuxtjs/tailwindcss": "^6.8.0",
+    "@types/qrcode": "^1.5.6",
     "daisyui": "^3.9.4",
     "eslint": "^9.3.0",
     "eslint-config-prettier": "^9.1.0",
@@ -43,6 +44,7 @@
     "@vueuse/core": "^14.0.0",
     "better-sqlite3": "^12.6.2",
     "dayjs": "^1.11.13",
+    "qrcode": "^1.5.4",
     "yup": "^1.4.0"
   },
   "resolutions": {
