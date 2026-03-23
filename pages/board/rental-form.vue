@@ -1,10 +1,19 @@
 <script setup lang="ts">
   import dayjs from 'dayjs';
-  import type { UnsavedRental } from '~/types/renal';
+  import PaymentModal from '~/components/PaymentModal.vue';
+  import type { RentalId, UnsavedRental } from '~/types/renal';
 
   definePageMeta({ middleware: 'board-member-guard' });
 
   const { show: showPopup } = usePopup();
+  const showPaymentModal = ref(false);
+  const paymentDetails = ref<{
+    amount: number;
+    name: string;
+    iban: string;
+    message: string;
+  } | null>(null);
+  const retnalId = ref<RentalId>();
 
   const { data: user } = await useLuakMember();
   const boardMember = {
@@ -32,16 +41,32 @@
       ...state,
       boardMemberId: boardMember.id,
     });
+
     if (!error && id) {
-      showPopup('success', 'Rental saved successfully!');
-      sleep(200);
-      await navigateTo(`/board/rentals/${id}`);
+      retnalId.value = id;
+      if (state.paymentMethod === 'transfer') {
+        paymentDetails.value = {
+          amount: state.depositFee,
+          name: 'LUAK vzw',
+          iban: 'BE03 7340 3133 8584',
+          message: 'Deposit fee',
+        };
+        showPaymentModal.value = true;
+      } else {
+        navigateTo(`/board/rentals/${retnalId.value}`);
+      }
+      showPopup('success', 'Rental saved successfully.');
       return { error: undefined };
     } else {
       showPopup('error', error ?? 'An unknown error occurred.');
       return { error };
     }
   }
+
+  const closeModal = () => {
+    showPaymentModal.value = false;
+    if (retnalId.value) navigateTo(`/board/rentals/${retnalId.value}`);
+  };
 </script>
 
 <template>
@@ -64,5 +89,13 @@
         dateBorrow: dayjs().format('YYYY-MM-DD').toString(),
         dateReturn: dayjs().add(3, 'w').format('YYYY-MM-DD').toString(),
       }" />
+
+    <PaymentModal
+      :is-open="showPaymentModal"
+      :amount="paymentDetails?.amount ?? 0"
+      :name="paymentDetails?.name ?? ''"
+      :iban="paymentDetails?.iban ?? ''"
+      :message="paymentDetails?.message ?? ''"
+      @close="closeModal" />
   </FullPageCard>
 </template>

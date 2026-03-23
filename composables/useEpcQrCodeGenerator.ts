@@ -8,8 +8,8 @@ export type EpcQrCode = {
   bic?: string;
 };
 
-export default function () {
-  const canvasRef = ref<HTMLCanvasElement | null>(null);
+export default function (templateRef: string) {
+  const canvasRef = useTemplateRef<HTMLCanvasElement>(templateRef);
 
   const renderToCanvas = async (epcQrCode: EpcQrCode) => {
     if (!canvasRef.value) return;
@@ -36,7 +36,6 @@ export default function () {
   };
 
   return {
-    canvasRef,
     renderToCanvas,
   };
 }
