@@ -10,11 +10,12 @@
     },
   );
 
-  const isLate = !props.ghost && props.date < dayjs().format('YYYY-MM-DD');
+  const isLate =
+    !props.ghost && props.date < dayjs().add(1, 'd').format('YYYY-MM-DD');
   const isAlmostLate =
     !props.ghost &&
     !isLate &&
-    props.date < dayjs().add(7, 'd').format('YYYY-MM-DD');
+    props.date < dayjs().add(7, 'd').add(1, 'd').format('YYYY-MM-DD');
 </script>
 
 <template>
