@@ -53,8 +53,9 @@
   const { setValues, handleSubmit, values, errors } = useForm({
     validationSchema: toTypedSchema(formSchema.value),
   });
-  const { update: updateReturnedGear } = useFieldArray<number>('returnedGear');
-  const { update: updateReturnedTopos } =
+  const { update: updateReturnedGear, fields: returnedGear } =
+    useFieldArray<number>('returnedGear');
+  const { update: updateReturnedTopos, fields: returnedTopos } =
     useFieldArray<number>('returnedTopos');
 
   function edit() {
@@ -203,52 +204,28 @@
       <b class="border px-1">Gear</b>
       <b class="border px-1">Amount</b>
       <b class="border px-1">Returned amount</b>
-      <template
+      <BoardRentalItem
         v-for="({ title, rentedAmount, returnedAmount }, idx) of rental.topos"
-        :key="idx">
-        <div class="border p-1 flex items-center">{{ title }}</div>
-        <div class="border p-1 flex flex-row justify-between items-center">
-          {{ rentedAmount }}
-          <button
-            v-if="editMode"
-            class="btn btn-circle btn-xs btn-outline"
-            @click="updateReturnedTopos(idx, rentedAmount)">
-            <span class="material-symbols-outlined text-sm">arrow_forward</span>
-          </button>
-        </div>
-        <div class="border p-1 flex flex-row items-center">
-          <InputNumber
-            v-if="editMode"
-            :class="{
-              'animate-bounceInput': bouncing[`returnedTopos[${idx}]`],
-            }"
-            :name="`returnedTopos[${idx}]`" />
-          <span v-else>{{ returnedAmount }}</span>
-        </div>
-      </template>
-      <template
+        :key="idx"
+        :bouncing="bouncing[`returnedTopos[${idx}]`]"
+        :name="title"
+        :rented-amount="rentedAmount"
+        :returned-amount="editMode ? returnedTopos[idx].value : returnedAmount"
+        :edit-mode="editMode"
+        :form-name="`returnedTopos[${idx}]`"
+        @update-returned-amount="
+          (amount) => updateReturnedTopos(idx, amount)
+        " />
+      <BoardRentalItem
         v-for="({ name, rentedAmount, returnedAmount }, idx) of rental.gear"
-        :key="idx">
-        <div class="border p-1 flex items-center">{{ name }}</div>
-        <div class="flex flex-row justify-between items-center border p-1">
-          {{ rentedAmount }}
-          <button
-            v-if="editMode"
-            class="btn btn-circle btn-xs btn-outline"
-            @click="updateReturnedGear(idx, rentedAmount)">
-            <span class="material-symbols-outlined text-sm">arrow_forward</span>
-          </button>
-        </div>
-        <div class="border p-1 flex flex-row items-center">
-          <InputNumber
-            v-if="editMode"
-            :class="{
-              'animate-bounceInput': bouncing[`returnedGear[${idx}]`],
-            }"
-            :name="`returnedGear[${idx}]`" />
-          <span v-else>{{ returnedAmount }}</span>
-        </div>
-      </template>
+        :key="idx"
+        :bouncing="bouncing[`returnedGear[${idx}]`]"
+        :name="name"
+        :rented-amount="rentedAmount"
+        :returned-amount="editMode ? returnedGear[idx].value : returnedAmount"
+        :edit-mode="editMode"
+        :form-name="`returnedGear[${idx}]`"
+        @update-returned-amount="(amount) => updateReturnedGear(idx, amount)" />
     </div>
     <hr class="my-3" />
     <div class="flex justify-end gap-3">
