@@ -38,7 +38,7 @@
     <div
       v-else
       class="grid grid-cols-1 sm:grid-cols-2 gap-x-2 gap-y-3 mt-2 mb-4">
-      <p class="col-span-2">{{ topo.details }}</p>
+      <p class="sm:col-span-2">{{ topo.details }}</p>
       <TopoLibraryTopoDetailItem name="Types of climbing">
         <span>{{ topo.types_of_climbing.join(', ') }}</span>
       </TopoLibraryTopoDetailItem>

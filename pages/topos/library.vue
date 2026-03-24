@@ -128,7 +128,14 @@
           <tbody>
             <tr v-for="topo in filteredTopos" :key="topo.id">
               <td>
-                <NuxtLink :to="`/topos/${topo.id}`">{{ topo.title }}</NuxtLink>
+                <NuxtLink :to="`/topos/${topo.id}`">
+                  <div class="flex flex-row gap-1 items-center">
+                    <span class="">{{ topo.title }}</span>
+                    <span class="material-symbols-outlined text-lg">
+                      open_in_new
+                    </span>
+                  </div>
+                </NuxtLink>
               </td>
               <td v-if="user.isBoard">{{ topo.place_in_library }}</td>
               <td>{{ topo.year_published }}</td>
