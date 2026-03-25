@@ -521,6 +521,169 @@ class GearService {
       { lazy: true },
     );
   }
+
+  public getInventory2() {
+    return useAsyncData(
+      'gearInventory2',
+      async () => {
+        const { data, error } = await this.supabase.from('GearItems').select(
+          `
+          id,
+          name,
+          lifespan,
+          deposit_fee,
+          GearInventory(
+            id,
+            details,
+            purchase_date,
+            production_date,
+            amount,
+            status
+          ),
+          RentedGear(
+            rental_id,
+            rented_amount,
+            returned_amount,
+            Rentals(
+              Users!member_id(
+                first_name,
+                last_name
+              ),
+              contact_info
+            )
+          )
+          `,
+        );
+        if (data === null) {
+          console.warn('getInventory2', error);
+          return [];
+        }
+
+        return data.map((it) => {
+          const totalAmount = sumBy(it.GearInventory, (i) =>
+            i.status === 'available' ? i.amount : 0,
+          );
+          const rentedAmount = sumBy(
+            it.RentedGear,
+            (rg) => rg.rented_amount - rg.returned_amount,
+          );
+          return {
+            id: it.id as GearItemId,
+            name: it.name,
+            lifespan: it.lifespan,
+            depositFee: it.deposit_fee,
+            totalAmount,
+            availableAmount: totalAmount - rentedAmount,
+            inventory: it.GearInventory.map((i) => {
+              return {
+                id: i.id as GearInventoryId,
+                details: i.details,
+                purchaseDate: i.purchase_date ?? undefined,
+                productionDate: i.production_date ?? undefined,
+                amount: i.amount,
+                status: i.status,
+              };
+            }),
+            rentals: it.RentedGear.filter(
+              (r) => r.rented_amount !== r.returned_amount,
+            ).map((r) => ({
+              id: r.rental_id as RentalId,
+              amount: r.rented_amount - r.returned_amount,
+              memberName: r.Rentals.Users
+                ? getFullName(r.Rentals.Users)
+                : r.Rentals.contact_info
+                  ? (JSON.parse(r.Rentals.contact_info) as ContactInfo).fullName
+                  : 'Failed to get name',
+            })),
+          };
+        });
+      },
+      { lazy: true },
+    );
+  }
+
+  public getGearItemByName(name: string) {
+    return useAsyncData(
+      `gearItem-${name}`,
+      async () => {
+        const { data, error } = await this.supabase
+          .from('GearItems')
+          .select(
+            `
+          id,
+          name,
+          lifespan,
+          deposit_fee,
+          GearInventory(
+            id,
+            details,
+            purchase_date,
+            production_date,
+            amount,
+            status
+          ),
+          RentedGear(
+            rental_id,
+            rented_amount,
+            returned_amount,
+            Rentals(
+              Users!member_id(
+                first_name,
+                last_name
+              ),
+              contact_info
+            )
+          )
+          `,
+          )
+          .eq('name', name)
+          .single();
+        if (data === null) {
+          console.warn('gearItem', error);
+          return null;
+        }
+
+        const totalAmount = sumBy(data.GearInventory, (i) =>
+          i.status === 'available' ? i.amount : 0,
+        );
+        const rentedAmount = sumBy(
+          data.RentedGear,
+          (rg) => rg.rented_amount - rg.returned_amount,
+        );
+
+        return {
+          id: data.id as GearItemId,
+          name: data.name,
+          lifespan: data.lifespan,
+          depositFee: data.deposit_fee,
+          totalAmount,
+          availableAmount: totalAmount - rentedAmount,
+          inventory: data.GearInventory.map((i) => {
+            return {
+              id: i.id as GearInventoryId,
+              details: i.details,
+              purchaseDate: i.purchase_date ?? undefined,
+              productionDate: i.production_date ?? undefined,
+              amount: i.amount,
+              status: i.status,
+            };
+          }),
+          rentals: data.RentedGear.filter(
+            (r) => r.rented_amount !== r.returned_amount,
+          ).map((r) => ({
+            id: r.rental_id as RentalId,
+            amount: r.rented_amount - r.returned_amount,
+            memberName: r.Rentals.Users
+              ? getFullName(r.Rentals.Users)
+              : r.Rentals.contact_info
+                ? (JSON.parse(r.Rentals.contact_info) as ContactInfo).fullName
+                : 'Failed to get name',
+          })),
+        };
+      },
+      { lazy: true },
+    );
+  }
 }
 
 function getActualRentedAmount(

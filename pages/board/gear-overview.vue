@@ -23,7 +23,6 @@
   );
   const searchTerm = ref('');
 
-  // Computed property for filtered and sorted subscriptions
   const filteredGear = computed(() => {
     return gear.value?.map((gearItem) => ({
       ...gearItem,
