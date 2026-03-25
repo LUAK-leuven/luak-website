@@ -141,7 +141,6 @@ class GearService {
   public async saveRental(
     rental: UnsavedRental,
   ): Promise<{ id: RentalId | undefined; error: string | undefined }> {
-    console.log('retnal', rental);
     const { error, data } = await this.supabase.rpc('create_rental', {
       p_board_member_id: rental.boardMemberId,
       p_member_id: rental.memberId ?? null,
