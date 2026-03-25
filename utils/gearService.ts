@@ -148,14 +148,18 @@ class GearService {
       p_date_return: rental.dateReturn,
       p_deposit: rental.depositFee,
       p_status: rental.status,
-      p_gear: Object.entries(rental.gear).map(([id, amount]) => ({
-        gear_item_id: id,
-        rented_amount: amount,
-      })),
-      p_topos: Object.entries(rental.topos).map(([id, amount]) => ({
-        topo_id: id,
-        rented_amount: amount,
-      })),
+      p_gear: Object.entries(rental.gear)
+        .filter(([_, amount]) => amount !== undefined)
+        .map(([id, amount]) => ({
+          gear_item_id: id,
+          rented_amount: amount,
+        })),
+      p_topos: Object.entries(rental.topos)
+        .filter(([_, amount]) => amount !== undefined)
+        .map(([id, amount]) => ({
+          topo_id: id,
+          rented_amount: amount,
+        })),
       p_payment_method: rental.paymentMethod,
       p_contact_info: rental.contactInfo
         ? JSON.stringify(rental.contactInfo)
@@ -210,9 +214,9 @@ class GearService {
     );
   }
 
-  public async getRental(rental_id: RentalId) {
+  public async getRental(rentalId: RentalId) {
     return useAsyncData(
-      `rental-${rental_id}`,
+      `rental-${rentalId}`,
       async () => {
         const { data: rental, error } = await this.supabase
           .from('Rentals')
@@ -256,11 +260,12 @@ class GearService {
           comments
           `,
           )
-          .eq('id', rental_id)
+          .eq('id', rentalId)
           .single();
 
         if (error || rental === null) {
-          console.warn('failed to load rentals', error);
+          console.warn(`failed to load rental ${rentalId}`, error);
+          console.info('rental:', rental);
           return undefined;
         }
 
@@ -283,18 +288,24 @@ class GearService {
           dateReturn: rental.date_return,
           depositFee: rental.deposit,
           depositReturned: rental.deposit_returned,
-          gear: rental.RentedGear.map((gearItem) => ({
-            gearItemId: gearItem.GearItems!.id as GearItemId,
-            name: gearItem.GearItems!.name,
-            rentedAmount: gearItem.rented_amount,
-            returnedAmount: gearItem.returned_amount,
-          })),
-          topos: rental.RentedTopos.map((topo) => ({
-            topoId: topo.Topos!.id as TopoId,
-            title: topo.Topos!.title,
-            rentedAmount: topo.rented_amount,
-            returnedAmount: topo.returned_amount,
-          })),
+          gear: sortBy(
+            rental.RentedGear.map((gearItem) => ({
+              gearItemId: gearItem.GearItems!.id as GearItemId,
+              name: gearItem.GearItems!.name,
+              rentedAmount: gearItem.rented_amount,
+              returnedAmount: gearItem.returned_amount,
+            })),
+            'name',
+          ),
+          topos: sortBy(
+            rental.RentedTopos.map((topo) => ({
+              topoId: topo.Topos!.id as TopoId,
+              title: topo.Topos!.title,
+              rentedAmount: topo.rented_amount,
+              returnedAmount: topo.returned_amount,
+            })),
+            'title',
+          ),
           paymentMethod: rental.payment_method,
           status: rental.status,
           comments: rental.comments ?? undefined,
@@ -344,7 +355,7 @@ class GearService {
       p_comments: rental.comments ?? null,
     });
     if (error) console.warn('editRental: ', error);
-    return error === null;
+    return error;
   }
 
   public async getRentalsForUser(userId: UserId) {
@@ -440,6 +451,72 @@ class GearService {
             amount: it.amount,
           })),
         }));
+      },
+      { lazy: true },
+    );
+  }
+
+  public async getTopoLibrary() {
+    return useAsyncData(
+      'allTopos',
+      async () => {
+        const { data: topos, error } = await this.supabase
+          .from('Topos')
+          .select('*');
+
+        if (topos === null) {
+          console.warn('getAllTopos', error);
+          return [];
+        }
+
+        return topos.map((topo) => ({
+          amount: topo.amount,
+          authors: topo.authors,
+          condition: topo.condition,
+          countries: topo.countries,
+          details: topo.details ?? undefined,
+          id: topo.id as TopoId,
+          languages: topo.languages,
+          place_in_library: topo.place_in_library,
+          tags: topo.tags.map((it) => it.trimStart()),
+          title: topo.title,
+          types_of_climbing: topo.types_of_climbing,
+          year_published: topo.year_published,
+        }));
+      },
+      { lazy: true },
+    );
+  }
+
+  public async getTopo(topoId: TopoId) {
+    return useAsyncData(
+      `topo-${topoId}`,
+      async () => {
+        const { data: topo, error } = await this.supabase
+          .from('Topos')
+          .select('*')
+          .eq('id', topoId)
+          .single();
+
+        if (topo === null) {
+          console.warn(`getTopo(${topoId})`, error);
+          return undefined;
+        }
+
+        return {
+          amount: topo.amount,
+          authors: topo.authors,
+          condition: topo.condition,
+          countries: topo.countries,
+          details: topo.details ?? undefined,
+          id: topo.id as TopoId,
+          languages: topo.languages,
+          place_in_library: topo.place_in_library,
+          tags: topo.tags.map((it) => it.trimStart()),
+          title: topo.title,
+          types_of_climbing: topo.types_of_climbing,
+          year_published: topo.year_published,
+        };
       },
       { lazy: true },
     );

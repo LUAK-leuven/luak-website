@@ -1,4 +1,6 @@
 <script setup lang="ts" generic="T">
+  import { useFloating, offset, flip, shift } from '@floating-ui/vue';
+
   const props = withDefaults(
     defineProps<{
       label?: string;
@@ -37,6 +39,14 @@
     textValue.value = '';
     hidden.value = false;
   }
+
+  const reference = ref(null);
+  const floating = ref(null);
+
+  const { floatingStyles } = useFloating(reference, floating, {
+    placement: 'bottom-start',
+    middleware: [offset(8), flip(), shift()],
+  });
 </script>
 
 <template>
@@ -45,8 +55,9 @@
       <span class="label-text">{{ label }}</span>
     </div>
     <label
+      ref="reference"
       class="input input-bordered flex w-full dropdown"
-      :class="{ 'bg-gray-300': disable }">
+      :class="{ 'bg-gray-300': disable, 'input-error': errorMessage }">
       <span v-if="hidden && selectedItem !== undefined" class="label w-max">
         <slot name="item" :data="selectedItem" />
       </span>
@@ -62,34 +73,38 @@
         @focus="onFocus()"
         @blur="if (!mouseOnSelection) hidden = true;" />
 
-      <ul
-        class="dropdown-content menu w-fit max-h-52 overflow-scroll rounded-box bg-base-100 shadow-md gap-y-1 top-12 z-10 flex-nowrap border-8 p-0 border-base-100"
-        :class="hidden ? 'hidden' : ''"
-        tabindex="0"
-        @mouseenter="mouseOnSelection = true"
-        @mouseleave="mouseOnSelection = false">
-        <li v-if="options === undefined">
-          <div>
-            {{ loadingMessage }} <span class="loading loading-dots"></span>
-          </div>
-        </li>
-        <template v-else>
-          <li
-            v-for="(option, idx) in options"
-            :key="idx"
-            class="hover:opacity-60">
-            <button
-              class="grid-cols-1 p-0"
-              type="button"
-              @click="onSelect(option)">
-              <slot name="item" :data="option" />
-            </button>
+      <Teleport to="body">
+        <ul
+          ref="floating"
+          class="dropdown-content menu w-fit max-h-52 overflow-scroll rounded-box bg-base-100 shadow-md gap-y-1 top-12 z-10 flex-nowrap border-8 p-0 border-base-100 fixed"
+          :class="hidden ? 'hidden' : ''"
+          :style="floatingStyles"
+          tabindex="0"
+          @mouseenter="mouseOnSelection = true"
+          @mouseleave="mouseOnSelection = false">
+          <li v-if="options === undefined">
+            <div>
+              {{ loadingMessage }} <span class="loading loading-dots"></span>
+            </div>
           </li>
-          <li v-if="options.length === 0">
-            <div>No results found</div>
-          </li>
-        </template>
-      </ul>
+          <template v-else>
+            <li
+              v-for="(option, idx) in options"
+              :key="idx"
+              class="hover:opacity-60">
+              <button
+                class="grid-cols-1 p-0"
+                type="button"
+                @click="onSelect(option)">
+                <slot name="item" :data="option" />
+              </button>
+            </li>
+            <li v-if="options.length === 0">
+              <div>No results found</div>
+            </li>
+          </template>
+        </ul>
+      </Teleport>
     </label>
     <span v-if="errorMessage" class="text-error">{{ errorMessage }}</span>
   </div>

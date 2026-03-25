@@ -2,54 +2,49 @@ import type { Database } from '~/types/database.types';
 import type { UserId } from '~/types/user';
 
 class UserService {
-  private readonly user = useSupabaseUser();
-  private readonly supabase = useSupabaseClient<Database>();
-
-  public async getUserInfo(userId?: UserId) {
-    if (userId === undefined) {
-      userId = (this.user.value?.id ?? undefined) as UserId | undefined;
-    }
-    if (userId === undefined) return undefined;
-    const { data } = await this.supabase
-      .from('Users')
-      .select('*')
-      .eq('id', userId)
-      .single();
-    return data;
-  }
-
   public async getAllUsers() {
-    const { data: users } = await this.supabase.from('Users').select(
-      `
-    id,
-    email,
-    first_name,
-    last_name,
-    phone_number,
-    Memberships (
-      year,
-      Payments (
-        approved
-      )
-    )
-    `,
-    );
+    return useAsyncData(
+      'allUsers',
+      async () => {
+        const { data: users, error } = await useSupabaseClient<Database>()
+          .from('Users')
+          .select(
+            `
+        id,
+        email,
+        first_name,
+        last_name,
+        phone_number,
+        Memberships (
+          year,
+          Payments (
+            approved
+          )
+        )
+        `,
+          );
+        if (error || users === null) {
+          if (error) console.error('allUsers:', error);
+          return [];
+        }
 
-    if (users === null) return [];
-    return users.map((user) => ({
-      id: user.id as UserId,
-      email: user.email,
-      first_name: user.first_name,
-      last_name: user.last_name,
-      phone_number: user.phone_number ?? undefined,
-      paid_membership:
-        user.Memberships.filter(
-          (membership) =>
-            membership.year === getLuakYear() &&
-            membership.Payments.filter((payment) => payment.approved).length >
-              0,
-        ).length > 0,
-    }));
+        return users.map((user) => ({
+          id: user.id as UserId,
+          email: user.email,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          phone_number: user.phone_number ?? undefined,
+          paid_membership:
+            user.Memberships.filter(
+              (membership) =>
+                membership.year === getLuakYear() &&
+                membership.Payments.filter((payment) => payment.approved)
+                  .length > 0,
+            ).length > 0,
+        }));
+      },
+      { lazy: true },
+    );
   }
 }
 

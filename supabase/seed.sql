@@ -118,8 +118,8 @@ values
 
 insert into "Topos" (id, title, authors, countries, year_published, amount, condition, types_of_climbing, tags, place_in_library, details, languages)
 values
-  ('539bca6e-417e-44b3-8e6a-fecf223b49a2', 'Topo Flone', array['KBF'], array['Belgium'], 2019, 2, 'good', array['sport_climbing'], array['flone', 'ourthe'], 'belgie', '', array['Dutch']),
-  ('184c489c-bee4-4a09-87d1-2b711e2a1248', 'Ailefriode', array[]::text[], array['France'], 2011, 1, 'used', array['multipitch', 'sport_climbing'], array['ailefroide', 'ecrin'], 'france', '', array['French']);
+  ('539bca6e-417e-44b3-8e6a-fecf223b49a2', 'Topo Flone', array['KBF'], array['Belgium'], 2019, 2, 'good', array['Sport climbing'], array['flone', 'ourthe'], 'belgie', '', array['Dutch']),
+  ('184c489c-bee4-4a09-87d1-2b711e2a1248', 'Ailefriode', array[]::text[], array['France'], 2011, 1, 'used', array['Multipitch', 'Sport climbing'], array['ailefroide', 'ecrin'], 'france', '', array['French']);
 
 
 -- Create some rentals

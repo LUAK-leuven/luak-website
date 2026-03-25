@@ -4,6 +4,7 @@
     formatStudentStatus,
     formatKbfUiaaStatus,
   } from '~/components/profile/helpers';
+  import dayjs from 'dayjs';
 
   definePageMeta({ middleware: 'board-member-guard' });
 
@@ -26,7 +27,7 @@
       has_paid: boolean;
     }>
   >([]);
-  const searchTerm = ref('');
+  const searchTerm = ref<string>();
   const filterType = ref('all');
   const sortField = ref('created_at');
   const sortDirection = ref('desc');
@@ -115,9 +116,11 @@
         return sub.year === currentYear - selectedYear.value;
       })
       .filter((sub) => {
-        const matchesSearch = sub.name
-          .toLowerCase()
-          .includes(searchTerm.value.toLowerCase());
+        const matchesSearch =
+          searchTerm.value === undefined
+            ? true
+            : !!fuzzySearch(sub.name, searchTerm.value) ||
+              matchOnFirstLetters(sub.name, searchTerm.value);
 
         if (filterType.value === 'all') return matchesSearch;
         if (filterType.value === 'student')
@@ -179,16 +182,12 @@
     <div v-else>
       <!-- Filters -->
       <div class="flex flex-col md:flex-row gap-4 mb-6">
-        <div class="form-control flex-1 min-w-48">
-          <label class="label">
-            <span class="label-text">Search by name</span>
-          </label>
-          <input
-            v-model="searchTerm"
-            class="input input-bordered w-full"
-            type="text"
-            placeholder="Search by name" />
-        </div>
+        <InputText2
+          v-model="searchTerm"
+          class="min-w-48 flex-1"
+          label="Search by name"
+          placeholder="Search by name">
+        </InputText2>
 
         <div class="form-control w-full md:max-w-64">
           <label class="label">
@@ -316,7 +315,9 @@
                   {{ formatKbfUiaaStatus(sub.kbf_uiaa_member) }}
                 </div>
               </td>
-              <td>{{ new Date(sub.created_at).toLocaleDateString() }}</td>
+              <td>
+                {{ dayjs(sub.created_at).format('DD MMM YYYY') }}
+              </td>
             </tr>
           </tbody>
         </table>

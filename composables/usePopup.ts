@@ -6,5 +6,17 @@ export default function () {
       }
     | undefined
   >('popup');
-  return popup;
+
+  const show = (
+    type: 'success' | 'warning' | 'error' | 'info',
+    message: string,
+  ) => {
+    popup.value = { type, message };
+  };
+
+  const close = () => {
+    popup.value = undefined;
+  };
+
+  return { show, close, state: computed(() => popup.value) };
 }

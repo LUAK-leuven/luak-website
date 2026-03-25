@@ -1,13 +1,25 @@
 <script setup lang="ts">
   import dayjs from 'dayjs';
-  import type { UnsavedRental } from '~/types/renal';
+  import PaymentModal from '~/components/PaymentModal.vue';
+  import type { RentalId, UnsavedRental } from '~/types/renal';
 
   definePageMeta({ middleware: 'board-member-guard' });
 
-  const user = await useLuakMember();
+  const { show: showPopup } = usePopup();
+  const showPaymentModal = ref(false);
+  const paymentDetails = ref<{
+    amount: number;
+    name: string;
+    iban: string;
+    message: string;
+  } | null>(null);
+  const retnalId = ref<RentalId>();
+
+  const { data: user } = await useLuakMember();
   const boardMember = {
-    name: user.userInfo!.first_name + ' ' + user.userInfo!.last_name,
-    id: user.userInfo!.id,
+    name:
+      user.value.userInfo!.first_name + ' ' + user.value.userInfo!.last_name,
+    id: user.value.userInfo!.id,
   };
 
   const { data: allGear, pending: gearPending } =
@@ -29,12 +41,32 @@
       ...state,
       boardMemberId: boardMember.id,
     });
-    if (!error) {
-      if (id) navigateTo(`/board/rentals/${id}`);
-      else navigateTo('/');
+
+    if (!error && id) {
+      retnalId.value = id;
+      if (state.paymentMethod === 'transfer') {
+        paymentDetails.value = {
+          amount: state.depositFee,
+          name: 'LUAK vzw',
+          iban: 'BE03 7340 3133 8584',
+          message: 'Deposit fee',
+        };
+        showPaymentModal.value = true;
+      } else {
+        navigateTo(`/board/rentals/${retnalId.value}`);
+      }
+      showPopup('success', 'Rental saved successfully.');
+      return { error: undefined };
+    } else {
+      showPopup('error', error ?? 'An unknown error occurred.');
+      return { error };
     }
-    return { error };
   }
+
+  const closeModal = () => {
+    showPaymentModal.value = false;
+    if (retnalId.value) navigateTo(`/board/rentals/${retnalId.value}`);
+  };
 </script>
 
 <template>
@@ -56,11 +88,14 @@
       :initial-values="{
         dateBorrow: dayjs().format('YYYY-MM-DD').toString(),
         dateReturn: dayjs().add(3, 'w').format('YYYY-MM-DD').toString(),
-        gear: [],
-        topos: [],
       }" />
 
-    <!-- <p>Values: {{ values }}</p>
-    <p>Errors: {{ errors }}</p> -->
+    <PaymentModal
+      :is-open="showPaymentModal"
+      :amount="paymentDetails?.amount ?? 0"
+      :name="paymentDetails?.name ?? ''"
+      :iban="paymentDetails?.iban ?? ''"
+      :message="paymentDetails?.message ?? ''"
+      @close="closeModal" />
   </FullPageCard>
 </template>

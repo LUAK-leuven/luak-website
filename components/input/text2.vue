@@ -36,7 +36,11 @@
     </div>
     <label
       class="input input-bordered w-full flex items-center"
-      :class="{ 'bg-gray-300': disabled, ' rounded-full': round }">
+      :class="{
+        'bg-gray-300': disabled,
+        'rounded-full': round,
+        'input-error': error,
+      }">
       <slot name="label1" />
       <input
         v-model="model"
@@ -46,6 +50,7 @@
         :placeholder="placeholder"
         :disabled="disabled"
         @focus="if (autoFillWithPlaceholder && !model) model = placeholder;" />
+      <slot name="label-end" />
     </label>
     <span v-if="error" class="text-error">{{ error }}</span>
   </div>

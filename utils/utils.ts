@@ -1,3 +1,5 @@
+import type { K } from 'vue-router/dist/router-CWoNjPRp.mjs';
+
 export function sum(array: number[]): number {
   return array.reduce((sum, current) => sum + current, 0);
 }
@@ -7,22 +9,6 @@ export function sumOf<T extends Record<K, number>, K extends keyof T>(
   key: K,
 ): number {
   return array.reduce((sum, current) => sum + current[key], 0);
-}
-
-export function search(content: string, searchTerm: string): boolean {
-  if (!content) return false;
-  return content.toLowerCase().includes(searchTerm.toLowerCase());
-}
-
-export function fuzzySearch(content: string, searchTerm: string): number {
-  if (!content) return 0;
-  content = content.toLowerCase();
-  const searchTerms = searchTerm.toLowerCase().split(' ');
-  const matches = searchTerms
-    .map((term) => content.match(term))
-    .filter((v) => v !== null);
-
-  return matches.length == searchTerms.length ? 1 : 0;
 }
 
 export function single<T>(array: T[]): T | undefined {
@@ -75,4 +61,17 @@ export function findBy<T extends Record<K, V>, K extends keyof T, V>(
 
 export async function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export function sortBy<T extends Record<K, string>, K extends keyof T>(
+  arr: T[],
+  key: K,
+) {
+  return arr.toSorted((a, b) =>
+    a[key].toLowerCase() < b[key].toLowerCase()
+      ? -1
+      : a[key] === b[key]
+        ? 0
+        : 1,
+  );
 }

@@ -2,9 +2,10 @@
   import * as yup from 'yup';
   import type { Enums } from '~/types/database.types';
   import type { GearItemId, TopoId } from '~/types/gear';
+  import { computeRentalStatusUnsafe } from '~/utils/rental/computeStatus';
 
   const { rental } = defineProps<{ rental: RentalDetails }>();
-  const popup = usePopup();
+  const { show: showPopup } = usePopup();
 
   const formSchema = computed(() =>
     yup.object({
@@ -52,8 +53,9 @@
   const { setValues, handleSubmit, values, errors } = useForm({
     validationSchema: toTypedSchema(formSchema.value),
   });
-  const { update: updateReturnedGear } = useFieldArray<number>('returnedGear');
-  const { update: updateReturnedTopos } =
+  const { update: updateReturnedGear, fields: returnedGear } =
+    useFieldArray<number>('returnedGear');
+  const { update: updateReturnedTopos, fields: returnedTopos } =
     useFieldArray<number>('returnedTopos');
 
   function edit() {
@@ -102,15 +104,9 @@
 
       if (success) {
         reloadNuxtApp();
-        popup.value = {
-          type: 'success',
-          message: 'Your changes have been saved.',
-        };
+        showPopup('success', 'Your changes have been saved.');
       } else {
-        popup.value = {
-          type: 'error',
-          message: 'Failed to save changes',
-        };
+        showPopup('error', 'Failed to save changes');
       }
     },
     (result) => {
@@ -123,22 +119,13 @@
   const computedStatus: ComputedRef<Enums<'rental_status'>> = computed(() => {
     if (editMode.value) {
       if (values.statusReserved) return 'reserved';
-      let isAllReturned = true;
-      let isAnyReturned = false;
-      for (let i = 0; i < rental.gear.length; i++) {
-        if (values.returnedGear![i] > 0) isAnyReturned = true;
-        if (values.returnedGear![i] !== rental.gear[i].rentedAmount)
-          isAllReturned = false;
-      }
-      for (let i = 0; i < rental.topos.length; i++) {
-        if (values.returnedTopos![i] > 0) isAnyReturned = true;
-        if (values.returnedTopos![i] !== rental.topos[i].rentedAmount)
-          isAllReturned = false;
-      }
-      if (isAllReturned && values.depositReturned) return 'returned';
-      else if (isAnyReturned || values.depositReturned)
-        return 'partially_returned';
-      else return 'not_returned';
+      return computeRentalStatusUnsafe(
+        rental.gear.map((it) => it.rentedAmount),
+        values.returnedGear!,
+        rental.topos.map((it) => it.rentedAmount),
+        values.returnedTopos!,
+        values.depositReturned!,
+      );
     }
     return rental.status;
   });
@@ -169,7 +156,10 @@
         <span class="w-max flex-shrink-0">Return date:</span>
         <span class="flex-[44] flex-shrink">
           <InputText v-if="editMode" name="dateReturn" type="date" />
-          <BoardRentalReturnDate v-else :date="rental.dateReturn" />
+          <BoardRentalReturnDate
+            v-else
+            :date="rental.dateReturn"
+            :ghost="rental.status === 'returned'" />
         </span>
       </div>
       <div class="flex flex-row gap-1 items-center">
@@ -214,52 +204,28 @@
       <b class="border px-1">Gear</b>
       <b class="border px-1">Amount</b>
       <b class="border px-1">Returned amount</b>
-      <template
+      <BoardRentalItem
         v-for="({ title, rentedAmount, returnedAmount }, idx) of rental.topos"
-        :key="idx">
-        <div class="border p-1 flex items-center">{{ title }}</div>
-        <div class="border p-1 flex flex-row justify-between items-center">
-          {{ rentedAmount }}
-          <button
-            v-if="editMode"
-            class="btn btn-circle btn-xs btn-outline"
-            @click="updateReturnedTopos(idx, rentedAmount)">
-            <span class="material-symbols-outlined text-sm">arrow_forward</span>
-          </button>
-        </div>
-        <div class="border p-1 flex flex-row items-center">
-          <InputNumber
-            v-if="editMode"
-            :class="{
-              'animate-bounceInput': bouncing[`returnedTopos[${idx}]`],
-            }"
-            :name="`returnedTopos[${idx}]`" />
-          <span v-else>{{ returnedAmount }}</span>
-        </div>
-      </template>
-      <template
+        :key="idx"
+        :bouncing="bouncing[`returnedTopos[${idx}]`]"
+        :name="title"
+        :rented-amount="rentedAmount"
+        :returned-amount="editMode ? returnedTopos[idx].value : returnedAmount"
+        :edit-mode="editMode"
+        :form-name="`returnedTopos[${idx}]`"
+        @update-returned-amount="
+          (amount) => updateReturnedTopos(idx, amount)
+        " />
+      <BoardRentalItem
         v-for="({ name, rentedAmount, returnedAmount }, idx) of rental.gear"
-        :key="idx">
-        <div class="border p-1 flex items-center">{{ name }}</div>
-        <div class="flex flex-row justify-between items-center border p-1">
-          {{ rentedAmount }}
-          <button
-            v-if="editMode"
-            class="btn btn-circle btn-xs btn-outline"
-            @click="updateReturnedGear(idx, rentedAmount)">
-            <span class="material-symbols-outlined text-sm">arrow_forward</span>
-          </button>
-        </div>
-        <div class="border p-1 flex flex-row items-center">
-          <InputNumber
-            v-if="editMode"
-            :class="{
-              'animate-bounceInput': bouncing[`returnedGear[${idx}]`],
-            }"
-            :name="`returnedGear[${idx}]`" />
-          <span v-else>{{ returnedAmount }}</span>
-        </div>
-      </template>
+        :key="idx"
+        :bouncing="bouncing[`returnedGear[${idx}]`]"
+        :name="name"
+        :rented-amount="rentedAmount"
+        :returned-amount="editMode ? returnedGear[idx].value : returnedAmount"
+        :edit-mode="editMode"
+        :form-name="`returnedGear[${idx}]`"
+        @update-returned-amount="(amount) => updateReturnedGear(idx, amount)" />
     </div>
     <hr class="my-3" />
     <div class="flex justify-end gap-3">
@@ -267,7 +233,7 @@
         <button class="btn btn-error btn-outline" @click="editMode = false">
           Cancel
         </button>
-        <button class="btn btn-primary" @click="save()">Save changes</button>
+        <SharedLoadingButton text="Save changes" :click-handler="save" />
       </template>
       <template v-else>
         <button

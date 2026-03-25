@@ -56,5 +56,9 @@ export default defineContentConfig({
           .optional(),
       }),
     }),
+    shared: defineCollection({
+      type: 'page',
+      source: 'shared/*.md',
+    }),
   },
 });

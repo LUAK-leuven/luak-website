@@ -1,7 +1,50 @@
 ---
-title: History
-description: A little history of luak
+title: About us
+description: Page about what LUAK is
 ---
+
+## What is LUAK?
+
+LUAK is a climbing community full of enthusiast climbers. We are passionate about all outdoor climbing & mountain sports: boulder, sport climbing, trad climbing, alpinism, tourski, ice climbing, ...
+
+We are a student club, but we are not limited to students, there are also a lot of non-students in our club. LUAK is a great place for both beginners and experienced people. We organize climbing trips/weekends and members can borrow gear (for free).
+
+We also have a clubhouse where we hold a weekly club evening. This is the moment where we make our climbing plans for the weekend, borrow gear, exchange climbing stories and have fun ...
+
+Want to learn more about us? Don't hesitate to pass by on one of our club evenings :)
+
+### The LUAK clubhouse 🏠
+
+- Address: Minderbroederstraat 50, 3000 Leuven (opposite to nr. 25 behind the iron cast gate)
+- Open every Thursday evening (only during the academic year) starting from 20h30
+
+## The board 🧗‍♀
+
+::flex-box
+---
+class: gap-3
+justify: justify-evenly
+---
+#item1
+:board-member{name="Mo Vanstraelen" picture="/info/mo.jpg" role="President"}
+
+#item2
+:board-member{name="Hektor Letraublon" picture="/info/a-wild-alpinist.jpg" role="IT"}
+
+#item3
+:board-member{name="Arthur Vranken" picture="/luak-logo.png" role="Graphics & Logistics"}
+
+#item4
+:board-member{name="Lukas Brüll" picture="/luak-logo.png" role="Planning & Logistics"}
+
+#item5
+:board-member{name="Hugo Fache" picture="/info/hugo.jpg" role="IT & Bar"}
+
+#item6
+:board-member{name="Ciska Pycke" picture="/luak-logo.png" role="Social Media"}
+::
+
+## History
 
 ( Sorry to all you foreigners out there, you'll have to learn dutch for this one :-) )
 
@@ -21,4 +64,6 @@ Het duurt dan ook niet lang voor we in de aktiviteitenoverzichten voor de eerste
 
 Het hek is van de dam. De volgende jaren worden we getrakteerd op soms halve boeken over Yosemite, Chamonix, Zwitserland, Calanques, Fontainebleau,.... Stuk voor stuk prettig gestoorde verhalen over (zwaar) klimmen en veel plezier. Dit doen we nu al een 40 tal jaar, op die 40 jaar zijn we geëvolueerd van de Hypothenuse tot Schwarzenegger, van de Arète des Cosmiques tot Eiger, Jackson, Pinocchio,.... Van oriëntatieloop tot marathon en 24 uren-loop, van initiant tot berggids, van holbewoner tot Himalaya, van den Directe in tire clou tot Mescalito, van Kokosmatje tot crashpad, van coin de bois tot camalot, van zootje ongeregeld tot vzw.
 
-![Image](/luak-logo.png)
+## Rules and regulations
+
+:include-content{content="rules_and_regulations"}

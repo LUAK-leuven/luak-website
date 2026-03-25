@@ -4,14 +4,18 @@
   definePageMeta({ middleware: 'board-member-guard' });
 
   const retnalId = useRoute().params.id as RentalId;
-  const { data: rental, pending } = await gearService().getRental(retnalId);
+  const {
+    data: rental,
+    pending,
+    error,
+  } = await gearService().getRental(retnalId);
 </script>
 
 <template>
   <FullPageCard>
     <template #subtitle>
       <h2>Rental</h2>
-      <i class="text-sm">{{ rental ? rental.id : '' }}</i>
+      <i class="text-sm">{{ retnalId }}</i>
     </template>
 
     <NuxtLink
@@ -25,7 +29,7 @@
     <div v-if="pending" class="flex justify-center">
       <span class="loading loading-spinner loading-lg" />
     </div>
-    <div v-else-if="!rental">ERROR!</div>
+    <div v-else-if="!rental">ERROR: {{ error }}</div>
     <BoardRentalDetails v-else :rental="rental" />
   </FullPageCard>
 </template>

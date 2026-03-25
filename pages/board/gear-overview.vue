@@ -68,7 +68,7 @@
           : 'bg-opacity-0 border-opacity-0';
 
     return {
-      date: retirementDate.format('DD MMM YYYY').toString(),
+      date: retirementDate.format('MMM YYYY'),
       color,
     };
   }
@@ -110,8 +110,8 @@
               <th>Name</th>
               <th class="pl-0">Amount</th>
               <th class="min-w-64">Details</th>
-              <th>Purchase Date</th>
               <th class="pr-0">Production Date</th>
+              <th class="pr-0">Purchase Date</th>
               <th>Retirement Date</th>
             </tr>
           </thead>
@@ -123,8 +123,20 @@
                 </td>
                 <td>{{ g.amount }}</td>
                 <td>{{ g.details }}</td>
-                <td>{{ g.purchaseDate }}</td>
-                <td>{{ g.productionDate }}</td>
+                <td>
+                  {{
+                    g.productionDate
+                      ? dayjs(g.productionDate).format('MMM YYYY')
+                      : ''
+                  }}
+                </td>
+                <td>
+                  {{
+                    g.purchaseDate
+                      ? dayjs(g.purchaseDate).format('MMM YYYY')
+                      : ''
+                  }}
+                </td>
                 <td>
                   <div class="flex justify-center items-center">
                     <span class="badge w-max" :class="g.badgeColor">

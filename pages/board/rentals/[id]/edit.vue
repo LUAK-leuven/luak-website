@@ -1,8 +1,10 @@
 <script setup lang="ts">
   import type { RentalId, UnsavedRental } from '~/types/renal';
+  import { computeRentalStatus } from '~/utils/rental/computeStatus';
 
   definePageMeta({ middleware: 'board-member-guard' });
 
+  const { show: showPopup } = usePopup();
   const route = useRoute();
   const rentalId = route.params.id as RentalId;
 
@@ -42,21 +44,45 @@
   async function handleSubmit(state: Omit<UnsavedRental, 'boardMemberId'>) {
     if (!!rental.value) {
       for (const { gearItemId: id } of rental.value.gear) {
-        if (!(id in state.gear)) {
+        if (!state.gear[id]) {
           state.gear[id] = 0;
         }
       }
       for (const { topoId: id } of rental.value.topos) {
-        if (!(id! in state.topos)) {
+        if (!state.topos[id]) {
           state.topos[id] = 0;
         }
       }
-      const success = await gearService().editRental({
+      state.status =
+        state.status === 'reserved'
+          ? 'reserved'
+          : computeRentalStatus(
+              state.gear,
+              Object.fromEntries(
+                rental.value.gear.map((g) => [g.gearItemId, g.returnedAmount]),
+              ),
+              state.topos,
+              Object.fromEntries(
+                rental.value.topos.map((t) => [t.topoId, t.returnedAmount]),
+              ),
+              rental.value.depositReturned,
+            );
+      const error = await gearService().editRental({
         ...state,
         id: rental.value.id,
       });
-      if (success) navigateTo(`/board/rentals/${rental.value.id}`);
-      return { error: success ? undefined : 'Failed to save rental' };
+      if (!error) {
+        showPopup('success', 'Rental saved successfully!');
+        sleep(200);
+        await navigateTo(`/board/rentals/${rental.value.id}`);
+        return { error: undefined };
+      } else {
+        showPopup(
+          'error',
+          "[500]: Failed to save rental. Stuff is broken, maybe you're not connected to the internet.",
+        );
+        return { error: 'Failed to save rental' };
+      }
     } else {
       return { error: 'Failed to save rental' };
     }
@@ -95,14 +121,12 @@
         dateReturn: rental.dateReturn,
         memberId: rental.memberId ?? 'non-user',
         contactInfo: rental.memberId === undefined ? rental.member : undefined,
-        gear: rental.gear.map((g) => ({
-          id: g.gearItemId,
-          amount: g.rentedAmount,
-        })),
-        topos: rental.topos.map((g) => ({
-          id: g.topoId,
-          amount: g.rentedAmount,
-        })),
+        gear: Object.fromEntries(
+          rental.gear.map((it) => [it.gearItemId, it.rentedAmount]),
+        ),
+        topos: Object.fromEntries(
+          rental.topos.map((it) => [it.topoId, it.rentedAmount]),
+        ),
         depositFee: rental.depositFee,
         paymentMethod: rental.paymentMethod,
         markAsReserved: rental.status === 'reserved',

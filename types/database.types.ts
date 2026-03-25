@@ -416,7 +416,7 @@ export type Database = {
           place_in_library: string;
           tags: string[];
           title: string;
-          types_of_climbing: string[] | null;
+          types_of_climbing: string[];
           year_published: number | null;
         };
         Insert: {
@@ -430,7 +430,7 @@ export type Database = {
           place_in_library: string;
           tags: string[];
           title: string;
-          types_of_climbing?: string[] | null;
+          types_of_climbing: string[];
           year_published?: number | null;
         };
         Update: {
@@ -444,7 +444,7 @@ export type Database = {
           place_in_library?: string;
           tags?: string[];
           title?: string;
-          types_of_climbing?: string[] | null;
+          types_of_climbing?: string[];
           year_published?: number | null;
         };
         Relationships: [];

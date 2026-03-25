@@ -4,25 +4,28 @@
   withDefaults(
     defineProps<{
       disable?: boolean;
-      errorMessage?: string;
+      error?: string;
     }>(),
     {
       disable: false,
-      errorMessage: undefined,
+      error: undefined,
     },
   );
 
-  const model = defineModel<UserId | 'non-user' | undefined>();
+  const selectedUserId = defineModel<UserId | 'non-user' | undefined>('userId');
+  const fullName = defineModel<string>('fullName');
+  const email = defineModel<string>('email');
+  const phone = defineModel<string>('phone');
 
-  const users = await useAsyncData('users', () => userService().getAllUsers());
+  const { data: users, pending } = await userService().getAllUsers();
   type SelectableUser = {
     name: string;
     id: UserId | 'non-user';
     hasPaid: boolean;
   };
   const selectableUsers = computed(() =>
-    users.data.value
-      ?.map(
+    (users.value ?? [])
+      .map(
         (user) =>
           ({
             name: user.first_name + ' ' + user.last_name,
@@ -37,36 +40,23 @@
       }),
   );
 
-  function matchFirstLetters(name: string, input: string) {
-    return (
-      input.toLowerCase() ===
-      name
-        .split(' ')
-        .map((x) => x.at(0))
-        .join('')
-        .toLowerCase()
-    );
-  }
-
-  function filterUser(input: string | undefined) {
+  const filterUser = (input: string | undefined) => {
+    if (pending.value) return undefined;
     if (input === undefined) return selectableUsers.value;
     return selectableUsers.value?.filter(
       (option) =>
         fuzzySearch(option.name, input) > 0 ||
-        matchFirstLetters(option.name, input),
+        matchOnFirstLetters(option.name, input),
     );
-  }
+  };
 
   const selectedUser = computed(() =>
-    findBy(selectableUsers.value, 'id', model.value),
+    findBy(selectableUsers.value, 'id', selectedUserId.value),
   );
-  function onSelect(selectedUser: {
-    id: UserId | 'non-user';
-    name: string;
-    hasPaid: boolean;
-  }) {
-    model.value = selectedUser.id;
-  }
+
+  const selectUser = (user: SelectableUser) => {
+    selectedUserId.value = user.id;
+  };
 </script>
 
 <template>
@@ -75,11 +65,11 @@
       label="Member name *"
       placeholder="select member"
       :options-provider="filterUser"
-      :error-message="errorMessage"
+      :error-message="error"
       :selected-item="selectedUser"
       loading-message="Loading users"
       :disable="disable"
-      @on-select="onSelect">
+      @on-select="selectUser">
       <template #item="{ data }">
         <div
           class="px-3 py-1 rounded-md w-full min-w-max"
@@ -94,19 +84,19 @@
         </div>
       </template>
     </InputSearchableSelect>
-    <div v-if="model === 'non-user'">
-      <InputText
-        name="contactInfo.fullName"
+    <div v-if="selectedUserId === 'non-user'">
+      <InputText2
+        v-model="fullName"
         placeholder="Adam Ondra"
         label="Full name *"
         type="text" />
-      <InputText
-        name="contactInfo.email"
+      <InputText2
+        v-model="email"
         placeholder="example@mail.com"
         label="Email"
         type="email" />
-      <InputText
-        name="contactInfo.phone"
+      <InputText2
+        v-model="phone"
         placeholder="+32 123 34 56 77"
         label="Phone number"
         type="text" />

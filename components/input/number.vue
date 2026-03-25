@@ -26,9 +26,14 @@
 <template>
   <label class="form-control max-w-20">
     <input
-      v-model="value"
       class="input input-bordered border-2 h-8"
       :class="getTextboxColor(value)"
-      type="number" />
+      :value="value"
+      type="number"
+      @input="
+        (pl) => {
+          if (pl.data !== null) value = Number(pl.data);
+        }
+      " />
   </label>
 </template>

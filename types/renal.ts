@@ -1,4 +1,4 @@
-import type { EntityId } from './common';
+import type { EntityId } from './ddd';
 import type { Enums } from './database.types';
 import type { GearItemId, TopoId } from './gear';
 import type { UserId } from './user';

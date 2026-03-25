@@ -45,7 +45,7 @@ ol {
   hr {
     @apply my-5;
   }
-  img {
+  img:not(.custom-img) {
     @apply rounded-lg;
     @apply shadow-2xl;
     @apply max-w-60;
