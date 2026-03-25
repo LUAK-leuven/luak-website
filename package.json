@@ -14,7 +14,7 @@
     "lintfix": "eslint . --fix && prettier --write --list-different ."
   },
   "devDependencies": {
-    "@nuxt/devtools": "^3.1.1",
+    "@nuxt/devtools": "^3.2.4",
     "@nuxt/eslint": "^0.3.13",
     "@nuxtjs/supabase": "^1.6.2",
     "@nuxtjs/tailwindcss": "^6.8.0",
