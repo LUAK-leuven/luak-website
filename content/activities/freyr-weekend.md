@@ -1,7 +1,8 @@
 ---
 title: Freyr Weekend
+date: 2025-09-27
+description: Freyr, home of the gods, the epicentre of the universe. On the weekend of 27-28 September we will again go to Freyr for an epic weekend. A Freyr weekend typically consists of beautifull climbing during the day, a campfire🔥 (and possibly some crasy night-time climbs or swimming) in the evening.
 image: /activities/freyr.jpg
-date: 2025-09-27T19:00:00.000Z
 price: 0
 ---
 

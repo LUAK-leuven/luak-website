@@ -1,7 +1,8 @@
 ---
 title: Start Academic year 25-26
+date: 2025-08-29
+description: helloooww luak people and interested people ✌️
 image: /news/zomer-2025-71.jpg
-date: 2025-08-29T00:00:00.000Z
 ---
 
 helloooww luak people and interested people ✌️

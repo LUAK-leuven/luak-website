@@ -1,7 +1,8 @@
 ---
 title: Story Night
+date: 2025-10-16
+description: Get taken away to the alps, to brand new Belgian crags, to an adventure waiting to happen,... all with a projector and the firsthand account of a fellow LUAKker.
 image: /news/zomer-2025-71.jpg
-date: 2025-10-16T01:00:00.000Z
 price: 0
 ---
 

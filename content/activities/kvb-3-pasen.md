@@ -1,7 +1,7 @@
 ---
 title: KVB3 course Easter - FULL
+date: 2026-04-12
 description: This course is already fully booked.
-date: 2026-04-12T00:00:00.000Z
 image: /activities/afbeelding1.png
 price: 37000
 tag: intermediate
@@ -54,7 +54,7 @@ Any non-climbing related stuff you want to give money to
 - You have KVB2 (klimvaardigheidsbewijs 2), or can provide proof of equivalent skills and experience
 - Member of de Klim- en Bergsportfedratie (or other mountain climbing federation that provides adequate climbing insurance). Membership also allows you access to the rocks.
 
-More info on KBF membership and insurance: [https://www.klimenbergsportfederatie.be/kbf/ledeninfo/lidmaatschap-van-z  ](https://www.klimenbergsportfederatie.be/kbf/ledeninfo/lidmaatschap-van-z%C2%A0%C2%A0)
+More info on KBF membership and insurance: [https://www.klimenbergsportfederatie.be/kbf/ledeninfo/lidmaatschap-van-z](https://www.klimenbergsportfederatie.be/kbf/ledeninfo/lidmaatschap-van-z%C2%A0%C2%A0)  
 
 ### **Sign up**
 

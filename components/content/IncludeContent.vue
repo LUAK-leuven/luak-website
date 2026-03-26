@@ -4,10 +4,10 @@
   }>();
 
   const { data } = await useAsyncData(props.content, () =>
-    queryCollection('shared').path(`/shared/${props.content}`).first(),
+    queryCollection('shared').where('id', 'LIKE', `%${props.content}%`).first(),
   );
 </script>
 
 <template>
-  <ContentRenderer v-if="data" :value="data" />
+  <ContentRenderer v-if="data" :value="data.meta" />
 </template>

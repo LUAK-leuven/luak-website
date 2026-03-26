@@ -1,14 +1,14 @@
 ---
 title: Ettringen Weekend
-description: More info & registrations will be posted later.
-date: 2026-04-25T00:00:00.000Z
+date: 2026-04-25
+description: "On the weekend of 25-26 April there will be a climbing meet in Ettringen, a very cool crack and trad climbing area in Germany. "
 image: /activities/ettringen.jpg
 price: 0
 ---
 
 On the weekend of 25-26 April there will be a climbing meet in Ettringen, a very cool crack and trad climbing area in Germany. We'll leave on Saturday early morning, sleep on the campsite close by and be back Sunday evening.
 
-This is a weekend for both experienced trad climbers and beginners that want to learn crack climbing (experienced people can hang topropes).
+This is a weekend for both experienced trad climbers and beginners that want to try their hand crack climbing, topropes will be provided. KVB2 (bolted lead climbing) experience and a good basis of climbing technique and conditioning is recommended though.
 
 ::flex-box
 ---

@@ -1,8 +1,8 @@
 ---
 title: Diedre du soleil levant - a story of first ascending in belgium
-image: /stories/DSC05328-min-min-600x400.jpg
-date: 2021-03-06T00:00:00.000Z
 author: Ward Lorenz
+date: 2021-03-06
+image: /stories/DSC05328-min-min-600x400.jpg
 ---
 
 Wow, I’m I in Orco? Val di Mello? No wait, I’m not staring at granite, this is limestone. ZIP – wake up, still in Belgium, just around the corner of the well known main slab of Les Awirs. But still, I am looking at an incredible 40m corner crack. It’s a bit overgrown and not bolted. But this is something to remember, potentially virgin rock in Belgium is something very rare to come by.

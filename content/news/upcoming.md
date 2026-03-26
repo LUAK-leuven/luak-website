@@ -1,7 +1,8 @@
 ---
 title: Summermeet location & upcoming activities
+date: 2025-04-16
+description: The long standing debate of where the next summermeet will take place has finally reached its destination.
 image: /news/bergjes_met_sneeuw.jpg
-date: 2025-04-16T01:00:00.000Z
 ---
 
 The long standing debate of where the next summermeet will take place has finally reached its destination.
@@ -12,7 +13,7 @@ We will be spending the week of 12 to 20 July in **Val di Mello**!
 
 ### Upcoming Activities
 
-We still have a lot of activities planned after the easter hollidays! As usual there is the weekly club evening starting from 20h30. 
+We still have a lot of activities planned after the easter hollidays! As usual there is the weekly club evening starting from 20h30.
 
 - Movie Night (Thursday 24 April): There is nothing better than an evening filled with an awe inspiring movie about crazy climbers doing crazy stuff.
 - Joint activity with Spekul (Saturday 26 April): Ever seen a cave? Always wanted to go in there? - [more info & registration](https://www.luak.be/activities/activity_spekul) (registrations close on 22 April)
