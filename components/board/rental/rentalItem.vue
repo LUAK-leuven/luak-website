@@ -34,12 +34,20 @@
     </button>
   </div>
   <div class="border p-1 flex flex-row items-center">
-    <InputNumber
+    <InputNumber2
       v-if="editMode"
       :class="{
         'animate-bounceInput': bouncing,
       }"
-      :name="formName" />
+      :model-value="returnedAmount"
+      :text-box-color="
+        returnedAmount < 0 || returnedAmount > rentedAmount ? 'input-error' : ''
+      "
+      @update:model-value="
+        (amount) => {
+          if (amount) emit('updateReturnedAmount', amount);
+        }
+      " />
     <span v-else>{{ returnedAmount }}</span>
   </div>
 </template>
