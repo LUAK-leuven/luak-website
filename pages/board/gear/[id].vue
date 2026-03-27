@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import type { GearItemId } from '~/types/gear';
-  import RetirementDate from '../retirementDate.vue';
   import dayjs from 'dayjs';
   import { useBreakpoints, breakpointsTailwind } from '@vueuse/core';
   import InventoryTableItem from '~/components/board/gear/inventoryTableItem.vue';
+  import RetirementDate from '~/components/board/gear/retirementDate.vue';
 
   definePageMeta({ middleware: 'board-member-guard' });
   const gearItemId = useRoute().params.id as GearItemId;

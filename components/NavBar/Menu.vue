@@ -57,7 +57,7 @@
       </details>
     </li>
     <li v-if="!user.isMember">
-      <NuxtLink to="/pages/become_a_member">Become a member</NuxtLink>
+      <NuxtLink to="/pages/become-a-member">Become a member</NuxtLink>
     </li>
     <li v-if="user.isMember">
       <details id="member-toggle">
@@ -66,7 +66,7 @@
           <li><NuxtLink to="/stories">Stories</NuxtLink></li>
           <li><NuxtLink to="/topos/library">Topo Library</NuxtLink></li>
           <li>
-            <NuxtLink to="/pages/christmas_bets">Christmas Bets</NuxtLink>
+            <NuxtLink to="/pages/christmas-bets">Christmas Bets</NuxtLink>
           </li>
         </ul>
       </details>
@@ -87,7 +87,7 @@
             <NuxtLink to="/board/rentals"> 👀 Rental overview </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/board/gear-overview"> ⚙️ Gear overview </NuxtLink>
+            <NuxtLink to="/board/gear"> ⚙️ Gear overview </NuxtLink>
           </li>
           <li>
             <a href="/_studio"> 📝 Studio Mode </a>
