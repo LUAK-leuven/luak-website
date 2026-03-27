@@ -96,11 +96,7 @@
       Rental-id: <i>{{ rental?.id }}</i>
     </template>
 
-    <NuxtLink
-      class="absolute btn btn-circle btn-sm btn-outline top-10 left-10"
-      to="/board/rentals">
-      <span class="material-symbols-outlined">arrow_back</span>
-    </NuxtLink>
+    <SharedBackButton :to="`/board/rentals/${rental?.id}`" />
 
     <div
       v-if="rentalPending || gearPending || toposPending"

@@ -22,7 +22,7 @@
     },
   );
 
-  const model = defineModel<string | number>();
+  const model = defineModel<string | number | undefined>();
 
   watch(model, (value) => {
     if (value === '') model.value = undefined;

@@ -266,7 +266,7 @@ class GearService {
         if (error || rental === null) {
           console.warn(`failed to load rental ${rentalId}`, error);
           console.info('rental:', rental);
-          return undefined;
+          return null;
         }
 
         const contactInfo: ContactInfo = rental.member
@@ -602,9 +602,9 @@ class GearService {
     );
   }
 
-  public getGearItemByName(name: string) {
+  public getGearItem(gearItemId: GearItemId) {
     return useAsyncData(
-      `gearItem-${name}`,
+      `gearItem-${gearItemId}`,
       async () => {
         const { data, error } = await this.supabase
           .from('GearItems')
@@ -636,7 +636,7 @@ class GearService {
           )
           `,
           )
-          .eq('name', name)
+          .eq('id', gearItemId)
           .single();
         if (data === null) {
           console.warn('gearItem', error);
