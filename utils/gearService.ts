@@ -450,23 +450,44 @@ class GearService {
     );
   }
 
-  public async getTopo(topoId: TopoId) {
+  public async getTopoDetails(topoId: TopoId) {
     return useAsyncData(
       `topo-${topoId}`,
       async () => {
         const { data: topo, error } = await this.supabase
           .from('Topos')
-          .select('*')
+          .select(
+            `
+            *,
+            RentedTopos(
+              rental_id,
+              rented_amount,
+              returned_amount,
+              Rentals(
+                Users!member_id(
+                  first_name,
+                  last_name
+                ),
+                contact_info
+              )
+            )`,
+          )
           .eq('id', topoId)
           .single();
 
-        if (topo === null) {
+        if (topo === null || error) {
           console.warn(`getTopo(${topoId})`, error);
           return undefined;
         }
 
+        const rentedAmount = sumBy(
+          topo.RentedTopos,
+          (rt) => rt.rented_amount - rt.returned_amount,
+        );
+
         return {
-          amount: topo.amount,
+          totalAmount: topo.amount,
+          availableAmount: topo.amount - rentedAmount,
           authors: topo.authors,
           condition: topo.condition,
           countries: topo.countries,
@@ -478,6 +499,17 @@ class GearService {
           title: topo.title,
           types_of_climbing: topo.types_of_climbing,
           year_published: topo.year_published,
+          rentals: topo.RentedTopos.filter(
+            (r) => r.rented_amount !== r.returned_amount,
+          ).map((r) => ({
+            id: r.rental_id as RentalId,
+            amount: r.rented_amount - r.returned_amount,
+            memberName: r.Rentals.Users
+              ? getFullName(r.Rentals.Users)
+              : r.Rentals.contact_info
+                ? (JSON.parse(r.Rentals.contact_info) as ContactInfo).fullName
+                : 'Failed to get name',
+          })),
         };
       },
       { lazy: true },

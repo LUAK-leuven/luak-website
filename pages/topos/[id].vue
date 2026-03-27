@@ -6,7 +6,7 @@
 
   const { data: user } = await useLuakMember();
   const topoId = useRoute().params.id as TopoId;
-  const { data, pending, error } = await gearService().getTopo(topoId);
+  const { data, pending, error } = await gearService().getTopoDetails(topoId);
 
   const conditionMap: Record<Enums<'topo_condition'>, string> = {
     as_good_as_new: 'New',
@@ -54,7 +54,12 @@
           </span>
         </TopoLibraryTopoDetailItem>
         <TopoLibraryTopoDetailItem name="Amount">
-          <span class="badge badge-ghost">{{ topo.amount }}</span>
+          <span v-if="user.isBoard">
+            {{ topo.availableAmount }} / {{ topo.totalAmount }}
+          </span>
+          <span v-else class="badge badge-ghost">
+            {{ topo.totalAmount }}
+          </span>
         </TopoLibraryTopoDetailItem>
         <TopoLibraryTopoDetailItem name="Languages">
           <span>{{ topo.languages.join(', ') }}</span>
@@ -71,8 +76,26 @@
       </div>
 
       <template v-if="user.isBoard">
-        <hr />
-        <div class="flex flex-row justify-center mt-2">
+        <template v-if="topo.rentals.length > 0">
+          <hr class="my-3" />
+          <b>Rentals</b>
+          <div
+            class="grid grid-cols-[3fr_1fr] border rounded-sm overflow-x-scroll">
+            <b class="border px-1">Name</b>
+            <b class="border px-1">Amount</b>
+            <template
+              v-for="{ id, memberName, amount } of topo.rentals"
+              :key="id">
+              <SharedLinkTo
+                class="border p-1"
+                :text="memberName"
+                :to="`/board/rentals/${id}`" />
+              <div class="border p-1">{{ amount }}</div>
+            </template>
+          </div>
+        </template>
+        <hr class="my-3" />
+        <div class="flex flex-row justify-center">
           <i class="text-sm w-fit">{{ topo.id }}</i>
         </div>
       </template>
