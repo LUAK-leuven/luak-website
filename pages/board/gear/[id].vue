@@ -2,26 +2,61 @@
   import type { GearItemId } from '~/types/gear';
   import RetirementDate from '../retirementDate.vue';
   import dayjs from 'dayjs';
+  import { useBreakpoints, breakpointsTailwind } from '@vueuse/core';
+  import InventoryTableItem from '~/components/board/gear/inventoryTableItem.vue';
 
   definePageMeta({ middleware: 'board-member-guard' });
   const gearItemId = useRoute().params.id as GearItemId;
 
-  const { data, pending, error } = await gearService().getGearItem(gearItemId);
+  const {
+    data: data_,
+    pending,
+    error,
+  } = await gearService().getGearItem(gearItemId);
+  const data = computed(() =>
+    data_.value
+      ? {
+          ...data_.value,
+          inventory: data_.value.inventory
+            .map((x) => {
+              const productionDate = x.productionDate
+                ? dayjs(x.productionDate)
+                : undefined;
+              const purchaseDate = x.purchaseDate
+                ? dayjs(x.purchaseDate)
+                : undefined;
+              const startDate =
+                purchaseDate !== undefined
+                  ? purchaseDate
+                  : productionDate !== undefined
+                    ? productionDate.add(1, 'year')
+                    : undefined;
+              return {
+                ...x,
+                productionDate,
+                purchaseDate,
+                retirementDate: startDate?.add(data_.value!.lifespan, 'y'),
+              };
+            })
+            .sort((a, b) => {
+              if (
+                a.retirementDate === undefined &&
+                b.retirementDate === undefined
+              )
+                return 0;
+              if (a.retirementDate === undefined) return -1;
+              if (b.retirementDate === undefined) return 1;
+              if (a.retirementDate.isSame(b.retirementDate)) return 0;
+              if (a.retirementDate.isBefore(b.retirementDate)) return 1;
+              return -1;
+            }),
+        }
+      : null,
+  );
 
-  const getRetirementDate = (
-    purchaseDate: string | undefined,
-    productionDate: string | undefined,
-    lifespan: number,
-  ) => {
-    const startDate =
-      purchaseDate !== undefined
-        ? dayjs(purchaseDate)
-        : productionDate !== undefined
-          ? dayjs(productionDate).add(1, 'year')
-          : undefined;
-
-    return startDate?.add(lifespan, 'years');
-  };
+  const bp = useBreakpoints(breakpointsTailwind);
+  const lg = computed(() => bp.lg.value);
+  const sm = computed(() => bp.sm.value);
 </script>
 <template>
   <PagesDetailsPage
@@ -43,43 +78,47 @@
 
     <hr class="my-3" />
     <b>Inventory</b>
-    <div
-      class="grid grid-cols-[3fr_1fr_1fr_2fr] border rounded-sm overflow-x-scroll">
-      <b class="border px-1">Details</b>
-      <b class="border px-1">Amount</b>
-      <b class="border px-1">Status</b>
-      <b class="border px-1">Retirement date</b>
-      <template
-        v-for="{
-          id,
-          details,
-          amount,
-          status,
-          productionDate,
-          purchaseDate,
-        } of gearItems.inventory"
-        :key="id">
-        <div class="border p-1">
-          {{ details }}
-        </div>
-        <div class="border p-1">
-          {{ amount }}
-        </div>
-        <div class="border p-1">
-          {{ status }}
-        </div>
-        <div class="border p-1">
-          <RetirementDate
-            :retirement-date="
-              getRetirementDate(
-                purchaseDate,
-                productionDate,
-                gearItems.lifespan,
-              )
-            " />
-        </div>
-      </template>
-    </div>
+    <ClientOnly>
+      <div
+        class="grid grid-cols-[3fr_1fr_2fr] sm:grid-cols-[3fr_1fr_1fr_2fr] lg:grid-cols-[4fr_1fr_1fr_2fr_2fr_2fr] border rounded-sm overflow-x-scroll">
+        <b class="border px-1">Details</b>
+        <b class="border px-1">Amount</b>
+        <b v-if="sm" class="border px-1">Status</b>
+        <b v-if="lg" class="border px-1">Production date</b>
+        <b v-if="lg" class="border px-1">Purchase date</b>
+        <b class="border px-1">Retirement date</b>
+        <template
+          v-for="{
+            id,
+            details,
+            amount,
+            status,
+            productionDate,
+            purchaseDate,
+            retirementDate,
+          } of gearItems.inventory"
+          :key="id">
+          <InventoryTableItem :status="status">
+            {{ details }}
+          </InventoryTableItem>
+          <InventoryTableItem :status="status">
+            {{ amount }}
+          </InventoryTableItem>
+          <InventoryTableItem v-if="sm" :status="status">
+            {{ status }}
+          </InventoryTableItem>
+          <InventoryTableItem v-if="lg" :status="status">
+            {{ productionDate?.format('MMM YYYY') }}
+          </InventoryTableItem>
+          <InventoryTableItem v-if="lg" :status="status">
+            {{ purchaseDate?.format('MMM YYYY') }}
+          </InventoryTableItem>
+          <InventoryTableItem :status="status">
+            <RetirementDate :retirement-date="retirementDate" />
+          </InventoryTableItem>
+        </template>
+      </div>
+    </ClientOnly>
 
     <template v-if="gearItems.rentals.length > 0">
       <hr class="my-3" />

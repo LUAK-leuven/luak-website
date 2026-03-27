@@ -1,0 +1,7 @@
+{
+  "vue-init": {
+    "scope": "vue",
+    "prefix": "vue, vue-init, init",
+    "body": "<script setup lang=\"ts\">\n\tdefineProps<{}>();\n</script>\n<template>\n\t\n</template>",
+  },
+}
