@@ -1,5 +1,4 @@
 import type { Database } from '~/types/database.types';
-import { groupBy } from './utils';
 import type {
   ContactInfo,
   RentalId,
@@ -42,61 +41,19 @@ class GearService {
 
         return gear.map((gearItem) => {
           const totalAmount = sumOf(gearItem.GearInventory, 'amount');
+          const rentedAmount = sumBy(
+            gearItem.RentedGear,
+            ({ rented_amount, returned_amount }) =>
+              rented_amount - returned_amount,
+          );
           return {
             id: gearItem.id as GearItemId,
             name: gearItem.name,
             totalAmount: totalAmount,
-            availableAmount:
-              totalAmount - getActualRentedAmount(gearItem.RentedGear),
+            availableAmount: totalAmount - rentedAmount,
             depositFee: gearItem.deposit_fee,
           };
         });
-      },
-      { lazy: true },
-    );
-  }
-
-  public async getGearInventory() {
-    return useAsyncData(
-      'gearInventory',
-      async () => {
-        const { data, error } = await this.supabase
-          .from('GearInventory')
-          .select(
-            `
-          id,
-          details,
-          purchase_date,
-          production_date,
-          amount,
-          GearItems(
-            name,
-            lifespan
-          )
-          `,
-          )
-          .eq('status', 'available');
-        if (data === null) {
-          console.warn(error);
-          return [];
-        }
-
-        const gear = Object.entries(
-          groupBy(data, (x) => x.GearItems?.name ?? ''),
-        );
-
-        return gear.map(([k, v]) => ({
-          lifespan: v[0].GearItems?.lifespan ?? 0,
-          name: k,
-          totalAmount: sumOf(v, 'amount'),
-          gearInventory: v.map((x) => ({
-            id: x.id as GearInventoryId,
-            details: x.details,
-            purchaseDate: x.purchase_date ?? undefined,
-            productionDate: x.production_date ?? undefined,
-            amount: x.amount,
-          })),
-        }));
       },
       { lazy: true },
     );
@@ -131,7 +88,12 @@ class GearService {
           title: topo.title,
           totalAmount: topo.amount,
           availableAmount:
-            topo.amount - getActualRentedAmount(topo.RentedTopos),
+            topo.amount -
+            sumBy(
+              topo.RentedTopos,
+              ({ rented_amount, returned_amount }) =>
+                rented_amount - returned_amount,
+            ),
         }));
       },
       { lazy: true },
@@ -522,87 +484,7 @@ class GearService {
     );
   }
 
-  public getInventory2() {
-    return useAsyncData(
-      'gearInventory2',
-      async () => {
-        const { data, error } = await this.supabase.from('GearItems').select(
-          `
-          id,
-          name,
-          lifespan,
-          deposit_fee,
-          GearInventory(
-            id,
-            details,
-            purchase_date,
-            production_date,
-            amount,
-            status
-          ),
-          RentedGear(
-            rental_id,
-            rented_amount,
-            returned_amount,
-            Rentals(
-              Users!member_id(
-                first_name,
-                last_name
-              ),
-              contact_info
-            )
-          )
-          `,
-        );
-        if (data === null) {
-          console.warn('getInventory2', error);
-          return [];
-        }
-
-        return data.map((it) => {
-          const totalAmount = sumBy(it.GearInventory, (i) =>
-            i.status === 'available' ? i.amount : 0,
-          );
-          const rentedAmount = sumBy(
-            it.RentedGear,
-            (rg) => rg.rented_amount - rg.returned_amount,
-          );
-          return {
-            id: it.id as GearItemId,
-            name: it.name,
-            lifespan: it.lifespan,
-            depositFee: it.deposit_fee,
-            totalAmount,
-            availableAmount: totalAmount - rentedAmount,
-            inventory: it.GearInventory.map((i) => {
-              return {
-                id: i.id as GearInventoryId,
-                details: i.details,
-                purchaseDate: i.purchase_date ?? undefined,
-                productionDate: i.production_date ?? undefined,
-                amount: i.amount,
-                status: i.status,
-              };
-            }),
-            rentals: it.RentedGear.filter(
-              (r) => r.rented_amount !== r.returned_amount,
-            ).map((r) => ({
-              id: r.rental_id as RentalId,
-              amount: r.rented_amount - r.returned_amount,
-              memberName: r.Rentals.Users
-                ? getFullName(r.Rentals.Users)
-                : r.Rentals.contact_info
-                  ? (JSON.parse(r.Rentals.contact_info) as ContactInfo).fullName
-                  : 'Failed to get name',
-            })),
-          };
-        });
-      },
-      { lazy: true },
-    );
-  }
-
-  public getGearItem(gearItemId: GearItemId) {
+  public getGearItemDetails(gearItemId: GearItemId) {
     return useAsyncData(
       `gearItem-${gearItemId}`,
       async () => {
@@ -684,16 +566,6 @@ class GearService {
       { lazy: true },
     );
   }
-}
-
-function getActualRentedAmount(
-  arr: { rented_amount: number; returned_amount: number }[],
-): number {
-  return arr.reduce(
-    (sum, { rented_amount, returned_amount }) =>
-      sum + (rented_amount - returned_amount),
-    0,
-  );
 }
 
 let gearServiceInstance: GearService | undefined = undefined;

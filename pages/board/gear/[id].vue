@@ -12,7 +12,7 @@
     data: data_,
     pending,
     error,
-  } = await gearService().getGearItem(gearItemId);
+  } = await gearService().getGearItemDetails(gearItemId);
   const data = computed(() =>
     data_.value
       ? {

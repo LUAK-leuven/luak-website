@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   definePageMeta({ middleware: 'board-member-guard' });
 
-  const { data: gear, pending, error } = await gearService().getInventory2();
+  const { data: gear, pending, error } = await gearService().getAllGearItems();
   const searchTerm = ref<string>();
 
   const filteredGear_ = computed(() =>
@@ -38,7 +38,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="gearItem of filteredGear" :key="gearItem.name">
+            <tr v-for="gearItem of filteredGear" :key="gearItem.id">
               <td class="whitespace-nowrap">
                 <SharedLinkTo
                   :text="gearItem.name"
