@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-  definePageMeta({ middleware: 'board-member-guard' });
-
   const { data: gear, pending, error } = await gearService().getAllGearItems();
   const searchTerm = ref<string>();
 

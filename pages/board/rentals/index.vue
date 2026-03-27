@@ -2,7 +2,6 @@
   import { useDebounceFn } from '@vueuse/core';
 
   definePageMeta({
-    middleware: 'board-member-guard',
     layout: false,
   });
 

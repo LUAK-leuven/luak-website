@@ -5,7 +5,6 @@
   import InventoryTableItem from '~/components/board/gear/inventoryTableItem.vue';
   import RetirementDate from '~/components/board/gear/retirementDate.vue';
 
-  definePageMeta({ middleware: 'board-member-guard' });
   const gearItemId = useRoute().params.id as GearItemId;
 
   const {

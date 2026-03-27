@@ -6,8 +6,6 @@
   } from '~/components/profile/helpers';
   import dayjs from 'dayjs';
 
-  definePageMeta({ middleware: 'board-member-guard' });
-
   const supabase = useSupabaseClient<Database>();
   const isLoading = ref(true);
   const error = ref<string | null>(null);

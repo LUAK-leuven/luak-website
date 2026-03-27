@@ -2,8 +2,6 @@
   import type { RentalId, UnsavedRental } from '~/types/renal';
   import { computeRentalStatus } from '~/utils/rental/computeStatus';
 
-  definePageMeta({ middleware: 'board-member-guard' });
-
   const { show: showPopup } = usePopup();
   const route = useRoute();
   const rentalId = route.params.id as RentalId;

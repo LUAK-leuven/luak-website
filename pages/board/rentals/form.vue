@@ -3,8 +3,6 @@
   import PaymentModal from '~/components/PaymentModal.vue';
   import type { RentalId, UnsavedRental } from '~/types/renal';
 
-  definePageMeta({ middleware: 'board-member-guard' });
-
   const { show: showPopup } = usePopup();
   const showPaymentModal = ref(false);
   const paymentDetails = ref<{

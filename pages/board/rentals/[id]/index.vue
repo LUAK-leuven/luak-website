@@ -2,8 +2,6 @@
   import DetailsPage from '~/components/pages/DetailsPage.vue';
   import type { RentalId } from '~/types/renal';
 
-  definePageMeta({ middleware: 'board-member-guard' });
-
   const retnalId = useRoute().params.id as RentalId;
   const { data, pending, error } = await gearService().getRental(retnalId);
 </script>
