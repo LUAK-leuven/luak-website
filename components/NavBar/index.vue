@@ -38,7 +38,7 @@
     <NuxtLink
       v-if="user.isBoard"
       class="btn btn-lg btn-circle bg-blue-400 m-1 fixed bottom-4 end-4 z-50 hover:bg-blue-300"
-      to="/board/rental-form">
+      to="/board/rentals/form">
       🧗‍♀️
     </NuxtLink>
   </div>

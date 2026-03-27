@@ -81,7 +81,7 @@
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/board/rental-form"> 🧗 Rental form </NuxtLink>
+            <NuxtLink to="/board/rentals/form"> 🧗 Rental form </NuxtLink>
           </li>
           <li>
             <NuxtLink to="/board/rentals"> 👀 Rental overview </NuxtLink>
