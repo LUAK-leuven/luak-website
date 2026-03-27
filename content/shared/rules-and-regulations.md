@@ -188,6 +188,5 @@ Gear Rules
 Statuten (Dutch only)
 
 #content
-_to be published soon_
+*to be published soon*
 ::
-

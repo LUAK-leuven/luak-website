@@ -1,7 +1,7 @@
 ---
 title: KVB2 course
-description: KVB2 – Indoor lead climbing
 date: 2026-03-23
+description: KVB2 – Indoor lead climbing
 image: /kvb2.png
 price: 8500
 ---

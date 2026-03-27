@@ -1,6 +1,6 @@
 ---
 title: Fontainebleau Weekend
-date: 2026-05-14T00:00:00.000Z
+date: 2026-05-14
 description: On the long weekend of 14-17 May we are going to the magical forests of Fontainebleau.
 image: /activities/font.jpg
 price: 0

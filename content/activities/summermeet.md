@@ -1,7 +1,8 @@
 ---
 title: "Summermeet: Val di Mello"
+date: 2025-07-12
+description: "Update 26/05: We changed the summermeet location to Val di Mello (so we will not be going to Pralognan-la-Vanoise, because the camping there was closed this summer)."
 image: /activities/ailefroide-sunrise.jpg
-date: 2025-07-12T19:00:00.000Z
 price: 0
 ---
 

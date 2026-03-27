@@ -1,7 +1,7 @@
 ---
 title: A new semester with a whole bunch of new activities!
+date: 2025-02-14
 image: /news/Seynes_2025_flat.jpeg
-date: 2025-02-14T01:00:00.000Z
 ---
 
 Helloooww everyone

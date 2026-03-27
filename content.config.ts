@@ -1,4 +1,9 @@
-import { defineCollection, defineContentConfig, z } from '@nuxt/content';
+import {
+  defineCollection,
+  defineContentConfig,
+  property,
+  z,
+} from '@nuxt/content';
 
 export default defineContentConfig({
   collections: {
@@ -6,7 +11,7 @@ export default defineContentConfig({
       type: 'page',
       source: 'activities/*.md',
       schema: z.object({
-        image: z.string(),
+        image: property(z.string()).editor({ input: 'media' }),
         title: z.string(),
         date: z.date(),
         price: z
@@ -19,7 +24,7 @@ export default defineContentConfig({
       type: 'page',
       source: 'news/*.md',
       schema: z.object({
-        image: z.string(),
+        image: property(z.string()).editor({ input: 'media' }),
         title: z.string(),
         date: z.date(),
         teaser: z.string().optional(),
@@ -43,7 +48,7 @@ export default defineContentConfig({
       type: 'page',
       source: 'stories/*.md',
       schema: z.object({
-        image: z.string(),
+        image: property(z.string()).editor({ input: 'media' }),
         title: z.string(),
         date: z.date(),
         author: z.string(),
@@ -57,8 +62,9 @@ export default defineContentConfig({
       }),
     }),
     shared: defineCollection({
-      type: 'page',
+      type: 'data',
       source: 'shared/*.md',
+      schema: z.object({}),
     }),
   },
 });

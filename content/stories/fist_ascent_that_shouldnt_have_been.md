@@ -1,8 +1,9 @@
 ---
 title: A first ascent that shouldn’t have been
-image: /stories/DSC04260-min-600x400.JPG
-date: 2021-10-13T00:00:00.000Z
 author: Ward Lorenz
+date: 2021-10-13
+description: Summer meet 2021 – location La Bérarde
+image: /stories/DSC04260-min-600x400.JPG
 ---
 
 Summer meet 2021 – location La Bérarde
@@ -22,7 +23,7 @@ justify: justify-center
 ![Sander climbing](/stories/DSC04244-min-600x400.JPG)
 
 #item3
-_Cedric and Sander in the crux pitch. A super delicate (yet powerful) 6b slab. in crazy exposure_
+*Cedric and Sander in the crux pitch. A super delicate (yet powerful) 6b slab. in crazy exposure*
 ::
 
 Amazing 3D-climbing on perfect granite. No-hands-kneebars, hand and footjams, heelhooks – a full range of movements in a crazy (AND VERY EXPOSED) atmosphere. Since I brought my camera, and Kobe was photographing from the other side this gave some amazing pictures.
@@ -34,7 +35,7 @@ justify: justify-center
 #item1
 ![edited-7329-min-600x400.jpg](/stories/edited-7329-min-600x400.jpg)
 
-_Venezuela?? Nono, just perfect la berarde granite_
+*Venezuela?? Nono, just perfect la berarde granite*
 ::
 
 ## Some alpine plans
@@ -47,7 +48,7 @@ Earlier I had promised Kobe we would go on an alpine style trad outing together.
 #item1
 ![DSC04260-min-600x400.JPG](/stories/DSC04260-min-600x400.JPG)
 
-_Stunning evening sunrays, making our approach very enjoyable_
+*Stunning evening sunrays, making our approach very enjoyable*
 
 #item2
 ![DSC04262-min-600x400.JPG](/stories/DSC04262-min-600x400.JPG)

@@ -1,7 +1,11 @@
 ---
-title: Finally!.. The new website!!
+title: Finally!.. The new website!!saf
+date: 2024-08-15
+description: For 4 years now, I have been promising to make a new website for LUAK. Most of you probably thougt it woud never happen. But the future is now! Take your agendas and mark the date, because this day is going down in the LUAK history books.
 image: /news/new_website.jpg
-date: 2024-08-15T00:00:00.000Z
+seo:
+  title: Finally!.. The new website!!
+  description: For 4 years now, I have been promising to make a new website for LUAK. Most of you probably thougt it woud never happen. But the future is now! Take your agendas and mark the date, because this day is going down in the LUAK history books.
 ---
 
 For 4 years now, I have been promising to make a new website for LUAK. Most of you probably thougt it woud never happen. But the future is now! Take your agendas and mark the date, because this day is going down in the LUAK history books.
@@ -22,7 +26,7 @@ Of course! If you have any suggestions or if you want to help with the developme
 
 ## Where is the old website 😢
 
-We will keep the old one alive for quite a while still on [old.luak.be ](http://old.luak.be)
+We will keep the old one alive for quite a while still on [old.luak.be](http://old.luak.be)
 
 Lots of LUAK Love xx,
 Cedric 😗

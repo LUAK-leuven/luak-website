@@ -1,7 +1,7 @@
 ---
 title: Initiation Yvoir
+date: 2026-03-21
 description: Our rock climbing initiations are a great opportunity to make your first experience with rock climbing. The experienced people from LUAK will hang topropes and explain how to climb and belay safely. After that it is up to you!
-date: 2026-03-21T00:00:00.000Z
 image: /activities/20231008134533_IMG_4973.jpg
 price: 0
 tag: beginner friendly

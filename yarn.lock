@@ -850,9 +850,9 @@
   integrity sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==
 
 "@iconify-json/lucide@^1.2.94":
-  version "1.2.98"
-  resolved "https://registry.yarnpkg.com/@iconify-json/lucide/-/lucide-1.2.98.tgz#4ed188034fe3288304e90c53559f0609b36cd798"
-  integrity sha512-Lx2464W8Tty/QEnZ2UPb73nPdML/HpGCj0J0w37jP3/jx3l4fniZBjDxe1TgHiIL5XW9QO3vlx53ZQZ5JsNpzQ==
+  version "1.2.99"
+  resolved "https://registry.yarnpkg.com/@iconify-json/lucide/-/lucide-1.2.99.tgz#92d66888d021f32f350873efc4069428fcbaf809"
+  integrity sha512-XE2Pg8uax2uN3ZbvvnO0C5ADgZOyUgEPiwnhD/xrJwz/bfpWwL3mbDwxntEWB2G1mwo2OqKMF50/jp6ia2QzKw==
   dependencies:
     "@iconify/types" "*"
 
@@ -7449,7 +7449,7 @@ nuxt-component-meta@0.17.2, nuxt-component-meta@^0.17.2:
     ufo "^1.6.2"
     vue-component-meta "^3.2.2"
 
-nuxt-studio@^1.5.1:
+nuxt-studio@^1.5.0:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/nuxt-studio/-/nuxt-studio-1.5.1.tgz#8122bdd95cc73f7c1c2a3eb03592f960eb04ae87"
   integrity sha512-cVzJVDphybuyct04TdzqqQu3r/mHPGHGiLfyfCR89fppRJFs8p3Z2K46GFLbwlMj8k/jCTqXU9MtBoG7KnuCHQ==

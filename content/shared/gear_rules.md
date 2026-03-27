@@ -1,7 +1,3 @@
----
-title: GearRules
----
-
 - Prices and maximum loan period are fixed on the yearly general meeting.
 - Only board members can lend out and receive gear. They always retain the right to refuse lending;
 - Only active members have the right to borrow gear. They can borrow gear for themselves and one extra person, no more;

@@ -1,7 +1,11 @@
 ---
-title: 'Black Diamond Sling Replacement Order: ON HOLD'
+title: "Black Diamond Sling Replacement Order: ON HOLD"
+date: 2024-11-25
+description: Resling your BD cams!
 image: /20241102_134927[1].jpg
-date: '2024-11-25T01:00:00.000Z'
+seo:
+  title: "Black Diamond Sling Replacement Order: ON HOLD"
+  description: "Update [27 November]:"
 ---
 
 Update \[27 November]:
