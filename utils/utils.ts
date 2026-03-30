@@ -80,3 +80,10 @@ export function sortBy<T extends Record<K, string>, K extends keyof T>(
         : 1,
   );
 }
+
+export function min<T>(arr: T[], predicate: (a: T, b: T) => boolean): T | null {
+  return arr.reduce<T | null>((minVal, it) => {
+    if (minVal === null) return it;
+    return predicate(minVal, it) ? minVal : it;
+  }, null);
+}
