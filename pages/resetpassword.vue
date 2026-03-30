@@ -1,6 +1,8 @@
 <script setup lang="ts">
   import * as yup from 'yup';
 
+  definePageMeta({ middleware: 'unauthenticated' });
+
   const supabase = useSupabaseClient();
   const url = useRequestURL();
 
@@ -39,9 +41,9 @@
           <button
             class="btn btn-primary mt-2"
             :class="{ 'btn-disabled': isSentSuccessfully }">
-            <span v-if="isSubmitting" class="loading loading-spinner"
-              >loading</span
-            >
+            <span v-if="isSubmitting" class="loading loading-spinner">
+              loading
+            </span>
             <span
               v-else-if="isSentSuccessfully"
               class="material-symbols-outlined">

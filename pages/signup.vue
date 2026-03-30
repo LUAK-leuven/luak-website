@@ -2,6 +2,11 @@
   import * as yup from 'yup';
   import type { Database } from '~/types/database.types';
   import { yup_password, yup_phone } from '~/utils/yup';
+
+  definePageMeta({
+    middleware: 'unauthenticated',
+  });
+
   const supabase = useSupabaseClient<Database>();
 
   const formSchema = yup.object({

@@ -1,6 +1,8 @@
 <script setup lang="ts">
   import * as yup from 'yup';
 
+  definePageMeta({ middleware: 'unauthenticated' });
+
   const supabase = useSupabaseClient();
   const route = useRoute();
 

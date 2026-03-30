@@ -1,6 +1,10 @@
 <script setup lang="ts">
   import * as yup from 'yup';
 
+  definePageMeta({
+    middleware: 'unauthenticated',
+  });
+
   const supabase = useSupabaseClient();
   const redirect = useRoute().query['redirect'] as string;
 
