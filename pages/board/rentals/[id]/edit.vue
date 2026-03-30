@@ -40,7 +40,7 @@
   );
 
   async function handleSubmit(state: Omit<UnsavedRental, 'boardMemberId'>) {
-    if (!!rental.value) {
+    if (rental.value) {
       for (const { gearItemId: id } of rental.value.gear) {
         if (!state.gear[id]) {
           state.gear[id] = 0;
