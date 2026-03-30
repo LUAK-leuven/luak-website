@@ -1,195 +1,209 @@
-# Rental Payment QR Code Modal Implementation Plan
+# E2E Testing Framework Setup Plan
 
-## Overview
-This plan outlines the implementation of a modal that displays a QR code for rental payment in the LUAK website. The modal will use EPC (European Payments Council) QR code format to facilitate easy payment via mobile banking apps.
+## Goal
 
-## Requirements
-- Display a modal after successful rental submission
-- Generate EPC QR code with rental payment details
-- Use existing `useEpcQrCodeGenerator` composable
-- Integrate with DaisyUI modal styling
-- Use deposit fee from form state as payment amount
+Set up **Playwright** as the e2e testing framework for the LUAK website. The outcome of this story is a working, runnable test suite with a single smoke test confirming the homepage renders correctly. No real feature tests are written yet.
+
+---
+
+## Why Playwright
+
+- **First-class Nuxt 3 integration** via `@nuxt/test-utils/playwright`: provides a `goto` fixture that waits for SSR + client-side hydration before asserting, which is essential for a Nuxt app.
+- **Multi-browser**: Chromium, Firefox, and WebKit (Safari) — Cypress cannot test Safari.
+- **Built-in `webServer`**: auto-starts the Nuxt dev server before tests, no shell scripting needed.
+- **`storageState`**: persists cookies *and* `localStorage` (where Supabase stores its auth token), making authenticated test sessions trivial to set up later.
+- **Trace viewer + UI mode + codegen**: first-rate debugging tooling.
+
+---
 
 ## Implementation Steps
 
-### Step 1: Create PaymentModal Component
-Create a new component `components/PaymentModal.vue` that handles the modal display and QR code rendering.
+### Step 1 — Install dependencies
 
-```vue
-<template>
-  <div class="modal" :class="{ 'modal-open': isOpen }">
-    <div class="modal-box">
-      <h3 class="font-bold text-lg">Payment QR Code</h3>
-      <p class="py-4">Scan this QR code to pay for your rental:</p>
-      <div class="flex justify-center">
-        <canvas ref="canvasRef" class="border rounded"></canvas>
-      </div>
-      <p class="py-2 text-sm text-gray-600">
-        Amount: €{{ amount.toFixed(2) }}<br>
-        Recipient: {{ name }}<br>
-        IBAN: {{ iban }}
-      </p>
-      <div class="modal-action">
-        <button class="btn" @click="closeModal">Close</button>
-      </div>
-    </div>
-  </div>
-</template>
+```bash
+yarn add --dev @playwright/test @nuxt/test-utils
+yarn playwright install --with-deps chromium
+```
 
-<script setup lang="ts">
-import { useEpcQrCodeGenerator } from '~/composables/useEpcQrCodeGenerator';
+> `--with-deps chromium` installs only the Chromium binary and its OS-level dependencies. Add `firefox` and `webkit` later when cross-browser coverage is needed.
 
-const props = defineProps<{
-  isOpen: boolean;
-  rentalId: string;
-  amount: number;
-  name: string;
-  iban: string;
-  message: string;
-}>();
+---
 
-const emit = defineEmits<{
-  close: [];
-}>();
+### Step 2 — Create `playwright.config.ts` at the project root
 
-const { canvasRef, renderToCanvas } = useEpcQrCodeGenerator();
+```ts
+// playwright.config.ts
+import { fileURLToPath } from 'node:url';
+import { defineConfig, devices } from '@playwright/test';
+import type { ConfigOptions } from '@nuxt/test-utils/playwright';
 
-const closeModal = () => {
-  emit('close');
-};
+export default defineConfig<ConfigOptions>({
+  testDir: 'tests/e2e',
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  reporter: process.env.CI ? 'github' : 'html',
 
-watch(() => props.isOpen, async (newVal) => {
-  if (newVal) {
-    await renderToCanvas({
-      name: props.name,
-      iban: props.iban,
-      amount: props.amount,
-      message: props.message,
-    });
-  }
+  use: {
+    baseURL: 'http://localhost:3000',
+    trace: 'on-first-retry',
+    nuxt: {
+      rootDir: fileURLToPath(new URL('.', import.meta.url)),
+    },
+  },
+
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
+  ],
+
+  webServer: {
+    command: 'yarn dev',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI, // reuse local dev server; always fresh on CI
+    timeout: 120_000,                     // Nuxt dev cold start can be slow
+    stdout: 'ignore',
+    stderr: 'pipe',
+  },
 });
-</script>
 ```
 
-### Step 2: Update Rental Form Page
-Modify `pages/board/rental-form.vue` to include the modal and trigger it after successful submission.
+Key decisions:
+- `testDir: 'tests/e2e'` keeps e2e tests separate from any future unit/component tests.
+- `reuseExistingServer: !process.env.CI` means locally you can have `yarn dev` already running and Playwright will reuse it, saving ~10 s per run.
+- On CI `retries: 2` absorbs flakiness caused by cold Supabase connections.
 
-```vue
-<script setup lang="ts">
-  // ... existing imports
-  import PaymentModal from '~/components/PaymentModal.vue';
+---
 
-  // ... existing code
+### Step 3 — Create the test directory and the smoke test
 
-  const showPaymentModal = ref(false);
-  const paymentDetails = ref<{
-    amount: number;
-    name: string;
-    iban: string;
-    message: string;
-  } | null>(null);
+```bash
+mkdir -p tests/e2e
+```
 
-  async function handleSubmit(state: Omit<UnsavedRental, 'boardMemberId'>) {
-    const { error, id } = await gearService().saveRental({
-      ...state,
-      boardMemberId: boardMember.id,
-    });
-    if (!error && id) {
-      // Use deposit fee from form state as payment amount
-      const amount = state.depositFee;
-      
-      paymentDetails.value = {
-        amount,
-        name: 'LUAK vzw', // Replace with actual recipient name
-        iban: 'BE12 3456 7890 1234', // Replace with actual IBAN
-        message: `Rental payment - ID: ${id}`,
-      };
-      
-      showPaymentModal.value = true;
-      showPopup('success', 'Rental saved successfully! Please complete payment.');
-      return { error: undefined };
-    } else {
-      showPopup('error', error ?? 'An unknown error occurred.');
-      return { error };
-    }
+```ts
+// tests/e2e/home.spec.ts
+import { expect, test } from '@nuxt/test-utils/playwright';
+
+test('homepage is visible', async ({ page, goto }) => {
+  // goto() from @nuxt/test-utils waits for SSR + client hydration,
+  // unlike plain page.goto() which only waits for DOMContentLoaded.
+  await goto('/', { waitUntil: 'hydration' });
+
+  // The LUAK logo image is rendered in the hero section of pages/index.vue
+  await expect(page.getByRole('img', { name: /luak/i })).toBeVisible();
+
+  // The primary CTA button is always shown regardless of auth state
+  await expect(page.getByRole('link', { name: /check our activities/i })).toBeVisible();
+});
+```
+
+This test exercises the actual homepage (`pages/index.vue`) without requiring authentication. It verifies:
+1. The Nuxt dev server is reachable.
+2. SSR renders and hydrates correctly.
+3. The hero section content (logo + CTA) is present in the DOM.
+
+---
+
+### Step 4 — Add scripts to `package.json`
+
+```json
+{
+  "scripts": {
+    "test:e2e":        "playwright test",
+    "test:e2e:ui":     "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed"
   }
-</script>
-
-<template>
-  <FullPageCard>
-    <template #title>Rental form 🧗</template>
-
-    <!-- ... existing template code -->
-
-    <PaymentModal
-      :is-open="showPaymentModal"
-      :rental-id="paymentDetails?.message.split(' - ID: ')[1] || ''"
-      :amount="paymentDetails?.amount || 0"
-      :name="paymentDetails?.name || ''"
-      :iban="paymentDetails?.iban || ''"
-      :message="paymentDetails?.message || ''"
-      @close="showPaymentModal = false"
-    />
-  </FullPageCard>
-</template>
+}
 ```
 
-## Testing Plan
-1. Test QR code generation with various amounts and details
-2. Verify modal opens after successful rental submission
-3. Test QR code scanning with mobile banking apps
-4. Ensure modal closes properly
+- `test:e2e` — headless run (CI / quick local check)
+- `test:e2e:ui` — Playwright UI mode: live-reloading test runner with timeline and trace, best for writing/debugging tests
+- `test:e2e:headed` — headed Chromium for watching test execution
 
-## Security Considerations
-- Ensure IBAN and payment details are properly secured
-- Use correct payment details (recipient name, IBAN) for LUAK
+**Running a single test file:**
 
-## Detailed Todo List
+```bash
+yarn test:e2e tests/e2e/home.spec.ts
+```
 
-### Phase 1: Preparation and Research
-- [ ] Review existing rental form page (`pages/board/rental-form.vue`) structure and handleSubmit function
-- [ ] Examine `useEpcQrCodeGenerator` composable to understand API and usage
-- [ ] Verify DaisyUI modal classes are available in the project
-- [ ] Confirm form state structure and `depositFee` property availability
-- [ ] Check existing import patterns and component structure conventions
-- [ ] Review TypeScript types for `UnsavedRental` and related interfaces
+**Running a single test by title:**
 
-### Phase 2: Component Development
-- [ ] Create new file `components/PaymentModal.vue`
-- [ ] Implement modal template with DaisyUI modal classes (`modal`, `modal-open`, `modal-box`)
-- [ ] Add QR code canvas element with proper styling (`border rounded`)
-- [ ] Create component props interface (isOpen, rentalId, amount, name, iban, message)
-- [ ] Implement emit interface for close event
-- [ ] Import and use `useEpcQrCodeGenerator` composable
-- [ ] Add watcher to generate QR code when modal opens
-- [ ] Implement closeModal function and emit close event
-- [ ] Add payment details display (amount, recipient, IBAN)
+```bash
+yarn test:e2e --grep "homepage is visible"
+```
 
-### Phase 3: Integration with Rental Form
-- [ ] Import PaymentModal component in `pages/board/rental-form.vue`
-- [ ] Add reactive ref for `showPaymentModal` (boolean)
-- [ ] Add reactive ref for `paymentDetails` object (amount, name, iban, message)
-- [ ] Modify `handleSubmit` function to set payment details using `state.depositFee`
-- [ ] Update success popup message to mention payment completion
-- [ ] Add PaymentModal component to template with proper props binding
-- [ ] Implement modal close handler (`@close="showPaymentModal = false"`)
+---
 
-### Phase 4: Testing and Validation
-- [ ] Test QR code generation with various deposit amounts
-- [ ] Verify modal opens after successful rental submission
-- [ ] Test modal closes when close button is clicked
-- [ ] Validate QR code renders correctly on canvas
-- [ ] Test QR code scanning with mobile banking app (if possible)
-- [ ] Verify payment details display correctly (amount formatting, IBAN, recipient)
-- [ ] Test error handling when QR code generation fails
-- [ ] Check responsive behavior on different screen sizes
+### Step 5 — Gitignore Playwright artifacts
 
-### Phase 5: Code Review and Deployment
-- [ ] Run ESLint and TypeScript checks on new component
-- [ ] Review code for Vue 3 composition API best practices
-- [ ] Verify proper error handling and edge cases
-- [ ] Test integration with existing rental form workflow
-- [ ] Update any relevant documentation
-- [ ] Commit changes with descriptive message
-- [ ] Deploy to staging environment for final testing
-- [ ] Verify functionality in staging before production deployment
+Add to `.gitignore`:
+
+```
+# Playwright
+/test-results/
+/playwright-report/
+```
+
+- `test-results/` — screenshots, videos, and traces captured on failure
+- `playwright-report/` — the HTML report generated by `reporter: 'html'`
+
+---
+
+### Step 6 — TypeScript: include test files in the project
+
+Playwright has native TypeScript support (no extra `ts-node` needed), but the test files need to be visible to the project's type checker. Extend `tsconfig.json`:
+
+```json
+{
+  "extends": "./.nuxt/tsconfig.json",
+  "include": [
+    "./types/*.d.ts",
+    "./tests/**/*.ts",
+    "./playwright.config.ts"
+  ]
+}
+```
+
+> Note: `~/` path aliases and Nuxt auto-imports are **not** available in e2e test files — they run in Node.js outside the Nuxt context. Import everything explicitly in test files.
+
+---
+
+## File Tree After Setup
+
+```
+luak-website/
+├── playwright.config.ts       # NEW — Playwright configuration
+├── tests/
+│   └── e2e/
+│       └── home.spec.ts       # NEW — homepage smoke test
+├── test-results/              # gitignored — failure artifacts
+├── playwright-report/         # gitignored — HTML report
+├── tsconfig.json              # MODIFIED — include tests/**/*.ts
+└── package.json               # MODIFIED — test:e2e scripts
+```
+
+---
+
+## Verification
+
+After completing all steps, run:
+
+```bash
+yarn test:e2e
+```
+
+Expected output:
+
+```
+Running 1 test using 1 worker
+
+  ✓  tests/e2e/home.spec.ts:4:1 › homepage is visible (1.8s)
+
+  1 passed (4s)
+```
+
+If the test passes, the framework is correctly set up: Playwright can start the Nuxt dev server, navigate to the homepage, wait for hydration, and assert on rendered content.
