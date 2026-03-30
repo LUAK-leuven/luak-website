@@ -41,10 +41,7 @@ A bulleted list of testable conditions that must be true for the feature to be c
 - Whether `types/database.types.ts` must be regenerated
 
 ## Implementation tasks
-Ordered, numbered list of vertical slices — each task delivers visible, working value on its own when complete. Each task must specify:
-- **What** to create or change (exact file path)
-- **How** (pattern to follow, e.g. "use gearService singleton pattern", "add yup schema to yup_schemas/")
-- **Why** (why this step is needed)
+Ordered, numbered list of vertical slices — each task delivers visible, working value on its own when complete. Each task must specify what to create or change (exact file path) and how (pattern to follow, e.g. "use gearService singleton pattern", "add yup schema to yup_schemas/").
 
 ## Out of scope
 Anything explicitly excluded from this plan.

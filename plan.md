@@ -1,209 +1,202 @@
-# E2E Testing Framework Setup Plan
+# Plan: Guard E2E Tests Against the Production Database
 
-## Goal
+## Overview
 
-Set up **Playwright** as the e2e testing framework for the LUAK website. The outcome of this story is a working, runnable test suite with a single smoke test confirming the homepage renders correctly. No real feature tests are written yet.
-
----
-
-## Why Playwright
-
-- **First-class Nuxt 3 integration** via `@nuxt/test-utils/playwright`: provides a `goto` fixture that waits for SSR + client-side hydration before asserting, which is essential for a Nuxt app.
-- **Multi-browser**: Chromium, Firefox, and WebKit (Safari) — Cypress cannot test Safari.
-- **Built-in `webServer`**: auto-starts the Nuxt dev server before tests, no shell scripting needed.
-- **`storageState`**: persists cookies *and* `localStorage` (where Supabase stores its auth token), making authenticated test sessions trivial to set up later.
-- **Trace viewer + UI mode + codegen**: first-rate debugging tooling.
+`SUPABASE_URL` and `SUPABASE_KEY` in `.env` currently point to production, so running `yarn test:e2e` or even `yarn dev` silently hits the live database. The fix introduces **environment-specific `.env` files**: `.env.local` (committed, safe, the default for local dev and tests) and `.env.production` (gitignored, production credentials). All scripts default to local. A `globalSetup` guard in Playwright makes it structurally impossible to run e2e tests against the production database, even if someone explicitly passes a production env file.
 
 ---
 
-## Implementation Steps
+## Acceptance criteria
 
-### Step 1 — Install dependencies
+- `yarn dev` starts the Nuxt dev server pointing to the local Supabase instance without any extra flags.
+- `nuxt dev --dotenv .env.production` starts the dev server pointing to production (opt-in, explicit).
+- `yarn test:e2e` always connects to the local Supabase instance, regardless of what `.env` or `.env.production` contain.
+- Running `yarn test:e2e` while `SUPABASE_URL` resolves to the production host exits immediately with a non-zero code and a clear error message, before any browser or dev server launches.
+- Production credentials (`SUPABASE_URL`, `SUPABASE_KEY`) are never present in any committed file.
+- `.env.local` (local credentials) is committed so every developer and CI environment gets working local defaults out of the box.
+- `.env.example` is updated to document the new file layout.
 
-```bash
-yarn add --dev @playwright/test @nuxt/test-utils
-yarn playwright install --with-deps chromium
+---
+
+## Implementation tasks
+
+### 1. Create `.env.local` with local Supabase credentials
+
+**What:** New file `.env.local`.
+
+**How:** Move the local Supabase values from the current `.env` into this file. The local anon key is not a secret — it only grants access to the ephemeral local database that lives on the developer's machine.
+
+```
+SUPABASE_URL=http://127.0.0.1:54321
+SUPABASE_KEY=sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH
 ```
 
-> `--with-deps chromium` installs only the Chromium binary and its OS-level dependencies. Add `firefox` and `webkit` later when cross-browser coverage is needed.
+---
+
+### 2. Create `.env.production` with production credentials
+
+**What:** New file `.env.production`.
+
+**How:** Move the production `SUPABASE_URL` and `SUPABASE_KEY` values from the current `.env` into this file.
+
+```
+SUPABASE_URL=https://cpjapefpqxrptkzeehyd.supabase.co
+SUPABASE_KEY=<production-anon-key>
+```
+
+This file is **gitignored** (covered by the existing `.env.*` rule in `.gitignore`) and must never be committed.
 
 ---
 
-### Step 2 — Create `playwright.config.ts` at the project root
+### 3. Clean up `.env` — remove Supabase credentials
 
-```ts
-// playwright.config.ts
-import { fileURLToPath } from 'node:url';
-import { defineConfig, devices } from '@playwright/test';
-import type { ConfigOptions } from '@nuxt/test-utils/playwright';
+**What:** Modify `.env`.
 
-export default defineConfig<ConfigOptions>({
-  testDir: 'tests/e2e',
-  fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
-  reporter: process.env.CI ? 'github' : 'html',
+**How:** Remove all `SUPABASE_URL` and `SUPABASE_KEY` lines (both the commented-out local lines and the active production lines). Keep only the environment-agnostic variables that apply in both environments:
 
-  use: {
-    baseURL: 'http://localhost:3000',
-    trace: 'on-first-retry',
-    nuxt: {
-      rootDir: fileURLToPath(new URL('.', import.meta.url)),
-    },
-  },
-
-  projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-  ],
-
-  webServer: {
-    command: 'yarn dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI, // reuse local dev server; always fresh on CI
-    timeout: 120_000,                     // Nuxt dev cold start can be slow
-    stdout: 'ignore',
-    stderr: 'pipe',
-  },
-});
 ```
+BASE_URL=http://localhost:3000
 
-Key decisions:
-- `testDir: 'tests/e2e'` keeps e2e tests separate from any future unit/component tests.
-- `reuseExistingServer: !process.env.CI` means locally you can have `yarn dev` already running and Playwright will reuse it, saving ~10 s per run.
-- On CI `retries: 2` absorbs flakiness caused by cold Supabase connections.
+NUXT_PUBLIC_PAYMENT_LINK_MEMBERSHIP=
+NUXT_PUBLIC_PAYMENT_LINK_MEMBERSHIP_DISCOUNT=
+
+STUDIO_GITHUB_CLIENT_ID=
+STUDIO_GITHUB_CLIENT_SECRET=
+STUDIO_GITHUB_MODERATORS=
+```
 
 ---
 
-### Step 3 — Create the test directory and the smoke test
+### 4. Update `package.json` — default `yarn dev` to `.env.local`
 
-```bash
-mkdir -p tests/e2e
-```
+**What:** Modify `package.json`, `scripts` section.
 
-```ts
-// tests/e2e/home.spec.ts
-import { expect, test } from '@nuxt/test-utils/playwright';
-
-test('homepage is visible', async ({ page, goto }) => {
-  // goto() from @nuxt/test-utils waits for SSR + client hydration,
-  // unlike plain page.goto() which only waits for DOMContentLoaded.
-  await goto('/', { waitUntil: 'hydration' });
-
-  // The LUAK logo image is rendered in the hero section of pages/index.vue
-  await expect(page.getByRole('img', { name: /luak/i })).toBeVisible();
-
-  // The primary CTA button is always shown regardless of auth state
-  await expect(page.getByRole('link', { name: /check our activities/i })).toBeVisible();
-});
-```
-
-This test exercises the actual homepage (`pages/index.vue`) without requiring authentication. It verifies:
-1. The Nuxt dev server is reachable.
-2. SSR renders and hydrates correctly.
-3. The hero section content (logo + CTA) is present in the DOM.
-
----
-
-### Step 4 — Add scripts to `package.json`
+**How:** Add `--dotenv .env.local` to the `dev` script only:
 
 ```json
 {
   "scripts": {
-    "test:e2e":        "playwright test",
-    "test:e2e:ui":     "playwright test --ui",
-    "test:e2e:headed": "playwright test --headed"
+    "dev": "nuxt dev --dotenv .env.local",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "preview": "NODE_OPTIONS='--import ./public/instrument.server.mjs' nuxt preview",
+    "test:e2e": "playwright test"
   }
 }
 ```
 
-- `test:e2e` — headless run (CI / quick local check)
-- `test:e2e:ui` — Playwright UI mode: live-reloading test runner with timeline and trace, best for writing/debugging tests
-- `test:e2e:headed` — headed Chromium for watching test execution
-
-**Running a single test file:**
-
-```bash
-yarn test:e2e tests/e2e/home.spec.ts
-```
-
-**Running a single test by title:**
-
-```bash
-yarn test:e2e --grep "homepage is visible"
-```
+`build`, `generate`, and `preview` are left unchanged — they run in production (Vercel), where env vars are injected by the platform, not from a local file.
 
 ---
 
-### Step 5 — Gitignore Playwright artifacts
+### 5. Update `playwright.config.ts` — add `globalSetup` and lock `webServer` env
 
-Add to `.gitignore`:
+**What:** Modify `playwright.config.ts`.
 
+**How:** Two changes:
+
+a. Add `globalSetup: './tests/e2e/globalSetup.ts'` to the `defineConfig` object.
+
+b. Add an `env` block to `webServer` that hardcodes the local Supabase values for the `yarn dev` child process. This is independent of any `.env` file on disk:
+
+```ts
+webServer: {
+  command: 'yarn dev',
+  url: 'http://localhost:3000',
+  reuseExistingServer: !process.env.CI,
+  timeout: 120_000,
+  stdout: 'ignore',
+  stderr: 'pipe',
+  env: {
+    ...process.env,
+    SUPABASE_URL: 'http://127.0.0.1:54321',
+    SUPABASE_KEY: '<local-anon-key>',
+  },
+},
 ```
-# Playwright
-/test-results/
-/playwright-report/
-```
 
-- `test-results/` — screenshots, videos, and traces captured on failure
-- `playwright-report/` — the HTML report generated by `reporter: 'html'`
+Use the same local anon key value as in `.env.local` (task 1). The `...process.env` spread preserves all other env vars (e.g. `BASE_URL`, `PATH`) so the dev server starts correctly.
 
 ---
 
-### Step 6 — TypeScript: include test files in the project
+### 6. Create `tests/e2e/globalSetup.ts` — the production-URL hard abort
 
-Playwright has native TypeScript support (no extra `ts-node` needed), but the test files need to be visible to the project's type checker. Extend `tsconfig.json`:
+**What:** New file `tests/e2e/globalSetup.ts`.
 
-```json
-{
-  "extends": "./.nuxt/tsconfig.json",
-  "include": [
-    "./types/*.d.ts",
-    "./tests/**/*.ts",
-    "./playwright.config.ts"
-  ]
+**How:** Playwright's `globalSetup` runs before any browser or `webServer` is started. Read `SUPABASE_URL` from `process.env` (which at this point reflects the shell environment, not the `webServer.env` override) and exit immediately if it matches the production host.
+
+```ts
+const PRODUCTION_SUPABASE_HOST = 'cpjapefpqxrptkzeehyd.supabase.co';
+
+export default function () {
+  const supabaseUrl = process.env.SUPABASE_URL ?? '';
+  if (supabaseUrl.includes(PRODUCTION_SUPABASE_HOST)) {
+    console.error(
+      '\n❌  E2E tests cannot run against the production Supabase database.\n' +
+        `   SUPABASE_URL is currently set to: ${supabaseUrl}\n` +
+        '   Ensure SUPABASE_URL=http://127.0.0.1:54321 (start local Supabase with: supabase start)\n',
+    );
+    process.exit(1);
+  }
 }
 ```
 
-> Note: `~/` path aliases and Nuxt auto-imports are **not** available in e2e test files — they run in Node.js outside the Nuxt context. Import everything explicitly in test files.
+---
+
+### 7. Update `.gitignore` — un-ignore `.env.local`
+
+**What:** Modify `.gitignore`.
+
+**How:** The existing rule `.env.*` gitignores all `.env.*` files. Add an explicit exception for `.env.local` alongside the existing `.env.example` exception:
+
+```
+# Local env files
+.env
+.env.*
+!.env.example
+!.env.local
+```
 
 ---
 
-## File Tree After Setup
+### 8. Update `.env.example` — document the new file layout
+
+**What:** Modify `.env.example`.
+
+**How:** Replace the current content with documentation of the three-file layout:
 
 ```
-luak-website/
-├── playwright.config.ts       # NEW — Playwright configuration
-├── tests/
-│   └── e2e/
-│       └── home.spec.ts       # NEW — homepage smoke test
-├── test-results/              # gitignored — failure artifacts
-├── playwright-report/         # gitignored — HTML report
-├── tsconfig.json              # MODIFIED — include tests/**/*.ts
-└── package.json               # MODIFIED — test:e2e scripts
+# Shared, non-sensitive variables — committed, used in all environments.
+BASE_URL=http://localhost:3000
+
+NUXT_PUBLIC_PAYMENT_LINK_MEMBERSHIP=
+NUXT_PUBLIC_PAYMENT_LINK_MEMBERSHIP_DISCOUNT=
+
+# Github oAuth for Nuxt Studio in Production
+# Find at github.com/settings/developers
+STUDIO_GITHUB_CLIENT_ID=
+STUDIO_GITHUB_CLIENT_SECRET=
+# Restrict Nuxt Studio access to specific email addresses (comma-separated)
+STUDIO_GITHUB_MODERATORS=
+
+# ---------------------------------------------------------------------------
+# Environment-specific files (never committed except .env.local)
+# ---------------------------------------------------------------------------
+# .env.local      — committed — local Supabase credentials for dev & tests
+#                   SUPABASE_URL=http://127.0.0.1:54321
+#                   SUPABASE_KEY=<local anon key — run: supabase status>
+#
+# .env.production — gitignored — production Supabase credentials
+#                   SUPABASE_URL=https://<project-ref>.supabase.co
+#                   SUPABASE_KEY=<production anon key>
+#                   Usage: nuxt dev --dotenv .env.production
 ```
 
 ---
 
-## Verification
+## Out of scope
 
-After completing all steps, run:
-
-```bash
-yarn test:e2e
-```
-
-Expected output:
-
-```
-Running 1 test using 1 worker
-
-  ✓  tests/e2e/home.spec.ts:4:1 › homepage is visible (1.8s)
-
-  1 passed (4s)
-```
-
-If the test passes, the framework is correctly set up: Playwright can start the Nuxt dev server, navigate to the homepage, wait for hydration, and assert on rendered content.
+- Adding a staging/preview Supabase project (only local and production exist).
+- Setting up GitHub Actions CI to run the tests automatically.
+- Rotating the production anon key that was previously committed in `.env` (a separate security remediation task — should be done on the Supabase dashboard).
+- Adding further e2e tests beyond the existing homepage smoke test.
