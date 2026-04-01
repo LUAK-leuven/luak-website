@@ -17,7 +17,10 @@
     <div class="hero-overlay bg-opacity-60" />
     <div class="hero-content text-left text-neutral-content my-20">
       <div class="max-w-md">
-        <NuxtImg src="/luak-logo-white.png" :placeholder="[448, 221]" />
+        <NuxtImg
+          src="/luak-logo-white.png"
+          :placeholder="[448, 221]"
+          data-testId="luak-logo" />
         <p class="mb-5 text-lg">
           Leuvense Universitaire Alpinisten Klub ⛰️ Alpine club in leuven for
           outdoors lovers from beginners to more seasoned climbers 🧗

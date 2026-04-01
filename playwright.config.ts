@@ -1,8 +1,6 @@
-import { fileURLToPath } from 'node:url';
 import { defineConfig, devices } from '@playwright/test';
-import type { ConfigOptions } from '@nuxt/test-utils/playwright';
 
-export default defineConfig<ConfigOptions>({
+export default defineConfig({
   globalSetup: './tests/e2e/globalSetup.ts',
   testDir: 'tests/e2e',
   fullyParallel: true,
@@ -13,10 +11,11 @@ export default defineConfig<ConfigOptions>({
 
   use: {
     baseURL: 'http://localhost:3000',
-    trace: 'on-first-retry',
-    nuxt: {
-      rootDir: fileURLToPath(new URL('.', import.meta.url)),
+    trace: process.env.CI ? 'on-first-retry' : 'on',
+    launchOptions: {
+      args: ['--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage'],
     },
+    video: process.env.CI ? 'on-first-retry' : 'on',
   },
 
   projects: [
@@ -27,9 +26,8 @@ export default defineConfig<ConfigOptions>({
   ],
 
   webServer: {
-    command: 'yarn dev --dotenv .env.local',
-    // url: 'http://localhost',
-    port: 3000,
+    command: 'yarn dev',
+    url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
     stdout: 'ignore',

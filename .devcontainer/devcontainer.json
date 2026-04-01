@@ -8,11 +8,15 @@
     "ghcr.io/devcontainers/features/docker-in-docker": {}
   },
 
+  "runArgs": ["--shm-size=1gb"],
+
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   "forwardPorts": [3000],
 
   // Use 'postCreateCommand' to run commands after the container is created.
   "postCreateCommand": "yarn install",
+
+  "postStartCommand": "yarn playwright install-deps && yarn playwright install chromium",
 
   // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
   "remoteUser": "node",

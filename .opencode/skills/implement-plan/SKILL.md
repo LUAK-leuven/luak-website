@@ -19,8 +19,8 @@ Given a plan (a written description, a `plan.md` file, or a prior conversation),
 3. **For each task** - one task at a time:
     1. **Implement incrementally** — make one logical change at a time.
     2. **Lint after all edits** — always run `yarn lintfix` at the end to auto-fix formatting.
-    3. **Verify the build** — run `yarn build` and fix any TypeScript or Nuxt build errors before declaring done.
-    4. **Verify the result** - run `yarn dev` and verify the result on http://localhost:3000.
+    3. **Verify the build** — run `yarn dev` and fix any TypeScript or Nuxt build errors before declaring done.
+    4. **Verify the result** - verify the result on http://localhost:3000.
     5. **Stop and ask for approval from the user** - IMPORTANT! 
     6. **Update todo** - mark each step complete before moving on.
     7. **Commit** - commit your changes.

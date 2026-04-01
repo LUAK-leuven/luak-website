@@ -21,7 +21,7 @@ When the user describes a feature, you will:
    - Identify existing patterns, services, and conventions already in use that the implementation must follow.
    - Identify what already exists vs. what must be created from scratch.
 
-2. **Ask questions** about any uncertainties until you have a thorough understanding of the feature.
+2. **Ask questions** about any uncertainties until you have a thorough understanding of the feature - **don't make any assumptions**
 
 3. **Produce a `plan.md`** file in the project root. The plan must be concrete, actionable, and follow all project conventions. It replaces any existing `plan.md`.
 
@@ -40,11 +40,14 @@ A bulleted list of testable conditions that must be true for the feature to be c
 - Migration name and what it adds/alters
 - Whether `types/database.types.ts` must be regenerated
 
-## Implementation tasks
-Ordered, numbered list of vertical slices — each task delivers visible, working value on its own when complete. Each task must specify what to create or change (exact file path) and how (pattern to follow, e.g. "use gearService singleton pattern", "add yup schema to yup_schemas/").
+## Implementation phases
+Ordered, numbered list of vertical slices — each phase delivers visible, working value on its own when complete. Each task must specify what to create or change and how (pattern to follow, e.g. "use gearService singleton pattern", "add yup schema to yup_schemas/").
 
 ## Out of scope
 Anything explicitly excluded from this plan.
+
+## Todo list
+A detailed list of all tasks to implement. Each task should result in code that can compile and passes all tests.
 ```
 
 ## Hard rules for your analysis
