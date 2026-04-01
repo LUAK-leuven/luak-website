@@ -1,197 +1,143 @@
-# Plan: Fix Unsafe Production DB Guard in E2E Tests (Option A)
+# Plan: Authentication E2E Tests
 
-## Problem
+## Overview
 
-`tests/e2e/globalSetup.ts` reads `process.env.SUPABASE_URL` from the **Playwright
-runner process**. This is structurally wrong: the runner process has no reliable
-knowledge of the environment inside the web server that will actually handle test
-requests.
+Add a comprehensive Playwright e2e test suite for the authentication flow of the LUAK website. Tests cover login (happy path, wrong credentials, already-logged-in redirect), signup (happy path with post-test cleanup, `auth.signUp` failure, `Users.insert` failure), password reset request (happy path, failure), and the full password reset loop (request → Inbucket email → `/passwordReset?code=` → new password set). A reusable authenticated Playwright fixture is introduced so future test files can easily start with a logged-in session for any seeded user.
 
-The gap opens because `playwright.config.ts` sets:
+## Acceptance criteria
 
-```ts
-reuseExistingServer: !process.env.CI,
-```
+- `yarn test:e2e` passes with all new tests green against a local Supabase instance.
+- **Login — happy path**: filling valid credentials and submitting lands the user on `/profile/overview`.
+- **Login — wrong password**: submitting invalid credentials shows an inline error message on the password field.
+- **Login — already logged in**: navigating to `/login` while authenticated redirects to `/profile/overview`.
+- **Signup — happy path**: completing the signup form creates a new `auth.users` + `Users` row, navigates to `/confirmLogin`, and the created user is deleted from both tables after the test using the Supabase admin client directly in the test process.
+- **Signup — `auth.signUp` failure**: when the `POST /auth/v1/signup` request is intercepted and made to return an error, an error message is shown on the password field.
+- **Signup — `Users.insert` failure**: when the `POST /rest/v1/Users` request is intercepted and made to return an error, an error message is shown on the password field.
+- **Reset password request — happy path**: submitting a valid email shows the success checkmark icon and the button gains `btn-disabled`.
+- **Reset password request — failure**: when `POST /auth/v1/recover` is intercepted and returns an error, an error message is shown on the email field.
+- **Full password reset loop**: after requesting a reset, the Inbucket REST API (`http://localhost:54324`) is polled to retrieve the reset link; the user navigates to `/passwordReset?code=...`, submits a new password, sees the success popup, and is redirected to `/profile/overview`. The seeded password is restored via the Supabase admin client afterward.
+- No test touches the production Supabase database (enforced by the existing `globalSetup.ts`).
+- All pre-existing seeded users (`*@test.com` / `123456789`) are used where an existing account is needed.
+- Authenticated sessions are created lazily on first use per user and cached to `tests/e2e/.auth/<email>.json` (git-ignored) for reuse by subsequent tests.
 
-When `CI` is unset (i.e., every local run), Playwright detects any process already
-listening on port 3000 and reuses it without starting a new one. The guard then
-checks the runner's own env — which is empty if the developer launched the dev
-server with `nuxt dev --dotenv .env.production` in a separate terminal — and passes
-silently. Tests run against the live production database.
+## Database changes
 
----
+None — no migrations required. Cleanup (user deletion, password restore) uses the `@supabase/supabase-js` admin client instantiated directly in the Playwright test process using `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` env vars, both of which are already present in `.env` for local dev.
 
-## Solution: Health-Check Endpoint
+## Implementation tasks
 
-Add a Nuxt server route at `GET /api/_test-guard` that returns the value of
-`SUPABASE_URL` as seen by the **running Nuxt process**. Replace the env check in
-`globalSetup.ts` with an HTTP request to this endpoint.
+### 1. Create `tests/e2e/fixtures.ts` — shared Playwright fixtures and helpers
 
-This is correct by construction: the endpoint lives inside the exact process that
-will serve all test requests. It cannot be fooled by how the server was started or
-which terminal the developer used.
+**File:** `tests/e2e/fixtures.ts`
 
-### Timing guarantee
+Extend the base Playwright `test` object and export the extended `{ test, expect }` for use in all spec files.
 
-Playwright's execution order is:
-1. `webServer` starts (or existing server is confirmed reachable on port 3000).
-2. `globalSetup` runs.
-3. Tests run.
+**Helpers (plain async functions, not fixtures):**
 
-`globalSetup` is always called after the server is healthy, so the HTTP request
-to `/_test-guard` is guaranteed to succeed as long as the server is up.
+- **`loginAs(email: string, password: string, browser: Browser): Promise<BrowserContext>`**: checks whether `tests/e2e/.auth/{email}.json` exists. If it does, creates a context from that `storageState`. If not, creates a fresh context, navigates to `/login`, fills the form, submits, waits for `/profile/overview`, saves `context.storageState({ path })`, and returns the context. This makes sessions lazy — created on first use and reused afterward for any user.
+- **`supabaseAdmin()`**: returns a `@supabase/supabase-js` client created with `createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)` using the `auth: { autoRefreshToken: false, persistSession: false }` option. Used for admin operations in test setup/teardown. `@supabase/supabase-js` is already a transitive dependency — no new package needed.
+- **`deleteUser(userId: string)`**: calls `supabaseAdmin().auth.admin.deleteUser(userId)`. The `Users` row is removed by the `ON DELETE CASCADE` FK policy.
+- **`restorePassword(userId: string, password: string)`**: calls `supabaseAdmin().auth.admin.updateUserById(userId, { password })`.
+- **`getResetLink(mailboxName: string)`**: polls `GET http://localhost:54324/api/v1/mailbox/{mailboxName}/latest` up to 10 times with 1 s delay. Extracts the `http://localhost:3000/passwordReset?...` URL from `body.text` using a regex. Throws after 10 failed attempts.
 
----
+**Fixture to add:**
 
-## Implementation Tasks
-
-### Task 1 — Create the server route
-
-**File to create:** `server/api/_test-guard.get.ts`
-
-Nuxt auto-discovers all files under `server/api/` and registers them as H3 event
-handlers. The `.get.ts` suffix restricts the route to `GET` requests only.
-The `_` prefix on the filename is conventional for internal/non-public routes and
-has no functional effect; it signals intent.
-
-The route must:
-- Return a 404 in production so it is inert on Vercel and in any production build.
-- Return `{ supabaseUrl: string }` in all other environments.
-
-`process.env.NODE_ENV` is set to `'production'` by Nuxt during `nuxt build` /
-`nuxt generate` / `nuxt preview`, and to `'development'` during `nuxt dev`.
-
-```ts
-// server/api/_test-guard.get.ts
-export default defineEventHandler(() => {
-  if (process.env.NODE_ENV === 'production') {
-    throw createError({ statusCode: 404 });
-  }
-  return { supabaseUrl: process.env.SUPABASE_URL ?? '' };
-});
-```
-
-Notes:
-- `defineEventHandler` and `createError` are auto-imported by Nitro (Nuxt's server
-  engine); no import statements are needed.
-- No authentication or rate-limiting is required. The endpoint only exposes
-  `SUPABASE_URL`, which is not a secret (it is a public API URL, not a key), and
-  is disabled entirely in production.
-- The file sits in `server/api/`, not `server/routes/api/`. Both conventions work
-  in Nuxt 3, but `server/api/` is the standard location for first-party API
-  endpoints and is already used by `@nuxtjs/supabase` internals.
+- **`authenticatedPage`** (`scope: 'test'`): calls `loginAs('paid_this_year@test.com', '123456789', browser)` to get (or create) a cached context, then yields a `page` from that context. Closes the context after the test. This is the default authenticated fixture; tests needing a different user call `loginAs` directly.
 
 ---
 
-### Task 2 — Rewrite `globalSetup.ts`
+### 2. Add `tests/e2e/.auth/` to `.gitignore`
 
-**File to modify:** `tests/e2e/globalSetup.ts`
+**File:** `.gitignore`
 
-Replace the current synchronous env check with an async function that:
-1. Creates a Playwright `APIRequestContext`.
-2. Calls `GET http://localhost:3000/api/_test-guard`.
-3. Aborts with a clear message if the response is not `200 OK`.
-4. Parses `supabaseUrl` from the JSON body.
-5. Aborts with a clear message if `supabaseUrl` contains `supabase.co`.
-6. Disposes the request context.
-
-```ts
-// tests/e2e/globalSetup.ts
-import { request } from '@playwright/test';
-
-export default async function () {
-  const ctx = await request.newContext({ baseURL: 'http://localhost:3000' });
-
-  let supabaseUrl: string;
-  try {
-    const res = await ctx.get('/api/_test-guard');
-    if (!res.ok()) {
-      console.error(
-        `\n❌  Safety check failed — /api/_test-guard returned HTTP ${res.status()}.\n` +
-          '    Ensure the dev server is running and NODE_ENV is not "production".\n',
-      );
-      process.exit(1);
-    }
-    ({ supabaseUrl } = await res.json());
-  } catch (err) {
-    console.error(
-      '\n❌  Safety check failed — could not reach http://localhost:3000/api/_test-guard.\n' +
-        `    ${err}\n`,
-    );
-    process.exit(1);
-  } finally {
-    await ctx.dispose();
-  }
-
-  if (supabaseUrl!.includes('supabase.co')) {
-    console.error(
-      '\n❌  E2E tests cannot run against the production Supabase database.\n' +
-        `    The running server is using SUPABASE_URL="${supabaseUrl!}".\n` +
-        '    Stop the server, start local Supabase with "supabase start", and retry.\n',
-    );
-    process.exit(1);
-  }
-}
-```
-
-Notes:
-- The function must be `async` because `request.newContext()` and `ctx.get()` are
-  Promises. Playwright supports async `globalSetup` functions.
-- `baseURL` is set on the context so the route path can be relative; this also
-  makes it easy to change the port in one place if needed.
-- The `try/catch` handles network-level failures (server not up, ECONNREFUSED)
-  separately from HTTP-level failures (non-200 status), giving the developer a
-  precise error message in each case.
-- `ctx.dispose()` is called in `finally` to release the HTTP connection pool
-  regardless of outcome.
+Append one line: `tests/e2e/.auth/`
 
 ---
 
-## Files Changed
+### 3. Create `tests/e2e/login.spec.ts` — login tests
 
-| File | Action | Purpose |
-|---|---|---|
-| `server/api/_test-guard.get.ts` | **Create** | Exposes server-side `SUPABASE_URL`; 404 in production |
-| `tests/e2e/globalSetup.ts` | **Modify** | Replaces env check with HTTP check against the endpoint |
+**File:** `tests/e2e/login.spec.ts`
 
-No other files need to change. No new dependencies are introduced (`@playwright/test`
-already provides `request`). No `nuxt.config.ts` changes are needed — Nuxt
-auto-discovers `server/api/` files.
+Import `{ test, expect }` from `./fixtures`.
 
----
+#### 3a. Login — happy path
+- `test.use({ storageState: { cookies: [], origins: [] } })` to ensure a clean session.
+- `page.goto('/login')`.
+- Fill email `paid_this_year@test.com`, password `123456789`.
+- Click the submit button.
+- `await expect(page).toHaveURL('/profile/overview')`.
 
-## Todo
+#### 3b. Login — wrong password
+- Clean session.
+- Navigate to `/login`, fill valid email + `wrongpassword`, submit.
+- Assert that a visible error message matching `/invalid login credentials/i` is on the page (vee-validate renders field errors as text near the input).
 
-- [ ] Create `server/api/_test-guard.get.ts`
-  - [ ] Return 404 when `process.env.NODE_ENV === 'production'`
-  - [ ] Return `{ supabaseUrl: process.env.SUPABASE_URL ?? '' }` in all other environments
-- [ ] Rewrite `tests/e2e/globalSetup.ts`
-  - [ ] Change the function signature to `async`
-  - [ ] Import `request` from `@playwright/test`
-  - [ ] Create an `APIRequestContext` with `baseURL: 'http://localhost:3000'`
-  - [ ] Call `GET /api/_test-guard` and abort with a clear error on non-200 response
-  - [ ] Parse `supabaseUrl` from the JSON response body
-  - [ ] Abort with a clear error if `supabaseUrl` contains `supabase.co`
-  - [ ] Dispose the request context in `finally`
-- [ ] Verify: reused production server is blocked
-  - [ ] Start `nuxt dev --dotenv .env.production`, then run `yarn test:e2e` — must exit with code 1 before any test runs
-- [ ] Verify: normal local path still works
-  - [ ] With `supabase start` running and no existing server on port 3000, run `yarn test:e2e` — must pass
+#### 3c. Login — already logged in redirects away
+- Use `authenticatedPage` fixture (lazily logs in as `paid_this_year@test.com` and caches session).
+- `page.goto('/login')`.
+- `await expect(page).toHaveURL('/profile/overview')`.
 
 ---
 
-## Verification
+### 4. Create `tests/e2e/signup.spec.ts` — signup tests
 
-After implementing, manually verify both failure and success modes:
+**File:** `tests/e2e/signup.spec.ts`
 
-1. **Reused production server (the original bug):**
-   - Start `nuxt dev --dotenv .env.production` in one terminal.
-   - Run `yarn test:e2e` in another terminal.
-   - Expected: `globalSetup` prints the `supabase.co` error and exits with code 1
-     before any test runs.
+Import `{ test, expect }` from `./fixtures`. Use `test.use({ storageState: { cookies: [], origins: [] } })` for the entire file.
 
-2. **Normal local dev path:**
-   - `supabase start` running, no existing server on port 3000.
-   - Run `yarn test:e2e`.
-   - Expected: Playwright starts the server via `yarn dev` (which loads `.env.local`),
-     `globalSetup` sees `http://127.0.0.1:54321`, and tests run normally.
+#### 4a. Signup — happy path
+- Generate a unique email: `` `e2e_${Date.now()}@test.com` ``.
+- Intercept `POST **/auth/v1/signup` via `page.route(...)` to capture the response body (`user.id` field) before forwarding it, storing `createdUserId`.
+- Navigate to `/signup`, fill first name, last name, the unique email, password `TestPass123!`.
+- Submit and await navigation to `/confirmLogin`.
+- `afterEach`: call `deleteUser(createdUserId)` to remove both the auth row and the `Users` row.
+
+#### 4b. Signup — `auth.signUp` failure
+- `page.route('**/auth/v1/signup', route => route.fulfill({ status: 400, contentType: 'application/json', body: JSON.stringify({ message: 'Signup is disabled' }) }))`.
+- Navigate to `/signup`, fill all required fields, submit.
+- Assert error message matching `/signup is disabled/i` is visible.
+
+#### 4c. Signup — `Users.insert` failure
+- Intercept `POST **/auth/v1/signup` to capture `createdUserId` before continuing (same technique as 4a).
+- `page.route('**/rest/v1/Users*', route => route.fulfill({ status: 409, contentType: 'application/json', body: JSON.stringify({ message: 'duplicate key value' }) }))`.
+- Navigate to `/signup`, fill all required fields, submit.
+- Assert error message matching `/duplicate key value/i` is visible.
+- `afterEach`: call `deleteUser(createdUserId)` to clean up the orphaned auth user.
+
+---
+
+### 5. Create `tests/e2e/resetPassword.spec.ts` — password reset tests
+
+**File:** `tests/e2e/resetPassword.spec.ts`
+
+Import `{ test, expect }` from `./fixtures`. Use `test.use({ storageState: { cookies: [], origins: [] } })` for the entire file.
+
+Seeded user for the full loop: `paid_last_year@test.com` (UUID `ebc0eb9c-e6a5-40ce-a4f4-4d4556ce78ea`). Using this user avoids disrupting the `paid_this_year` session cached by the login fixture.
+
+#### 5a. Reset request — failure
+- `page.route('**/auth/v1/recover', route => route.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ message: 'Email service unavailable' }) }))`.
+- Navigate to `/resetpassword`, fill email, submit.
+- Assert error message matching `/email service unavailable/i` is visible.
+
+#### 5b. Full password reset loop
+- `page.goto('/resetpassword')`, fill `paid_last_year@test.com`, submit.
+- Assert the button has class `btn-disabled` (success state of the request step).
+- Assert a `check` icon (`.material-symbols-outlined` with text `check`) is visible.
+- Call `getResetLink('paid_last_year')` to poll Inbucket at `http://localhost:54324/api/v1/mailbox/paid_last_year/latest` and extract the `/passwordReset?code=...` URL.
+- `page.goto(resetLink)`.
+- Fill `pwd1` = `pwd2` = `NewPass456!`, submit.
+- Assert the success toast `<pop-up>` containing `/password updated successfully/i` is visible.
+- `await expect(page).toHaveURL('/profile/overview')` (after the 800 ms redirect).
+- `afterEach`: call `restorePassword('ebc0eb9c-e6a5-40ce-a4f4-4d4556ce78ea', '123456789')` to set the password back so subsequent test runs work with the seeded credentials.
+
+---
+
+## Out of scope
+
+- Form validation error tests (weak password, missing required fields, phone format).
+- Middleware / route-guard tests (`unauthenticated` guard, board guard, active-member guard).
+- OAuth / magic-link flows.
+- Testing the `/confirmLogin` callback page behaviour beyond verifying the URL after signup.
+- Stripe payment flows.
+- Visual regression or accessibility testing.
+- Testing browsers other than Chromium (single project in existing config).

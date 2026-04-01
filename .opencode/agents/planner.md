@@ -23,7 +23,7 @@ When the user describes a feature, you will:
 
 2. **Ask questions** about any uncertainties until you have a thorough understanding of the feature - **don't make any assumptions**
 
-3. **Produce a `plan.md`** file in the project root. The plan must be concrete, actionable, and follow all project conventions. It replaces any existing `plan.md`.
+3. **Produce a `plan.md`** file in the project root. The plan must be concrete, actionable, and follow all project conventions. It replaces any existing `plan.md`. You don't need to repeat what you wrote in the plan.
 
 ## plan.md structure
 
