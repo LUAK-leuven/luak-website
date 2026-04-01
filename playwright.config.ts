@@ -3,6 +3,7 @@ import { defineConfig, devices } from '@playwright/test';
 import type { ConfigOptions } from '@nuxt/test-utils/playwright';
 
 export default defineConfig<ConfigOptions>({
+  globalSetup: './tests/e2e/globalSetup.ts',
   testDir: 'tests/e2e',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -26,8 +27,9 @@ export default defineConfig<ConfigOptions>({
   ],
 
   webServer: {
-    command: 'yarn dev',
-    url: 'http://localhost:3000',
+    command: 'yarn dev --dotenv .env.local',
+    // url: 'http://localhost',
+    port: 3000,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
     stdout: 'ignore',
