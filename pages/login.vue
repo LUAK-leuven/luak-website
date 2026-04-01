@@ -25,7 +25,7 @@
       setFieldError('password', error.message);
     } else {
       const path = redirect ?? '/profile/overview';
-      return reloadNuxtApp({ path });
+      return navigateTo(path);
     }
   });
 </script>
@@ -38,19 +38,21 @@
           label="Email"
           name="email"
           placeholder="youremail@example.com"
-          type="email" />
+          type="email"
+          data-testId="login.email" />
         <InputText
           label="Password"
           name="password"
           placeholder="*******"
-          type="password" />
+          type="password"
+          data-testId="login.password" />
         <div class="flex flex-row justify-end">
           <NuxtLink class="underline my-2" to="/resetpassword">
             Forgot password?
           </NuxtLink>
         </div>
         <div>
-          <button class="btn btn-primary w-full p-5">
+          <button class="btn btn-primary w-full p-5" data-testId="login.submit">
             <span v-if="isSubmitting" class="loading loading-spinner">
               loading
             </span>

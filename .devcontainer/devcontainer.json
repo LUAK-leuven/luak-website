@@ -8,7 +8,7 @@
     "ghcr.io/devcontainers/features/docker-in-docker": {}
   },
 
-  "runArgs": ["--shm-size=1gb"],
+  "runArgs": ["--shm-size=4gb"],
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   "forwardPorts": [3000],

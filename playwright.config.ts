@@ -6,15 +6,12 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : '50%',
+  workers: process.env.CI ? 1 : 1,
   reporter: process.env.CI ? 'github' : 'html',
 
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: 'http://localhost:3001',
     trace: process.env.CI ? 'on-first-retry' : 'on',
-    launchOptions: {
-      args: ['--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage'],
-    },
     video: process.env.CI ? 'on-first-retry' : 'on',
   },
 
@@ -26,8 +23,8 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'yarn dev',
-    url: 'http://localhost:3000',
+    command: 'yarn dev --port 3001',
+    url: 'http://localhost:3001',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
     stdout: 'ignore',

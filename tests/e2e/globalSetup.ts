@@ -1,7 +1,7 @@
 import { request } from '@playwright/test';
 
 export default async function () {
-  const ctx = await request.newContext({ baseURL: 'http://localhost:3000' });
+  const ctx = await request.newContext({ baseURL: 'http://localhost:3001' });
 
   let supabaseUrl: string;
   try {
@@ -16,7 +16,7 @@ export default async function () {
     ({ supabaseUrl } = await res.json());
   } catch (err) {
     console.error(
-      '\n❌  Safety check failed — could not reach http://localhost:3000/api/_test-guard.\n' +
+      '\n❌  Safety check failed — could not reach http://localhost:3001/api/_test-guard.\n' +
         `    ${err}\n`,
     );
     process.exit(1);

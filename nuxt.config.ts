@@ -25,6 +25,9 @@ export default defineNuxtConfig({
       include: ['/profile(/*)?', '/stories(/*)?', '/topo-library'],
       saveRedirectToCookie: true,
     },
+    cookieOptions: {
+      secure: process.env.NODE_ENV === 'production',
+    },
   },
   runtimeConfig: {
     public: {
