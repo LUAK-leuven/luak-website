@@ -8,6 +8,7 @@ Add a comprehensive Playwright e2e test suite for the authentication flow of the
 
 - `yarn test:e2e` passes with all new tests green against a local Supabase instance.
 - **Login — happy path**: filling valid credentials and submitting lands the user on `/profile/overview`.
+- **Login — wrong user**: submitting an email which doesn't exist yet, shows inline error on password field.
 - **Login — wrong password**: submitting invalid credentials shows an inline error message on the password field.
 - **Login — already logged in**: navigating to `/login` while authenticated redirects to `/profile/overview`.
 - **Signup — happy path**: completing the signup form creates a new `auth.users` + `Users` row, navigates to `/confirmLogin`, and the created user is deleted from both tables after the test using the Supabase admin client directly in the test process.
