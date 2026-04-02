@@ -30,7 +30,8 @@
         "tamasfe.even-better-toml",
         "bierner.emojisense",
         "denoland.vscode-deno",
-        "Nuxt.mdc"
+        "Nuxt.mdc",
+        "ms-playwright.playwright"
       ]
     }
   }

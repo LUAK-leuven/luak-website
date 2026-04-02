@@ -101,10 +101,15 @@
     <NuxtLink
       v-if="user.userInfo === undefined"
       class="btn btn-primary btn-outline"
-      to="/profile/overview">
+      to="/profile/overview"
+      data-testId="nav.login">
       Log In
     </NuxtLink>
-    <NuxtLink v-else class="btn btn-primary btn-outline" to="/profile/overview">
+    <NuxtLink
+      v-else
+      class="btn btn-primary btn-outline"
+      to="/profile/overview"
+      data-testId="nav.profile">
       My Profile
     </NuxtLink>
   </ul>
