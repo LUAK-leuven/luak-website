@@ -8,6 +8,7 @@ dist
 
 # Node dependencies
 node_modules
+.tool-versions
 
 # Logs
 logs
@@ -17,6 +18,9 @@ logs
 .DS_Store
 .fleet
 .idea
+.vscode
+.opencode
+/stories/
 
 # Local env files
 .env

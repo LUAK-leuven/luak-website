@@ -14,17 +14,18 @@ The techstack used for this project is:
 
 ## Setup
 
-The easiest way to get started is using vscode with devcontainers. a devcontainer is defined including all the necessarry dependencies.
-
-1. install Docker
-2. install Vscode
-3. Open this github repo in a dev-container
-
----OR---
-
-3. use github codespaces
+Install stuff
+1. install [Docker](https://docs.docker.com/desktop/setup/install/) (or podman)
+2. install Node 20.x.x (using asdf: `asdf install nodejs 20.20.2`)
+3. install yarn: `npm install --global yarn@1.22.22`
+4. install packages: `yarn install`
+5. install browsers for the e2e tests: `yarn playwright install`
 
 next set the right env variables to connect with supabase. check `.env.example` and the [Supabase Docs](https://supabase.com/docs/guides/getting-started)
+
+### e2e-tests
+
+Firs you need to install playwright: `yarn playwright install`
 
 ## Nuxt Studio
 
@@ -32,8 +33,9 @@ Visual content editing is available through Nuxt Studio.
 
 **Quick start (dev mode):**
 - Run `yarn dev`
-- Look for the floating Studio button in the bottom-left corner
-- Click to edit content visually
+- The local server should be running on http://localhost:3000
+
+To run against the production database: `yarn dev --dotenv .env.production`
 
 ## Test users
 
@@ -49,9 +51,11 @@ All the users have the same password: 123456789
 
 ## Supabase
 
-- supabase start
-- supabase login
-- supabase link
+Set up the local database, for the first time use:
+
+- `supabase start` (can take a long time)
+- `supabase login`
+- `supabase link`
 
 To pull the latest migrations from the linked(=remote) db
 
