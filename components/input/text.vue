@@ -36,6 +36,10 @@
       value.value = model.value;
     }
   });
+
+  function onFocus() {
+    if (props.autoFillWithPlaceholder && value === undefined) model.value = props.placeholder;
+  }
 </script>
 
 <template>
@@ -54,10 +58,7 @@
         :type="type"
         :placeholder="placeholder"
         :disabled="disabled"
-        @focus="
-          if (autoFillWithPlaceholder && value === undefined)
-            value = placeholder;
-        " />
+        @focus="onFocus()" />
     </label>
     <span v-if="errorMessage" class="text-error">{{ errorMessage }}</span>
   </div>

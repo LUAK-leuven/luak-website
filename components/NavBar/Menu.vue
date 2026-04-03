@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import { toggleCloseFix } from '~/utils/toggleCloseFix';
+
   const props = defineProps<{ id?: string }>();
 
   const { data: info_navigation } = await useAsyncData('info_navigation', () =>
@@ -16,9 +18,9 @@
   };
 
   onMounted(() => {
-    useToggleCloseFix('info-toggle');
-    useToggleCloseFix('board-toggle');
-    useToggleCloseFix('member-toggle');
+    toggleCloseFix('info-toggle');
+    toggleCloseFix('board-toggle');
+    toggleCloseFix('member-toggle');
 
     if (props.id !== undefined) {
       // Fix drawer closing by closing drawer on click
