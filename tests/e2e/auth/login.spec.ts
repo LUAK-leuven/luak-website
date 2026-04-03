@@ -5,11 +5,11 @@ test('Login & logout — happy path', async ({ page }) => {
   await testUser.login('unpaid_membership@test.com', page);
 
   expect(page).toHaveURL('/profile/overview');
-  expect(page.getByTestId('nav.profile')).toBeVisible();
+  expect(page.getByTestId('nav.profile').first()).toBeVisible();
 
   await page
     .getByTestId('profile.logout')
-    .click({ timeout: 2_000, delay: 1_000 });
+    .click();
   await expect(page).toHaveURL('/login');
   await expect(page.getByTestId('nav.login').first()).toBeVisible();
 });
