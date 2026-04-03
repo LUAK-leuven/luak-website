@@ -2,7 +2,7 @@
   import type { RentalItem } from '~/types/board/form/RentalItem';
   import type { Enums } from '~/types/database.types';
   import type { GearItemId, TopoId } from '~/types/gear';
-  import type { UnsavedRental } from '~/types/renal';
+  import type { UnsavedRental } from '~/types/rental';
   import type { UserId } from '~/types/user';
 
   const props = defineProps<{

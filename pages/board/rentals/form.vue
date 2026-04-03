@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import dayjs from 'dayjs';
   import PaymentModal from '~/components/PaymentModal.vue';
-  import type { RentalId, UnsavedRental } from '~/types/renal';
+  import type { RentalId, UnsavedRental } from '~/types/rental';
 
   const { show: showPopup } = usePopup();
   const showPaymentModal = ref(false);
@@ -11,7 +11,7 @@
     iban: string;
     message: string;
   } | null>(null);
-  const retnalId = ref<RentalId>();
+  const rentalId = ref<RentalId>();
 
   const { data: user } = await useLuakMember();
   const boardMember = {
@@ -41,7 +41,7 @@
     });
 
     if (!error && id) {
-      retnalId.value = id;
+      rentalId.value = id;
       if (state.paymentMethod === 'transfer') {
         paymentDetails.value = {
           amount: state.depositFee,
@@ -51,7 +51,7 @@
         };
         showPaymentModal.value = true;
       } else {
-        navigateTo(`/board/rentals/${retnalId.value}`);
+        navigateTo(`/board/rentals/${rentalId.value}`);
       }
       showPopup('success', 'Rental saved successfully.');
       return { error: undefined };
@@ -63,7 +63,7 @@
 
   const closeModal = () => {
     showPaymentModal.value = false;
-    if (retnalId.value) navigateTo(`/board/rentals/${retnalId.value}`);
+    if (rentalId.value) navigateTo(`/board/rentals/${rentalId.value}`);
   };
 </script>
 

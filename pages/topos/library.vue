@@ -137,7 +137,7 @@
         </div>
 
         <div v-if="filteredTopos.length === 0" class="text-center pt-8">
-          <p>No subscriptions found matching your criteria.</p>
+          <p>No topos found matching your criteria.</p>
         </div>
       </div>
     </PagesWithLazyResource>

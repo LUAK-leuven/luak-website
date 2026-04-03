@@ -1,4 +1,4 @@
-export default function () {
+export function usePopup() {
   const popup = useState<
     | {
         type: 'success' | 'warning' | 'error' | 'info';

@@ -10,7 +10,7 @@ type UserInfo = {
   phone_number?: string;
 };
 
-export default function (): AsyncData<
+export function useLuakMember(): AsyncData<
   {
     userInfo: UserInfo | undefined;
     isBoard: boolean;

@@ -1,5 +1,3 @@
-import type { K } from 'vue-router/dist/router-CWoNjPRp.mjs';
-
 export function sum(array: number[]): number {
   return array.reduce((sum, current) => sum + current, 0);
 }

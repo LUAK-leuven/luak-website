@@ -8,7 +8,7 @@ export type EpcQrCode = {
   bic?: string;
 };
 
-export default function (templateRef: string) {
+export function useEpcQrCodeGenerator (templateRef: string) {
   const canvasRef = useTemplateRef<HTMLCanvasElement>(templateRef);
 
   const renderToCanvas = async (epcQrCode: EpcQrCode) => {

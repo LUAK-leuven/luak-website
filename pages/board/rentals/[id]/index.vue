@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import DetailsPage from '~/components/pages/DetailsPage.vue';
-  import type { RentalId } from '~/types/renal';
+  import type { RentalId } from '~/types/rental';
 
   const retnalId = useRoute().params.id as RentalId;
   const { data, pending, error } = await gearService().getRental(retnalId);

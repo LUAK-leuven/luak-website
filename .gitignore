@@ -20,7 +20,7 @@ logs
 .idea
 .vscode
 .opencode
-/stories/
+/planning/
 
 # Local env files
 .env

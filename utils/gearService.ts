@@ -4,7 +4,7 @@ import type {
   RentalId,
   RentalUpdate,
   UnsavedRental,
-} from '~/types/renal';
+} from '~/types/rental';
 import type { GearInventoryId, GearItemId, TopoId } from '~/types/gear';
 import type { UserId } from '~/types/user';
 
@@ -426,7 +426,7 @@ class GearService {
 
   public async getTopoLibrary() {
     return useAsyncData(
-      'allTopos',
+      'topoLibrary',
       async () => {
         const { data: topos, error } = await this.supabase
           .from('Topos')

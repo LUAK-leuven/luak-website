@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import type { RentalId, UnsavedRental } from '~/types/renal';
+  import type { RentalId, UnsavedRental } from '~/types/rental';
   import { computeRentalStatus } from '~/utils/rental/computeStatus';
 
   const { show: showPopup } = usePopup();
