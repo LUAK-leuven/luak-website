@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import Number from '~/components/input/Number.vue';
+
   defineProps<{
     name: string;
     rentedAmount: number;
@@ -34,7 +36,7 @@
     </button>
   </div>
   <div class="border p-1 flex flex-row items-center">
-    <InputNumber2
+    <Number
       v-if="editMode"
       :class="{
         'animate-bounceInput': bouncing,

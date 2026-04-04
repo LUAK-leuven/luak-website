@@ -1,5 +1,6 @@
 <script lang="ts" setup generic="T extends EntityId<unknown>">
   import type { EntityId } from '~/types/ddd';
+  import Number from '~/components/input/Number.vue';
 
   defineProps<{
     selectedItems: {
@@ -30,7 +31,7 @@
         {{ item.name }}
       </span>
       <span>
-        <InputNumber2
+        <Number
           :text-box-color="
             item.selectedAmount <= 0 || item.selectedAmount > item.totalAmount
               ? 'input-error'
