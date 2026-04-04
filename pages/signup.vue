@@ -2,6 +2,8 @@
   import * as yup from 'yup';
   import type { Database } from '~/types/database.types';
   import { yup_password, yup_phone } from '~/utils/yup';
+  import TextField from '~/components/input/TextField.vue';
+  import LoadingButton from '~/components/shared/LoadingButton.vue';
 
   definePageMeta({
     middleware: 'unauthenticated',
@@ -18,7 +20,7 @@
     whatsapp: yup.bool().default(true),
     phoneNumber: yup_phone.transform((v: string) => (v ? v : undefined)),
   });
-  const { handleSubmit, isSubmitting, setFieldError } = useForm({
+  const { handleSubmit, setFieldError } = useForm({
     validationSchema: toTypedSchema(formSchema),
   });
 
@@ -44,50 +46,55 @@
     }
   });
 </script>
+
 <template>
   <div class="relative flex flex-wrap justify-center z-2 bg-base-300">
     <div
-      class="bg-base-100 shadow-md rounded w-10/12 lg:w-8/12 xl:w-1/2 mb-28 z-10 mt-8 p-5 sm:p-20">
-      <form @submit="onSubmit">
+      class="bg-base-100 shadow-md rounded-xl w-10/12 lg:w-8/12 xl:w-1/2 mb-28 z-10 mt-8 p-5 sm:p-20">
+      <h2 class="mt-[-1.25rem]">Create an account</h2>
+      <form @submit.prevent>
         <div class="flex flex-row justify-stretch">
-          <InputText
+          <TextField
             class="mr-1"
             label="First name *"
             name="firstName"
-            placeholder="Alex" />
-          <InputText
+            placeholder="Alex"
+            autocomplete="given-name" />
+          <TextField
             class="ml-1"
             label="Last name *"
             name="lastName"
-            placeholder="Megos" />
+            placeholder="Megos"
+            autocomplete="family-name" />
         </div>
-        <InputText
+        <TextField
           label="Email *"
           name="email"
           placeholder="youremail@example.com"
-          type="email" />
-        <InputText
+          type="email"
+          autocomplete="email" />
+        <TextField
           label="Phone Number (for WhatsApp)"
           name="phoneNumber"
           placeholder="+32468123123"
-          type="tel" />
-        <InputText
+          type="tel"
+          autocomplete="tel" />
+        <TextField
           label="Password *"
           name="password"
           placeholder="*******"
-          type="password" />
+          type="password"
+          autocomplete="new-password" />
         <InputBool name="whatsapp">Can we contact you via whatsapp?</InputBool>
         <InputBool name="newsletter">
           Subscribe to monthly newsletter?
         </InputBool>
 
         <div class="flex justify-center">
-          <button class="btn btn-primary w-full p-5">
-            <span v-if="isSubmitting" class="loading loading-spinner"
-              >loading</span
-            >
-            <span v-else>Sign up</span>
-          </button>
+          <LoadingButton
+            class="w-full"
+            text="Sign up"
+            :click-handler="onSubmit" />
         </div>
       </form>
     </div>
