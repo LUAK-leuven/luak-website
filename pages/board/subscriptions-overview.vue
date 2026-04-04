@@ -1,8 +1,8 @@
 <script lang="ts" setup>
   import type { Database } from '~/types/database.types';
   import {
-    formatStudentStatus,
     formatKbfUiaaStatus,
+    formatStudentStatus,
   } from '~/components/profile/helpers';
   import dayjs from 'dayjs';
   import Text from '~/components/input/Text.vue';
@@ -64,7 +64,7 @@
       if (fetchError) throw fetchError;
 
       // Format the data to match our needs
-      const formattedData = data
+      subscriptions.value = data
         .flatMap((user) =>
           user.Memberships.map((membership) => ({
             id: membership.id,
@@ -81,9 +81,7 @@
             has_paid: membership.Payments.some((payment) => payment.approved),
           })),
         )
-        .filter((sub) => sub.name); // Ensure we have a name
-
-      subscriptions.value = formattedData;
+        .filter((sub) => sub.name);
       error.value = null;
     } catch (err) {
       console.error('Error fetching subscriptions:', err);
