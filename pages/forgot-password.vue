@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import * as yup from 'yup';
+  import TextField from '~/components/input/TextField.vue';
 
   definePageMeta({ middleware: 'unauthenticated' });
 
@@ -16,7 +17,7 @@
   const onSubmit = handleSubmit(async (submitted) => {
     const { error } = await supabase.auth.resetPasswordForEmail(
       submitted.email,
-      { redirectTo: `${url.origin}/passwordReset` },
+      { redirectTo: `${url.origin}/reset-password` },
     );
     if (error) {
       setFieldError('email', error.message);
@@ -32,11 +33,12 @@
           <span class="material-symbols-outlined"> arrow_back</span>
         </NuxtLink>
         <h2>❓ Forgot password:</h2>
-        <InputText
+        <TextField
           label="Email"
           name="email"
           placeholder="youremail@example.com"
-          type="email" />
+          type="email"
+          autocomplete="email" />
         <div class="flex justify-end">
           <button
             class="btn btn-primary mt-2"

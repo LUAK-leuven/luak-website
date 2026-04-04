@@ -51,7 +51,7 @@
           autocomplete="current-password"
           data-testId="login.password" />
         <div class="flex flex-row justify-end">
-          <NuxtLink class="underline my-2" to="/resetpassword">
+          <NuxtLink class="underline my-2" to="/forgot-password">
             Forgot password?
           </NuxtLink>
         </div>
