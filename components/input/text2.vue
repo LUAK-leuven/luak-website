@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import type { InputTypeHTMLAttribute } from 'vue';
 
-  withDefaults(
+  const props = withDefaults(
     defineProps<{
       label?: string | undefined;
       type?: InputTypeHTMLAttribute;
@@ -10,6 +10,7 @@
       disabled?: boolean;
       autoFillWithPlaceholder?: boolean;
       round?: boolean;
+      autocomplete?: AutoFillField;
     }>(),
     {
       type: 'text',
@@ -19,6 +20,7 @@
       label: undefined,
       round: false,
       error: undefined,
+      autocomplete: undefined,
     },
   );
 
@@ -27,6 +29,10 @@
   watch(model, (value) => {
     if (value === '') model.value = undefined;
   });
+
+  const autoFillPlaceholder = () => {
+    if (props.autoFillWithPlaceholder && !model.value) model.value = props.placeholder;
+  };
 </script>
 
 <template>
@@ -49,7 +55,8 @@
         :type="type"
         :placeholder="placeholder"
         :disabled="disabled"
-        @focus="if (autoFillWithPlaceholder && !model) model = placeholder;" />
+        :autocomplete="autocomplete"
+        @focus="autoFillPlaceholder" />
       <slot name="label-end" />
     </label>
     <span v-if="error" class="text-error">{{ error }}</span>

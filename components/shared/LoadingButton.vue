@@ -4,8 +4,9 @@
       text: string;
       disabled?: boolean;
       clickHandler: () => Promise<T>;
+      type?: HTMLButtonElement['type'];
     }>(),
-    { disabled: false },
+    { disabled: false, type: 'submit' },
   );
 
   const isSubmitting = ref(false);
@@ -20,7 +21,7 @@
   <button
     class="btn btn-primary w-fit"
     :class="{ 'btn-disabled': disabled }"
-    type="submit"
+    :type="type"
     @click="onClick">
     <span v-if="isSubmitting" class="loading loading-spinner">loading</span>
     <span v-else>{{ text }}</span>

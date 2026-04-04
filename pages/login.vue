@@ -1,5 +1,7 @@
 <script setup lang="ts">
   import * as yup from 'yup';
+  import TextField from '~/components/input/TextField.vue';
+  import LoadingButton from '~/components/shared/LoadingButton.vue';
 
   definePageMeta({
     middleware: 'unauthenticated',
@@ -12,7 +14,7 @@
     email: yup.string().required().email(),
     password: yup.string().required(),
   });
-  const { handleSubmit, isSubmitting, setFieldError } = useForm({
+  const { handleSubmit, setFieldError } = useForm({
     validationSchema: toTypedSchema(formSchema),
   });
 
@@ -33,32 +35,27 @@
   <div class="relative flex flex-wrap justify-center z-2 bg-base-300">
     <div
       class="bg-base-100 shadow-md rounded w-10/12 lg:w-8/12 xl:w-1/3 mb-28 z-10 mt-8 p-5 sm:p-20">
-      <form @submit="onSubmit">
-        <InputText
+      <form @submit.prevent="onSubmit">
+        <TextField
           label="Email"
           name="email"
           placeholder="youremail@example.com"
           type="email"
+          autocomplete="email"
           data-testId="login.email" />
-        <InputText
+        <TextField
           label="Password"
           name="password"
           placeholder="*******"
           type="password"
+          autocomplete="current-password"
           data-testId="login.password" />
         <div class="flex flex-row justify-end">
           <NuxtLink class="underline my-2" to="/resetpassword">
             Forgot password?
           </NuxtLink>
         </div>
-        <div>
-          <button class="btn btn-primary w-full p-5" data-testId="login.submit">
-            <span v-if="isSubmitting" class="loading loading-spinner">
-              loading
-            </span>
-            <span v-else>Sign in</span>
-          </button>
-        </div>
+        <LoadingButton class="w-full" text="Log in" :click-handler="onSubmit" />
       </form>
       <div class="divider">OR</div>
       <NuxtLink to="/signup">
