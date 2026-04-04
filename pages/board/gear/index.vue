@@ -3,6 +3,7 @@
   import type { Dayjs } from 'dayjs';
   import dayjs from 'dayjs';
   import RetirementDate from '~/components/board/gear/retirementDate.vue';
+  import Text from '~/components/input/Text.vue';
 
   const { data, pending, error } = await gearService().getGearInventory();
   const searchTerm = ref<string>();
@@ -59,7 +60,7 @@
       :data="filteredGear_"
       :is-loading="pending"
       :error="error?.message">
-      <InputText2
+      <Text
         v-model="searchTerm"
         label="Search by name"
         placeholder="Search by name ..." />

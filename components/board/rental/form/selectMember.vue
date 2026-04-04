@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import type { UserId } from '~/types/user';
+  import Text from '~/components/input/Text.vue';
 
   withDefaults(
     defineProps<{
@@ -85,17 +86,17 @@
       </template>
     </InputSearchableSelect>
     <div v-if="selectedUserId === 'non-user'">
-      <InputText2
+      <Text
         v-model="fullName"
         placeholder="Adam Ondra"
         label="Full name *"
         type="text" />
-      <InputText2
+      <Text
         v-model="email"
         placeholder="example@mail.com"
         label="Email"
         type="email" />
-      <InputText2
+      <Text
         v-model="phone"
         placeholder="+32 123 34 56 77"
         label="Phone number"

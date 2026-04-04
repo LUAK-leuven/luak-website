@@ -5,6 +5,7 @@
     formatKbfUiaaStatus,
   } from '~/components/profile/helpers';
   import dayjs from 'dayjs';
+  import Text from '~/components/input/Text.vue';
 
   const supabase = useSupabaseClient<Database>();
   const isLoading = ref(true);
@@ -180,12 +181,12 @@
     <div v-else>
       <!-- Filters -->
       <div class="flex flex-col md:flex-row gap-4 mb-6">
-        <InputText2
+        <Text
           v-model="searchTerm"
           class="min-w-48 flex-1"
           label="Search by name"
           placeholder="Search by name">
-        </InputText2>
+        </Text>
 
         <div class="form-control w-full md:max-w-64">
           <label class="label">

@@ -4,6 +4,7 @@
   import type { GearItemId, TopoId } from '~/types/gear';
   import type { UnsavedRental } from '~/types/rental';
   import type { UserId } from '~/types/user';
+  import Text from '~/components/input/Text.vue';
 
   const props = defineProps<{
     boardMemberName: string;
@@ -115,18 +116,18 @@
           v-bind="userAttr" />
       </div>
 
-      <InputText2
+      <Text
         class="w-full"
         label="Board member *"
         :model-value="boardMemberName"
         :disabled="true" />
 
-      <InputText2
+      <Text
         v-model="dateBorrow"
         label="Date borrow *"
         type="date"
         v-bind="dateBorrowAttr" />
-      <InputText2
+      <Text
         v-model="dateReturn"
         label="Date return *"
         type="date"
@@ -170,7 +171,7 @@
 
     <h2>Payment</h2>
     <div class="flex flex-row items-end gap-5">
-      <InputText2
+      <Text
         v-model="depositFee"
         label="Deposit fee *"
         type="number"
@@ -178,7 +179,7 @@
         :auto-fill-with-placeholder="true"
         v-bind="depositFeeAttr">
         <template #label1><span class="mr-1">€</span></template>
-      </InputText2>
+      </Text>
       <select
         v-model="paymentMethod"
         class="select select-bordered w-min"

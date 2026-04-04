@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { useDebounceFn } from '@vueuse/core';
-  import Text2 from '~/components/input/text2.vue';
+  import Text from '~/components/input/Text.vue';
 
   definePageMeta({
     layout: false,
@@ -68,7 +68,7 @@
   <NuxtLayout name="page-with-title">
     <template #title>Rental Overview</template>
     <div class="flex flex-row w-full sm:w-2/3 items-center gap-3 mb-5">
-      <Text2
+      <Text
         v-model="searchInput"
         class="w-full"
         type="text"

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import Text from '~/components/input/Text.vue';
+
   const { data: user } = await useLuakMember();
   const { data: topos, pending, error } = await gearService().getTopoLibrary();
 
@@ -63,11 +65,11 @@
           <template #content>
             <div class="flex flex-col">
               <span class="font-bold">Search:</span>
-              <InputText2
+              <Text
                 v-model="searchTerm"
                 type="text"
                 placeholder="Search by title">
-              </InputText2>
+              </Text>
               <span class="font-bold mt-3">Type(s) of climbing:</span>
               <div class="flex flex-row flex-wrap gap-x-1 gap-y-1">
                 <InputSelectableBadge

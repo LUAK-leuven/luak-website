@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { useField } from 'vee-validate';
   import type { InputTypeHTMLAttribute } from 'vue';
-  import Text2 from '~/components/input/text2.vue';
+  import Text from '~/components/input/Text.vue';
 
   const props = withDefaults(
     defineProps<{
@@ -31,7 +31,7 @@
 </script>
 
 <template>
-  <Text2
+  <Text
     v-model="value"
     :label="label"
     :type="type"
@@ -47,5 +47,5 @@
     <template #label-end>
       <slot name="label-end" />
     </template>
-  </Text2>
+  </Text>
 </template>
