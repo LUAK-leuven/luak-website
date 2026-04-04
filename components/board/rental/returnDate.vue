@@ -20,8 +20,8 @@
 
 <template>
   <span
-    class="rounded-2xl p-1 px-2 text-nowrap"
-    :class="{ 'bg-error': isLate, 'bg-warning': isAlmostLate }">
+    class="badge"
+    :class="{ 'badge-error': isLate, 'badge-warning': isAlmostLate }">
     {{ date }}
   </span>
 </template>

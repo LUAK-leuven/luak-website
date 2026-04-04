@@ -3,6 +3,7 @@
   import type { Enums } from '~/types/database.types';
   import type { GearItemId, TopoId } from '~/types/gear';
   import { computeRentalStatusUnsafe } from '~/utils/rental/computeStatus';
+  import TextField from '~/components/input/TextField.vue';
 
   const { rental } = defineProps<{ rental: RentalDetails }>();
   const { show: showPopup } = usePopup();
@@ -155,7 +156,7 @@
       <div class="flex flex-row gap-x-1 items-center flex-wrap">
         <span class="w-max flex-shrink-0">Return date:</span>
         <span class="flex-[44] flex-shrink">
-          <InputText v-if="editMode" name="dateReturn" type="date" />
+          <TextField v-if="editMode" name="dateReturn" type="date" />
           <BoardRentalReturnDate
             v-else
             :date="rental.dateReturn"
