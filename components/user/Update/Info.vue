@@ -2,6 +2,7 @@
   import type { Database } from '~/types/database.types';
   import { yup_phone } from '~/utils/yup';
   import * as yup from 'yup';
+  import TextField from '~/components/input/TextField.vue';
 
   const supabase = useSupabaseClient<Database>();
   const user = useSupabaseUser();
@@ -59,22 +60,25 @@
   <form @submit="onSubmit">
     <h2>👩 Update Info:</h2>
     <div class="flex flex-row justify-stretch">
-      <InputText
+      <TextField
         class="mr-1"
         label="First name"
         name="firstName"
-        placeholder="Alex" />
-      <InputText
+        placeholder="Alex"
+        autocomplete="given-name" />
+      <TextField
         class="ml-1"
         label="Last name"
         name="lastName"
-        placeholder="Megos" />
+        placeholder="Megos"
+        autocomplete="family-name" />
     </div>
-    <InputText
+    <TextField
       label="Phone Number (for WhatsApp)"
       name="phoneNumber"
       placeholder="+32468123123"
-      type="tel" />
+      type="tel"
+      autocomplete="tel" />
     <InputBool name="whatsapp">Can we contact you via whatsapp?</InputBool>
     <InputBool name="newsletter">Subscribe to monthly newsletter?</InputBool>
     <div class="flex justify-end">

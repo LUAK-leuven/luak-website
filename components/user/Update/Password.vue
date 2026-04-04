@@ -2,7 +2,9 @@
   import type { Database } from '~/types/database.types';
   import * as yup from 'yup';
   import { yup_password } from '~/utils/yup';
+  import TextField from '~/components/input/TextField.vue';
 
+  const user = useSupabaseUser();
   const supabase = useSupabaseClient<Database>();
   const isChangedSuccessfull = ref(false);
   const { handleSubmit, setFieldError, isSubmitting } = useForm({
@@ -13,8 +15,10 @@
           .required()
           .oneOf([yup.ref('password')], 'Password does not match')
           .label('password'),
+        email: yup.string(),
       }),
     ),
+    initialValues: { email: user.value?.email },
   });
   const onSubmit = handleSubmit(async (submitted) => {
     const { error } = await supabase.auth.updateUser({
@@ -30,16 +34,20 @@
 <template>
   <form @submit="onSubmit">
     <h2>🔐 Change Password:</h2>
-    <InputText
+    <!-- Add a hidden email for accessibility, this way autocomplete knows for which accout the pwd is -->
+    <TextField class="hidden" name="email" autocomplete="email" disabled />
+    <TextField
       label="New password"
       name="password"
       placeholder="*******"
-      type="password" />
-    <InputText
+      type="password"
+      autocomplete="new-password" />
+    <TextField
       label="Confirm password"
       name="password2"
       placeholder="*******"
-      type="password" />
+      type="password"
+      autocomplete="new-password" />
     <div class="flex justify-end">
       <button
         class="btn btn-primary mt-2"
