@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import type { Database } from '~/types/database.types';
   import createMembershipSchema from '~/yup_schemas/createMembershipSchema';
+  import BoolField from '~/components/input/BoolField.vue';
   const { handleSubmit, isSubmitting } = useForm({
     validationSchema: toTypedSchema(createMembershipSchema),
     initialValues: { sportscard: false },
@@ -76,8 +77,8 @@
       </h2>
       <InputKbfSelect />
       <InputStudentSelect />
-      <InputBool name="sportscard">Do you have a sportscard?</InputBool>
-      <InputBool name="houserules">
+      <BoolField name="sportscard">Do you have a sportscard?</BoolField>
+      <BoolField name="houserules">
         Do you agree to the
         <NuxtLink
           class="text-primary underline"
@@ -86,7 +87,7 @@
         </NuxtLink>
         ?
         <span class="italic text-error">(required)</span>
-      </InputBool>
+      </BoolField>
 
       <div class="flex w-full justify-end">
         <div v-if="isFirstTimeMember" class="stat w-fit">

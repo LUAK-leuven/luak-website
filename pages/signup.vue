@@ -4,6 +4,7 @@
   import { yup_password, yup_phone } from '~/utils/yup';
   import TextField from '~/components/input/TextField.vue';
   import LoadingButton from '~/components/shared/LoadingButton.vue';
+  import BoolField from '~/components/input/BoolField.vue';
 
   definePageMeta({
     middleware: 'unauthenticated',
@@ -85,10 +86,10 @@
           placeholder="*******"
           type="password"
           autocomplete="new-password" />
-        <InputBool name="whatsapp">Can we contact you via whatsapp?</InputBool>
-        <InputBool name="newsletter">
+        <BoolField name="whatsapp">Can we contact you via whatsapp?</BoolField>
+        <BoolField name="newsletter">
           Subscribe to monthly newsletter?
-        </InputBool>
+        </BoolField>
 
         <div class="flex justify-center">
           <LoadingButton

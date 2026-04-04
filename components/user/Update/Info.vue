@@ -3,6 +3,7 @@
   import { yup_phone } from '~/utils/yup';
   import * as yup from 'yup';
   import TextField from '~/components/input/TextField.vue';
+  import BoolField from '~/components/input/BoolField.vue';
 
   const supabase = useSupabaseClient<Database>();
   const user = useSupabaseUser();
@@ -79,8 +80,8 @@
       placeholder="+32468123123"
       type="tel"
       autocomplete="tel" />
-    <InputBool name="whatsapp">Can we contact you via whatsapp?</InputBool>
-    <InputBool name="newsletter">Subscribe to monthly newsletter?</InputBool>
+    <BoolField name="whatsapp" >Can we contact you via whatsapp?</BoolField>
+    <BoolField name="newsletter">Subscribe to monthly newsletter?</BoolField>
     <div class="flex justify-end">
       <button
         class="btn btn-primary mt-2"

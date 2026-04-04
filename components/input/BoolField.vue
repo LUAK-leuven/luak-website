@@ -1,12 +1,13 @@
 <script setup lang="ts">
   import { useField } from 'vee-validate';
 
-  const props = defineProps({
-    name: {
-      type: String,
-      default: 'checkbox',
-    },
-  });
+  const props = withDefaults(
+    defineProps<{
+      name: string;
+      type?: 'checkbox';
+    }>(),
+    { type: 'checkbox' },
+  );
 
   const { checked, handleChange, errorMessage } = useField(
     () => props.name,
@@ -26,7 +27,7 @@
       <slot />
     </span>
     <input
-      class="checkbox"
+      :class="type"
       type="checkbox"
       :checked="checked"
       @change="handleChange" />
