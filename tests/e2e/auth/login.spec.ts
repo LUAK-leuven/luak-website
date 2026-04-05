@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { LoginPage } from './login.page';
+import { LoginPage } from '../pages/login.page';
+import { testUsers } from '../fixtures';
 
 test('Login & logout — happy path', async ({ page }) => {
   const loginPage = new LoginPage(page);
@@ -33,4 +34,13 @@ test('Login — wrong password shows "invalid login credentials" on password fie
   await expect(page.getByTestId('login.password')).toContainText(
     'Invalid login credentials',
   );
+});
+
+test('Login — already logged in redirects to profile', async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  await loginPage.login(testUsers.boardMember);
+  await page.waitForURL('/profile/overview');
+
+  await page.goto(loginPage.path);
+  await expect(page).toHaveURL('/profile/overview');
 });

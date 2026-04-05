@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 
 export class LoginPage {
   private readonly page: Page;
+  readonly path = '/login';
 
   constructor(page: Page) {
     this.page = page;
@@ -24,7 +25,7 @@ export class LoginPage {
   }
 
   async login(email: string, password: string = '123456789') {
-    await this.page.goto('/login');
+    await this.page.goto(this.path);
     await this.email.fill(email);
     await this.password.fill(password);
     await this.submitButton.click();
