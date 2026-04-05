@@ -1,33 +1,23 @@
 import { expect, test } from '@playwright/test';
-import { testUser } from '../fixtures';
+import { LoginPage } from './login.page';
 
 test('Login & logout — happy path', async ({ page }) => {
-  await testUser.login('unpaid_membership@test.com', page);
+  const loginPage = new LoginPage(page);
+  await loginPage.login('unpaid_membership@test.com');
+  await Promise.all([
+    expect(page).toHaveURL('/profile/overview'),
+    expect(page.getByTestId('nav.profile').first()).toBeVisible(),
+  ]);
 
-  expect(page).toHaveURL('/profile/overview');
-  expect(page.getByTestId('nav.profile').first()).toBeVisible();
-
-  await page
-    .getByTestId('profile.logout')
-    .click();
-  await expect(page).toHaveURL('/login');
+  await loginPage.logout();
   await expect(page.getByTestId('nav.login').first()).toBeVisible();
 });
 
 test('Login — wrong email shows "invalid login credentials" on password field', async ({
   page,
 }) => {
-  await page.goto('/login');
-  await page
-    .getByTestId('login.email')
-    .getByRole('textbox')
-    .fill('not_an_existing_account@test.com');
-  await page
-    .getByTestId('login.password')
-    .getByRole('textbox')
-    .fill('123456789');
-
-  await page.getByTestId('login.submit').click();
+  const loginPage = new LoginPage(page);
+  await loginPage.login('not_an_existing_account@test.com');
 
   await expect(page.getByTestId('login.password')).toContainText(
     'Invalid login credentials',
@@ -37,17 +27,8 @@ test('Login — wrong email shows "invalid login credentials" on password field'
 test('Login — wrong password shows "invalid login credentials" on password field', async ({
   page,
 }) => {
-  await page.goto('/login');
-  await page
-    .getByTestId('login.email')
-    .getByRole('textbox')
-    .fill('paid_this_year@test.com');
-  await page
-    .getByTestId('login.password')
-    .getByRole('textbox')
-    .fill('wronggggg');
-
-  await page.getByTestId('login.submit').click();
+  const loginPage = new LoginPage(page);
+  await loginPage.login('paid_this_year@test.com', 'wrong_password');
 
   await expect(page.getByTestId('login.password')).toContainText(
     'Invalid login credentials',

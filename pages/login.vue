@@ -55,7 +55,11 @@
             Forgot password?
           </NuxtLink>
         </div>
-        <LoadingButton class="w-full" text="Log in" :click-handler="onSubmit" />
+        <LoadingButton
+          class="w-full"
+          text="Log in"
+          :click-handler="onSubmit"
+          data-testId="login.submit" />
       </form>
       <div class="divider">OR</div>
       <NuxtLink to="/signup">
