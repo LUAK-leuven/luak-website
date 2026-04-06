@@ -18,7 +18,7 @@
 
     <template v-if="subTitle" #subtitle>
       <h2 class="mt-0">{{ subTitle }}</h2>
-      <i class="text-sm">{{ data?.id }}</i>
+      <i class="text-sm" data-testId="detailsPage.id">{{ data?.id }}</i>
     </template>
 
     <SharedBackButton v-if="backTo" :to="backTo" />

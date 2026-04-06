@@ -3,6 +3,7 @@ import { RentalFormPage } from './pages/rental-form.page';
 import { LoginPage } from './pages/login.page';
 import { testUsers } from './fixtures';
 import dayjs from 'dayjs';
+import { RentalDetailsPage } from '~/tests/e2e/pages/rental-details.page';
 
 test.describe('create a new rental', async () => {
   test.beforeEach(async ({ page }) => {
@@ -29,9 +30,23 @@ test.describe('create a new rental', async () => {
 
   test('create - can submit a minimal rental', async ({ page }) => {
     const rentalFormPage = new RentalFormPage(page);
-
-    await rentalFormPage.submitMinimal({member: testUsers.paidMembership, paymentMethod: 'cash'})
+    const member = testUsers.paidMembership;
+    await rentalFormPage.submitMinimal({
+      member: member,
+      paymentMethod: 'cash',
+    });
 
     await expect(page).toHaveURL(/\/board\/rentals\/[d-]*/);
+
+    const rentalDetailsPage = new RentalDetailsPage(page);
+    await rentalDetailsPage.expectToHave({
+      memberEmail: member,
+      dateBorrow: dayjs(),
+      dateReturn: dayjs().add(3, 'w'),
+      depositFee: 20,
+      paymentMethod: 'cash',
+      status: 'Not returned',
+      comments: '',
+    });
   });
 });

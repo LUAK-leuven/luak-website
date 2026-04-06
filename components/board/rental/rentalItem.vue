@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import Number from '~/components/input/Number.vue';
+  import NumberInput from '~/components/input/Number.vue';
 
   defineProps<{
     name: string;
@@ -36,7 +36,7 @@
     </button>
   </div>
   <div class="border p-1 flex flex-row items-center">
-    <Number
+    <NumberInput
       v-if="editMode"
       :class="{
         'animate-bounceInput': bouncing,
