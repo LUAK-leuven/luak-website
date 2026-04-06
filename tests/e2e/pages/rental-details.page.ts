@@ -52,7 +52,7 @@ export class RentalDetailsPage {
     return this.page.getByTestId('comments');
   }
 
-  async expectToHave(_args: {
+  async expectToHave(args: {
     memberEmail: string;
     dateBorrow: Dayjs;
     dateReturn: Dayjs;
@@ -60,10 +60,8 @@ export class RentalDetailsPage {
     paymentMethod: 'cash' | 'transfer';
     status: 'Not returned' | 'Partially returned' | 'Returned' | 'Reserved';
     comments: string;
+    items: [string, number][];
   }) {
-    const args = {
-      ..._args,
-    };
     await expect(this.member.email).toHaveText(args.memberEmail);
     await expect(this.boardMember).toContainText(testUsers.boardMember);
     await expect(this.dateBorrow).toHaveText(
@@ -77,6 +75,16 @@ export class RentalDetailsPage {
     await expect(this.status).toHaveText(args.status);
     if (args.comments === '') await expect(this.comments).toBeHidden();
     else await expect(this.comments).toHaveText(args.comments);
+
+    for (const [title, amount] of args.items) {
+      const titleLocator = this.page
+        .getByTestId('gear-and-topos-overview')
+        .getByText(title);
+      await expect(titleLocator).toBeVisible();
+      await expect(
+        titleLocator.locator('xpath=following-sibling::*[1]'),
+      ).toHaveText(amount.toString());
+    }
 
     return this.getRentalId();
   }

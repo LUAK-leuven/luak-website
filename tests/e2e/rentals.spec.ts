@@ -32,10 +32,11 @@ test.describe('create a new rental', async () => {
   test('create - can submit a minimal rental', async ({ page }) => {
     const rentalFormPage = new RentalFormPage(page);
     const member = testUsers.paidMembership;
-    await rentalFormPage.submitMinimal({
+    await rentalFormPage.fillForm({
       member: member,
       paymentMethod: 'cash',
     });
+    await rentalFormPage.submit();
 
     await expect(page).toHaveURL(/\/board\/rentals\/[d-]*/);
 
@@ -48,6 +49,44 @@ test.describe('create a new rental', async () => {
       paymentMethod: 'cash',
       status: 'Not returned',
       comments: '',
+      items: [],
+    });
+
+    const rentalsOverviewPage = new RentalsOverviewPage(page);
+    await page.goto(rentalsOverviewPage.path);
+
+    await expect(rentalsOverviewPage.rentalSummary(rentalId)).toBeVisible();
+  });
+
+  test('create - can submit a full rental', async ({ page }) => {
+    const rentalFormPage = new RentalFormPage(page);
+    const formValues = {
+      member: testUsers.paidMembership,
+      dateBorrow: dayjs().subtract(2, 'd'),
+      dateReturn: dayjs().subtract(2, 'd').add(4, 'w'),
+      comments: 'yeeehaah',
+      depositFee: 50,
+      paymentMethod: 'cash' as const,
+    };
+
+    await rentalFormPage.fillForm(formValues);
+    await rentalFormPage.addItem('gear', 'quickdraw', 14);
+    await rentalFormPage.addItem('gear', 'single rope 000');
+    await rentalFormPage.addItem('topos', 'ailefriode');
+    await rentalFormPage.submit();
+
+    await expect(page).toHaveURL(/\/board\/rentals\/[d-]*/);
+
+    const rentalDetailsPage = new RentalDetailsPage(page);
+    const rentalId = await rentalDetailsPage.expectToHave({
+      ...formValues,
+      memberEmail: formValues.member,
+      status: 'Not returned',
+      items: [
+        ['quickdraw', 14],
+        ['single rope 000', 1],
+        ['ailefriode', 1],
+      ],
     });
 
     const rentalsOverviewPage = new RentalsOverviewPage(page);

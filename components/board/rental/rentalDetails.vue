@@ -206,11 +206,15 @@
           <textarea class="textarea textarea-bordered" v-bind="field" />
         </Field>
 
-        <p v-else class="italic" data-testId="comments">{{ rental.comments }}</p>
+        <p v-else class="italic" data-testId="comments">
+          {{ rental.comments }}
+        </p>
       </div>
     </div>
     <hr class="my-3" />
-    <div class="grid grid-cols-[3fr_1fr_1fr] border rounded-sm">
+    <div
+      class="grid grid-cols-[3fr_1fr_1fr] border rounded-sm"
+      data-testId="gear-and-topos-overview">
       <b class="border px-1">Gear</b>
       <b class="border px-1">Amount</b>
       <b class="border px-1">Returned amount</b>
