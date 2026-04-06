@@ -1,8 +1,9 @@
 <script setup lang="ts">
   import type { RentalId, UnsavedRental } from '~/types/rental';
   import { computeRentalStatus } from '~/utils/rental/computeStatus';
+  import { useToast } from '~/composables/useToast';
 
-  const { show: showPopup } = usePopup();
+  const { show: showPopup } = useToast();
   const route = useRoute();
   const rentalId = route.params.id as RentalId;
 

@@ -5,9 +5,10 @@
   import { computeRentalStatusUnsafe } from '~/utils/rental/computeStatus';
   import TextField from '~/components/input/TextField.vue';
   import PaymentModal from '~/components/PaymentModal.vue';
+  import { useToast } from '~/composables/useToast';
 
   const { rental } = defineProps<{ rental: RentalDetails }>();
-  const { show: showPopup } = usePopup();
+  const { show: showPopup } = useToast();
 
   const formSchema = computed(() =>
     yup.object({

@@ -2,8 +2,9 @@
   import dayjs from 'dayjs';
   import PaymentModal from '~/components/PaymentModal.vue';
   import type { RentalId, UnsavedRental } from '~/types/rental';
+  import { useToast } from '~/composables/useToast';
 
-  const { show: showPopup } = usePopup();
+  const { show: showPopup } = useToast();
   const showPaymentModal = ref(false);
   const depositFee = ref<number>();
   const rentalId = ref<RentalId>();
