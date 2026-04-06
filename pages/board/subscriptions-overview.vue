@@ -1,12 +1,11 @@
 <script lang="ts" setup>
   import type { Database } from '~/types/database.types';
   import {
-    formatStudentStatus,
     formatKbfUiaaStatus,
+    formatStudentStatus,
   } from '~/components/profile/helpers';
   import dayjs from 'dayjs';
-
-  definePageMeta({ middleware: 'board-member-guard' });
+  import Text from '~/components/input/Text.vue';
 
   const supabase = useSupabaseClient<Database>();
   const isLoading = ref(true);
@@ -65,7 +64,7 @@
       if (fetchError) throw fetchError;
 
       // Format the data to match our needs
-      const formattedData = data
+      subscriptions.value = data
         .flatMap((user) =>
           user.Memberships.map((membership) => ({
             id: membership.id,
@@ -82,9 +81,7 @@
             has_paid: membership.Payments.some((payment) => payment.approved),
           })),
         )
-        .filter((sub) => sub.name); // Ensure we have a name
-
-      subscriptions.value = formattedData;
+        .filter((sub) => sub.name);
       error.value = null;
     } catch (err) {
       console.error('Error fetching subscriptions:', err);
@@ -182,12 +179,12 @@
     <div v-else>
       <!-- Filters -->
       <div class="flex flex-col md:flex-row gap-4 mb-6">
-        <InputText2
+        <Text
           v-model="searchTerm"
           class="min-w-48 flex-1"
           label="Search by name"
           placeholder="Search by name">
-        </InputText2>
+        </Text>
 
         <div class="form-control w-full md:max-w-64">
           <label class="label">

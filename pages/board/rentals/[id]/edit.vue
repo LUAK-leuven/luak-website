@@ -1,8 +1,6 @@
 <script setup lang="ts">
-  import type { RentalId, UnsavedRental } from '~/types/renal';
+  import type { RentalId, UnsavedRental } from '~/types/rental';
   import { computeRentalStatus } from '~/utils/rental/computeStatus';
-
-  definePageMeta({ middleware: 'board-member-guard' });
 
   const { show: showPopup } = usePopup();
   const route = useRoute();
@@ -42,7 +40,7 @@
   );
 
   async function handleSubmit(state: Omit<UnsavedRental, 'boardMemberId'>) {
-    if (!!rental.value) {
+    if (rental.value) {
       for (const { gearItemId: id } of rental.value.gear) {
         if (!state.gear[id]) {
           state.gear[id] = 0;
@@ -96,11 +94,7 @@
       Rental-id: <i>{{ rental?.id }}</i>
     </template>
 
-    <NuxtLink
-      class="absolute btn btn-circle btn-sm btn-outline top-10 left-10"
-      to="/board/rentals">
-      <span class="material-symbols-outlined">arrow_back</span>
-    </NuxtLink>
+    <SharedBackButton :to="`/board/rentals/${rental?.id}`" />
 
     <div
       v-if="rentalPending || gearPending || toposPending"

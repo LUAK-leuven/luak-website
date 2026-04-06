@@ -1,5 +1,3 @@
-import type { K } from 'vue-router/dist/router-CWoNjPRp.mjs';
-
 export function sum(array: number[]): number {
   return array.reduce((sum, current) => sum + current, 0);
 }
@@ -9,6 +7,11 @@ export function sumOf<T extends Record<K, number>, K extends keyof T>(
   key: K,
 ): number {
   return array.reduce((sum, current) => sum + current[key], 0);
+}
+
+ 
+export function sumBy<T>(array: T[], getValue: (i: T) => number): number {
+  return array.reduce((sum, current) => sum + getValue(current), 0);
 }
 
 export function single<T>(array: T[]): T | undefined {
@@ -74,4 +77,11 @@ export function sortBy<T extends Record<K, string>, K extends keyof T>(
         ? 0
         : 1,
   );
+}
+
+export function min<T>(arr: T[], predicate: (a: T, b: T) => boolean): T | null {
+  return arr.reduce<T | null>((minVal, it) => {
+    if (minVal === null) return it;
+    return predicate(minVal, it) ? minVal : it;
+  }, null);
 }

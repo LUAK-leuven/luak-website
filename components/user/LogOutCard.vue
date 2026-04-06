@@ -15,7 +15,12 @@
       <strong>{{ user?.email }}</strong>
     </template>
     <template #actions>
-      <button class="btn btn-error" @click="logout">Log out</button>
+      <button
+        class="btn btn-error"
+        data-testId="profile.logout"
+        @click="logout">
+        Log out
+      </button>
     </template>
   </UserCard>
 </template>

@@ -22,8 +22,11 @@ export default defineNuxtConfig({
     redirectOptions: {
       login: '/login',
       callback: '/confirmLogin',
-      include: ['/profile(/*)?', '/stories(/*)?', '/topo-library'],
+      include: ['/profile(/*)?', '/stories(/*)?', '/topo(/*)?'],
       saveRedirectToCookie: true,
+    },
+    cookieOptions: {
+      secure: process.env.NODE_ENV === 'production',
     },
   },
   runtimeConfig: {

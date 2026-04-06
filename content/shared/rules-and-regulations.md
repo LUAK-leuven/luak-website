@@ -180,7 +180,7 @@ Dit huishoudelijk reglement treedt in werking d.d. 21 september 2006
 Gear Rules
 
 #content
-:include-content{content="gear_rules"}
+:include-content{content="gear-rules"}
 ::
 
 ::collapsable

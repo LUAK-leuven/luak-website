@@ -8,6 +8,7 @@ dist
 
 # Node dependencies
 node_modules
+.tool-versions
 
 # Logs
 logs
@@ -17,8 +18,17 @@ logs
 .DS_Store
 .fleet
 .idea
+.vscode
+.opencode
+/planning/
 
 # Local env files
 .env
 .env.*
 !.env.example
+!.env.local
+
+# Playwright
+/test-results/
+/playwright-report/
+tests/e2e/.auth/

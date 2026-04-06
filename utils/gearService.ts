@@ -1,11 +1,10 @@
 import type { Database } from '~/types/database.types';
-import { groupBy } from './utils';
 import type {
   ContactInfo,
   RentalId,
   RentalUpdate,
   UnsavedRental,
-} from '~/types/renal';
+} from '~/types/rental';
 import type { GearInventoryId, GearItemId, TopoId } from '~/types/gear';
 import type { UserId } from '~/types/user';
 
@@ -42,61 +41,19 @@ class GearService {
 
         return gear.map((gearItem) => {
           const totalAmount = sumOf(gearItem.GearInventory, 'amount');
+          const rentedAmount = sumBy(
+            gearItem.RentedGear,
+            ({ rented_amount, returned_amount }) =>
+              rented_amount - returned_amount,
+          );
           return {
             id: gearItem.id as GearItemId,
             name: gearItem.name,
             totalAmount: totalAmount,
-            availableAmount:
-              totalAmount - getActualRentedAmount(gearItem.RentedGear),
+            availableAmount: totalAmount - rentedAmount,
             depositFee: gearItem.deposit_fee,
           };
         });
-      },
-      { lazy: true },
-    );
-  }
-
-  public async getGearInventory() {
-    return useAsyncData(
-      'gearInventory',
-      async () => {
-        const { data, error } = await this.supabase
-          .from('GearInventory')
-          .select(
-            `
-          id,
-          details,
-          purchase_date,
-          production_date,
-          amount,
-          GearItems(
-            name,
-            lifespan
-          )
-          `,
-          )
-          .eq('status', 'available');
-        if (data === null) {
-          console.warn(error);
-          return [];
-        }
-
-        const gear = Object.entries(
-          groupBy(data, (x) => x.GearItems?.name ?? ''),
-        );
-
-        return gear.map(([k, v]) => ({
-          lifespan: v[0].GearItems?.lifespan ?? 0,
-          name: k,
-          totalAmount: sumOf(v, 'amount'),
-          gearInventory: v.map((x) => ({
-            id: x.id as GearInventoryId,
-            details: x.details,
-            purchaseDate: x.purchase_date ?? undefined,
-            productionDate: x.production_date ?? undefined,
-            amount: x.amount,
-          })),
-        }));
       },
       { lazy: true },
     );
@@ -131,7 +88,12 @@ class GearService {
           title: topo.title,
           totalAmount: topo.amount,
           availableAmount:
-            topo.amount - getActualRentedAmount(topo.RentedTopos),
+            topo.amount -
+            sumBy(
+              topo.RentedTopos,
+              ({ rented_amount, returned_amount }) =>
+                rented_amount - returned_amount,
+            ),
         }));
       },
       { lazy: true },
@@ -266,7 +228,7 @@ class GearService {
         if (error || rental === null) {
           console.warn(`failed to load rental ${rentalId}`, error);
           console.info('rental:', rental);
-          return undefined;
+          return null;
         }
 
         const contactInfo: ContactInfo = rental.member
@@ -405,18 +367,24 @@ class GearService {
           depositFee: rental.deposit,
           depositReturned: rental.deposit_returned,
           status: rental.status,
-          gear: rental.RentedGear.map((gearItem) => ({
-            gearItemId: gearItem.GearItems!.id as GearItemId,
-            name: gearItem.GearItems!.name,
-            rentedAmount: gearItem.rented_amount,
-            returnedAmount: gearItem.returned_amount,
-          })),
-          topos: rental.RentedTopos.map((topo) => ({
-            topoId: topo.Topos!.id as TopoId,
-            title: topo.Topos!.title,
-            rentedAmount: topo.rented_amount,
-            returnedAmount: topo.returned_amount,
-          })),
+          gear: sortBy(
+            rental.RentedGear.map((gearItem) => ({
+              gearItemId: gearItem.GearItems!.id as GearItemId,
+              name: gearItem.GearItems!.name,
+              rentedAmount: gearItem.rented_amount,
+              returnedAmount: gearItem.returned_amount,
+            })),
+            'name',
+          ),
+          topos: sortBy(
+            rental.RentedTopos.map((topo) => ({
+              topoId: topo.Topos!.id as TopoId,
+              title: topo.Topos!.title,
+              rentedAmount: topo.rented_amount,
+              returnedAmount: topo.returned_amount,
+            })),
+            'title',
+          ),
           paymentMethod: rental.payment_method,
         }));
       },
@@ -458,7 +426,7 @@ class GearService {
 
   public async getTopoLibrary() {
     return useAsyncData(
-      'allTopos',
+      'topoLibrary',
       async () => {
         const { data: topos, error } = await this.supabase
           .from('Topos')
@@ -488,23 +456,44 @@ class GearService {
     );
   }
 
-  public async getTopo(topoId: TopoId) {
+  public async getTopoDetails(topoId: TopoId) {
     return useAsyncData(
       `topo-${topoId}`,
       async () => {
         const { data: topo, error } = await this.supabase
           .from('Topos')
-          .select('*')
+          .select(
+            `
+            *,
+            RentedTopos(
+              rental_id,
+              rented_amount,
+              returned_amount,
+              Rentals(
+                Users!member_id(
+                  first_name,
+                  last_name
+                ),
+                contact_info
+              )
+            )`,
+          )
           .eq('id', topoId)
           .single();
 
-        if (topo === null) {
+        if (topo === null || error) {
           console.warn(`getTopo(${topoId})`, error);
           return undefined;
         }
 
+        const rentedAmount = sumBy(
+          topo.RentedTopos,
+          (rt) => rt.rented_amount - rt.returned_amount,
+        );
+
         return {
-          amount: topo.amount,
+          totalAmount: topo.amount,
+          availableAmount: topo.amount - rentedAmount,
           authors: topo.authors,
           condition: topo.condition,
           countries: topo.countries,
@@ -516,21 +505,163 @@ class GearService {
           title: topo.title,
           types_of_climbing: topo.types_of_climbing,
           year_published: topo.year_published,
+          rentals: topo.RentedTopos.filter(
+            (r) => r.rented_amount !== r.returned_amount,
+          ).map((r) => ({
+            id: r.rental_id as RentalId,
+            amount: r.rented_amount - r.returned_amount,
+            memberName: r.Rentals.Users
+              ? getFullName(r.Rentals.Users)
+              : r.Rentals.contact_info
+                ? (JSON.parse(r.Rentals.contact_info) as ContactInfo).fullName
+                : 'Failed to get name',
+          })),
         };
       },
       { lazy: true },
     );
   }
-}
 
-function getActualRentedAmount(
-  arr: { rented_amount: number; returned_amount: number }[],
-): number {
-  return arr.reduce(
-    (sum, { rented_amount, returned_amount }) =>
-      sum + (rented_amount - returned_amount),
-    0,
-  );
+  public getGearItemDetails(gearItemId: GearItemId) {
+    return useAsyncData(
+      `gearItem-${gearItemId}`,
+      async () => {
+        const { data, error } = await this.supabase
+          .from('GearItems')
+          .select(
+            `
+          id,
+          name,
+          lifespan,
+          deposit_fee,
+          GearInventory(
+            id,
+            details,
+            purchase_date,
+            production_date,
+            amount,
+            status
+          ),
+          RentedGear(
+            rental_id,
+            rented_amount,
+            returned_amount,
+            Rentals(
+              Users!member_id(
+                first_name,
+                last_name
+              ),
+              contact_info
+            )
+          )
+          `,
+          )
+          .eq('id', gearItemId)
+          .single();
+        if (data === null) {
+          console.warn('gearItem', error);
+          return null;
+        }
+
+        const totalAmount = sumBy(data.GearInventory, (i) =>
+          i.status === 'available' ? i.amount : 0,
+        );
+        const rentedAmount = sumBy(
+          data.RentedGear,
+          (rg) => rg.rented_amount - rg.returned_amount,
+        );
+
+        return {
+          id: data.id as GearItemId,
+          name: data.name,
+          lifespan: data.lifespan,
+          depositFee: data.deposit_fee,
+          totalAmount,
+          availableAmount: totalAmount - rentedAmount,
+          inventory: data.GearInventory.map((i) => {
+            return {
+              id: i.id as GearInventoryId,
+              details: i.details,
+              purchaseDate: i.purchase_date ?? undefined,
+              productionDate: i.production_date ?? undefined,
+              amount: i.amount,
+              status: i.status,
+            };
+          }),
+          rentals: data.RentedGear.filter(
+            (r) => r.rented_amount !== r.returned_amount,
+          ).map((r) => ({
+            id: r.rental_id as RentalId,
+            amount: r.rented_amount - r.returned_amount,
+            memberName: r.Rentals.Users
+              ? getFullName(r.Rentals.Users)
+              : r.Rentals.contact_info
+                ? (JSON.parse(r.Rentals.contact_info) as ContactInfo).fullName
+                : 'Failed to get name',
+          })),
+        };
+      },
+      { lazy: true },
+    );
+  }
+
+  public async getGearInventory() {
+    return useAsyncData(
+      'gearInventory',
+      async () => {
+        const { data: gear, error } = await this.supabase
+          .from('GearItems')
+          .select(
+            `
+            id,
+            name,
+            lifespan,
+            GearInventory (
+              id,
+              details,
+              production_date,
+              purchase_date,
+              amount
+            ),
+            RentedGear (
+              rented_amount,
+              returned_amount
+            )
+          `,
+          )
+          .eq('GearInventory.status', 'available')
+          .order('name');
+
+        if (error || gear === null) {
+          console.warn('getAllGearItems:', error);
+          return [];
+        }
+
+        return gear.map((gearItem) => {
+          const totalAmount = sumOf(gearItem.GearInventory, 'amount');
+          const rentedAmount = sumBy(
+            gearItem.RentedGear,
+            ({ rented_amount, returned_amount }) =>
+              rented_amount - returned_amount,
+          );
+          return {
+            id: gearItem.id as GearItemId,
+            name: gearItem.name,
+            totalAmount: totalAmount,
+            availableAmount: totalAmount - rentedAmount,
+            lifespan: gearItem.lifespan,
+            inventory: gearItem.GearInventory.map((i) => ({
+              id: i.id as GearInventoryId,
+              details: i.details,
+              productionDate: i.production_date,
+              purchaseDate: i.purchase_date,
+            })),
+          };
+        });
+      },
+      { lazy: true },
+    );
+  }
 }
 
 let gearServiceInstance: GearService | undefined = undefined;

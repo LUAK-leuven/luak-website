@@ -1,5 +1,11 @@
 <script setup lang="ts">
   import * as yup from 'yup';
+  import TextField from '~/components/input/TextField.vue';
+  import LoadingButton from '~/components/shared/LoadingButton.vue';
+
+  definePageMeta({
+    middleware: 'unauthenticated',
+  });
 
   const supabase = useSupabaseClient();
   const redirect = useRoute().query['redirect'] as string;
@@ -8,7 +14,7 @@
     email: yup.string().required().email(),
     password: yup.string().required(),
   });
-  const { handleSubmit, isSubmitting, setFieldError } = useForm({
+  const { handleSubmit, setFieldError } = useForm({
     validationSchema: toTypedSchema(formSchema),
   });
 
@@ -21,7 +27,7 @@
       setFieldError('password', error.message);
     } else {
       const path = redirect ?? '/profile/overview';
-      return reloadNuxtApp({ path });
+      return navigateTo(path);
     }
   });
 </script>
@@ -29,30 +35,31 @@
   <div class="relative flex flex-wrap justify-center z-2 bg-base-300">
     <div
       class="bg-base-100 shadow-md rounded w-10/12 lg:w-8/12 xl:w-1/3 mb-28 z-10 mt-8 p-5 sm:p-20">
-      <form @submit="onSubmit">
-        <InputText
+      <form @submit.prevent>
+        <TextField
           label="Email"
           name="email"
           placeholder="youremail@example.com"
-          type="email" />
-        <InputText
+          type="email"
+          autocomplete="email"
+          data-testId="login.email" />
+        <TextField
           label="Password"
           name="password"
           placeholder="*******"
-          type="password" />
+          type="password"
+          autocomplete="current-password"
+          data-testId="login.password" />
         <div class="flex flex-row justify-end">
-          <NuxtLink class="underline my-2" to="/resetpassword">
+          <NuxtLink class="underline my-2" to="/forgot-password">
             Forgot password?
           </NuxtLink>
         </div>
-        <div>
-          <button class="btn btn-primary w-full p-5">
-            <span v-if="isSubmitting" class="loading loading-spinner">
-              loading
-            </span>
-            <span v-else>Sign in</span>
-          </button>
-        </div>
+        <LoadingButton
+          class="w-full"
+          text="Log in"
+          :click-handler="onSubmit"
+          data-testId="login.submit" />
       </form>
       <div class="divider">OR</div>
       <NuxtLink to="/signup">

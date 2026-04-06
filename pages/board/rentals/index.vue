@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import { useDebounceFn } from '@vueuse/core';
+  import Text from '~/components/input/Text.vue';
 
   definePageMeta({
-    middleware: 'board-member-guard',
     layout: false,
   });
 
@@ -33,8 +33,7 @@
   const debounceFn = useDebounceFn((value) => value, 250);
   const searchTerm = ref<string>();
   effect(async () => {
-    const debounced = await debounceFn(searchInput.value);
-    searchTerm.value = debounced;
+    searchTerm.value = await debounceFn(searchInput.value);
   });
   const showReturned = ref<boolean>();
 
@@ -68,8 +67,8 @@
 <template>
   <NuxtLayout name="page-with-title">
     <template #title>Rental Overview</template>
-    <form class="flex flex-row w-full sm:w-2/3 items-center gap-3 mb-5">
-      <InputText
+    <div class="flex flex-row w-full sm:w-2/3 items-center gap-3 mb-5">
+      <Text
         v-model="searchInput"
         class="w-full"
         type="text"
@@ -86,14 +85,15 @@
           class="toggle toggle-lg toggle-primary"
           type="checkbox" />
       </div>
-    </form>
+    </div>
     <span v-if="pending" class="loading loading-dots loading-lg"></span>
     <NuxtLink
       v-for="rental in filteredRentals"
       v-else
       :key="rental.id"
       class="bg-base-100 shadow-md w-full shrink-0 grow-0 rounded-xl px-8 py-6 md:p-5 hover:shadow-lg hover:bg-base-200 active:bg-base-300"
-      :to="`/board/rentals/${rental.id}`">
+      :to="`/board/rentals/${rental.id}`"
+      :data-testId="`rental-${rental.id}`">
       <BoardRentalSummary :rental="rental" />
     </NuxtLink>
   </NuxtLayout>

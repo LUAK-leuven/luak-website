@@ -8,7 +8,7 @@
     <template v-else>
       <h2>Hi {{ user.userInfo?.first_name ?? 'LUAK member' }} 👋</h2>
       Welcome to your profile page. Here you can manage your membership! In the
-      future more functionaity will be added.
+      future more functionality will be added.
       <div class="my-5 mx-2 flex flex-wrap justify-evenly gap-x-4">
         <UserMembershipCard v-if="user.hasActiveMembership" />
         <UserBuyMembershipCard v-else />

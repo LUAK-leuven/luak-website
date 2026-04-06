@@ -1,6 +1,6 @@
 import type { Database } from '~/types/database.types';
 
-export default async function () {
+export async function useMemberService() {
   const user = useSupabaseUser();
 
   const { data: paidMemberships, error } = await useAsyncData(

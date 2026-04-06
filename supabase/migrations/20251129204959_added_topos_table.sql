@@ -1,4 +1,4 @@
-create type "public"."topo_condition" as enum ('as_good_as_new', 'good', 'used', 'damaged');
+create type "public"."topo_condition" as enum ('as_good_as_new', 'good', 'used', 'damaged', 'falling_appart');
 
 create table "public"."RentedTopos" (
     "id" uuid not null default gen_random_uuid(),

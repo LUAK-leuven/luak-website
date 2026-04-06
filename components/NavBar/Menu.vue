@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import { toggleCloseFix } from '~/utils/toggleCloseFix';
+
   const props = defineProps<{ id?: string }>();
 
   const { data: info_navigation } = await useAsyncData('info_navigation', () =>
@@ -16,9 +18,9 @@
   };
 
   onMounted(() => {
-    useToggleCloseFix('info-toggle');
-    useToggleCloseFix('board-toggle');
-    useToggleCloseFix('member-toggle');
+    toggleCloseFix('info-toggle');
+    toggleCloseFix('board-toggle');
+    toggleCloseFix('member-toggle');
 
     if (props.id !== undefined) {
       // Fix drawer closing by closing drawer on click
@@ -57,7 +59,7 @@
       </details>
     </li>
     <li v-if="!user.isMember">
-      <NuxtLink to="/pages/become_a_member">Become a member</NuxtLink>
+      <NuxtLink to="/pages/become-a-member">Become a member</NuxtLink>
     </li>
     <li v-if="user.isMember">
       <details id="member-toggle">
@@ -66,7 +68,7 @@
           <li><NuxtLink to="/stories">Stories</NuxtLink></li>
           <li><NuxtLink to="/topos/library">Topo Library</NuxtLink></li>
           <li>
-            <NuxtLink to="/pages/christmas_bets">Christmas Bets</NuxtLink>
+            <NuxtLink to="/pages/christmas-bets">Christmas Bets</NuxtLink>
           </li>
         </ul>
       </details>
@@ -81,13 +83,13 @@
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/board/rental-form"> 🧗 Rental form </NuxtLink>
+            <NuxtLink to="/board/rentals/form"> 🧗 Rental form </NuxtLink>
           </li>
           <li>
             <NuxtLink to="/board/rentals"> 👀 Rental overview </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/board/gear-overview"> ⚙️ Gear overview </NuxtLink>
+            <NuxtLink to="/board/gear"> ⚙️ Gear overview </NuxtLink>
           </li>
           <li>
             <a href="/_studio"> 📝 Studio Mode </a>
@@ -101,10 +103,15 @@
     <NuxtLink
       v-if="user.userInfo === undefined"
       class="btn btn-primary btn-outline"
-      to="/profile/overview">
+      to="/profile/overview"
+      data-testId="nav.login">
       Log In
     </NuxtLink>
-    <NuxtLink v-else class="btn btn-primary btn-outline" to="/profile/overview">
+    <NuxtLink
+      v-else
+      class="btn btn-primary btn-outline"
+      to="/profile/overview"
+      data-testId="nav.profile">
       My Profile
     </NuxtLink>
   </ul>

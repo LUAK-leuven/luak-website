@@ -24,47 +24,47 @@ type RentalFormState = {
   comments: string | undefined;
 };
 
-export default function (
+function selectionFrom<T extends EntityId<unknown>>(
+  selection: { id: T; name: string; totalAmount: number }[],
+) {
+  return yup
+    .object<Record<T, number>>()
+    .default(() => ({}) as Record<T, number>)
+    .required()
+    .test(function (items: Record<T, number>) {
+      for (const [id, amount] of Object.entries(items) as [T, number][]) {
+        const item = selection.find((x) => x.id === id);
+        if (item === undefined) {
+          console.warn(
+            `Could not find item ${id} in ${selection.map((x) => x.id).toString()}!`,
+          );
+          return this.createError({
+            path: `${this.path}.${id}`,
+            message: `Error: item with id ${id} cannot be found in the inventory.`,
+          });
+        }
+        if (amount <= 0) {
+          return this.createError({
+            path: `${this.path}.${id}`,
+            message: `Value for ${item.name} must be a positive number.`,
+          });
+        }
+        if (amount > item.totalAmount) {
+          return this.createError({
+            path: `${this.path}.${id}`,
+            message: `Value for ${item.name} cannot exceed ${item.totalAmount}`,
+          });
+        }
+      }
+      return true;
+    });
+}
+
+export function useRentalForm(
   initialState: Partial<RentalFormState>,
   allGear: RentalItem<GearItemId>[],
   allTopos: RentalItem<TopoId>[],
 ) {
-  const selectionFrom = <T extends EntityId<unknown>>(
-    selection: { id: T; name: string; totalAmount: number }[],
-  ) => {
-    return yup
-      .object<Record<T, number>>()
-      .default(() => ({}) as Record<T, number>)
-      .required()
-      .test(function (items: Record<T, number>) {
-        for (const [id, amount] of Object.entries(items) as [T, number][]) {
-          const item = selection.find((x) => x.id === id);
-          if (item === undefined) {
-            console.warn(
-              `Could not find item ${id} in ${selection.map((x) => x.id).toString()}!`,
-            );
-            return this.createError({
-              path: `${this.path}.${id}`,
-              message: `Error: item with id ${id} cannot be found in the inventory.`,
-            });
-          }
-          if (amount <= 0) {
-            return this.createError({
-              path: `${this.path}.${id}`,
-              message: `Value for ${item.name} must be a positive number.`,
-            });
-          }
-          if (amount > item.totalAmount) {
-            return this.createError({
-              path: `${this.path}.${id}`,
-              message: `Value for ${item.name} cannot exceed ${item.totalAmount}`,
-            });
-          }
-        }
-        return true;
-      });
-  };
-
   const formSchema: yup.ObjectSchema<RentalFormState> = yup.object({
     memberId: yup
       .string<UserId | 'non-user'>()

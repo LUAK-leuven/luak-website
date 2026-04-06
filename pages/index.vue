@@ -17,7 +17,10 @@
     <div class="hero-overlay bg-opacity-60" />
     <div class="hero-content text-left text-neutral-content my-20">
       <div class="max-w-md">
-        <NuxtImg src="/luak-logo-white.png" :placeholder="[448, 221]" />
+        <NuxtImg
+          src="/luak-logo-white.png"
+          :placeholder="[448, 221]"
+          data-testId="luak-logo" />
         <p class="mb-5 text-lg">
           Leuvense Universitaire Alpinisten Klub ⛰️ Alpine club in leuven for
           outdoors lovers from beginners to more seasoned climbers 🧗
@@ -43,7 +46,7 @@
     </div>
   </div>
   <div class="relative flex flex-wrap justify-center z-2 bg-base-300">
-    <PageCard class="mt-[-5em] p-5">
+    <PageCard class="mt-[-5em]">
       <NuxtLink to="/news">
         <h1 class="w-full text-center text-6xl mt-10 mb-5">News</h1>
       </NuxtLink>
@@ -57,7 +60,7 @@
         </NuxtLink>
       </div>
     </PageCard>
-    <PageCard class="p-5 mt-5">
+    <PageCard class="mt-5">
       <NuxtLink to="/activities">
         <h1 class="w-full text-center text-6xl my-10">Activities</h1>
       </NuxtLink>
