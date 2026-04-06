@@ -113,6 +113,7 @@
           v-model:email="contactInfo.email.value"
           v-model:phone="contactInfo.phone.value"
           :disable="props.initialValues.memberId !== undefined"
+          data-testId="rental.form.memberSelect"
           v-bind="userAttr" />
       </div>
 
@@ -120,17 +121,20 @@
         class="w-full"
         label="Board member *"
         :model-value="boardMemberName"
-        :disabled="true" />
+        :disabled="true"
+        data-testId="rental.form.boardMember" />
 
       <Text
         v-model="dateBorrow"
         label="Date borrow *"
         type="date"
+        data-testId="rental.form.dateBorrow"
         v-bind="dateBorrowAttr" />
       <Text
         v-model="dateReturn"
         label="Date return *"
         type="date"
+        data-testId="rental.form.dateReturn"
         v-bind="dateReturnAttr" />
 
       <div class="flex flex-col w-fit">
@@ -139,12 +143,16 @@
           id="markAsReserved"
           v-model="markAsReserved"
           class="toggle toggle-primary"
-          type="checkbox" />
+          type="checkbox"
+          data-testId="rental.form.markAsReserved" />
       </div>
 
       <div class="flex flex-col w-full col-span-full">
         <span>Comments:</span>
-        <textarea v-model="comments" class="textarea textarea-bordered" />
+        <textarea
+          v-model="comments"
+          class="textarea textarea-bordered"
+          data-testId="rental.form.comments" />
       </div>
     </div>
 
@@ -177,13 +185,15 @@
         type="number"
         :placeholder="computedDeposit?.toString()"
         :auto-fill-with-placeholder="true"
+        data-testId="rental.form.depositFee"
         v-bind="depositFeeAttr">
         <template #label1><span class="mr-1">€</span></template>
       </Text>
       <select
         v-model="paymentMethod"
         class="select select-bordered w-min"
-        :class="errors.paymentMethod ? 'select-error border-4' : ''">
+        :class="errors.paymentMethod ? 'select-error border-4' : ''"
+        data-testId="rental.form.paymentMethod">
         <option disabled selected>Payment method</option>
         <option value="cash">cash</option>
         <option value="transfer">transfer</option>
@@ -195,7 +205,8 @@
         class="mt-3"
         :text="'Submit'"
         :disabled="!meta.dirty"
-        :click-handler="onSubmit" />
+        :click-handler="onSubmit"
+        data-testId="rental.form.submit" />
     </div>
   </form>
 

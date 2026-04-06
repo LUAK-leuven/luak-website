@@ -1,9 +1,9 @@
-<script setup lang="ts" generic="T">
+<script setup lang="ts">
   const props = withDefaults(
     defineProps<{
       text: string;
       disabled?: boolean;
-      clickHandler: () => Promise<T>;
+      clickHandler: () => Promise<unknown>;
       type?: HTMLButtonElement['type'];
     }>(),
     { disabled: false, type: 'submit' },
@@ -21,6 +21,7 @@
   <button
     class="btn btn-primary w-fit"
     :class="{ 'btn-disabled': disabled }"
+    :disabled="disabled"
     :type="type"
     @click="onClick">
     <span v-if="isSubmitting" class="loading loading-spinner">loading</span>

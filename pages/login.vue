@@ -35,7 +35,7 @@
   <div class="relative flex flex-wrap justify-center z-2 bg-base-300">
     <div
       class="bg-base-100 shadow-md rounded w-10/12 lg:w-8/12 xl:w-1/3 mb-28 z-10 mt-8 p-5 sm:p-20">
-      <form @submit.prevent="onSubmit">
+      <form @submit.prevent>
         <TextField
           label="Email"
           name="email"
