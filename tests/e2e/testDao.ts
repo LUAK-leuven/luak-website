@@ -12,7 +12,12 @@ class TestDao {
       .from('Rentals')
       .delete()
       .neq('deposit', -1);
-    if (error) console.warn(`Failed to clear rentals;\nerror: ${error}`);
+    if (error) {
+      console.warn(`
+Failed to clear rentals:
+  error: ${JSON.stringify(error)}
+      `);
+    }
   }
 }
 

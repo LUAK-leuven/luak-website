@@ -259,6 +259,7 @@
       <template v-else>
         <button
           class="btn btn-secondary"
+          data-testId="editButton"
           @click="() => navigateTo(`/board/rentals/${rental.id}/edit`)">
           Edit
         </button>

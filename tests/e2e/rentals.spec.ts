@@ -30,6 +30,7 @@ test.describe('create a new rental', async () => {
   });
 
   test('create - can submit a minimal rental', async ({ page }) => {
+    // --- Submit a rental ---
     const rentalFormPage = new RentalFormPage(page);
     const member = testUsers.paidMembership;
     await rentalFormPage.fillForm({
@@ -56,6 +57,29 @@ test.describe('create a new rental', async () => {
     await page.goto(rentalsOverviewPage.path);
 
     await expect(rentalsOverviewPage.rentalSummary(rentalId)).toBeVisible();
+
+    // --- Edit the rental ---
+    await rentalsOverviewPage.rentalSummary(rentalId).click();
+    await expect(page).toHaveURL(`/board/rentals/${rentalId}`);
+    await rentalDetailsPage.editButton.click();
+    await expect(page).toHaveURL(`/board/rentals/${rentalId}/edit`);
+
+    await rentalFormPage.addItem('gear', 'BD C4 .4');
+    await rentalFormPage.addItem('gear', 'BD C4 .5');
+    await rentalFormPage.selectComponent('gear').listItem('BD C4 .5').remove.click();
+
+    await rentalFormPage.submit();
+    await expect(page).toHaveURL(`/board/rentals/${rentalId}`);
+    await rentalDetailsPage.expectToHave({
+      memberEmail: member,
+      dateBorrow: dayjs(),
+      dateReturn: dayjs().add(3, 'w'),
+      depositFee: 20,
+      paymentMethod: 'cash',
+      status: 'Not returned',
+      comments: '',
+      items: [['BD C4 .4', 1]],
+    });
   });
 
   test('create - can submit a full rental', async ({ page }) => {
@@ -72,6 +96,8 @@ test.describe('create a new rental', async () => {
     await rentalFormPage.fillForm(formValues);
     await rentalFormPage.addItem('gear', 'quickdraw', 14);
     await rentalFormPage.addItem('gear', 'single rope 000');
+    await rentalFormPage.addItem('gear', 'single rope 001');
+    await rentalFormPage.selectComponent('gear').listItem('single rope 001').remove.click();
     await rentalFormPage.addItem('topos', 'ailefriode');
     await rentalFormPage.submit();
 
