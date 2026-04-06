@@ -4,6 +4,7 @@
   import type { GearItemId, TopoId } from '~/types/gear';
   import { computeRentalStatusUnsafe } from '~/utils/rental/computeStatus';
   import TextField from '~/components/input/TextField.vue';
+  import PaymentModal from '~/components/PaymentModal.vue';
 
   const { rental } = defineProps<{ rental: RentalDetails }>();
   const { show: showPopup } = usePopup();
@@ -132,6 +133,8 @@
   });
 
   const editMode = ref(false);
+
+  const showPaymentModal = ref(false);
 </script>
 
 <template>
@@ -186,6 +189,9 @@
           name="depositReturned"
           type="checkbox"
           :value="true" />
+        <button @click="showPaymentModal = true">
+          <span class="material-symbols-outlined"> qr_code_scanner </span>
+        </button>
       </div>
       <div data-testId="paymentMethod">Payment: {{ rental.paymentMethod }}</div>
       <div class="flex flex-row gap-1 items-center">
@@ -263,4 +269,10 @@
     <hr />
     <p>Rental: {{ rental }}</p> -->
   </form>
+
+  <PaymentModal
+    :is-open="showPaymentModal"
+    :amount="rental.depositFee"
+    message="Deposit fee"
+    @close="showPaymentModal = false" />
 </template>

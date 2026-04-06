@@ -5,12 +5,7 @@
 
   const { show: showPopup } = usePopup();
   const showPaymentModal = ref(false);
-  const paymentDetails = ref<{
-    amount: number;
-    name: string;
-    iban: string;
-    message: string;
-  } | null>(null);
+  const depositFee = ref<number>();
   const rentalId = ref<RentalId>();
 
   const { data: user } = await useLuakMember();
@@ -43,12 +38,7 @@
     if (!error && id) {
       rentalId.value = id;
       if (state.paymentMethod === 'transfer') {
-        paymentDetails.value = {
-          amount: state.depositFee,
-          name: 'LUAK vzw',
-          iban: 'BE03 7340 3133 8584',
-          message: 'Deposit fee',
-        };
+        depositFee.value = state.depositFee;
         showPaymentModal.value = true;
       } else {
         navigateTo(`/board/rentals/${rentalId.value}`);
@@ -90,10 +80,8 @@
 
     <PaymentModal
       :is-open="showPaymentModal"
-      :amount="paymentDetails?.amount ?? 0"
-      :name="paymentDetails?.name ?? ''"
-      :iban="paymentDetails?.iban ?? ''"
-      :message="paymentDetails?.message ?? ''"
+      :amount="depositFee ?? 0"
+      message="Deposit fee"
       @close="closeModal" />
   </FullPageCard>
 </template>

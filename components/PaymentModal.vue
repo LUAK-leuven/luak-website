@@ -1,10 +1,11 @@
 <script setup lang="ts">
+  import { LUAK_PAYMENT } from '~/utils/constants';
+  import { EpcQrCode } from '~/model/EpcQrCode';
+
   type PaymentModalProps = {
     isOpen: boolean;
     amount: number;
-    name: string;
-    iban: string;
-    message: string;
+    message?: string;
   };
 
   const props = defineProps<PaymentModalProps>();
@@ -23,12 +24,13 @@
       }
 
       await nextTick();
-      await renderToCanvas({
-        name: props.name,
-        iban: props.iban,
+      await renderToCanvas(new EpcQrCode({
+        name: LUAK_PAYMENT.name,
+        iban: LUAK_PAYMENT.iban,
+        bic: LUAK_PAYMENT.bic,
         amount: props.amount,
-        message: props.message,
-      });
+        unstructuredReference: props.message
+      }));
     },
   );
 
@@ -57,8 +59,8 @@
         <p>
           <span class="font-semibold">Amount:</span> EUR {{ amount.toFixed(2) }}
         </p>
-        <p><span class="font-semibold">Recipient:</span> {{ name }}</p>
-        <p><span class="font-semibold">IBAN:</span> {{ iban }}</p>
+        <p><span class="font-semibold">Recipient:</span> {{ LUAK_PAYMENT.name }}</p>
+        <p><span class="font-semibold">IBAN:</span> {{ LUAK_PAYMENT.iban }}</p>
         <p><span class="font-semibold">Message:</span> {{ message }}</p>
       </div>
 
