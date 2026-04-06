@@ -4,6 +4,7 @@ import { LoginPage } from './pages/login.page';
 import { testUsers } from './fixtures';
 import dayjs from 'dayjs';
 import { RentalDetailsPage } from '~/tests/e2e/pages/rental-details.page';
+import { RentalsOverviewPage } from '~/tests/e2e/pages/rentals-overview.page';
 
 test.describe('create a new rental', async () => {
   test.beforeEach(async ({ page }) => {
@@ -39,7 +40,7 @@ test.describe('create a new rental', async () => {
     await expect(page).toHaveURL(/\/board\/rentals\/[d-]*/);
 
     const rentalDetailsPage = new RentalDetailsPage(page);
-    await rentalDetailsPage.expectToHave({
+    const rentalId = await rentalDetailsPage.expectToHave({
       memberEmail: member,
       dateBorrow: dayjs(),
       dateReturn: dayjs().add(3, 'w'),
@@ -48,5 +49,10 @@ test.describe('create a new rental', async () => {
       status: 'Not returned',
       comments: '',
     });
+
+    const rentalsOverviewPage = new RentalsOverviewPage(page);
+    await page.goto(rentalsOverviewPage.path);
+
+    await expect(rentalsOverviewPage.rentalSummary(rentalId)).toBeVisible();
   });
 });

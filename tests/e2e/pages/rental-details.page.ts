@@ -1,17 +1,19 @@
 import { expect, type Page } from '@playwright/test';
 import { testUsers } from '~/tests/e2e/fixtures';
 import type { Dayjs } from 'dayjs';
+import type { RentalId } from '~/types/rental';
 
 export class RentalDetailsPage {
   private readonly page: Page;
-  readonly path = '/board/rentals/form';
 
   constructor(page: Page) {
     this.page = page;
   }
 
   async getRentalId() {
-    return await this.page.getByTestId('detailsPage.id').innerText();
+    return (await this.page
+      .getByTestId('detailsPage.id')
+      .innerText()) as RentalId;
   }
 
   get member() {
@@ -75,5 +77,7 @@ export class RentalDetailsPage {
     await expect(this.status).toHaveText(args.status);
     if (args.comments === '') await expect(this.comments).toBeHidden();
     else await expect(this.comments).toHaveText(args.comments);
+
+    return this.getRentalId();
   }
 }
