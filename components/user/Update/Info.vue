@@ -80,7 +80,7 @@
       placeholder="+32468123123"
       type="tel"
       autocomplete="tel" />
-    <BoolField name="whatsapp" >Can we contact you via whatsapp?</BoolField>
+    <BoolField name="whatsapp">Can we contact you via whatsapp?</BoolField>
     <BoolField name="newsletter">Subscribe to monthly newsletter?</BoolField>
     <div class="flex justify-end">
       <button

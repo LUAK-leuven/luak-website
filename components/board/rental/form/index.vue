@@ -45,7 +45,6 @@
   );
 
   const {
-    values,
     handleSubmit,
     meta,
     errors,

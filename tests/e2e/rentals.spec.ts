@@ -66,7 +66,10 @@ test.describe('create a new rental', async () => {
 
     await rentalFormPage.addItem('gear', 'BD C4 .4');
     await rentalFormPage.addItem('gear', 'BD C4 .5');
-    await rentalFormPage.selectComponent('gear').listItem('BD C4 .5').remove.click();
+    await rentalFormPage
+      .selectComponent('gear')
+      .listItem('BD C4 .5')
+      .remove.click();
 
     await rentalFormPage.submit();
     await expect(page).toHaveURL(`/board/rentals/${rentalId}`);
@@ -97,7 +100,10 @@ test.describe('create a new rental', async () => {
     await rentalFormPage.addItem('gear', 'quickdraw', 14);
     await rentalFormPage.addItem('gear', 'single rope 000');
     await rentalFormPage.addItem('gear', 'single rope 001');
-    await rentalFormPage.selectComponent('gear').listItem('single rope 001').remove.click();
+    await rentalFormPage
+      .selectComponent('gear')
+      .listItem('single rope 001')
+      .remove.click();
     await rentalFormPage.addItem('topos', 'ailefriode');
     await rentalFormPage.submit();
 

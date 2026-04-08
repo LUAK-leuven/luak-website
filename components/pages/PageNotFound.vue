@@ -1,14 +1,14 @@
 <script setup lang="ts">
-  defineProps<{ arrow_back?: string }>();
+  defineProps<{ arrowBack?: string }>();
 </script>
 <template>
   <FullPageCard>
     <template #title> Page Not Found </template>
 
     <NuxtLink
-      v-if="arrow_back"
+      v-if="arrowBack"
       class="btn btn-circle btn-sm btn-outline mb-5"
-      :to="arrow_back">
+      :to="arrowBack">
       <span class="material-symbols-outlined">arrow_back</span>
     </NuxtLink>
     <div class="text-center">

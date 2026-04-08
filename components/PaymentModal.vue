@@ -24,13 +24,15 @@
       }
 
       await nextTick();
-      await renderToCanvas(new EpcQrCode({
-        name: LUAK_PAYMENT.name,
-        iban: LUAK_PAYMENT.iban,
-        bic: LUAK_PAYMENT.bic,
-        amount: props.amount,
-        unstructuredReference: props.message
-      }));
+      await renderToCanvas(
+        new EpcQrCode({
+          name: LUAK_PAYMENT.name,
+          iban: LUAK_PAYMENT.iban,
+          bic: LUAK_PAYMENT.bic,
+          amount: props.amount,
+          unstructuredReference: props.message,
+        }),
+      );
     },
   );
 
@@ -59,7 +61,9 @@
         <p>
           <span class="font-semibold">Amount:</span> EUR {{ amount.toFixed(2) }}
         </p>
-        <p><span class="font-semibold">Recipient:</span> {{ LUAK_PAYMENT.name }}</p>
+        <p>
+          <span class="font-semibold">Recipient:</span> {{ LUAK_PAYMENT.name }}
+        </p>
         <p><span class="font-semibold">IBAN:</span> {{ LUAK_PAYMENT.iban }}</p>
         <p><span class="font-semibold">Message:</span> {{ message }}</p>
       </div>

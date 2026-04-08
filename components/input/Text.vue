@@ -31,7 +31,8 @@
   });
 
   const autoFillPlaceholder = () => {
-    if (props.autoFillWithPlaceholder && !model.value) model.value = props.placeholder;
+    if (props.autoFillWithPlaceholder && !model.value)
+      model.value = props.placeholder;
   };
 </script>
 

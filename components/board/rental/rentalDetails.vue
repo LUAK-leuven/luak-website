@@ -53,7 +53,7 @@
     }),
   );
 
-  const { setValues, handleSubmit, values, errors } = useForm({
+  const { setValues, handleSubmit, values } = useForm({
     validationSchema: toTypedSchema(formSchema.value),
   });
   const { update: updateReturnedGear, fields: returnedGear } =
