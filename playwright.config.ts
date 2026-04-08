@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
 
-dotenv.config({ path: ['.env', '.env.test'], quiet: true });
+dotenv.config({ path: ['.env', '.env.local', '.env.test'], quiet: true });
 
 export default defineConfig({
   globalSetup: './tests/e2e/prodDbGuard.ts',

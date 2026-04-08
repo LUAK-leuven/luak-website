@@ -38,7 +38,7 @@ export function useLuakMember(): AsyncData<
         .select(
           'id, first_name, last_name, email, BoardMembers (user_id), Memberships (year, Payments( approved )) ',
         )
-        .eq('id', user.value.id)
+        .eq('id', user.value.sub)
         .eq('Memberships.year', getLuakYear())
         .single();
 

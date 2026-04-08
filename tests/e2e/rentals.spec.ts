@@ -9,8 +9,7 @@ import { RentalsOverviewPage } from '~/tests/e2e/pages/rentals-overview.page';
 test.describe('create a new rental', async () => {
   test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
-    await loginPage.login(testUsers.boardMember);
-    await page.waitForURL('/profile/overview');
+    await loginPage.loginAsserted(testUsers.boardMember);
     await page.goto('/board/rentals/form');
   });
 

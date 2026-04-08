@@ -31,6 +31,21 @@ export class LoginPage {
     await this.submitButton.click();
   }
 
+  async loginAsserted(email: string, password: string = '123456789') {
+    try {
+      await this.page.goto(this.path);
+      await this.email.fill(email);
+      await this.password.fill(password);
+      await this.submitButton.click();
+      await this.page.waitForURL('/profile/overview', { timeout: 5_000 });
+    } catch {
+      await this.email.fill(email);
+      await this.password.fill(password);
+      await this.submitButton.click();
+      await this.page.waitForURL('/profile/overview', { timeout: 5_000 });
+    }
+  }
+
   async logout() {
     await this.page.goto('/profile/overview');
     await this.logoutButton.click();

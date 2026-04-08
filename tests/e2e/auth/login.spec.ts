@@ -38,8 +38,7 @@ test('Login — wrong password shows "invalid login credentials" on password fie
 
 test('Login — already logged in redirects to profile', async ({ page }) => {
   const loginPage = new LoginPage(page);
-  await loginPage.login(testUsers.boardMember);
-  await page.waitForURL('/profile/overview');
+  await loginPage.loginAsserted(testUsers.boardMember);
 
   await page.goto(loginPage.path);
   await expect(page).toHaveURL('/profile/overview');
