@@ -28,6 +28,7 @@ export default defineNuxtConfig({
     cookieOptions: {
       secure: process.env.NODE_ENV === 'production',
     },
+    types: './types/database.types.ts',
   },
   runtimeConfig: {
     public: {
