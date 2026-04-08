@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test';
+import type { Page } from '@playwright/test';
 import type { Dayjs } from 'dayjs';
 
 export class RentalFormPage {
@@ -69,16 +69,28 @@ export class RentalFormPage {
     return this.page.getByTestId('rental.form.submit');
   }
 
-  async selectMember(memberName: string) {
-    const memberSelect = this.page.getByTestId('rental.form.memberSelect');
-    await expect(async () => {
-      await memberSelect.getByRole('textbox').click();
-      await this.page
-        .getByRole('list')
+  private selectMemberComponent(memberName: string) {
+    return {
+      search: this.page
+        .getByTestId('rental.form.memberSelect')
+        .getByTestId('searchable-select-input-field'),
+      options: this.page
+        .getByTestId('searchable-select-options')
         .getByRole('button')
-        .getByText(memberName)
-        .click({ timeout: 100 });
-    }).toPass({timeout: 3_000});
+        .getByText(memberName),
+    };
+  }
+
+  async selectMember(memberName: string) {
+    const { search, options } = this.selectMemberComponent(memberName);
+    await search.click();
+    try {
+      await options.click({ timeout: 200 });
+    } catch {
+      await search.blur();
+      await search.click();
+      await options.click({ timeout: 200 });
+    }
   }
 
   async selectPaymentMethod(paymentMethod: 'cash' | 'transfer') {

@@ -57,7 +57,8 @@
     <label
       ref="reference"
       class="input input-bordered flex w-full dropdown"
-      :class="{ 'bg-gray-300': disable, 'input-error': errorMessage }">
+      :class="{ 'bg-gray-300': disable, 'input-error': errorMessage }"
+      data-testId="searchable-select-input-field">
       <span v-if="hidden && selectedItem !== undefined" class="label w-max">
         <slot name="item" :data="selectedItem" />
       </span>
@@ -80,6 +81,7 @@
           :class="hidden ? 'hidden' : ''"
           :style="floatingStyles"
           tabindex="0"
+          data-testId="searchable-select-options"
           @mouseenter="mouseOnSelection = true"
           @mouseleave="mouseOnSelection = false">
           <li v-if="options === undefined">
