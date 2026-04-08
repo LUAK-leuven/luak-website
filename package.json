@@ -33,7 +33,7 @@
     "nuxt-studio": "^1.5.0",
     "prettier": "^3.8.1",
     "prettier-plugin-organize-attributes": "^1.0.0",
-    "sass": "^1.98.0",
+    "sass": "^1.99.0",
     "supabase": "^2.84.1",
     "typescript": "^6.0.2",
     "vue": "^3.5.30",
