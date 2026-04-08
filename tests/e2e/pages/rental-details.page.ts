@@ -52,6 +52,10 @@ export class RentalDetailsPage {
     return this.page.getByTestId('comments');
   }
 
+  get editButton() {
+    return this.page.getByTestId('editButton');
+  }
+
   async expectToHave(args: {
     memberEmail: string;
     dateBorrow: Dayjs;

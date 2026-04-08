@@ -1,22 +1,22 @@
-export function usePopup() {
-  const popup = useState<
+export function useToast() {
+  const toast = useState<
     | {
         type: 'success' | 'warning' | 'error' | 'info';
         message: string;
       }
     | undefined
-  >('popup');
+  >('luak.toast');
 
   const show = (
     type: 'success' | 'warning' | 'error' | 'info',
     message: string,
   ) => {
-    popup.value = { type, message };
+    toast.value = { type, message };
   };
 
   const close = () => {
-    popup.value = undefined;
+    toast.value = undefined;
   };
 
-  return { show, close, state: computed(() => popup.value) };
+  return { show, close, state: readonly(toast) };
 }

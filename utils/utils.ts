@@ -9,7 +9,6 @@ export function sumOf<T extends Record<K, number>, K extends keyof T>(
   return array.reduce((sum, current) => sum + current[key], 0);
 }
 
- 
 export function sumBy<T>(array: T[], getValue: (i: T) => number): number {
   return array.reduce((sum, current) => sum + getValue(current), 0);
 }

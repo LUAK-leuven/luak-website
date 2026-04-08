@@ -1,14 +1,10 @@
 <script setup lang="ts">
-  const props = defineProps<{
+  defineProps<{
     type: 'success' | 'warning' | 'error' | 'info';
   }>();
   const emit = defineEmits<{
     close: [];
   }>();
-  const alert_type = ref<string>();
-  watch(props, () => {
-    alert_type.value = `alert-${props.type}`;
-  });
 </script>
 
 <template>

@@ -2,16 +2,17 @@
   import * as yup from 'yup';
   import TextField from '~/components/input/TextField.vue';
   import LoadingButton from '~/components/shared/LoadingButton.vue';
+  import { useToast } from '~/composables/useToast';
 
   definePageMeta({ middleware: 'unauthenticated' });
 
   const supabase = useSupabaseClient();
   const route = useRoute();
-  const user = useSupabaseUser()
+  const user = useSupabaseUser();
+  const { show: showPopup } = useToast();
 
   const dialog = ref<HTMLDialogElement>();
   const authError = ref<{ error: string; description: string }>();
-  const success = ref(false);
 
   const formSchema = yup.object({
     pwd1: yup_password.required().label('password'),
@@ -32,23 +33,20 @@
       password: submitted.pwd1,
     });
     if (data.user) {
-      success.value = true;
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      await navigateTo({
+      showPopup('success', 'Password updated successfully.');
+      return navigateTo({
         path: '/profile/overview',
       });
     }
     if (error) {
-      authError.value = {
-        error: `There was an error updating your password!`,
-        description: error.message,
-      };
+      showPopup('error', `There was an error updating your password!`);
+      console.error(error.message);
     }
   });
 
-  effect(() => {
-    if (authError.value) {
-      if (dialog.value === undefined) alert(authError.value.error);
+  watch(authError, (value) => {
+    if (value) {
+      if (dialog.value === undefined) alert(value.error);
       else dialog.value.showModal();
     }
   });
@@ -56,7 +54,6 @@
   onMounted(async () => {
     dialog.value = document.getElementById('auth-error') as HTMLDialogElement;
 
-    console.log('query:', route.query);
     if (route.query.error) {
       authError.value = {
         error: route.query.error as string,
@@ -68,7 +65,7 @@
         description: '',
       };
     } else {
-      setValues({email: user.value?.email})
+      setValues({ email: user.value?.email });
     }
   });
 </script>
@@ -78,7 +75,7 @@
     <div
       class="bg-base-100 shadow-md rounded-lg w-10/12 lg:w-8/12 xl:w-1/3 max-w-[400px] mb-28 z-10 mt-8 p-10">
       <form @submit.prevent>
-        <h2>Reset password for {{user?.email ?? ''}}</h2>
+        <h2>Reset password for {{ user?.email ?? '' }}</h2>
         <TextField class="hidden" name="email" autocomplete="email" />
         <TextField
           label="Enter your new password:"
@@ -107,9 +104,5 @@
         </div>
       </div>
     </dialog>
-
-    <pop-up v-model:show="success" type="success">
-      Password updated successfully
-    </pop-up>
   </div>
 </template>

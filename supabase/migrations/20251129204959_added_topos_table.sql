@@ -17,7 +17,7 @@ create table "public"."Topos" (
     "countries" text[],
     "year_published" numeric,
     "amount" numeric not null,
-    "condition" topo_condition not null,
+    "condition" topo_condition,
     "types_of_climbing" text[],
     "tags" text[],
     "place_in_library" text not null,
@@ -35,7 +35,7 @@ alter table "public"."RentedTopos" add constraint "RentedTopos_pkey" PRIMARY KEY
 
 alter table "public"."Topos" add constraint "topos_pkey" PRIMARY KEY using index "topos_pkey";
 
-alter table "public"."RentedTopos" add constraint "RentedTopos_rental_id_fkey" FOREIGN KEY (rental_id) REFERENCES "Rentals"(id) ON DELETE RESTRICT not valid;
+alter table "public"."RentedTopos" add constraint "RentedTopos_rental_id_fkey" FOREIGN KEY (rental_id) REFERENCES "Rentals"(id) ON DELETE CASCADE not valid;
 
 alter table "public"."RentedTopos" validate constraint "RentedTopos_rental_id_fkey";
 

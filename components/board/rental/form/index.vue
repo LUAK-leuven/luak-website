@@ -5,6 +5,7 @@
   import type { UnsavedRental } from '~/types/rental';
   import type { UserId } from '~/types/user';
   import Text from '~/components/input/Text.vue';
+  import { useToast } from '~/composables/useToast';
 
   const props = defineProps<{
     boardMemberName: string;
@@ -31,7 +32,7 @@
     ) => Promise<{ error: string | undefined }>;
   }>();
 
-  const { show: showPopup } = usePopup();
+  const { show: showPopup } = useToast();
 
   const { data } = await gearService().getCompositeGearItems();
   const compositeGearItems = computed(() =>
@@ -44,7 +45,6 @@
   );
 
   const {
-    values,
     handleSubmit,
     meta,
     errors,

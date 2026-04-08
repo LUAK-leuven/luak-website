@@ -304,14 +304,18 @@ class GearService {
       p_date_borrow: rental.dateBorrow,
       p_date_return: rental.dateReturn,
       p_deposit: rental.depositFee,
-      p_gear: Object.entries(rental.gear).map(([id, amount]) => ({
-        gear_item_id: id,
-        rented_amount: amount,
-      })),
-      p_topos: Object.entries(rental.topos).map(([id, amount]) => ({
-        topo_id: id,
-        rented_amount: amount,
-      })),
+      p_gear: Object.entries(rental.gear)
+        .filter(([_, amount]) => amount !== undefined)
+        .map(([id, amount]) => ({
+          gear_item_id: id,
+          rented_amount: amount,
+        })),
+      p_topos: Object.entries(rental.topos)
+        .filter(([_, amount]) => amount !== undefined)
+        .map(([id, amount]) => ({
+          topo_id: id,
+          rented_amount: amount,
+        })),
       p_payment_method: rental.paymentMethod,
       p_status: rental.status,
       p_comments: rental.comments ?? null,
