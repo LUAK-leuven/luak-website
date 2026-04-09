@@ -35,7 +35,7 @@
           sportscard: submitted.sportscard,
           student: submitted.student,
         })
-        .match({ user_id: user.value?.id, year: luak_year })
+        .match({ user_id: user.value?.sub, year: luak_year })
         .select()
         .single();
       if (error || !data) throw error;

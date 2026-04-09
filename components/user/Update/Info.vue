@@ -13,7 +13,7 @@
     const { data } = await supabase
       .from('Users')
       .select('*')
-      .eq('id', user.value.id)
+      .eq('id', user.value.sub)
       .single();
     return data;
   });
@@ -49,7 +49,7 @@
         has_whatsapp: submitted.whatsapp,
         phone_number: submitted.phoneNumber,
       })
-      .eq('id', user.value?.id);
+      .eq('id', user.value?.sub);
     if (error) {
       setFieldError('newsletter', error.message);
     } else {

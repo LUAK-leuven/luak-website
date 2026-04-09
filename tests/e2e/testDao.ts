@@ -3,8 +3,8 @@ import type { Database } from '~/types/database.types';
 
 class TestDao {
   private readonly supabase = createClient<Database>(
-    process.env.SUPABASE_URL,
-    process.env.NUXT_SUPABASE_SECRET_KEY, // IMPORTANT: service role
+    process.env.NUXT_PUBLIC_SUPABASE_URL!,
+    process.env.NUXT_SUPABASE_SECRET_KEY!, // IMPORTANT: service role
   );
 
   async clearRentals() {
