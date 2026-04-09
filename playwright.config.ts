@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config({ path: ['.env', '.env.local', '.env.test'], quiet: true });
 
 export default defineConfig({
-  globalSetup: './tests/e2e/prodDbGuard.ts',
+  globalSetup: './tests/e2e/global-setup-and-teardown/prodDbGuard.ts',
   testDir: 'tests/e2e',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -21,12 +21,12 @@ export default defineConfig({
   projects: [
     {
       name: 'setup db',
-      testMatch: /global\.setup\.ts/,
+      testMatch: /global-setup-and-teardown\/global\.setup\.ts/,
       teardown: 'cleanup db',
     },
     {
       name: 'cleanup db',
-      testMatch: /global\.teardown\.ts/,
+      testMatch: /global-setup-and-teardown\/global\.teardown\.ts/,
     },
     {
       name: 'chromium',

@@ -2,7 +2,7 @@ import type { Page } from '@playwright/test';
 
 export class LoginPage {
   private readonly page: Page;
-  readonly path = '/login';
+  static readonly path = '/login';
 
   constructor(page: Page) {
     this.page = page;
@@ -24,31 +24,34 @@ export class LoginPage {
     return this.page.getByTestId('login.password').getByRole('textbox');
   }
 
+  get errorMessage() {
+    return this.page.getByTestId('login.password').getByTestId('error-message');
+  }
+
   async login(email: string, password: string = '123456789') {
-    await this.page.goto(this.path);
     await this.email.fill(email);
     await this.password.fill(password);
     await this.submitButton.click();
   }
 
   async loginAsserted(email: string, password: string = '123456789') {
+    await this.page.goto(LoginPage.path);
     try {
-      await this.page.goto(this.path);
-      await this.email.fill(email);
-      await this.password.fill(password);
-      await this.submitButton.click();
-      await this.page.waitForURL('/profile/overview', { timeout: 5_000 });
+      await this.login(email, password);
+      if (await this.errorMessage.isVisible())
+        await this.login(email, password);
+      await this.page.waitForURL('/profile/overview', { timeout: 3_000 });
     } catch {
-      await this.email.fill(email);
-      await this.password.fill(password);
-      await this.submitButton.click();
-      await this.page.waitForURL('/profile/overview', { timeout: 5_000 });
+      await this.login(email, password);
+      if (await this.errorMessage.isVisible())
+        await this.login(email, password);
+      await this.page.waitForURL('/profile/overview', { timeout: 3_000 });
     }
   }
 
   async logout() {
     await this.page.goto('/profile/overview');
     await this.logoutButton.click();
-    await this.page.waitForURL('/login');
+    await this.page.waitForURL(LoginPage.path);
   }
 }

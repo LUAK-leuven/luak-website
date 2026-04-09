@@ -1,4 +1,5 @@
 import { request } from '@playwright/test';
+import { validateSupabaseUrl } from '~/tests/e2e/global-setup-and-teardown/validateSupabaseUrl';
 
 export default async function () {
   const ctx = await request.newContext({ baseURL: process.env.BASE_URL });
@@ -24,11 +25,5 @@ export default async function () {
     await ctx.dispose();
   }
 
-  if (supabaseUrl.includes('supabase.co')) {
-    console.error(
-      '\n❌  E2E tests cannot run against the production Supabase database.\n' +
-        `    The running server is using SUPABASE_URL="${supabaseUrl}".\n`,
-    );
-    process.exit(1);
-  }
+  validateSupabaseUrl(supabaseUrl);
 }
