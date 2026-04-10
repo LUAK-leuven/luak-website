@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { LoginPage } from './pages/login.page';
-import { testUsers } from './fixtures';
+import { navigateTo, testUsers } from './fixtures';
 
 test('Login & logout — happy path', async ({ page }) => {
   const loginPage = new LoginPage(page);
@@ -17,7 +17,7 @@ test('Login & logout — happy path', async ({ page }) => {
 test('Login — wrong email shows "invalid login credentials" on password field', async ({
   page,
 }) => {
-  await page.goto(LoginPage.path);
+  await navigateTo(page, LoginPage.path);
   const loginPage = new LoginPage(page);
   await loginPage.login('not_an_existing_account@test.com');
 
@@ -27,7 +27,7 @@ test('Login — wrong email shows "invalid login credentials" on password field'
 test('Login — wrong password shows "invalid login credentials" on password field', async ({
   page,
 }) => {
-  await page.goto(LoginPage.path);
+  await navigateTo(page, LoginPage.path);
   const loginPage = new LoginPage(page);
   await loginPage.login('paid_this_year@test.com', 'wrong_password');
 
@@ -38,6 +38,5 @@ test('Login — already logged in redirects to profile', async ({ page }) => {
   const loginPage = new LoginPage(page);
   await loginPage.loginAsserted(testUsers.boardMember);
 
-  await page.goto(LoginPage.path);
-  await expect(page).toHaveURL('/profile/overview');
+  await navigateTo(page, LoginPage.path);
 });

@@ -1,7 +1,8 @@
 import { expect, test } from '@playwright/test';
+import { navigateTo } from '~/tests/e2e/fixtures';
 
 test('homepage is visible', async ({ page }) => {
-  await page.goto('/');
+  await navigateTo(page, '/');
 
   await expect(page.getByTestId('luak-logo')).toBeVisible();
 

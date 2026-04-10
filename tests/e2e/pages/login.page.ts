@@ -1,4 +1,5 @@
-import type { Page } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
+import { navigateTo } from '~/tests/e2e/fixtures';
 
 export class LoginPage {
   private readonly page: Page;
@@ -32,25 +33,69 @@ export class LoginPage {
     await this.email.fill(email);
     await this.password.fill(password);
     await this.submitButton.click();
+
+    try {
+      await expect
+        .poll(
+          async () => {
+            return (
+              (await this.errorMessage.isVisible()) ||
+              (await this.submitButton.getByTestId('loading').isVisible()) ||
+              (await this.page.getByTestId('page.title').innerText()).includes(
+                'My Profile',
+              )
+            );
+          },
+          { timeout: 1_000 },
+        )
+        .toBe(true);
+    } catch {
+      console.log(
+        `error: ${await this.errorMessage.isVisible()}\nloading: ${await this.submitButton.getByTestId('loading').isVisible()}\nprofile:${await this.page.getByTestId('page.title').innerText()}`,
+      );
+      return 'timeout';
+    }
+
+    return (await this.errorMessage.isVisible()) ? 'error' : 'loading';
   }
 
   async loginAsserted(email: string, password: string = '123456789') {
-    await this.page.goto(LoginPage.path);
-    try {
-      await this.login(email, password);
-      if (await this.errorMessage.isVisible())
-        await this.login(email, password);
-      await this.page.waitForURL('/profile/overview', { timeout: 3_000 });
-    } catch {
-      await this.login(email, password);
-      if (await this.errorMessage.isVisible())
-        await this.login(email, password);
-      await this.page.waitForURL('/profile/overview', { timeout: 3_000 });
+    await navigateTo(this.page, LoginPage.path);
+    let result: 'error' | 'loading' | 'timeout' = await this.login(
+      email,
+      password,
+    );
+    switch (result) {
+      case 'error': {
+        result = await this.login(email, password);
+        switch (result) {
+          case 'error': {
+            throw `Error - Failed to login user ${email}.`;
+          }
+          case 'timeout': {
+            throw `Timeout - Failed to login user ${email}.`;
+          }
+          case 'loading': {
+            await expect(this.submitButton.getByTestId('loading')).toBeHidden();
+            await this.page.waitForURL('/profile/overview', { timeout: 2_000 });
+            return;
+          }
+        }
+        break;
+      }
+      case 'timeout': {
+        throw `Timeout - Failed to login user ${email}.`;
+      }
+      case 'loading': {
+        await expect(this.submitButton.getByTestId('loading')).toBeHidden();
+        await this.page.waitForURL('/profile/overview', { timeout: 2_000 });
+        return;
+      }
     }
   }
 
   async logout() {
-    await this.page.goto('/profile/overview');
+    await navigateTo(this.page, '/profile/overview');
     await this.logoutButton.click();
     await this.page.waitForURL(LoginPage.path);
   }

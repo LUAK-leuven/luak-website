@@ -24,7 +24,7 @@
     :disabled="disabled"
     :type="type"
     @click="onClick">
-    <span v-if="isSubmitting" class="loading loading-spinner">loading</span>
-    <span v-else>{{ text }}</span>
+    <span v-if="isSubmitting" class="loading loading-spinner" data-testId="loading">loading</span>
+    <span v-else data-testId="button-text">{{ text }}</span>
   </button>
 </template>

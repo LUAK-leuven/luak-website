@@ -59,7 +59,10 @@
 </script>
 
 <template>
-  <button class="btn" onclick="buy_membership_modal.showModal()">
+  <button
+    class="btn"
+    onclick="buy_membership_modal.showModal()"
+    data-testId="buyMembershipButton">
     Buy a membership
   </button>
 

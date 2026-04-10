@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T">
-  defineProps<{ data: T; isLoading: boolean; error?: string }>();
+  defineProps<{ data: T; isLoading: boolean; error?: string | undefined }>();
 </script>
 <template>
   <div v-if="error">ERROR: {{ error }}</div>

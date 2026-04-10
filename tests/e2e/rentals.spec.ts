@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { RentalFormPage } from './pages/rental-form.page';
 import { LoginPage } from './pages/login.page';
-import { testUsers } from './fixtures';
+import { navigateTo, testUsers } from './fixtures';
 import dayjs from 'dayjs';
 import { RentalDetailsPage } from '~/tests/e2e/pages/rental-details.page';
 import { RentalsOverviewPage } from '~/tests/e2e/pages/rentals-overview.page';
@@ -10,7 +10,7 @@ test.describe('create a new rental', async () => {
   test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.loginAsserted(testUsers.boardMember);
-    await page.goto('/board/rentals/form');
+    await navigateTo(page, '/board/rentals/form');
   });
 
   test('create - defaults should be filled in', async ({ page }) => {
@@ -53,7 +53,7 @@ test.describe('create a new rental', async () => {
     });
 
     const rentalsOverviewPage = new RentalsOverviewPage(page);
-    await page.goto(rentalsOverviewPage.path);
+    await navigateTo(page, rentalsOverviewPage.path);
 
     await expect(rentalsOverviewPage.rentalSummary(rentalId)).toBeVisible();
 
@@ -121,7 +121,7 @@ test.describe('create a new rental', async () => {
     });
 
     const rentalsOverviewPage = new RentalsOverviewPage(page);
-    await page.goto(rentalsOverviewPage.path);
+    await navigateTo(page, rentalsOverviewPage.path);
 
     await expect(rentalsOverviewPage.rentalSummary(rentalId)).toBeVisible();
   });
