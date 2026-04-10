@@ -19,12 +19,11 @@ Object.entries(testUsers).forEach(async ([testUser, email]) => {
   test.describe(`${user}`, async () => {
     test.beforeEach(async ({ page }) => {
       const loginPage = new LoginPage(page);
-      await loginPage.loginAsserted(testUsers.boardMember);
+      await loginPage.loginAsserted(user);
     });
 
     test(`buyMembership - card is visible`, async ({ page }) => {
       const profilePage = new ProfileOverviewPage(page);
-      console.log(await page.getByTestId('page.title').innerText());
       await expect(profilePage.buyMembershipButton).toBeVisible();
 
       await profilePage.buyMembershipButton.click();

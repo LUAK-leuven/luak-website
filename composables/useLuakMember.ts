@@ -19,11 +19,11 @@ export function useLuakMember(): AsyncData<
   },
   unknown
 > {
+  const user = useSupabaseUser();
+
   return useAsyncData(
     'useLuakMember',
     async () => {
-      const user = useSupabaseUser();
-
       if (!user.value) {
         return {
           isBoard: false,
@@ -85,6 +85,6 @@ export function useLuakMember(): AsyncData<
         hasActiveMembership: true,
       };
     },
-    { lazy: false },
+    { lazy: false, watch: [user] },
   );
 }

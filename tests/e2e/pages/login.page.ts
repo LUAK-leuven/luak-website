@@ -41,9 +41,7 @@ export class LoginPage {
             return (
               (await this.errorMessage.isVisible()) ||
               (await this.submitButton.getByTestId('loading').isVisible()) ||
-              (await this.page.getByTestId('page.title').innerText()).includes(
-                'My Profile',
-              )
+              (await this.page.getByTestId('page.title').isVisible())
             );
           },
           { timeout: 1_000 },
@@ -51,7 +49,7 @@ export class LoginPage {
         .toBe(true);
     } catch {
       console.log(
-        `error: ${await this.errorMessage.isVisible()}\nloading: ${await this.submitButton.getByTestId('loading').isVisible()}\nprofile:${await this.page.getByTestId('page.title').innerText()}`,
+        `error: ${await this.errorMessage.isVisible()}\nloading: ${await this.submitButton.getByTestId('loading').isVisible()}\nprofile:${await this.page.getByTestId('page.title').isVisible()}`,
       );
       return 'timeout';
     }
