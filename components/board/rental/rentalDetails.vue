@@ -6,6 +6,7 @@
   import TextField from '~/components/input/TextField.vue';
   import PaymentModal from '~/components/PaymentModal.vue';
   import { useToast } from '~/composables/useToast';
+  import type { RentalDetails } from '~/types/rental';
 
   const { rental } = defineProps<{ rental: RentalDetails }>();
   const { show: showPopup } = useToast();
@@ -24,10 +25,10 @@
         .required()
         .test('max_per_item', function (array) {
           for (let i = 0; i < array.length; i++) {
-            if (array[i] > rental.gear[i].rentedAmount) {
+            if (array[i]! > rental.gear[i]!.rentedAmount) {
               return this.createError({
                 path: `${this.path}[${i}]`,
-                message: `Value for ${rental.gear[i].name} cannot exceed rented amount`,
+                message: `Value for ${rental.gear[i]!.name} cannot exceed rented amount`,
               });
             }
           }
@@ -38,10 +39,10 @@
         .required()
         .test('max_per_item', function (array) {
           for (let i = 0; i < array.length; i++) {
-            if (array[i] > rental.topos[i].rentedAmount) {
+            if (array[i]! > rental.topos[i]!.rentedAmount) {
               return this.createError({
                 path: `${this.path}[${i}]`,
-                message: `Value for ${rental.topos[i].title} cannot exceed rented amount`,
+                message: `Value for ${rental.topos[i]!.title} cannot exceed rented amount`,
               });
             }
           }
@@ -79,19 +80,19 @@
     async (formState) => {
       const gear: { gear_item_id: GearItemId; returned_amount: number }[] = [];
       for (let i = 0; i < rental.gear.length; i++) {
-        if (formState.returnedGear[i] !== rental.gear[i].returnedAmount) {
+        if (formState.returnedGear[i] !== rental.gear[i]!.returnedAmount) {
           gear.push({
-            gear_item_id: rental.gear[i].gearItemId,
-            returned_amount: formState.returnedGear[i],
+            gear_item_id: rental.gear[i]!.id,
+            returned_amount: formState.returnedGear[i]!,
           });
         }
       }
       const topos: { topo_id: TopoId; returned_amount: number }[] = [];
       for (let i = 0; i < rental.topos.length; i++) {
-        if (formState.returnedTopos[i] !== rental.topos[i].returnedAmount) {
+        if (formState.returnedTopos[i] !== rental.topos[i]!.returnedAmount) {
           topos.push({
-            topo_id: rental.topos[i].topoId,
-            returned_amount: formState.returnedTopos[i],
+            topo_id: rental.topos[i]!.id,
+            returned_amount: formState.returnedTopos[i]!,
           });
         }
       }
@@ -106,8 +107,8 @@
       });
 
       if (success) {
-        reloadNuxtApp();
         showPopup('success', 'Your changes have been saved.');
+        editMode.value = false;
       } else {
         showPopup('error', 'Failed to save changes');
       }
@@ -231,7 +232,7 @@
         :bouncing="bouncing[`returnedTopos[${idx}]`]"
         :name="title"
         :rented-amount="rentedAmount"
-        :returned-amount="editMode ? returnedTopos[idx].value : returnedAmount"
+        :returned-amount="editMode ? returnedTopos[idx]!.value : returnedAmount"
         :edit-mode="editMode"
         :form-name="`returnedTopos[${idx}]`"
         @update-returned-amount="
@@ -243,7 +244,7 @@
         :bouncing="bouncing[`returnedGear[${idx}]`]"
         :name="name"
         :rented-amount="rentedAmount"
-        :returned-amount="editMode ? returnedGear[idx].value : returnedAmount"
+        :returned-amount="editMode ? returnedGear[idx]!.value : returnedAmount"
         :edit-mode="editMode"
         :form-name="`returnedGear[${idx}]`"
         @update-returned-amount="(amount) => updateReturnedGear(idx, amount)" />

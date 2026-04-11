@@ -1,5 +1,16 @@
 <script setup lang="ts" generic="T">
-  defineProps<{ data: T; isLoading: boolean; error?: string | undefined }>();
+  withDefaults(
+    defineProps<{
+      data: T;
+      isLoading: boolean;
+      error?: string | undefined;
+      defaultError?: string;
+    }>(),
+    {
+      defaultError: 'Failed to load page data',
+      error: undefined,
+    },
+  );
 </script>
 <template>
   <div v-if="error">ERROR: {{ error }}</div>
@@ -8,7 +19,7 @@
     <span class="loading loading-spinner loading-lg"></span>
   </div>
 
-  <div v-else-if="!data">ERROR!</div>
+  <div v-else-if="!data">{{ defaultError}}</div>
 
   <template v-else>
     <slot :data="data" />

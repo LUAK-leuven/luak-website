@@ -3,8 +3,11 @@
   import PaymentModal from '~/components/PaymentModal.vue';
   import type { RentalId, UnsavedRental } from '~/types/rental';
   import { useToast } from '~/composables/useToast';
+  import { useRentalService } from '~/composables/useRentalService';
 
   const { show: showPopup } = useToast();
+  const { save: saveRental } = useRentalService();
+
   const showPaymentModal = ref(false);
   const depositFee = ref<number>();
   const rentalId = ref<RentalId>();
@@ -31,7 +34,7 @@
   );
 
   async function handleSubmit(state: Omit<UnsavedRental, 'boardMemberId'>) {
-    const { error, id } = await gearService().saveRental({
+    const { error, id } = await saveRental({
       ...state,
       boardMemberId: boardMember.id,
     });

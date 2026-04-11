@@ -3,7 +3,7 @@
   import type { RentalId } from '~/types/rental';
 
   const retnalId = useRoute().params.id as RentalId;
-  const { data, pending, error } = await gearService().getRental(retnalId);
+  const { rentals: data, pending } = await useRentalService().get(retnalId);
 </script>
 
 <template>
@@ -12,7 +12,7 @@
     sub-title="Rental"
     :data="data"
     :is-loading="pending"
-    :error="error?.message"
+    default-error="Failed to load rentals"
     back-to="/board/rentals">
     <BoardRentalDetails :rental="rental" />
   </DetailsPage>

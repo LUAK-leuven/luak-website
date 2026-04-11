@@ -6,7 +6,9 @@
     layout: false,
   });
 
-  const { data, pending } = await gearService().getRentals();
+  const { getAll: getAllRentals } = useRentalService();
+
+  const { rentals: data, pending } = await getAllRentals();
 
   const rentals = computed(() => {
     if (data.value !== null) {

@@ -1,14 +1,24 @@
 <script setup lang="ts" generic="T extends { id: EntityId<unknown> } | null">
   import type { EntityId } from '~/types/ddd';
 
-  defineProps<{
-    title?: string;
-    subTitle?: string;
-    data: T;
-    isLoading: boolean;
-    error?: string;
-    backTo?: string;
-  }>();
+  withDefaults(
+    defineProps<{
+      title?: string;
+      subTitle?: string;
+      data: T;
+      isLoading: boolean;
+      error?: string;
+      backTo?: string;
+      defaultError?: string | undefined;
+    }>(),
+    {
+      defaultError: undefined,
+      title: undefined,
+      subTitle: undefined,
+      error: undefined,
+      backTo: undefined,
+    },
+  );
 </script>
 <template>
   <FullPageCard>
@@ -27,7 +37,8 @@
       v-slot="{ data: data_ }"
       :data="data"
       :is-loading="isLoading"
-      :error="error">
+      :error="error"
+      :default-error="defaultError">
       <slot :data="data_" />
     </PagesWithLazyResource>
   </FullPageCard>

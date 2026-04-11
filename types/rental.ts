@@ -5,19 +5,25 @@ import type { UserId } from './user';
 
 export type RentalId = EntityId<'rental'>;
 
-export type UnsavedRental = {
-  memberId?: UserId;
+type BaseRental = {
+  id: RentalId;
   boardMemberId: UserId;
   dateBorrow: string;
   dateReturn: string;
-  gear: Record<GearItemId, number>;
-  topos: Record<TopoId, number>;
   depositFee: number;
   paymentMethod: Enums<'payment_method'>;
-  contactInfo?: ContactInfo;
   status: Enums<'rental_status'>;
   comments?: string;
 };
+
+export type UnsavedRental = Omit<BaseRental, 'id'> & {
+  memberId: UserId | undefined;
+  contactInfo: ContactInfo | undefined;
+  gear: Record<GearItemId, number>;
+  topos: Record<TopoId, number>;
+};
+
+export type SavedRental = UnsavedRental & { id: RentalId };
 
 export type ContactInfo = {
   fullName: string;
@@ -31,6 +37,32 @@ export type RentalUpdate = {
   gear: { gear_item_id: GearItemId; returned_amount: number }[];
   topos: { topo_id: TopoId; returned_amount: number }[];
   depositReturned: boolean;
+  status: Enums<'rental_status'>;
+  comments: string | undefined;
+};
+
+export type RentalDetails = {
+  id: RentalId;
+  member: ContactInfo;
+  memberId: UserId | undefined;
+  boardMember: string;
+  dateBorrow: string;
+  dateReturn: string;
+  depositFee: number;
+  depositReturned: boolean;
+  gear: {
+    id: GearItemId;
+    name: string;
+    rentedAmount: number;
+    returnedAmount: number;
+  }[];
+  topos: {
+    id: TopoId;
+    title: string;
+    rentedAmount: number;
+    returnedAmount: number;
+  }[];
+  paymentMethod: Enums<'payment_method'>;
   status: Enums<'rental_status'>;
   comments: string | undefined;
 };
