@@ -26,7 +26,9 @@
       ">
       {{ name }}
     </div>
-    <div class="border p-1 flex flex-row justify-between items-center" data-testId="rentedAmount">
+    <div
+      class="border p-1 flex flex-row justify-between items-center"
+      data-testId="rentedAmount">
       {{ rentedAmount }}
       <button
         v-if="editMode"
@@ -51,7 +53,7 @@
         data-testId="returnedAmountInput"
         @update:model-value="
           (amount) => {
-            if (amount) emit('updateReturnedAmount', amount);
+            if (amount !== undefined) emit('updateReturnedAmount', amount);
           }
         " />
       <span v-else data-testId="returnedAmount">{{ returnedAmount }}</span>
