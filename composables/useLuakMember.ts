@@ -19,11 +19,11 @@ export function useLuakMember(): AsyncData<
   },
   unknown
 > {
+  const user = useSupabaseUser();
+
   return useAsyncData(
     'useLuakMember',
     async () => {
-      const user = useSupabaseUser();
-
       if (!user.value) {
         return {
           isBoard: false,
@@ -38,7 +38,7 @@ export function useLuakMember(): AsyncData<
         .select(
           'id, first_name, last_name, email, BoardMembers (user_id), Memberships (year, Payments( approved )) ',
         )
-        .eq('id', user.value.id)
+        .eq('id', user.value.sub)
         .eq('Memberships.year', getLuakYear())
         .single();
 
@@ -85,6 +85,6 @@ export function useLuakMember(): AsyncData<
         hasActiveMembership: true,
       };
     },
-    { lazy: false },
+    { lazy: false, watch: [user] },
   );
 }

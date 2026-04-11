@@ -1,6 +1,8 @@
 <script setup lang="ts">
   import Text from '~/components/input/Text.vue';
 
+  definePageMeta({ middleware: 'active-member-guard' });
+
   const { data: user } = await useLuakMember();
   const { data: topos, pending, error } = await gearService().getTopoLibrary();
 

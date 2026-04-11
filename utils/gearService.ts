@@ -100,82 +100,6 @@ class GearService {
     );
   }
 
-  public async saveRental(
-    rental: UnsavedRental,
-  ): Promise<{ id: RentalId | undefined; error: string | undefined }> {
-    const { error, data } = await this.supabase.rpc('create_rental', {
-      p_board_member_id: rental.boardMemberId,
-      p_member_id: rental.memberId ?? null,
-      p_date_borrow: rental.dateBorrow,
-      p_date_return: rental.dateReturn,
-      p_deposit: rental.depositFee,
-      p_status: rental.status,
-      p_gear: Object.entries(rental.gear)
-        .filter(([_, amount]) => amount !== undefined)
-        .map(([id, amount]) => ({
-          gear_item_id: id,
-          rented_amount: amount,
-        })),
-      p_topos: Object.entries(rental.topos)
-        .filter(([_, amount]) => amount !== undefined)
-        .map(([id, amount]) => ({
-          topo_id: id,
-          rented_amount: amount,
-        })),
-      p_payment_method: rental.paymentMethod,
-      p_contact_info: rental.contactInfo
-        ? JSON.stringify(rental.contactInfo)
-        : null,
-      p_comments: rental.comments ?? null,
-    });
-
-    return { id: (data as RentalId) ?? undefined, error: error?.message };
-  }
-
-  public async getRentals() {
-    return useAsyncData(
-      'rentals',
-      async () => {
-        const { data, error } = await this.supabase.from('Rentals').select(
-          `
-          id,
-          member:Users!Rentals_member_id_fkey (
-            first_name,
-            last_name
-          ),
-          date_return,
-          date_borrow,
-          status,
-          contact_info
-          `,
-        );
-
-        if (error || data === null) {
-          console.warn('failed to load rentals', error);
-          return [];
-        }
-
-        return data.map((rental) => {
-          const contactInfo: ContactInfo = rental.contact_info
-            ? JSON.parse(rental.contact_info)
-            : undefined;
-          return {
-            id: rental.id as RentalId,
-            memberName: rental.member
-              ? getFullName(rental.member)
-              : contactInfo
-                ? contactInfo.fullName
-                : 'Failed to load name',
-            dateReturn: rental.date_return,
-            dateBorrow: rental.date_borrow,
-            status: rental.status,
-          };
-        });
-      },
-      { lazy: true },
-    );
-  }
-
   public async getRental(rentalId: RentalId) {
     return useAsyncData(
       `rental-${rentalId}`,
@@ -675,14 +599,14 @@ export function gearService(): GearService {
   return gearServiceInstance;
 }
 
-export type RentalDetails = ReturnType<'getRental'>;
-export type PublicRentalDetails = ReturnType<'getRentalsForUser'>;
-
-type ReturnType<K extends keyof GearService> = GearService[K] extends (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ...any: any
-) => Promise<{ data: { value: infer T | null | undefined } }>
-  ? T extends (infer T1)[]
-    ? T1
-    : T
-  : never;
+// export type RentalDetails = ReturnType<'getRental'>;
+// export type PublicRentalDetails = ReturnType<'getRentalsForUser'>;
+//
+// type ReturnType<K extends keyof GearService> = GearService[K] extends (
+//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//   ...any: any
+// ) => Promise<{ data: { value: infer T | null | undefined } }>
+//   ? T extends (infer T1)[]
+//     ? T1
+//     : T
+//   : never;

@@ -22,12 +22,13 @@ export default defineNuxtConfig({
     redirectOptions: {
       login: '/login',
       callback: '/confirmLogin',
-      include: ['/profile(/*)?', '/stories(/*)?', '/topo(/*)?'],
+      include: ['/profile(/*)?', '/stories(/*)?', '/topos(/*)?'],
       saveRedirectToCookie: true,
     },
     cookieOptions: {
       secure: process.env.NODE_ENV === 'production',
     },
+    types: '~/types/database.types.ts',
   },
   runtimeConfig: {
     public: {

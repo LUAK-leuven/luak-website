@@ -17,7 +17,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const { data } = await supabase
     .from('Memberships')
     .select('year,Payments(id)')
-    .eq('user_id', user.value.id)
+    .eq('user_id', user.value.sub)
     .in('year', [currentLuakYear, currentLuakYear - 1])
     .eq('Payments.approved', true);
 

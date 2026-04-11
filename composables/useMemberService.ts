@@ -10,7 +10,7 @@ export async function useMemberService() {
       const { data, error } = await useSupabaseClient<Database>()
         .from('Users')
         .select('first_name, last_name, Memberships(year, Payments(approved))')
-        .eq('id', user.value.id)
+        .eq('id', user.value.sub)
         .eq('Memberships.Payments.approved', true)
         .single();
       if (error) {

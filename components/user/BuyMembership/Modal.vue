@@ -35,7 +35,7 @@
           sportscard: submitted.sportscard,
           student: submitted.student,
         })
-        .match({ user_id: user.value?.id, year: luak_year })
+        .match({ user_id: user.value?.sub, year: luak_year })
         .select()
         .single();
       if (error || !data) throw error;
@@ -59,7 +59,10 @@
 </script>
 
 <template>
-  <button class="btn" onclick="buy_membership_modal.showModal()">
+  <button
+    class="btn"
+    onclick="buy_membership_modal.showModal()"
+    data-testId="buyMembershipButton">
     Buy a membership
   </button>
 

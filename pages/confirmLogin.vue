@@ -1,18 +1,14 @@
 <script setup lang="ts">
   const user = useSupabaseUser();
 
-  // Get redirect path from cookies
-  const cookieName = useRuntimeConfig().public.supabase.cookieName;
-  const redirectPath = useCookie(`${cookieName}-redirect-path`).value;
+  const redirectInfo = useSupabaseCookieRedirect();
 
   watch(
     user,
     () => {
       if (user.value) {
-        // Clear cookie
-        useCookie(`${cookieName}-redirect-path`).value = null;
-        // Redirect to path
-        return navigateTo(redirectPath || '/profile/overview');
+        const path = redirectInfo.pluck();
+        return navigateTo(path || '/profile/overview');
       }
     },
     { immediate: true },

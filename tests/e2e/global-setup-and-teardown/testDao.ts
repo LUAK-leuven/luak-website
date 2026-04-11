@@ -1,11 +1,17 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '~/types/database.types';
+import { validateSupabaseUrl } from '~/tests/e2e/global-setup-and-teardown/validateSupabaseUrl';
 
 class TestDao {
-  private readonly supabase = createClient<Database>(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!, // IMPORTANT: service role
-  );
+  private readonly supabase;
+
+  constructor() {
+    validateSupabaseUrl(process.env.NUXT_PUBLIC_SUPABASE_URL!);
+    this.supabase = createClient<Database>(
+      process.env.NUXT_PUBLIC_SUPABASE_URL!,
+      process.env.NUXT_SUPABASE_SECRET_KEY!, // IMPORTANT: secret key in order to bypass RLS
+    );
+  }
 
   async clearRentals() {
     const { error } = await this.supabase

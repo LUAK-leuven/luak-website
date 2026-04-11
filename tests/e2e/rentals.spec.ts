@@ -1,17 +1,17 @@
 import { expect, test } from '@playwright/test';
 import { RentalFormPage } from './pages/rental-form.page';
 import { LoginPage } from './pages/login.page';
-import { testUsers } from './fixtures';
+import { navigateTo, testUsers } from './fixtures';
 import dayjs from 'dayjs';
 import { RentalDetailsPage } from '~/tests/e2e/pages/rental-details.page';
 import { RentalsOverviewPage } from '~/tests/e2e/pages/rentals-overview.page';
+import { uuidRegex } from '~/utils/utils';
 
 test.describe('create a new rental', async () => {
   test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
-    await loginPage.login(testUsers.boardMember);
-    await page.waitForURL('/profile/overview');
-    await page.goto('/board/rentals/form');
+    await loginPage.loginAsserted(testUsers.boardMember);
+    await navigateTo(page, '/board/rentals/form');
   });
 
   test('create - defaults should be filled in', async ({ page }) => {
@@ -50,11 +50,10 @@ test.describe('create a new rental', async () => {
       paymentMethod: 'cash',
       status: 'Not returned',
       comments: '',
-      items: [],
     });
 
     const rentalsOverviewPage = new RentalsOverviewPage(page);
-    await page.goto(rentalsOverviewPage.path);
+    await navigateTo(page, rentalsOverviewPage.path);
 
     await expect(rentalsOverviewPage.rentalSummary(rentalId)).toBeVisible();
 
@@ -81,11 +80,27 @@ test.describe('create a new rental', async () => {
       paymentMethod: 'cash',
       status: 'Not returned',
       comments: '',
-      items: [['BD C4 .4', 1]],
+      numberOfItems: 1,
     });
+    await rentalDetailsPage.expectItem('BD C4 .4', 1);
+
+    // --- return the rental ---
+    await rentalDetailsPage.returnButton.click();
+    await rentalDetailsPage.rentedItem('BD C4 .4').quickReturn.click();
+    await rentalDetailsPage.depositReturned.check();
+
+    await rentalDetailsPage.saveButton.click();
+    await expect(rentalDetailsPage.editComments).toBeHidden();
+
+    await rentalDetailsPage.expectToHave({
+      status: 'Returned',
+      numberOfItems: 1,
+    });
+    await rentalDetailsPage.expectItem('BD C4 .4', 1, 1);
   });
 
   test('create - can submit a full rental', async ({ page }) => {
+    // --- create a new rental ---
     const rentalFormPage = new RentalFormPage(page);
     const formValues = {
       member: testUsers.paidMembership,
@@ -107,23 +122,65 @@ test.describe('create a new rental', async () => {
     await rentalFormPage.addItem('topos', 'ailefriode');
     await rentalFormPage.submit();
 
-    await expect(page).toHaveURL(/\/board\/rentals\/[d-]*/);
+    await expect(page).toHaveURL(new RegExp(`board\\/rentals\\/${uuidRegex}`));
 
     const rentalDetailsPage = new RentalDetailsPage(page);
     const rentalId = await rentalDetailsPage.expectToHave({
       ...formValues,
       memberEmail: formValues.member,
       status: 'Not returned',
-      items: [
-        ['quickdraw', 14],
-        ['single rope 000', 1],
-        ['ailefriode', 1],
-      ],
+      numberOfItems: 3,
     });
+    await rentalDetailsPage.expectItem('quickdraw', 14);
+    await rentalDetailsPage.expectItem('single rope 000', 1);
+    await rentalDetailsPage.expectItem('Ailefriode', 1);
 
     const rentalsOverviewPage = new RentalsOverviewPage(page);
-    await page.goto(rentalsOverviewPage.path);
+    await navigateTo(page, rentalsOverviewPage.path);
 
     await expect(rentalsOverviewPage.rentalSummary(rentalId)).toBeVisible();
+
+    // --- return a rental ---
+    await rentalsOverviewPage.rentalSummary(rentalId).click();
+    await expect(page).toHaveURL(`/board/rentals/${rentalId}`);
+
+    await rentalDetailsPage.returnButton.click();
+    await rentalDetailsPage.editComments.fill('a test comment');
+    await rentalDetailsPage
+      .rentedItem('quickdraw')
+      .returnedAmountInput.fill('10');
+    await rentalDetailsPage.rentedItem('single rope 000').quickReturn.click();
+    await expect(
+      rentalDetailsPage.rentedItem('single rope 000').returnedAmountInput,
+    ).toHaveValue('1');
+
+    await rentalDetailsPage.saveButton.click();
+    await expect(rentalDetailsPage.editComments).toBeHidden();
+
+    await rentalDetailsPage.expectToHave({
+      comments: 'a test comment',
+      status: 'Partially returned',
+      numberOfItems: 3,
+    });
+    await rentalDetailsPage.expectItem('quickdraw', 14, 10);
+    await rentalDetailsPage.expectItem('single rope 000', 1, 1);
+    await rentalDetailsPage.expectItem('Ailefriode', 1, 0);
+
+    // --- return more stuff ---
+    await rentalDetailsPage.returnButton.click();
+    await rentalDetailsPage
+      .rentedItem('single rope 000')
+      .returnedAmountInput.fill('0');
+
+    await rentalDetailsPage.saveButton.click();
+    await expect(rentalDetailsPage.editComments).toBeHidden();
+
+    await rentalDetailsPage.expectToHave({
+      status: 'Partially returned',
+      numberOfItems: 3,
+    });
+    await rentalDetailsPage.expectItem('quickdraw', 14, 10);
+    await rentalDetailsPage.expectItem('single rope 000', 1, 0);
+    await rentalDetailsPage.expectItem('Ailefriode', 1, 0);
   });
 });

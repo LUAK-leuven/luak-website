@@ -40,7 +40,9 @@ export class RentalFormPage {
     return {
       search: this.page.getByPlaceholder(placeholder),
       select: (name: string) =>
-        this.page.getByRole('list').getByRole('button', { name: name }),
+        this.page
+          .getByTestId('searchable-select-options')
+          .getByRole('button', { name: name }),
       listItem: (name: string) => {
         const item = this.page
           .getByTestId('rental.form.listItem')
