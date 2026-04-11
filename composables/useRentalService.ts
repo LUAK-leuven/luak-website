@@ -1,7 +1,4 @@
-import {
-  type RentalService,
-  rentalService,
-} from '~/utils/services/rentalService';
+import { rentalService } from '~/services/rentalService';
 import type { RentalId, RentalUpdate, UnsavedRental } from '~/types/rental';
 import type {
   ExtractFunctionArguments,
@@ -11,38 +8,36 @@ import type {
 
 const RENTAL = 'rental';
 
+type RentalServiceNames = PickFunctionNames<typeof rentalService>;
+
 function invalidateCaches() {
   clearNuxtData((key) => key.startsWith(RENTAL));
 }
 
 export function useRentalService() {
-  const service = rentalService();
-
-  function getRentalData<T extends PickFunctionNames<RentalService>>(fName: T) {
-    return async function (
-      ...args: ExtractFunctionArguments<RentalService[T]>
-    ): Promise<{
-      rentals: Ref<Unwrap<ExtractFunctionReturn<RentalService[T]>> | null>;
-      pending: Ref<boolean>;
-    }> {
-      const { data, pending, error } = await useAsyncData(
+  function getRentalData<T extends RentalServiceNames>(fName: T) {
+    type Fn = (typeof rentalService)[T];
+    return async function (...args: ExtractFunctionArguments<Fn>) {
+      const { data, pending, error, refresh } = await useAsyncData(
         `${RENTAL}-${fName}`,
         async () => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-expect-error
-          return await service[fName](...args);
+          return await rentalService[fName](...args);
         },
-        { lazy: true,  },
+        { lazy: true },
       );
       if (error.value) console.error(fName, error.value);
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      return { rentals: data, pending };
+      return {
+        rentals: data as Ref<Unwrap<ExtractFunctionReturn<Fn>> | null>,
+        pending,
+        refresh,
+      };
     };
   }
 
   async function save(rental: UnsavedRental) {
-    const { id, error } = await service.saveRental(rental);
+    const { id, error } = await rentalService.saveRental(rental);
     invalidateCaches();
     return { id, error };
   }
@@ -51,13 +46,13 @@ export function useRentalService() {
     id: RentalId,
     rental: Omit<Omit<UnsavedRental, 'memberId'>, 'boardMemberId'>,
   ) {
-    const { error } = await service.editRental(id, rental);
+    const { error } = await rentalService.editRental(id, rental);
     invalidateCaches();
     return { error };
   }
 
   async function update(id: RentalId, rental: Omit<RentalUpdate, 'id'>) {
-    const { error } = await service.updateRental(id, rental);
+    const { error } = await rentalService.updateRental(id, rental);
     invalidateCaches();
     return { error };
   }

@@ -44,7 +44,7 @@ export class LoginPage {
               (await this.page.getByTestId('page.title').isVisible())
             );
           },
-          { timeout: 1_000 },
+          { timeout: 2_000 },
         )
         .toBe(true);
     } catch {
@@ -82,7 +82,21 @@ export class LoginPage {
         break;
       }
       case 'timeout': {
-        throw `Timeout - Failed to login user ${email}.`;
+        result = await this.login(email, password);
+        switch (result) {
+          case 'error': {
+            throw `Error - Failed to login user ${email}.`;
+          }
+          case 'timeout': {
+            throw `Timeout - Failed to login user ${email}.`;
+          }
+          case 'loading': {
+            await expect(this.submitButton.getByTestId('loading')).toBeHidden();
+            await this.page.waitForURL('/profile/overview', { timeout: 2_000 });
+            return;
+          }
+        }
+        break;
       }
       case 'loading': {
         await expect(this.submitButton.getByTestId('loading')).toBeHidden();

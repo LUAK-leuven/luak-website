@@ -52,44 +52,86 @@ export class RentalDetailsPage {
     return this.page.getByTestId('comments');
   }
 
+  get editComments() {
+    return this.page.getByTestId('editComments');
+  }
+
+  get depositReturned() {
+    return this.page.getByTestId('depositReturned');
+  }
+
   get editButton() {
     return this.page.getByTestId('editButton');
   }
 
-  async expectToHave(args: {
-    memberEmail: string;
-    dateBorrow: Dayjs;
-    dateReturn: Dayjs;
-    depositFee: number;
-    paymentMethod: 'cash' | 'transfer';
-    status: 'Not returned' | 'Partially returned' | 'Returned' | 'Reserved';
-    comments: string;
-    items: [string, number][];
-  }) {
-    await expect(this.member.email).toHaveText(args.memberEmail);
-    await expect(this.boardMember).toContainText(testUsers.boardMember);
-    await expect(this.dateBorrow).toHaveText(
-      args.dateBorrow.format('YYYY-MM-DD'),
-    );
-    await expect(this.dateReturn).toHaveText(
-      args.dateReturn.format('YYYY-MM-DD'),
-    );
-    await expect(this.depositFee).toHaveText(`${args.depositFee}`);
-    await expect(this.paymentMethod).toContainText(args.paymentMethod);
-    await expect(this.status).toHaveText(args.status);
-    if (args.comments === '') await expect(this.comments).toBeHidden();
-    else await expect(this.comments).toHaveText(args.comments);
+  get returnButton() {
+    return this.page.getByTestId('returnButton');
+  }
 
-    for (const [title, amount] of args.items) {
-      const titleLocator = this.page
-        .getByTestId('gear-and-topos-overview')
-        .getByText(title);
-      await expect(titleLocator).toBeVisible();
-      await expect(
-        titleLocator.locator('xpath=following-sibling::*[1]'),
-      ).toHaveText(amount.toString());
+  get saveButton() {
+    return this.page.getByTestId('saveButton');
+  }
+
+  rentedItem(name: string) {
+    const item = this.page.getByTestId(`rental-item-${name}`);
+    return {
+      item,
+      rentedAmount: item.getByTestId('rentedAmount'),
+      returnedAmount: item.getByTestId('returnedAmount'),
+      returnedAmountInput: item.getByTestId('returnedAmountInput'),
+      quickReturn: item.getByTestId('quickReturn'),
+    };
+  }
+
+  async expectToHave(args: {
+    memberEmail?: string;
+    dateBorrow?: Dayjs;
+    dateReturn?: Dayjs;
+    depositFee?: number;
+    paymentMethod?: 'cash' | 'transfer';
+    status?: 'Not returned' | 'Partially returned' | 'Returned' | 'Reserved';
+    comments?: string;
+    numberOfItems?: number;
+  }) {
+    if (args.memberEmail)
+      await expect(this.member.email).toHaveText(args.memberEmail);
+    await expect(this.boardMember).toContainText(testUsers.boardMember);
+    if (args.dateBorrow)
+      await expect(this.dateBorrow).toHaveText(
+        args.dateBorrow.format('YYYY-MM-DD'),
+      );
+    if (args.dateReturn)
+      await expect(this.dateReturn).toHaveText(
+        args.dateReturn.format('YYYY-MM-DD'),
+      );
+    if (args.depositFee)
+      await expect(this.depositFee).toHaveText(`${args.depositFee}`);
+    if (args.paymentMethod)
+      await expect(this.paymentMethod).toContainText(args.paymentMethod);
+    if (args.status) await expect(this.status).toHaveText(args.status);
+    if (args.comments) {
+      if (args.comments === '') await expect(this.comments).toBeHidden();
+      else await expect(this.comments).toHaveText(args.comments);
     }
+    if (args.numberOfItems)
+      await expect(this.page.getByTestId(/rental-item/)).toHaveCount(
+        args.numberOfItems,
+      );
 
     return this.getRentalId();
+  }
+
+  async expectItem(
+    name: string,
+    rentedAmount: number,
+    returnedAmount: number = 0,
+  ) {
+    await expect(this.rentedItem(name).item).toBeVisible();
+    await expect(this.rentedItem(name).rentedAmount).toHaveText(
+      rentedAmount.toString(),
+    );
+    await expect(this.rentedItem(name).returnedAmount).toHaveText(
+      returnedAmount.toString(),
+    );
   }
 }

@@ -84,3 +84,5 @@ export function min<T>(arr: T[], predicate: (a: T, b: T) => boolean): T | null {
     return predicate(minVal, it) ? minVal : it;
   }, null);
 }
+
+export const uuidRegex = `[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}`;

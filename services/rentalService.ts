@@ -9,44 +9,47 @@ import type {
 import type { GearItemId, TopoId } from '~/types/gear';
 import type { UserId } from '~/types/user';
 
-class RentalService {
-  private readonly supabase = useSupabaseClient<Database>();
-
-  public async saveRental(
+export const rentalService = {
+  async saveRental(
     rental: UnsavedRental,
   ): Promise<{ id: RentalId | undefined; error: string | undefined }> {
-    const { error, data } = await this.supabase.rpc('create_rental', {
-      p_board_member_id: rental.boardMemberId,
-      p_member_id: rental.memberId ?? null,
-      p_date_borrow: rental.dateBorrow,
-      p_date_return: rental.dateReturn,
-      p_deposit: rental.depositFee,
-      p_status: rental.status,
-      p_gear: Object.entries(rental.gear)
-        .filter(([_, amount]) => amount !== undefined)
-        .map(([id, amount]) => ({
-          gear_item_id: id,
-          rented_amount: amount,
-        })),
-      p_topos: Object.entries(rental.topos)
-        .filter(([_, amount]) => amount !== undefined)
-        .map(([id, amount]) => ({
-          topo_id: id,
-          rented_amount: amount,
-        })),
-      p_payment_method: rental.paymentMethod,
-      p_contact_info: rental.contactInfo
-        ? JSON.stringify(rental.contactInfo)
-        : null,
-      p_comments: rental.comments ?? null,
-    });
+    const { error, data } = await useSupabaseClient<Database>().rpc(
+      'create_rental',
+      {
+        p_board_member_id: rental.boardMemberId,
+        p_member_id: rental.memberId ?? null,
+        p_date_borrow: rental.dateBorrow,
+        p_date_return: rental.dateReturn,
+        p_deposit: rental.depositFee,
+        p_status: rental.status,
+        p_gear: Object.entries(rental.gear)
+          .filter(([_, amount]) => amount !== undefined)
+          .map(([id, amount]) => ({
+            gear_item_id: id,
+            rented_amount: amount,
+          })),
+        p_topos: Object.entries(rental.topos)
+          .filter(([_, amount]) => amount !== undefined)
+          .map(([id, amount]) => ({
+            topo_id: id,
+            rented_amount: amount,
+          })),
+        p_payment_method: rental.paymentMethod,
+        p_contact_info: rental.contactInfo
+          ? JSON.stringify(rental.contactInfo)
+          : null,
+        p_comments: rental.comments ?? null,
+      },
+    );
 
     return { id: (data as RentalId) ?? undefined, error: error?.message };
-  }
+  },
 
-  public async getRentals() {
-    const { data, error } = await this.supabase.from('Rentals').select(
-      `
+  async getRentals() {
+    const { data, error } = await useSupabaseClient<Database>()
+      .from('Rentals')
+      .select(
+        `
           id,
           member:Users!Rentals_member_id_fkey (
             first_name,
@@ -57,7 +60,7 @@ class RentalService {
           status,
           contact_info
           `,
-    );
+      );
 
     if (error || data === null) {
       console.warn('failed to load rentals', error);
@@ -80,10 +83,10 @@ class RentalService {
         status: rental.status,
       };
     });
-  }
+  },
 
-  public async getRental(rentalId: RentalId): Promise<RentalDetails | null> {
-    const { data: rental, error } = await this.supabase
+  async getRental(rentalId: RentalId): Promise<RentalDetails | null> {
+    const { data: rental, error } = await useSupabaseClient<Database>()
       .from('Rentals')
       .select(
         `
@@ -175,10 +178,10 @@ class RentalService {
       status: rental.status,
       comments: rental.comments ?? undefined,
     };
-  }
+  },
 
-  public async updateRental(id: RentalId, rentalUpdate: Omit<RentalUpdate, 'id'>) {
-    const { error } = await this.supabase.rpc('update_rental', {
+  async updateRental(id: RentalId, rentalUpdate: Omit<RentalUpdate, 'id'>) {
+    const { error } = await useSupabaseClient<Database>().rpc('update_rental', {
       p_rental_id: id,
       p_date_return: rentalUpdate.dateReturn,
       p_deposit_returned: rentalUpdate.depositReturned,
@@ -189,13 +192,13 @@ class RentalService {
     });
     if (error) console.warn('updateRental: ', error);
     return { error: error?.message };
-  }
+  },
 
-  public async editRental(
+  async editRental(
     id: RentalId,
     rental: Omit<Omit<UnsavedRental, 'memberId'>, 'boardMemberId'>,
   ) {
-    const { error } = await this.supabase.rpc('edit_rental', {
+    const { error } = await useSupabaseClient<Database>().rpc('edit_rental', {
       p_rental_id: id,
       p_contact_info: rental.contactInfo
         ? JSON.stringify(rental.contactInfo)
@@ -221,10 +224,10 @@ class RentalService {
     });
     if (error) console.warn('editRental: ', error);
     return { error: error?.message };
-  }
+  },
 
-  public async getRentalsForUser(userId: UserId) {
-    const { data: rentals, error } = await this.supabase
+  async getRentalsForUser(userId: UserId) {
+    const { data: rentals, error } = await useSupabaseClient<Database>()
       .from('Rentals')
       .select(
         `
@@ -256,7 +259,7 @@ class RentalService {
       .eq('member_id', userId);
 
     if (error || rentals === null) {
-      console.warn('failed to load rentals', error);
+      console.warn('failed to load rentals for user', error);
       return null;
     }
 
@@ -287,13 +290,5 @@ class RentalService {
       ),
       paymentMethod: rental.payment_method,
     }));
-  }
-}
-
-let instance: RentalService | undefined = undefined;
-export function rentalService(): RentalService {
-  if (instance === undefined) instance = new RentalService();
-  return instance;
-}
-
-export type { RentalService };
+  },
+};

@@ -6,9 +6,13 @@
   import TextField from '~/components/input/TextField.vue';
   import PaymentModal from '~/components/PaymentModal.vue';
   import { useToast } from '~/composables/useToast';
-  import type { RentalDetails } from '~/types/rental';
+  import type { RentalDetails, RentalUpdate } from '~/types/rental';
 
-  const { rental } = defineProps<{ rental: RentalDetails }>();
+  const props = defineProps<{
+    rental: RentalDetails;
+    update: (rental: RentalUpdate) => Promise<boolean>;
+  }>();
+
   const { show: showPopup } = useToast();
 
   const formSchema = computed(() =>
@@ -17,7 +21,7 @@
         .string()
         .required()
         .test('isAfter', 'Return date must be after borrow date', (date) => {
-          return rental.dateBorrow < date;
+          return props.rental.dateBorrow < date;
         })
         .label('return date'),
       returnedGear: yup
@@ -25,10 +29,10 @@
         .required()
         .test('max_per_item', function (array) {
           for (let i = 0; i < array.length; i++) {
-            if (array[i]! > rental.gear[i]!.rentedAmount) {
+            if (array[i]! > props.rental.gear[i]!.rentedAmount) {
               return this.createError({
                 path: `${this.path}[${i}]`,
-                message: `Value for ${rental.gear[i]!.name} cannot exceed rented amount`,
+                message: `Value for ${props.rental.gear[i]!.name} cannot exceed rented amount`,
               });
             }
           }
@@ -39,10 +43,10 @@
         .required()
         .test('max_per_item', function (array) {
           for (let i = 0; i < array.length; i++) {
-            if (array[i]! > rental.topos[i]!.rentedAmount) {
+            if (array[i]! > props.rental.topos[i]!.rentedAmount) {
               return this.createError({
                 path: `${this.path}[${i}]`,
-                message: `Value for ${rental.topos[i]!.title} cannot exceed rented amount`,
+                message: `Value for ${props.rental.topos[i]!.title} cannot exceed rented amount`,
               });
             }
           }
@@ -65,12 +69,14 @@
   function edit() {
     editMode.value = true;
     setValues({
-      dateReturn: rental.dateReturn,
-      returnedGear: rental.gear.map((gearItem) => gearItem.returnedAmount),
-      returnedTopos: rental.topos.map((topo) => topo.returnedAmount),
-      depositReturned: rental.depositReturned,
-      comments: rental.comments,
-      statusReserved: rental.status === 'reserved',
+      dateReturn: props.rental.dateReturn,
+      returnedGear: props.rental.gear.map(
+        (gearItem) => gearItem.returnedAmount,
+      ),
+      returnedTopos: props.rental.topos.map((topo) => topo.returnedAmount),
+      depositReturned: props.rental.depositReturned,
+      comments: props.rental.comments,
+      statusReserved: props.rental.status === 'reserved',
     });
   }
 
@@ -79,25 +85,29 @@
   const save = handleSubmit(
     async (formState) => {
       const gear: { gear_item_id: GearItemId; returned_amount: number }[] = [];
-      for (let i = 0; i < rental.gear.length; i++) {
-        if (formState.returnedGear[i] !== rental.gear[i]!.returnedAmount) {
+      for (let i = 0; i < props.rental.gear.length; i++) {
+        if (
+          formState.returnedGear[i] !== props.rental.gear[i]!.returnedAmount
+        ) {
           gear.push({
-            gear_item_id: rental.gear[i]!.id,
+            gear_item_id: props.rental.gear[i]!.id,
             returned_amount: formState.returnedGear[i]!,
           });
         }
       }
       const topos: { topo_id: TopoId; returned_amount: number }[] = [];
-      for (let i = 0; i < rental.topos.length; i++) {
-        if (formState.returnedTopos[i] !== rental.topos[i]!.returnedAmount) {
+      for (let i = 0; i < props.rental.topos.length; i++) {
+        if (
+          formState.returnedTopos[i] !== props.rental.topos[i]!.returnedAmount
+        ) {
           topos.push({
-            topo_id: rental.topos[i]!.id,
+            topo_id: props.rental.topos[i]!.id,
             returned_amount: formState.returnedTopos[i]!,
           });
         }
       }
-      const success = await gearService().updateRental({
-        id: rental.id,
+      const success = await props.update({
+        id: props.rental.id,
         dateReturn: formState.dateReturn,
         depositReturned: formState.depositReturned,
         gear: gear,
@@ -124,14 +134,14 @@
     if (editMode.value) {
       if (values.statusReserved) return 'reserved';
       return computeRentalStatusUnsafe(
-        rental.gear.map((it) => it.rentedAmount),
+        props.rental.gear.map((it) => it.rentedAmount),
         values.returnedGear!,
-        rental.topos.map((it) => it.rentedAmount),
+        props.rental.topos.map((it) => it.rentedAmount),
         values.returnedTopos!,
         values.depositReturned!,
       );
     }
-    return rental.status;
+    return props.rental.status;
   });
 
   const editMode = ref(false);
@@ -169,7 +179,11 @@
       <div class="flex flex-row gap-x-1 items-center flex-wrap">
         <span class="w-max flex-shrink-0">Return date:</span>
         <span class="flex-[44] flex-shrink">
-          <TextField v-if="editMode" name="dateReturn" type="date" />
+          <TextField
+            v-if="editMode"
+            name="dateReturn"
+            type="date"
+            data-testId="editDateReturn" />
           <BoardRentalReturnDate
             v-else
             :date="rental.dateReturn"
@@ -190,7 +204,8 @@
           class="checkbox checkbox-success border-2 ml-1"
           name="depositReturned"
           type="checkbox"
-          :value="true" />
+          :value="true"
+          data-testId="depositReturned" />
         <button @click="showPaymentModal = true">
           <span class="material-symbols-outlined"> qr_code_scanner </span>
         </button>
@@ -211,7 +226,10 @@
         class="col-span-full flex flex-col">
         <span>Comments:</span>
         <Field v-if="editMode" v-slot="{ field }" name="comments">
-          <textarea class="textarea textarea-bordered" v-bind="field" />
+          <textarea
+            class="textarea textarea-bordered"
+            data-testId="editComments"
+            v-bind="field" />
         </Field>
 
         <p v-else class="italic" data-testId="comments">
@@ -220,33 +238,33 @@
       </div>
     </div>
     <hr class="my-3" />
-    <div
-      class="grid grid-cols-[3fr_1fr_1fr] border rounded-sm"
-      data-testId="gear-and-topos-overview">
-      <b class="border px-1">Gear</b>
-      <b class="border px-1">Amount</b>
-      <b class="border px-1">Returned amount</b>
+    <div class="border rounded-sm" data-testId="gear-and-topos-overview">
+      <div class="grid grid-cols-[3fr_1fr_1fr]">
+        <b class="border px-1">Gear</b>
+        <b class="border px-1">Amount</b>
+        <b class="border px-1">Returned amount</b>
+      </div>
       <BoardRentalItem
         v-for="({ title, rentedAmount, returnedAmount }, idx) of rental.topos"
         :key="idx"
+        class="grid grid-cols-[3fr_1fr_1fr]"
         :bouncing="bouncing[`returnedTopos[${idx}]`]"
         :name="title"
         :rented-amount="rentedAmount"
         :returned-amount="editMode ? returnedTopos[idx]!.value : returnedAmount"
         :edit-mode="editMode"
-        :form-name="`returnedTopos[${idx}]`"
         @update-returned-amount="
           (amount) => updateReturnedTopos(idx, amount)
         " />
       <BoardRentalItem
         v-for="({ name, rentedAmount, returnedAmount }, idx) of rental.gear"
         :key="idx"
+        class="grid grid-cols-[3fr_1fr_1fr]"
         :bouncing="bouncing[`returnedGear[${idx}]`]"
         :name="name"
         :rented-amount="rentedAmount"
         :returned-amount="editMode ? returnedGear[idx]!.value : returnedAmount"
         :edit-mode="editMode"
-        :form-name="`returnedGear[${idx}]`"
         @update-returned-amount="(amount) => updateReturnedGear(idx, amount)" />
     </div>
     <hr class="my-3" />
@@ -255,7 +273,10 @@
         <button class="btn btn-error btn-outline" @click="editMode = false">
           Cancel
         </button>
-        <SharedLoadingButton text="Save changes" :click-handler="save" />
+        <SharedLoadingButton
+          text="Save changes"
+          :click-handler="save"
+          data-testId="saveButton" />
       </template>
       <template v-else>
         <button
@@ -264,7 +285,12 @@
           @click="() => navigateTo(`/board/rentals/${rental.id}/edit`)">
           Edit
         </button>
-        <button class="btn btn-primary" @click="edit()">Return</button>
+        <button
+          class="btn btn-primary"
+          data-testId="returnButton"
+          @click="edit()">
+          Return
+        </button>
       </template>
     </div>
     <!-- <p>Values: {{ values }}</p>
