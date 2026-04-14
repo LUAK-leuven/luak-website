@@ -22,7 +22,7 @@ export default defineNuxtConfig({
     redirectOptions: {
       login: '/login',
       callback: '/confirmLogin',
-      include: ['/profile(/*)?', '/stories(/*)?', '/topos(/*)?'],
+      include: ['/profile(/*)?'],
       saveRedirectToCookie: true,
     },
     cookieOptions: {

@@ -5,21 +5,16 @@
   });
 </script>
 <template>
-  <main>
-    <template v-if="doc">
-      <FullPageCard>
-        <template #title>
-          {{ doc.title }}
-        </template>
-        <ContentRenderer class="nuxt-content w-full" :value="doc" />
-      </FullPageCard>
+  <FullPageCard v-if="doc">
+    <template #title>
+      {{ doc.title }}
     </template>
-    <template v-else>
-      <FullPageCard>
-        <template #title> Page Not Found </template>
-        <p>Oops! The content you're looking for doesn't exist.</p>
-        <NuxtLink to="/">Go back home</NuxtLink>
-      </FullPageCard>
-    </template>
-  </main>
+
+    <ContentRenderer class="nuxt-content w-full" :value="doc" />
+  </FullPageCard>
+  <FullPageCard v-else>
+    <template #title> Page Not Found </template>
+    <p>Oops! The content you're looking for doesn't exist.</p>
+    <NuxtLink class="link" to="/">Go back home</NuxtLink>
+  </FullPageCard>
 </template>
