@@ -1,5 +1,6 @@
 <script setup lang="ts">
   definePageMeta({
+    middleware: 'active-member-guard',
     layout: 'picture',
   });
 

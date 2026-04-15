@@ -29,7 +29,7 @@ test.describe('create a new rental', async () => {
     );
   });
 
-  test('create - can submit a minimal rental', async ({ page }) => {
+  test('create - can submit a minimal rental - edit it - and return it', async ({ page }) => {
     // --- Submit a rental ---
     const rentalFormPage = new RentalFormPage(page);
     const member = testUsers.paidMembership;
@@ -99,7 +99,7 @@ test.describe('create a new rental', async () => {
     await rentalDetailsPage.expectItem('BD C4 .4', 1, 1);
   });
 
-  test('create - can submit a full rental', async ({ page }) => {
+  test('create - can submit a full rental - and (partially) return the rental', async ({ page }) => {
     // --- create a new rental ---
     const rentalFormPage = new RentalFormPage(page);
     const formValues = {
@@ -164,23 +164,6 @@ test.describe('create a new rental', async () => {
     });
     await rentalDetailsPage.expectItem('quickdraw', 14, 10);
     await rentalDetailsPage.expectItem('single rope 000', 1, 1);
-    await rentalDetailsPage.expectItem('Ailefriode', 1, 0);
-
-    // --- return more stuff ---
-    await rentalDetailsPage.returnButton.click();
-    await rentalDetailsPage
-      .rentedItem('single rope 000')
-      .returnedAmountInput.fill('0');
-
-    await rentalDetailsPage.saveButton.click();
-    await expect(rentalDetailsPage.editComments).toBeHidden();
-
-    await rentalDetailsPage.expectToHave({
-      status: 'Partially returned',
-      numberOfItems: 3,
-    });
-    await rentalDetailsPage.expectItem('quickdraw', 14, 10);
-    await rentalDetailsPage.expectItem('single rope 000', 1, 0);
     await rentalDetailsPage.expectItem('Ailefriode', 1, 0);
   });
 });

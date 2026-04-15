@@ -20,10 +20,12 @@ export default defineNuxtRouteMiddleware(async (to) => {
       .eq('user_id', user.value.sub);
 
     if (data === null || data.length === 0) {
-      throw createError({
-        statusCode: 404,
-        statusMessage: 'Page Not Found',
-      });
+      return abortNavigation(
+        createError({
+          statusCode: 403,
+          statusMessage: 'Unauthorized',
+        }),
+      );
     }
   }
 });

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  definePageMeta({ middleware: 'active-member-guard' });
+
   const NR_OF_STORIES = 20;
   const { data } = await useAsyncData(() =>
     queryCollection('stories').order('date', 'DESC').limit(NR_OF_STORIES).all(),
