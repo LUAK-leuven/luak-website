@@ -1,13 +1,14 @@
 ---
 title: Start Academic year 25-26
 date: 2025-08-29
-description: helloooww luak people and interested people ✌️
 image: /news/zomer-2025-71.jpg
 ---
 
 helloooww luak people and interested people ✌️
 
-The new academic year is closing in and with that also the start of a new luak year. This means of course new initiations, info evenings, lots of climbing and lots of fun. Starting from 25 September our regular club evenings will once again be on Thursday evening from 20h30 to at least 23h00.
+The new academic year is closing in and with that also the start of a new luak year. This means of course new
+initiations, info evenings, lots of climbing and lots of fun. Starting from 25 September our regular club evenings will
+once again be on Thursday evening from 20h30 to at least 23h00.
 
 <!--more-->
 
@@ -23,7 +24,8 @@ They will start at **20:00** and will be held at the [LUAK clubhouse](https://ma
 - Saturday 4 Ocotber
 - Sunnday October 12th
 
-**Signing up is mandatory** and can be done during our info evening and will also be posted on the website after the info evening (if there is still place)!
+**Signing up is mandatory** and can be done during our info evening and will also be posted on the website after the
+info evening (if there is still place)!
 
 ### More climbing activities
 
@@ -34,4 +36,5 @@ They will start at **20:00** and will be held at the [LUAK clubhouse](https://ma
 
 ---
 
-For more information about our activities, be sure to check our [Activities](/activities) and [Instagram](https://www.instagram.com/luakleuven/) .
+For more information about our activities, be sure to check our [Activities](/activities)
+and [Instagram](https://www.instagram.com/luakleuven/) .
