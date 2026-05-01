@@ -19,7 +19,7 @@
   "devDependencies": {
     "@nuxt/devtools": "^3.2.4",
     "@nuxt/eslint": "^1.15.2",
-    "@nuxt/test-utils": "^4.0.0",
+    "@nuxt/test-utils": "^4.0.3",
     "@nuxtjs/supabase": "^2.0.6",
     "@nuxtjs/tailwindcss": "^6.8.0",
     "@playwright/test": "^1.59.1",
@@ -32,15 +32,15 @@
     "eslint-plugin-nuxt": "^4.0.0",
     "eslint-plugin-prettier": "^5.5.5",
     "happy-dom": "^20.9.0",
-    "nuxt": "^3.21.0",
-    "nuxt-studio": "^1.6.0",
+    "nuxt": "^3.21.4",
+    "nuxt-studio": "^1.7.0",
     "prettier": "^3.8.1",
     "prettier-plugin-organize-attributes": "^1.0.0",
     "sass": "^1.99.0",
     "supabase": "^2.98.0",
     "typescript": "^6.0.2",
     "vitest": "^4.1.4",
-    "vue": "^3.5.32",
+    "vue": "^3.5.33",
     "vue-router": "^4.6.4"
   },
   "dependencies": {
