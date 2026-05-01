@@ -115,7 +115,14 @@
         dateBorrow: rental.dateBorrow,
         dateReturn: rental.dateReturn,
         memberId: rental.memberId ?? 'non-user',
-        contactInfo: rental.memberId === undefined ? rental.member : undefined,
+        contactInfo:
+          rental.memberId === undefined
+            ? {
+                fullName: rental.member.fullName,
+                email: rental.member.email,
+                phone: rental.member.phoneNumber,
+              }
+            : undefined,
         gear: Object.fromEntries(
           rental.gear.map((it) => [it.gearItemId, it.rentedAmount]),
         ),

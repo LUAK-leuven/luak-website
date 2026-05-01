@@ -27,8 +27,8 @@ export type SavedRental = UnsavedRental & { id: RentalId };
 
 export type ContactInfo = {
   fullName: string;
-  email?: string;
-  phoneNumber?: string;
+  email: string | undefined;
+  phoneNumber: string | undefined;
 };
 
 export type RentalUpdate = {
