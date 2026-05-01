@@ -84,6 +84,8 @@ export class RentalDetailsPage {
   }
 
   async expectToHave(args: {
+    memberName?: string;
+    memberPhone?: string;
     memberEmail?: string;
     dateBorrow?: Dayjs;
     dateReturn?: Dayjs;
@@ -93,8 +95,15 @@ export class RentalDetailsPage {
     comments?: string;
     numberOfItems?: number;
   }) {
-    if (args.memberEmail)
+    if (args.memberName) {
+      await expect(this.member.fullName).toContainText(args.memberName);
+    }
+    if (args.memberEmail) {
       await expect(this.member.email).toHaveText(args.memberEmail);
+    }
+    if (args.memberPhone) {
+      await expect(this.member.phone).toHaveText(args.memberPhone);
+    }
     await expect(this.boardMember).toContainText(testUsers.boardMember);
     if (args.dateBorrow)
       await expect(this.dateBorrow).toHaveText(

@@ -90,17 +90,20 @@
         v-model="fullName"
         placeholder="Adam Ondra"
         label="Full name *"
-        type="text" />
+        type="text"
+        data-testId="contact.fullName" />
       <Text
         v-model="email"
         placeholder="example@mail.com"
         label="Email"
-        type="email" />
+        type="email"
+        data-testId="contact.email" />
       <Text
         v-model="phone"
         placeholder="+32 123 34 56 77"
         label="Phone number"
-        type="text" />
+        type="text"
+        data-testId="contact.phoneNumber" />
     </div>
   </div>
 </template>

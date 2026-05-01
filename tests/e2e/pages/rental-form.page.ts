@@ -15,6 +15,18 @@ export class RentalFormPage {
       .getByRole('textbox');
   }
 
+  get contactFullName() {
+    return this.page.getByTestId('contact.fullName').getByRole('textbox');
+  }
+
+  get contactEmail() {
+    return this.page.getByTestId('contact.email').getByRole('textbox');
+  }
+
+  get contactPhoneNumber() {
+    return this.page.getByTestId('contact.phoneNumber').getByRole('textbox');
+  }
+
   get dateBorrow() {
     return this.page.getByTestId('rental.form.dateBorrow').getByRole('textbox');
   }
