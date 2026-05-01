@@ -20,7 +20,7 @@
     "@nuxt/devtools": "^3.2.4",
     "@nuxt/eslint": "^1.15.2",
     "@nuxt/test-utils": "^4.0.0",
-    "@nuxtjs/supabase": "^2.0.4",
+    "@nuxtjs/supabase": "^2.0.6",
     "@nuxtjs/tailwindcss": "^6.8.0",
     "@playwright/test": "^1.59.1",
     "@vue/test-utils": "^2.4.6",

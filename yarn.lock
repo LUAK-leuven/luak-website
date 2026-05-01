@@ -1768,10 +1768,10 @@
     unwasm "^0.5.3"
     vfile "^6.0.3"
 
-"@nuxtjs/supabase@^2.0.4":
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/@nuxtjs/supabase/-/supabase-2.0.5.tgz#176ba4243e4f7610a6ef416ee6ba94aeb242735f"
-  integrity sha512-BC9nA7CunW2sGvHD7rvODwGoKmis3SAGt9q2AwDdmS+37tknTtwq3+cpTudKiFVDilUT7zuWVT9B8rk+vLz+6A==
+"@nuxtjs/supabase@^2.0.6":
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/@nuxtjs/supabase/-/supabase-2.0.6.tgz#7873e3b39d762fce3b2aba55aa368f52a27db213"
+  integrity sha512-w0KSh4OKOxAkX5Dg6RfwyrG71HbCqXMfELHSKgOcl1MdO1Okwv+SItWD3mezc6q4J0tKtb0pw2KZDQ0F3FPIdA==
   dependencies:
     "@supabase/ssr" "^0.10.0"
     "@supabase/supabase-js" "^2.101.1"
@@ -4703,12 +4703,7 @@ define-properties@^1.2.1:
     has-property-descriptors "^1.0.0"
     object-keys "^1.1.1"
 
-defu@^6.1.4:
-  version "6.1.4"
-  resolved "https://registry.yarnpkg.com/defu/-/defu-6.1.4.tgz#4e0c9cf9ff68fe5f3d7f2765cc1a012dfdcb0479"
-  integrity sha512-mEQCMmwJu317oSz8CwdIOdwf3xMif1ttiM8LTufzc3g6kR+9Pe236twL8j3IYT1F7GfRgGcW6MWxzZjLIkuHIg==
-
-defu@^6.1.6, defu@^6.1.7:
+defu@^6.1.4, defu@^6.1.6, defu@^6.1.7:
   version "6.1.7"
   resolved "https://registry.yarnpkg.com/defu/-/defu-6.1.7.tgz#72543567c8e9f97ff13ce402b6dbe09ac5ae4d23"
   integrity sha512-7z22QmUWiQ/2d0KkdYmANbRUVABpZ9SNYyH5vx6PZ+nE5bcC0l7uFvEfHlyld/HcGBFTL536ClDt3DEcSlEJAQ==
