@@ -29,7 +29,7 @@ test.describe('create a new rental', async () => {
     );
   });
 
-  test('create - can submit a minimal rental - edit it - and return it', async ({ page }) => {
+  test('create, edit & return - a minimal rental', async ({ page }) => {
     // --- Submit a rental ---
     const rentalFormPage = new RentalFormPage(page);
     const member = testUsers.paidMembership;
@@ -99,7 +99,7 @@ test.describe('create a new rental', async () => {
     await rentalDetailsPage.expectItem('BD C4 .4', 1, 1);
   });
 
-  test('create - can submit a full rental - and (partially) return the rental', async ({ page }) => {
+  test('create & partial return - a full rental', async ({ page }) => {
     // --- create a new rental ---
     const rentalFormPage = new RentalFormPage(page);
     const formValues = {
@@ -165,5 +165,53 @@ test.describe('create a new rental', async () => {
     await rentalDetailsPage.expectItem('quickdraw', 14, 10);
     await rentalDetailsPage.expectItem('single rope 000', 1, 1);
     await rentalDetailsPage.expectItem('Ailefriode', 1, 0);
+  });
+
+  test('create & edit - a rental for non-member', async ({ page }) => {
+    // --- create a new rental ---
+    const rentalFormPage = new RentalFormPage(page);
+    const formValues = {
+      member: 'non-member',
+      paymentMethod: 'cash' as const,
+    };
+    const contactInfo = {
+      name: 'Not a member',
+      email: 'not-a-member@test.com',
+      phone: '+32 412 34 56 78',
+    };
+    await rentalFormPage.fillForm(formValues);
+    await rentalFormPage.contactFullName.fill(contactInfo.name);
+    await rentalFormPage.contactEmail.fill(contactInfo.email);
+    await rentalFormPage.contactPhoneNumber.fill(contactInfo.phone);
+    await rentalFormPage.submit();
+
+    await expect(page).toHaveURL(new RegExp(`board\\/rentals\\/${uuidRegex}`));
+
+    const rentalDetailsPage = new RentalDetailsPage(page);
+    const rentalId = await rentalDetailsPage.expectToHave({
+      ...formValues,
+      memberName: contactInfo.name,
+      memberEmail: contactInfo.email,
+      memberPhone: contactInfo.phone,
+      status: 'Not returned',
+      numberOfItems: 0,
+    });
+
+    const rentalsOverviewPage = new RentalsOverviewPage(page);
+    await navigateTo(page, rentalsOverviewPage.path);
+
+    await expect(rentalsOverviewPage.rentalSummary(rentalId)).toBeVisible();
+
+    // --- Edit the rental ---
+    await rentalsOverviewPage.rentalSummary(rentalId).click();
+    await expect(page).toHaveURL(`/board/rentals/${rentalId}`);
+    await rentalDetailsPage.editButton.click();
+    await expect(page).toHaveURL(`/board/rentals/${rentalId}/edit`);
+
+    await expect(rentalFormPage.contactFullName).toHaveValue(contactInfo.name);
+    await expect(rentalFormPage.contactEmail).toHaveValue(contactInfo.email);
+    await expect(rentalFormPage.contactPhoneNumber).toHaveValue(
+      contactInfo.phone,
+    );
   });
 });

@@ -15,8 +15,8 @@
       memberId: UserId | 'non-user';
       contactInfo: {
         fullName: string;
-        email?: string;
-        phone?: string;
+        email: string | undefined;
+        phone: string | undefined;
       };
       dateBorrow: string;
       dateReturn: string;
@@ -78,7 +78,13 @@
         topos: formState.topos,
         depositFee: formState.depositFee,
         paymentMethod: formState.paymentMethod,
-        contactInfo: formState.contactInfo,
+        contactInfo: formState.contactInfo
+          ? {
+              fullName: formState.contactInfo.fullName,
+              email: formState.contactInfo.email,
+              phoneNumber: formState.contactInfo.phone,
+            }
+          : undefined,
         status: formState.markAsReserved ? 'reserved' : 'not_returned',
         comments: formState.comments,
       });
