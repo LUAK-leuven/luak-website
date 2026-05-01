@@ -1,8 +1,9 @@
 <script setup lang="ts">
-  import type { Database } from '~/types/database.types';
-  import createMembershipSchema from '~/yup_schemas/createMembershipSchema';
-  import BoolField from '~/components/input/BoolField.vue';
-  const { handleSubmit, isSubmitting } = useForm({
+import type { Database } from '~/types/database.types';
+import createMembershipSchema from '~/yup_schemas/createMembershipSchema';
+import BoolField from '~/components/input/BoolField.vue';
+
+const { handleSubmit, isSubmitting } = useForm({
     validationSchema: toTypedSchema(createMembershipSchema),
     initialValues: { sportscard: false },
   });
