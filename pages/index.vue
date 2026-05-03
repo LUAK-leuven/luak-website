@@ -32,7 +32,7 @@
           <NuxtLink
             v-if="!user.hasActiveMembership && !wasMemberLastYear"
             class="btn btn-outline m-2 text-white"
-            to="/pages/become_a_member">
+            to="/pages/become-a-member">
             Become a member
           </NuxtLink>
           <NuxtLink
