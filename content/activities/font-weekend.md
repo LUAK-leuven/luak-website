@@ -10,6 +10,6 @@ On the long weekend of 14-17 May we are going to the magical forests of Fontaine
 
 Because this is a bouldering trip, no experience with belaying or lead climbing is required. But don't underestimate the dangers of bouldering, there are more accidents with bouldering than sportclimbing! So make sure you know how to spot someone and how to safely fall on a crashpad. If you're not familiar with this it might be a good idea to check out some videos on youtube😉.
 
-More info & registrations will be posted later.
+Want to join? Register by filling in [this form](https://docs.google.com/forms/d/e/1FAIpQLSfFEbZRwVuaEMhtScn9dsYZKHFh1n7EVZFEPHv3uoisSZXAvw/viewform?usp=dialog).
 
-:br Contact-Person for this activity: Hugo
+:br Contact-Person for this activity: Arthur
