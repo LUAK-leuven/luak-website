@@ -5,5 +5,7 @@ export const validateLengthIsBetween = (
   max: number,
 ) => {
   if (!!value && !(min <= value.length && value.length <= max))
-    throw `${name} must be between ${min} and ${max} characters`;
+    throw new Error(
+      `${name} must be between ${min.toFixed()} and ${max.toFixed()} characters`,
+    );
 };

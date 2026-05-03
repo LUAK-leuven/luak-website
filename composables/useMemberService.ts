@@ -1,5 +1,3 @@
-import type { Database } from '~/types/database.types';
-
 export async function useMemberService() {
   const user = useSupabaseUser();
 
@@ -7,7 +5,7 @@ export async function useMemberService() {
     'membershipInfo',
     async () => {
       if (user.value === null) return null;
-      const { data, error } = await useSupabaseClient<Database>()
+      const { data, error } = await useSupabaseClient()
         .from('Users')
         .select('first_name, last_name, Memberships(year, Payments(approved))')
         .eq('id', user.value.sub)

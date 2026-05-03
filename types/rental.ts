@@ -41,11 +41,15 @@ export type RentalUpdate = {
   comments: string | undefined;
 };
 
-export type RentalDetails = {
-  id: RentalId;
+export type RentalDetails = PublicRentalDetails & {
   member: ContactInfo;
   memberId: UserId | undefined;
   boardMember: string;
+  comments: string | undefined;
+};
+
+export type PublicRentalDetails = {
+  id: RentalId;
   dateBorrow: string;
   dateReturn: string;
   depositFee: number;
@@ -64,5 +68,4 @@ export type RentalDetails = {
   }[];
   paymentMethod: Enums<'payment_method'>;
   status: Enums<'rental_status'>;
-  comments: string | undefined;
 };

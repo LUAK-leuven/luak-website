@@ -8,7 +8,7 @@
     if (props.data.price === 0) {
       return 'Free';
     } else if (typeof props.data.price === 'number') {
-      return `${props.data.price / 100} €`;
+      return `${(props.data.price / 100).toFixed(2)} €`;
     } else {
       return ' - €';
     }

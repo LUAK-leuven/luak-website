@@ -1,11 +1,10 @@
 <script lang="ts" setup>
-  import type { Database } from '~/types/database.types';
   import { yup_phone } from '~/utils/yup';
   import * as yup from 'yup';
   import TextField from '~/components/input/TextField.vue';
   import BoolField from '~/components/input/BoolField.vue';
 
-  const supabase = useSupabaseClient<Database>();
+  const supabase = useSupabaseClient();
   const user = useSupabaseUser();
 
   const { data: userData } = await useAsyncData('userData', async () => {
@@ -49,7 +48,7 @@
         has_whatsapp: submitted.whatsapp,
         phone_number: submitted.phoneNumber,
       })
-      .eq('id', user.value?.sub);
+      .eq('id', user.value.sub);
     if (error) {
       setFieldError('newsletter', error.message);
     } else {

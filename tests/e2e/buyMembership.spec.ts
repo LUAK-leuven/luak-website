@@ -3,7 +3,7 @@ import { login, testUsers } from '~/tests/e2e/fixtures';
 import { LoginPage } from '~/tests/e2e/pages/login.page';
 import { ProfileOverviewPage } from '~/tests/e2e/pages/profile-overview.page';
 
-Object.entries(testUsers).forEach(async ([testUser, email]) => {
+Object.entries(testUsers).forEach(([testUser, email]) => {
   test(`${testUser} - overview page shows name`, async ({ page }) => {
     await login(page, email);
     const profilePage = new ProfileOverviewPage(page);
@@ -16,7 +16,7 @@ Object.entries(testUsers).forEach(async ([testUser, email]) => {
   testUsers.nonMember,
   testUsers.paidLastYear,
 ].forEach((user) => {
-  test.describe(`${user}`, async () => {
+  test.describe(user, () => {
     test.beforeEach(async ({ page }) => {
       const loginPage = new LoginPage(page);
       await loginPage.loginAsserted(user);

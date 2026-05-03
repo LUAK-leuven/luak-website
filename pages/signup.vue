@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import * as yup from 'yup';
-  import type { Database } from '~/types/database.types';
   import { yup_password, yup_phone } from '~/utils/yup';
   import TextField from '~/components/input/TextField.vue';
   import LoadingButton from '~/components/shared/LoadingButton.vue';
@@ -10,7 +9,7 @@
     middleware: 'unauthenticated',
   });
 
-  const supabase = useSupabaseClient<Database>();
+  const supabase = useSupabaseClient();
 
   const formSchema = yup.object({
     firstName: yup.string().required().label('First name'),

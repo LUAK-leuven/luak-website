@@ -3,7 +3,7 @@ import { LoginPage } from '~/tests/e2e/pages/login.page';
 import { testUsers } from '~/tests/e2e/fixtures';
 
 ['/board/rentals', '/board/subscriptions-overview'].forEach((path) => {
-  test.describe(`board section: ${path}`, async () => {
+  test.describe(`board section: ${path}`, () => {
     test('board member has access', async ({ page }) => {
       const loginPage = new LoginPage(page);
       await loginPage.loginAsserted(testUsers.boardMember);
@@ -38,7 +38,7 @@ import { testUsers } from '~/tests/e2e/fixtures';
 
 // TODO: add middleware for 'pages/christmas-bets/'
 ['/topos/library', '/stories/'].forEach((path) => {
-  test.describe(`member section - ${path}`, async () => {
+  test.describe(`member section - ${path}`, () => {
     test('active member has access', async ({ page }) => {
       const loginPage = new LoginPage(page);
       await loginPage.loginAsserted(testUsers.paidMembership);

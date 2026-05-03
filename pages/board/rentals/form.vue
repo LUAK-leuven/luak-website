@@ -45,7 +45,7 @@
         depositFee.value = state.depositFee;
         showPaymentModal.value = true;
       } else {
-        navigateTo(`/board/rentals/${rentalId.value}`);
+        await navigateTo(`/board/rentals/${rentalId.value}`);
       }
       showPopup('success', 'Rental saved successfully.');
       return { error: undefined };
@@ -55,9 +55,9 @@
     }
   }
 
-  const closeModal = () => {
+  const closeModal = async () => {
     showPaymentModal.value = false;
-    if (rentalId.value) navigateTo(`/board/rentals/${rentalId.value}`);
+    if (rentalId.value) await navigateTo(`/board/rentals/${rentalId.value}`);
   };
 </script>
 

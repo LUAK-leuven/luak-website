@@ -47,7 +47,7 @@ export function getBy<T extends Record<K, V>, K extends keyof T, V>(
   if (res === undefined) {
     console.error('getBy:', arr);
     throw Error(
-      `Could not find by ${key} with value ${value} in [${arr.join()}]`,
+      `Could not find by ${key.toString()} with value ${value} in [${arr.join()}]`,
     );
   }
   return res;

@@ -32,7 +32,7 @@
   });
 
   const searchInput = ref<string>();
-  const debounceFn = useDebounceFn((value) => value, 250);
+  const debounceFn = useDebounceFn((value: string | undefined) => value, 250);
   const searchTerm = ref<string>();
   effect(async () => {
     searchTerm.value = await debounceFn(searchInput.value);
@@ -45,7 +45,6 @@
         ? rentals.value?.filter((rental) => rental.status === 'returned')
         : rentals.value?.filter((rental) => rental.status !== 'returned')) ??
       [];
-    if (selectedRentals === undefined) return undefined;
     const term = searchTerm.value;
     if (term === undefined) return selectedRentals;
 

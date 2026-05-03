@@ -45,7 +45,7 @@
     link.setAttribute('href', url);
     link.setAttribute(
       'download',
-      `${props.filename}-${new Date().toISOString().split('T')[0]}.csv`,
+      `${props.filename}-${new Date().toISOString().split('T')[0]!}.csv`,
     );
 
     // Append to body, click, and remove

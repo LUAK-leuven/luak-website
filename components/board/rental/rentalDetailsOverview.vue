@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import type { PublicRentalDetails, RentalDetails } from '~/types/rental';
+
   const { rental } = defineProps<{
     rental: RentalDetails | PublicRentalDetails;
   }>();
@@ -8,7 +10,7 @@
   <div class="card border shadow">
     <div class="card-body">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div v-if="rental.member" class="flex flex-col">
+        <div v-if="'member' in rental" class="flex flex-col">
           <span>Member: {{ rental.member.fullName }}</span>
           <span v-if="rental.member.email" class="ml-3">
             ✉️: <SharedMailTo :email="rental.member.email" />
@@ -17,7 +19,7 @@
             ☎️: <SharedWhatsappLink :phone-number="rental.member.phoneNumber" />
           </span>
         </div>
-        <div v-if="rental.boardMember">
+        <div v-if="'boardMember' in rental">
           Board member: {{ rental.boardMember }}
         </div>
         <div class="flex flex-row gap-x-1 items-center flex-wrap">
@@ -33,7 +35,7 @@
           </span>
         </div>
         <div class="flex flex-row gap-1 items-center flex-wrap">
-          <span>Deposit: {{ rental.depositFee }}</span>
+          <span>Deposit: {{ rental.depositFee.toFixed(2) }}</span>
           <span v-if="rental.depositReturned" class="badge badge-success">
             returned
           </span>
@@ -50,12 +52,7 @@
         <b class="border px-1">Amount</b>
         <b class="border px-1">Returned amount</b>
         <template
-          v-for="{
-            topoId: id,
-            title,
-            rentedAmount,
-            returnedAmount,
-          } of rental.topos"
+          v-for="{ id, title, rentedAmount, returnedAmount } of rental.topos"
           :key="id">
           <div class="border p-1">{{ title }}</div>
           <div class="border p-1">{{ rentedAmount }}</div>
@@ -64,12 +61,7 @@
           </div>
         </template>
         <template
-          v-for="{
-            gearItemId: id,
-            name,
-            rentedAmount,
-            returnedAmount,
-          } of rental.gear"
+          v-for="{ id, name, rentedAmount, returnedAmount } of rental.gear"
           :key="id">
           <div class="border p-1">{{ name }}</div>
           <div class="border p-1">{{ rentedAmount }}</div>

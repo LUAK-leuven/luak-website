@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import type { Database } from '~/types/database.types';
   import createMembershipSchema from '~/components/user/BuyMembership/createMembershipSchema';
   import BoolField from '~/components/input/BoolField.vue';
   
@@ -9,7 +8,7 @@
   });
   const hasMembership = await getHasMembership();
   const luak_year = getLuakYear();
-  const supabase = useSupabaseClient<Database>();
+  const supabase = useSupabaseClient();
   const user = useSupabaseUser();
   const env = useRuntimeConfig().public;
   const { isFirstTimeMember } = await useMemberService();
@@ -26,7 +25,7 @@
         })
         .select()
         .single();
-      if (error || !data) throw error;
+      if (error) throw error;
       membership = data;
     } else if (hasMembership.value === 'unpaid_membership') {
       const { data, error } = await supabase
@@ -39,7 +38,7 @@
         .match({ user_id: user.value?.sub, year: luak_year })
         .select()
         .single();
-      if (error || !data) throw error;
+      if (error) throw error;
       membership = data;
     } else throw Error('User already has a membership');
     let payment_url;
@@ -49,7 +48,7 @@
     const email = user.value?.email?.replace('@', '%40');
     payment_url = `${payment_url}?client_reference_id=${membership.id}&prefilled_email=${email}`;
 
-    navigateTo(payment_url, { external: true });
+    return navigateTo(payment_url, { external: true });
   });
   const values = useFormValues();
   const price = computed(() => {
