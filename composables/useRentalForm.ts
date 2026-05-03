@@ -28,7 +28,7 @@ function selectionFrom<T extends EntityId<unknown>>(
   selection: { id: T; name: string; totalAmount: number }[],
 ) {
   return yup
-    .object<Record<T, number>>()
+    .object<Record<T, number>, Record<T, yup.NumberSchema>>()
     .default(() => ({}) as Record<T, number>)
     .required()
     .test(function (items: Record<T, number>) {
@@ -52,7 +52,7 @@ function selectionFrom<T extends EntityId<unknown>>(
         if (amount > item.totalAmount) {
           return this.createError({
             path: `${this.path}.${id}`,
-            message: `Value for ${item.name} cannot exceed ${item.totalAmount}`,
+            message: `Value for ${item.name} cannot exceed ${item.totalAmount.toFixed()}`,
           });
         }
       }
@@ -98,7 +98,7 @@ export function useRentalForm(
       .test('email and phone', function (contact) {
         if (contact && !contact.email && !contact.phone) {
           return this.createError({
-            path: `${this.path}`,
+            path: this.path,
             message: `One of email or phone number is required`,
           });
         }
@@ -135,7 +135,7 @@ export function useRentalForm(
   });
 
   const errorAttr = {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     props: (state: any) => ({ error: state.errors[0] }),
   };
 

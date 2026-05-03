@@ -7,7 +7,7 @@ import { RentalDetailsPage } from '~/tests/e2e/pages/rental-details.page';
 import { RentalsOverviewPage } from '~/tests/e2e/pages/rentals-overview.page';
 import { uuidRegex } from '~/utils/utils';
 
-test.describe('create a new rental', async () => {
+test.describe('create a new rental', () => {
   test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.loginAsserted(testUsers.boardMember);

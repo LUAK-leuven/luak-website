@@ -1,8 +1,6 @@
-import type { Database } from '~/types/database.types';
-
 export default defineNuxtRouteMiddleware(async (to) => {
   if (to.path.startsWith('/board')) {
-    const supabase = useSupabaseClient<Database>();
+    const supabase = useSupabaseClient();
     const user = useSupabaseUser();
 
     if (!user.value) {

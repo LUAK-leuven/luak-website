@@ -1,8 +1,11 @@
 <script setup lang="ts">
   const { data: user } = await useLuakMember();
 
-  const { data: rentals, pending: loading } =
-    await gearService().getRentalsForUser(user.value.userInfo!.id); // TODO fix usafe !
+  const { getForUser } = useRentalService();
+  const { rentals, pending: loading } = await getForUser(
+    user.value.userInfo!.id, // TODO fix usafe !
+  );
+
   const activeRentals = computed(() =>
     rentals.value?.filter((it) => it.status !== 'returned'),
   );
@@ -12,7 +15,7 @@
 
   const showReturned = ref(false);
 
-  async function onShowReturned() {
+  function onShowReturned() {
     showReturned.value = true;
   }
 </script>

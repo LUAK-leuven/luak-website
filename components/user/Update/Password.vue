@@ -1,11 +1,10 @@
 <script lang="ts" setup>
-  import type { Database } from '~/types/database.types';
   import * as yup from 'yup';
   import { yup_password } from '~/utils/yup';
   import TextField from '~/components/input/TextField.vue';
 
   const user = useSupabaseUser();
-  const supabase = useSupabaseClient<Database>();
+  const supabase = useSupabaseClient();
   const isChangedSuccessfull = ref(false);
   const { handleSubmit, setFieldError, isSubmitting } = useForm({
     validationSchema: toTypedSchema(

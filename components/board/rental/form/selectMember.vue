@@ -44,7 +44,7 @@
   const filterUser = (input: string | undefined) => {
     if (pending.value) return undefined;
     if (input === undefined) return selectableUsers.value;
-    return selectableUsers.value?.filter(
+    return selectableUsers.value.filter(
       (option) =>
         fuzzySearch(option.name, input) > 0 ||
         matchOnFirstLetters(option.name, input),

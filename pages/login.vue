@@ -8,7 +8,7 @@
   });
 
   const supabase = useSupabaseClient();
-  const redirect = useRoute().query['redirect'] as string;
+  const redirect = useRoute().query['redirect'] as string | null;
 
   const formSchema = yup.object({
     email: yup.string().required().email(),

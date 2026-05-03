@@ -51,7 +51,7 @@
     }
   });
 
-  onMounted(async () => {
+  onMounted(() => {
     dialog.value = document.getElementById('auth-error') as HTMLDialogElement;
 
     if (route.query.error) {

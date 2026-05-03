@@ -1,4 +1,3 @@
-import type { Database } from '~/types/database.types';
 import type { UserId } from '~/types/user';
 
 class UserService {
@@ -6,7 +5,7 @@ class UserService {
     return useAsyncData(
       'allUsers',
       async () => {
-        const { data: users, error } = await useSupabaseClient<Database>()
+        const { data: users, error } = await useSupabaseClient()
           .from('Users')
           .select(
             `
@@ -23,8 +22,8 @@ class UserService {
         )
         `,
           );
-        if (error || users === null) {
-          if (error) console.error('allUsers:', error);
+        if (error) {
+          console.error('allUsers:', error);
           return [];
         }
 

@@ -41,6 +41,7 @@ export class EpcQrCode {
   }) {
     this.version = props.version ?? '002';
     const encoding = props.encoding ?? 'UTF-8';
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.char = single(
       EpcQrCode.encodingMap.filter((it) => it[0] === encoding),
     )![1];
@@ -48,9 +49,9 @@ export class EpcQrCode {
       props.bic !== undefined &&
       !(props.bic.length === 8 || props.bic.length === 11)
     )
-      throw 'bic must have 8 or 11 characters';
+      throw new Error('bic must have 8 or 11 characters');
     if (props.bic === undefined && this.version === '001')
-      throw "bic is required for version '001'";
+      throw new Error("bic is required for version '001'");
     this.bic = props.bic ?? '';
 
     validateLengthIsBetween(props.name, 'name', 1, 70);
@@ -68,7 +69,9 @@ export class EpcQrCode {
       props.structuredReference !== undefined &&
       props.unstructuredReference !== undefined
     )
-      throw 'only one of structured reference or unstructured reference can be defined';
+      throw new Error(
+        'only one of structured reference or unstructured reference can be defined',
+      );
     validateLengthIsBetween(
       props.structuredReference,
       'structuredReference',

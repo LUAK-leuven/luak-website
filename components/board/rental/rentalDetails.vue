@@ -31,7 +31,7 @@
           for (let i = 0; i < array.length; i++) {
             if (array[i]! > props.rental.gear[i]!.rentedAmount) {
               return this.createError({
-                path: `${this.path}[${i}]`,
+                path: `${this.path}[${i.toFixed()}]`,
                 message: `Value for ${props.rental.gear[i]!.name} cannot exceed rented amount`,
               });
             }
@@ -45,7 +45,7 @@
           for (let i = 0; i < array.length; i++) {
             if (array[i]! > props.rental.topos[i]!.rentedAmount) {
               return this.createError({
-                path: `${this.path}[${i}]`,
+                path: `${this.path}[${i.toFixed()}]`,
                 message: `Value for ${props.rental.topos[i]!.title} cannot exceed rented amount`,
               });
             }
@@ -193,7 +193,7 @@
       </div>
       <div class="flex flex-row gap-1 items-center">
         <span>Deposit:</span>
-        <span data-testId="depositFee">{{ rental.depositFee }}</span>
+        <span data-testId="depositFee">{{ rental.depositFee.toFixed(2) }}</span>
         <span
           v-if="!editMode && rental.depositReturned"
           class="badge badge-success">

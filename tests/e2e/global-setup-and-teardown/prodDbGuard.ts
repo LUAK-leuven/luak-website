@@ -9,11 +9,12 @@ export default async function () {
     const res = await ctx.get('/api/_test-guard');
     if (!res.ok()) {
       console.error(
-        `\n❌  Safety check failed — /api/_test-guard returned HTTP ${res.status()}.\n` +
+        `\n❌  Safety check failed — /api/_test-guard returned HTTP ${res.status().toFixed()}.\n` +
           '    Ensure the dev server is running and NODE_ENV is not "production".\n',
       );
       process.exit(1);
     }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     ({ supabaseUrl } = await res.json());
   } catch (err) {
     console.error(

@@ -1,5 +1,4 @@
 import type { AsyncData } from '#app';
-import type { Database } from '~/types/database.types';
 import type { UserId } from '~/types/user';
 
 type UserInfo = {
@@ -33,7 +32,7 @@ export function useLuakMember(): AsyncData<
         };
       }
 
-      const { data, error } = await useSupabaseClient<Database>()
+      const { data, error } = await useSupabaseClient()
         .from('Users')
         .select(
           'id, first_name, last_name, email, BoardMembers (user_id), Memberships (year, Payments( approved )) ',
@@ -42,8 +41,8 @@ export function useLuakMember(): AsyncData<
         .eq('Memberships.year', getLuakYear())
         .single();
 
-      if (error || !data) {
-        if (error) console.error(error);
+      if (error) {
+        console.error(error);
         return {
           isBoard: false,
           isMember: false,

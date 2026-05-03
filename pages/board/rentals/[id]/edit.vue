@@ -7,8 +7,9 @@
   const route = useRoute();
   const rentalId = route.params.id as RentalId;
 
-  const { data: rental, pending: rentalPending } =
-    await gearService().getRental(rentalId);
+  const { get, edit } = useRentalService();
+
+  const { rentals: rental, pending: rentalPending } = await get(rentalId);
   const { data: _allGear, pending: gearPending } =
     await gearService().getAllGearItems();
   const { data: _allTopos, pending: toposPending } =
@@ -21,8 +22,8 @@
       totalAmount: gearItem.totalAmount,
       availableAmount:
         gearItem.availableAmount +
-        (rental.value?.gear.find((g) => g.gearItemId === gearItem.id)
-          ?.rentedAmount ?? 0),
+        (rental.value?.gear.find((g) => g.id === gearItem.id)?.rentedAmount ??
+          0),
       depositFee: gearItem.depositFee,
     })),
   );
@@ -34,20 +35,19 @@
       totalAmount: topo.totalAmount,
       availableAmount:
         topo.availableAmount +
-        (rental.value?.topos.find((t) => t.topoId === topo.id)?.rentedAmount ??
-          0),
+        (rental.value?.topos.find((t) => t.id === topo.id)?.rentedAmount ?? 0),
       depositFee: 500,
     })),
   );
 
   async function handleSubmit(state: Omit<UnsavedRental, 'boardMemberId'>) {
     if (rental.value) {
-      for (const { gearItemId: id } of rental.value.gear) {
+      for (const { id } of rental.value.gear) {
         if (!state.gear[id]) {
           state.gear[id] = 0;
         }
       }
-      for (const { topoId: id } of rental.value.topos) {
+      for (const { id } of rental.value.topos) {
         if (!state.topos[id]) {
           state.topos[id] = 0;
         }
@@ -58,22 +58,18 @@
           : computeRentalStatus(
               state.gear,
               Object.fromEntries(
-                rental.value.gear.map((g) => [g.gearItemId, g.returnedAmount]),
+                rental.value.gear.map((g) => [g.id, g.returnedAmount]),
               ),
               state.topos,
               Object.fromEntries(
-                rental.value.topos.map((t) => [t.topoId, t.returnedAmount]),
+                rental.value.topos.map((t) => [t.id, t.returnedAmount]),
               ),
               rental.value.depositReturned,
             );
-      const error = await gearService().editRental({
-        ...state,
-        id: rental.value.id,
-      });
+      const { error } = await edit(rentalId, state);
       if (!error) {
         showPopup('success', 'Rental saved successfully!');
-        sleep(200);
-        await navigateTo(`/board/rentals/${rental.value.id}`);
+        await navigateTo(`/board/rentals/${rentalId}`);
         return { error: undefined };
       } else {
         showPopup(
@@ -124,10 +120,10 @@
               }
             : undefined,
         gear: Object.fromEntries(
-          rental.gear.map((it) => [it.gearItemId, it.rentedAmount]),
+          rental.gear.map((it) => [it.id, it.rentedAmount]),
         ),
         topos: Object.fromEntries(
-          rental.topos.map((it) => [it.topoId, it.rentedAmount]),
+          rental.topos.map((it) => [it.id, it.rentedAmount]),
         ),
         depositFee: rental.depositFee,
         paymentMethod: rental.paymentMethod,

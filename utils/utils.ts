@@ -16,7 +16,7 @@ export function sumBy<T>(array: T[], getValue: (i: T) => number): number {
 export function single<T>(array: T[]): T | undefined {
   if (array.length > 1)
     throw Error(
-      'Cannot convert array containting multiple elements to a single element!',
+      'Cannot convert array containing multiple elements to a single element!',
     );
   else if (array.length === 0) return undefined;
   else return array[0];
@@ -47,7 +47,7 @@ export function getBy<T extends Record<K, V>, K extends keyof T, V>(
   if (res === undefined) {
     console.error('getBy:', arr);
     throw Error(
-      `Could not find by ${key} with value ${value} in [${arr.join()}]`,
+      `Could not find by ${key.toString()} with value ${value} in [${arr.join()}]`,
     );
   }
   return res;

@@ -90,7 +90,7 @@
       });
     },
     (ctx) => {
-      showPopup('error', `${Object.values(ctx.errors)[0]}`);
+      showPopup('error', Object.values(ctx.errors)[0] ?? '');
     },
   );
 
@@ -103,8 +103,8 @@
     return total > 20 ? total : 20;
   });
 
-  onMounted(() => {
-    validateField('paymentMethod');
+  onMounted(async () => {
+    await validateField('paymentMethod');
   });
 </script>
 

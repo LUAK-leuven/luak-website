@@ -114,7 +114,7 @@ export class RentalDetailsPage {
         args.dateReturn.format('YYYY-MM-DD'),
       );
     if (args.depositFee)
-      await expect(this.depositFee).toHaveText(`${args.depositFee}`);
+      await expect(this.depositFee).toHaveText(args.depositFee.toFixed(2));
     if (args.paymentMethod)
       await expect(this.paymentMethod).toContainText(args.paymentMethod);
     if (args.status) await expect(this.status).toHaveText(args.status);

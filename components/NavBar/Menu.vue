@@ -11,7 +11,7 @@
   const closeDrawer = () => {
     const drawerToggle = document.getElementById(
       'my-drawer-3',
-    ) as HTMLInputElement;
+    ) as HTMLInputElement | null;
     if (drawerToggle) {
       drawerToggle.checked = false;
     }
