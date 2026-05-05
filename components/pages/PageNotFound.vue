@@ -13,7 +13,7 @@
     </NuxtLink>
     <div class="text-center">
       <p>Oops! The content you're looking for doesn't exist.</p>
-      <NuxtLink class="link" to="/">Go back home</NuxtLink>
+      <NuxtLink class="link" :to="{ name: 'index' }">Go back home</NuxtLink>
     </div>
   </FullPageCard>
 </template>

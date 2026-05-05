@@ -42,7 +42,7 @@
       });
       if (error) {
         setFieldError('password', error.message);
-      } else await navigateTo('/confirmLogin');
+      } else await navigateTo({ name: 'confirmLogin' });
     }
   });
 </script>

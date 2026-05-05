@@ -282,7 +282,13 @@
         <button
           class="btn btn-secondary"
           data-testId="editButton"
-          @click="() => navigateTo(`/board/rentals/${rental.id}/edit`)">
+          @click="
+            () =>
+              navigateTo({
+                name: 'board-rentals-id-edit',
+                params: { id: rental.id },
+              })
+          ">
           Edit
         </button>
         <button

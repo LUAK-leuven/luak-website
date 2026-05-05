@@ -29,7 +29,9 @@
     <div
       class="bg-base-100 shadow-md rounded w-10/12 lg:w-8/12 xl:w-1/3 mb-28 z-10 mt-8 p-5 sm:p-20">
       <form @submit="onSubmit">
-        <NuxtLink class="btn btn-circle btn-sm btn-outline" to="/login">
+        <NuxtLink
+          class="btn btn-circle btn-sm btn-outline"
+          :to="{ name: 'login' }">
           <span class="material-symbols-outlined"> arrow_back</span>
         </NuxtLink>
         <h2>❓ Forgot password:</h2>

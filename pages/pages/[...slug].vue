@@ -15,6 +15,6 @@
   <FullPageCard v-else>
     <template #title> Page Not Found </template>
     <p>Oops! The content you're looking for doesn't exist.</p>
-    <NuxtLink class="link" to="/">Go back home</NuxtLink>
+    <NuxtLink class="link" :to="{ name: 'index' }">Go back home</NuxtLink>
   </FullPageCard>
 </template>

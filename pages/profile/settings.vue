@@ -2,7 +2,9 @@
 <template>
   <FullPageCard>
     <template #title> Profile settings </template>
-    <NuxtLink class="btn btn-circle btn-sm btn-outline" to="/profile/overview">
+    <NuxtLink
+      class="btn btn-circle btn-sm btn-outline"
+      :to="{ name: 'profile-overview' }">
       <span class="material-symbols-outlined"> arrow_back</span>
     </NuxtLink>
     <UserUpdatePassword />

@@ -89,7 +89,7 @@
               <SharedLinkTo
                 class="border p-1"
                 :text="memberName"
-                :to="`/board/rentals/${id}`" />
+                :to="{ name: 'board-rentals-id', params: { id } }" />
               <div class="border p-1">{{ amount }}</div>
             </template>
           </div>

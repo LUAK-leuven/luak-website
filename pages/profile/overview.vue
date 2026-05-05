@@ -6,7 +6,9 @@
     <template #title> My Profile </template>
     <span v-if="!user">Not logged in yet</span>
     <template v-else>
-      <h2 data-testId="userName">Hi {{ user.userInfo?.first_name ?? 'LUAK member' }} 👋</h2>
+      <h2 data-testId="userName">
+        Hi {{ user.userInfo?.first_name ?? 'LUAK member' }} 👋
+      </h2>
       Welcome to your profile page. Here you can manage your membership! In the
       future more functionality will be added.
       <div class="my-5 mx-2 flex flex-wrap justify-evenly gap-x-4">
@@ -18,7 +20,9 @@
             Change your password, phone number and other settings
           </template>
           <template #actions>
-            <NuxtLink class="btn" to="/profile/settings"> settings </NuxtLink>
+            <NuxtLink class="btn" :to="{ name: 'profile-settings' }">
+              settings
+            </NuxtLink>
           </template>
         </UserCard>
         <UserCard image="/20241102_134927[1].jpg">
@@ -27,7 +31,7 @@
             View the status of your active rental(s)
           </template>
           <template #actions>
-            <NuxtLink class="btn btn-accent" to="/profile/gear">
+            <NuxtLink class="btn btn-accent" :to="{ name: 'profile-gear' }">
               my rentals
             </NuxtLink>
           </template>

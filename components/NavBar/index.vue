@@ -11,7 +11,7 @@
       <div class="flex justify-center top-3 z-40 w-full fixed">
         <div class="navbar bg-base-200 w-11/12 rounded-xl">
           <div class="flex-1">
-            <NuxtLink class="btn btn-ghost p-1" to="/">
+            <NuxtLink class="btn btn-ghost p-1" :to="{ name: 'index' }">
               <NuxtImg class="h-full" src="/luak-logo.png" :quality="50" />
             </NuxtLink>
           </div>
@@ -38,7 +38,7 @@
     <NuxtLink
       v-if="user.isBoard"
       class="btn btn-lg btn-circle bg-blue-400 m-1 fixed bottom-4 end-4 z-50 hover:bg-blue-300"
-      to="/board/rentals/form">
+      :to="{ name: 'board-rentals-form' }">
       🧗‍♀️
     </NuxtLink>
   </div>

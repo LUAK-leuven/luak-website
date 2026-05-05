@@ -26,19 +26,19 @@
           outdoors lovers from beginners to more seasoned climbers 🧗
         </p>
         <div class="flex flex-row flex-wrap justify-center">
-          <NuxtLink class="btn btn-primary m-2" to="/activities">
+          <NuxtLink class="btn btn-primary m-2" :to="{ name: 'activities' }">
             Check our activities
           </NuxtLink>
           <NuxtLink
             v-if="!user.hasActiveMembership && !wasMemberLastYear"
             class="btn btn-outline m-2 text-white"
-            to="/pages/become-a-member">
+            :to="{ name: 'pages-slug', params: { slug: ['become-a-member'] } }">
             Become a member
           </NuxtLink>
           <NuxtLink
             v-if="wasMemberLastYear"
             class="btn m-2 text-white bg-orange-400 border-orange-400 hover:bg-orange-600 hover:border-orange-600"
-            to="/profile/overview">
+            :to="{ name: 'profile-overview' }">
             Renew membership
           </NuxtLink>
         </div>
@@ -47,7 +47,7 @@
   </div>
   <div class="relative flex flex-wrap justify-center z-2 bg-base-300">
     <PageCard class="mt-[-5em]">
-      <NuxtLink to="/news">
+      <NuxtLink :to="{ name: 'news' }">
         <h1 class="w-full text-center text-6xl mt-10 mb-5">News</h1>
       </NuxtLink>
       <NewsItem
@@ -55,13 +55,13 @@
         :key="newsItem.path"
         v-bind="{ data: newsItem, reversed: !!((index + 1) % 2) }" />
       <div class="flex flex-row justify-center mb-2">
-        <NuxtLink class="btn btn-primary btn-outline" to="/news">
+        <NuxtLink class="btn btn-primary btn-outline" :to="{ name: 'news' }">
           See all news posts
         </NuxtLink>
       </div>
     </PageCard>
     <PageCard class="mt-5">
-      <NuxtLink to="/activities">
+      <NuxtLink :to="{ name: 'activities' }">
         <h1 class="w-full text-center text-6xl my-10">Activities</h1>
       </NuxtLink>
       <GoogleCalendar />
