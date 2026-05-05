@@ -1,4 +1,5 @@
 <script setup lang="ts" generic="T extends { id: EntityId<unknown> } | null">
+  import type { RoutesNamedLocations } from '@typed-router';
   import type { EntityId } from '~/types/ddd';
 
   withDefaults(
@@ -8,7 +9,7 @@
       data: T;
       isLoading: boolean;
       error?: string;
-      backTo?: string;
+      backTo?: RoutesNamedLocations;
       defaultError?: string | undefined;
     }>(),
     {

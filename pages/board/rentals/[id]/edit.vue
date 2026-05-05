@@ -91,7 +91,8 @@
       Rental-id: <i>{{ rental?.id }}</i>
     </template>
 
-    <SharedBackButton :to="`/board/rentals/${rental?.id}`" />
+    <SharedBackButton
+      :to="{ name: 'board-rentals-id', params: { id: rentalId } }" />
 
     <div
       v-if="rentalPending || gearPending || toposPending"
