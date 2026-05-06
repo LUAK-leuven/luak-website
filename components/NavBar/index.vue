@@ -6,7 +6,7 @@
   <div class="drawer">
     <input id="my-drawer-3" class="drawer-toggle" type="checkbox" />
 
-    <div class="drawer-content flex flex-col">
+    <div class="drawer-content flex flex-col min-w-0">
       <!-- Navbar -->
       <div class="flex justify-center top-3 z-40 w-full fixed">
         <div class="navbar bg-base-200 w-11/12 rounded-xl">
