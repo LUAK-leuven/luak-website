@@ -238,16 +238,15 @@
       </div>
     </div>
     <hr class="my-3" />
-    <div class="border rounded-sm" data-testId="gear-and-topos-overview">
-      <div class="grid grid-cols-[3fr_1fr_1fr]">
-        <b class="border px-1">Gear</b>
-        <b class="border px-1">Amount</b>
-        <b class="border px-1">Returned amount</b>
-      </div>
+    <div
+      class="border rounded-sm grid grid-cols-[3fr_1fr_1fr]"
+      data-testId="gear-and-topos-overview">
+      <b class="border px-1">Gear</b>
+      <b class="border px-1">Amount</b>
+      <b class="border px-1">Returned amount</b>
       <BoardRentalItem
         v-for="({ title, rentedAmount, returnedAmount }, idx) of rental.topos"
         :key="idx"
-        class="grid grid-cols-[3fr_1fr_1fr]"
         :bouncing="bouncing[`returnedTopos[${idx}]`]"
         :name="title"
         :rented-amount="rentedAmount"
@@ -259,7 +258,6 @@
       <BoardRentalItem
         v-for="({ name, rentedAmount, returnedAmount }, idx) of rental.gear"
         :key="idx"
-        class="grid grid-cols-[3fr_1fr_1fr]"
         :bouncing="bouncing[`returnedGear[${idx}]`]"
         :name="name"
         :rented-amount="rentedAmount"
