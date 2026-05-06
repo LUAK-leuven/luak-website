@@ -21,7 +21,7 @@
     :data="data"
     :is-loading="pending"
     default-error="Failed to load rentals"
-    back-to="/board/rentals">
+    :back-to="{ name: 'board-rentals' }">
     <BoardRentalDetails :rental="rental" :update="updateRental" />
   </DetailsPage>
 </template>

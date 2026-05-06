@@ -1,5 +1,7 @@
 <script setup lang="ts">
-  defineProps<{ to: string }>();
+  import type { RoutesNamedLocations } from '@typed-router';
+
+  defineProps<{ to: RoutesNamedLocations }>();
 </script>
 <template>
   <NuxtLink

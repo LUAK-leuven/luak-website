@@ -37,6 +37,7 @@ ol {
   a {
     @apply text-primary;
     @apply underline;
+    @apply break-words;
   }
   ol,
   ul {

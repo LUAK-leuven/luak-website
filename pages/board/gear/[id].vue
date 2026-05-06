@@ -65,7 +65,7 @@
     :data="data"
     :is-loading="pending"
     :error="error?.message"
-    back-to="/board/gear">
+    :back-to="{ name: 'board-gear' }">
     <div class="flex flex-row flex-wrap justify-between gap-3 mt-3">
       <span>
         Available: {{ gearItems.availableAmount }} /
@@ -131,7 +131,7 @@
           <SharedLinkTo
             class="border p-1"
             :text="memberName"
-            :to="`/board/rentals/${id}`" />
+            :to="{ name: 'board-rentals-id', params: { id } }" />
           <div class="border p-1">{{ amount }}</div>
         </template>
       </div>

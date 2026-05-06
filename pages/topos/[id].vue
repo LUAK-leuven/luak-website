@@ -23,7 +23,7 @@
       <i class="text-sm">{{ data ? data.authors.join(', ') : '' }}</i>
     </template>
 
-    <SharedBackButton to="/topos/library" />
+    <SharedBackButton :to="{ name: 'topos-library' }" />
 
     <div class="h-2"></div>
 
@@ -89,7 +89,7 @@
               <SharedLinkTo
                 class="border p-1"
                 :text="memberName"
-                :to="`/board/rentals/${id}`" />
+                :to="{ name: 'board-rentals-id', params: { id } }" />
               <div class="border p-1">{{ amount }}</div>
             </template>
           </div>

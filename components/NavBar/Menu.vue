@@ -39,10 +39,12 @@
 <template>
   <ul :id="id" class="menu">
     <li>
-      <NuxtLink to="/pages/about">About us</NuxtLink>
+      <NuxtLink :to="{ name: 'pages-slug', params: { slug: ['about'] } }">
+        About us
+      </NuxtLink>
     </li>
     <li>
-      <NuxtLink to="/activities">Activities</NuxtLink>
+      <NuxtLink :to="{ name: 'activities' }">Activities</NuxtLink>
     </li>
     <li>
       <details id="info-toggle">
@@ -59,16 +61,24 @@
       </details>
     </li>
     <li v-if="!user.isMember">
-      <NuxtLink to="/pages/become-a-member">Become a member</NuxtLink>
+      <NuxtLink
+        :to="{ name: 'pages-slug', params: { slug: ['become-a-member'] } }">
+        Become a member
+      </NuxtLink>
     </li>
     <li v-if="user.isMember">
       <details id="member-toggle">
         <summary>Member section</summary>
         <ul class="p-2 bg-base-200 rounded-t-none w-52">
-          <li><NuxtLink to="/stories">Stories</NuxtLink></li>
-          <li><NuxtLink to="/topos/library">Topo Library</NuxtLink></li>
+          <li><NuxtLink :to="{ name: 'stories' }">Stories</NuxtLink></li>
           <li>
-            <NuxtLink to="/pages/christmas-bets">Christmas Bets</NuxtLink>
+            <NuxtLink :to="{ name: 'topos-library' }">Topo Library</NuxtLink>
+          </li>
+          <li>
+            <NuxtLink
+              :to="{ name: 'pages-slug', params: { slug: ['christmas-bets'] } }"
+              >Christmas Bets</NuxtLink
+            >
           </li>
         </ul>
       </details>
@@ -78,18 +88,22 @@
         <summary>Board</summary>
         <ul class="p-2 bg-base-200 rounded-t-none w-52">
           <li>
-            <NuxtLink to="/board/subscriptions-overview">
+            <NuxtLink :to="{ name: 'board-subscriptions-overview' }">
               👥 Members overview
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/board/rentals/form"> 🧗 Rental form </NuxtLink>
+            <NuxtLink :to="{ name: 'board-rentals-form' }">
+              🧗 Rental form
+            </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/board/rentals"> 👀 Rental overview </NuxtLink>
+            <NuxtLink :to="{ name: 'board-rentals' }">
+              👀 Rental overview
+            </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/board/gear"> ⚙️ Gear overview </NuxtLink>
+            <NuxtLink :to="{ name: 'board-gear' }"> ⚙️ Gear overview </NuxtLink>
           </li>
           <li>
             <a href="/_studio"> 📝 Studio Mode </a>
@@ -98,19 +112,21 @@
       </details>
     </li>
     <li>
-      <NuxtLink to="/pages/contact">Contact</NuxtLink>
+      <NuxtLink :to="{ name: 'pages-slug', params: { slug: ['contact'] } }">
+        Contact
+      </NuxtLink>
     </li>
     <NuxtLink
       v-if="user.userInfo === undefined"
       class="btn btn-primary btn-outline"
-      to="/profile/overview"
+      :to="{ name: 'profile-overview' }"
       data-testId="nav.login">
       Log In
     </NuxtLink>
     <NuxtLink
       v-else
       class="btn btn-primary btn-outline"
-      to="/profile/overview"
+      :to="{ name: 'profile-overview' }"
       data-testId="nav.profile">
       My Profile
     </NuxtLink>

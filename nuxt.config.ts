@@ -73,5 +73,6 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     // '@sentry/nuxt/module',
     'nuxt-studio',
+    'nuxt-typed-router',
   ],
 });

@@ -84,7 +84,10 @@
                 <td>
                   <SharedLinkTo
                     :text="gearItem.name"
-                    :to="`/board/gear/${gearItem.id}`" />
+                    :to="{
+                      name: 'board-gear-id',
+                      params: { id: gearItem.id },
+                    }" />
                 </td>
                 <td v-if="sm">
                   <RetirementDate

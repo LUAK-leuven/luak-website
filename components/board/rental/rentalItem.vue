@@ -14,7 +14,7 @@
   }>();
 </script>
 <template>
-  <div :data-testId="`rental-item-${name}`">
+  <div :data-testId="`rental-item-${name}`" class="contents">
     <div
       class="border p-1 flex items-center"
       :class="

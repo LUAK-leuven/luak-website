@@ -28,7 +28,9 @@
     </template>
 
     <PageCard>
-      <NuxtLink class="btn btn-circle btn-sm btn-outline mb-5" to="/activities">
+      <NuxtLink
+        class="btn btn-circle btn-sm btn-outline mb-5"
+        :to="{ name: 'activities' }">
         <span class="material-symbols-outlined"> arrow_back</span>
       </NuxtLink>
       <ContentRenderer class="nuxt-content" :value="page" />

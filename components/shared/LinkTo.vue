@@ -1,5 +1,7 @@
 <script setup lang="ts">
-  defineProps<{ text: string; to: string }>();
+  import type { RoutesNamedLocations } from '@typed-router';
+
+  defineProps<{ text: string; to: RoutesNamedLocations }>();
 </script>
 <template>
   <NuxtLink class="flex flex-row gap-1 items-center" :to="to">

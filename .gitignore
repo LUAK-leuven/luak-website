@@ -22,6 +22,7 @@ logs
 .vscode
 .opencode
 /planning/
+.playwright-cli
 
 # Local env files
 .env

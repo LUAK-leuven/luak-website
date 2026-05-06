@@ -100,7 +100,9 @@
         <h2>Error: {{ authError?.error }}</h2>
         <p>{{ authError?.description }}</p>
         <div class="flex flex-row justify-end">
-          <NuxtLink class="btn btn-primary" to="/">OK</NuxtLink>
+          <NuxtLink class="btn btn-primary" :to="{ name: 'index' }">
+            OK
+          </NuxtLink>
         </div>
       </div>
     </dialog>

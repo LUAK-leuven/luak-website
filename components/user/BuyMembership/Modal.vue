@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import createMembershipSchema from '~/components/user/BuyMembership/createMembershipSchema';
   import BoolField from '~/components/input/BoolField.vue';
-  
+
   const { handleSubmit, isSubmitting } = useForm({
     validationSchema: toTypedSchema(createMembershipSchema),
     initialValues: { sportscard: false },
@@ -85,7 +85,10 @@
         Do you agree to the
         <NuxtLink
           class="text-primary underline"
-          to="/info/rules_and_regulations">
+          :to="{
+            name: 'info-slug',
+            params: { slug: ['rules_and_regulations'] },
+          }">
           house rules
         </NuxtLink>
         ?

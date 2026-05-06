@@ -26,8 +26,11 @@
     if (error) {
       setFieldError('password', error.message);
     } else {
-      const path = redirect ?? '/profile/overview';
-      return navigateTo(path);
+      if (redirect) {
+        await navigateTo(redirect);
+      } else {
+        await navigateTo({ name: 'profile-overview' });
+      }
     }
   });
 </script>
@@ -51,7 +54,7 @@
           autocomplete="current-password"
           data-testId="login.password" />
         <div class="flex flex-row justify-end">
-          <NuxtLink class="underline my-2" to="/forgot-password">
+          <NuxtLink class="underline my-2" :to="{ name: 'forgot-password' }">
             Forgot password?
           </NuxtLink>
         </div>
@@ -62,7 +65,7 @@
           data-testId="login.submit" />
       </form>
       <div class="divider">OR</div>
-      <NuxtLink to="/signup">
+      <NuxtLink :to="{ name: 'signup' }">
         <button class="btn btn-outline btn-primary w-full p-5">
           Create an account
         </button>

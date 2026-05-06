@@ -1,7 +1,6 @@
 ---
 title: KVB3 course Easter - FULL
 date: 2026-04-12
-description: This course is already fully booked.
 image: /activities/afbeelding1.png
 price: 37000
 tag: intermediate

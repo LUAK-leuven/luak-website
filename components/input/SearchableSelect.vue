@@ -1,5 +1,11 @@
 <script setup lang="ts" generic="T">
-  import { useFloating, offset, flip, shift } from '@floating-ui/vue';
+  import {
+    useFloating,
+    offset,
+    flip,
+    shift,
+    autoUpdate,
+  } from '@floating-ui/vue';
 
   const props = withDefaults(
     defineProps<{
@@ -46,6 +52,7 @@
   const { floatingStyles } = useFloating(reference, floating, {
     placement: 'bottom-start',
     middleware: [offset(8), flip(), shift()],
+    whileElementsMounted: autoUpdate,
   });
 </script>
 
