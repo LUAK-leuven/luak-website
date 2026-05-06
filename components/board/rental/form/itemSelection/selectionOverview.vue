@@ -46,12 +46,11 @@
             (value) => emit('updateSelectedItemAmount', item.id, value ?? 0)
           " />
       </span>
-      <div data-testId="deposit">
-        Deposit:
+      <span class="w-min justify-self-center" data-testId="deposit">
         {{ (item.selectedAmount * item.depositFee) / 100 }}€
-      </div>
+      </span>
       <button
-        class="btn btn-sm btn-circle btn-ghost justify-self-end mr-2"
+        class="btn btn-sm btn-circle btn-ghost justify-self-end mr-2 text-lg"
         type="button"
         data-testId="remove"
         @click="() => emit('removeItem', item.id)">
