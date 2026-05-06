@@ -100,18 +100,7 @@
     json5 "^2.2.3"
     semver "^6.3.1"
 
-"@babel/generator@^7.28.5", "@babel/generator@^7.28.6":
-  version "7.28.6"
-  resolved "https://registry.yarnpkg.com/@babel/generator/-/generator-7.28.6.tgz#48dcc65d98fcc8626a48f72b62e263d25fc3c3f1"
-  integrity sha512-lOoVRwADj8hjf7al89tvQ2a1lf53Z+7tiXMgpZJL3maQPDxh0DgLMN62B2MKUOFcoodBHLMbDM6WAbKgNy5Suw==
-  dependencies:
-    "@babel/parser" "^7.28.6"
-    "@babel/types" "^7.28.6"
-    "@jridgewell/gen-mapping" "^0.3.12"
-    "@jridgewell/trace-mapping" "^0.3.28"
-    jsesc "^3.0.2"
-
-"@babel/generator@^7.29.0":
+"@babel/generator@^7.28.5", "@babel/generator@^7.28.6", "@babel/generator@^7.29.0":
   version "7.29.1"
   resolved "https://registry.yarnpkg.com/@babel/generator/-/generator-7.29.1.tgz#d09876290111abbb00ef962a7b83a5307fba0d50"
   integrity sha512-qsaF+9Qcm2Qv8SRIMMscAvG4O3lJ0F1GuMo5HR/Bp02LopNgnZBC/EkbevHFeGs4ls/oPz9v+Bsmzbkbe+0dUw==
@@ -3675,6 +3664,13 @@
   integrity sha512-kIE8wvwlcZ6TJTbNeU2HQNtaxLx3a84aotTITUuL/4bzfPxzajGBOoqjMhwZJ8L9qFYDU/lAYMEEm11dnZOD6g==
   dependencies:
     "@vue/devtools-kit" "^7.7.9"
+
+"@vue/devtools-api@^8.0.6":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@vue/devtools-api/-/devtools-api-8.1.1.tgz#367caf696349b1a49c655939ce605f4c96e30357"
+  integrity sha512-bsDMJ07b3GN1puVwJb/fyFnj/U2imyswK5UQVLZwVl7O05jDrt6BHxeG5XffmOOdasOj/bOmIjxJvGPxU7pcqw==
+  dependencies:
+    "@vue/devtools-kit" "^8.1.1"
 
 "@vue/devtools-core@^8.1.0":
   version "8.1.1"
@@ -8370,17 +8366,7 @@ mkdirp@3.0.1:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-3.0.1.tgz#e44e4c5607fb279c168241713cc6e0fea9adcb50"
   integrity sha512-+NsyUUAZDmo6YVHzL/stxSu3t9YS1iljliy3BSDrXJ/dkn1KYdmtZODGGjLcc9XLgVVpH4KshHB8XmZgMhaBXg==
 
-mlly@^1.3.0, mlly@^1.7.1, mlly@^1.7.2, mlly@^1.7.3:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/mlly/-/mlly-1.8.0.tgz#e074612b938af8eba1eaf43299cbc89cb72d824e"
-  integrity sha512-l8D9ODSRWLe2KHJSifWGwBqpTZXIXTeo8mlKjY+E2HAakaTeNpqAyBZ8GSqLzHgw4XmHmC8whvpjJNMbFZN7/g==
-  dependencies:
-    acorn "^8.15.0"
-    pathe "^2.0.3"
-    pkg-types "^1.3.1"
-    ufo "^1.6.1"
-
-mlly@^1.7.4, mlly@^1.8.0, mlly@^1.8.1, mlly@^1.8.2:
+mlly@^1.3.0, mlly@^1.7.1, mlly@^1.7.2, mlly@^1.7.3, mlly@^1.7.4, mlly@^1.8.0, mlly@^1.8.1, mlly@^1.8.2:
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/mlly/-/mlly-1.8.2.tgz#e7f7919a82d13b174405613117249a3f449d78bb"
   integrity sha512-d+ObxMQFmbt10sretNDytwt85VrbkhhUA/JBGm1MPaWJ65Cl4wOgLaB1NYvJSZ0Ef03MMEU/0xpPMXUIQ29UfA==
@@ -9251,12 +9237,7 @@ picomatch@^2.0.4, picomatch@^2.2.1, picomatch@^2.3.1:
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.3.1.tgz#3ba3833733646d9d3e4995946c1365a67fb07a42"
   integrity sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==
 
-picomatch@^4.0.2:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-4.0.3.tgz#796c76136d1eead715db1e7bad785dedd695a042"
-  integrity sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q==
-
-picomatch@^4.0.3, picomatch@^4.0.4:
+picomatch@^4.0.2, picomatch@^4.0.3, picomatch@^4.0.4:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-4.0.4.tgz#fd6f5e00a143086e074dffe4c924b8fb293b0589"
   integrity sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A==
@@ -11993,6 +11974,29 @@ vue-router@^4.6.4:
   integrity sha512-Hz9q5sa33Yhduglwz6g9skT8OBPii+4bFn88w6J+J4MfEo4KRRpmiNG/hHHkdbRFlLBOqxN8y8gf2Fb0MTUgVg==
   dependencies:
     "@vue/devtools-api" "^6.6.4"
+
+vue-router@^5.0.6:
+  version "5.0.6"
+  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-5.0.6.tgz#2c8e10bc6f37fd7f0992552258601e418778ddaf"
+  integrity sha512-9+kmUTGbKMyW9Asoy98IXXYIzrTMT7JDAdpDDeEkorHvybpUvBI2wsrSM5jFOXrFydpzRFJ9vAh+80DN2PGu9w==
+  dependencies:
+    "@babel/generator" "^7.28.6"
+    "@vue-macros/common" "^3.1.1"
+    "@vue/devtools-api" "^8.0.6"
+    ast-walker-scope "^0.8.3"
+    chokidar "^5.0.0"
+    json5 "^2.2.3"
+    local-pkg "^1.1.2"
+    magic-string "^0.30.21"
+    mlly "^1.8.0"
+    muggle-string "^0.4.1"
+    pathe "^2.0.3"
+    picomatch "^4.0.3"
+    scule "^1.3.0"
+    tinyglobby "^0.2.15"
+    unplugin "^3.0.0"
+    unplugin-utils "^0.3.1"
+    yaml "^2.8.2"
 
 vue@^3.5.27:
   version "3.5.32"
