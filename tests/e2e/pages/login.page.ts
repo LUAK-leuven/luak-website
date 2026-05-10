@@ -68,10 +68,10 @@ export class LoginPage {
         result = await this.login(email, password);
         switch (result) {
           case 'error': {
-            throw `Error - Failed to login user ${email}.`;
+            throw new Error(`Error - Failed to login user ${email}.`);
           }
           case 'timeout': {
-            throw `Timeout - Failed to login user ${email}.`;
+            throw new Error(`Timeout - Failed to login user ${email}.`);
           }
           case 'loading': {
             await expect(this.submitButton.getByTestId('loading')).toBeHidden();
@@ -85,10 +85,10 @@ export class LoginPage {
         result = await this.login(email, password);
         switch (result) {
           case 'error': {
-            throw `Error - Failed to login user ${email}.`;
+            throw new Error(`Error - Failed to login user ${email}.`);
           }
           case 'timeout': {
-            throw `Timeout - Failed to login user ${email}.`;
+            throw new Error(`Timeout - Failed to login user ${email}.`);
           }
           case 'loading': {
             await expect(this.submitButton.getByTestId('loading')).toBeHidden();

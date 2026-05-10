@@ -24,6 +24,7 @@ export default withNuxt(
     },
   },
   {
+    files: ['**/*.ts', '**/*.tsx', '**/*.vue'],
     rules: {
       ...strictRules,
       'vue/html-self-closing': 'off',
