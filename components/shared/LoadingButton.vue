@@ -3,7 +3,7 @@
     defineProps<{
       text: string;
       disabled?: boolean;
-      clickHandler: () => Promise<unknown>;
+      clickHandler: () => Promise<void>;
       type?: HTMLButtonElement['type'];
     }>(),
     { disabled: false, type: 'submit' },
@@ -24,7 +24,12 @@
     :disabled="disabled"
     :type="type"
     @click="onClick">
-    <span v-if="isSubmitting" class="loading loading-spinner" data-testId="loading">loading</span>
+    <span
+      v-if="isSubmitting"
+      class="loading loading-spinner"
+      data-testId="loading">
+      loading
+    </span>
     <span v-else data-testId="button-text">{{ text }}</span>
   </button>
 </template>
