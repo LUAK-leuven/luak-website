@@ -17,6 +17,7 @@
     isSubmitting.value = false;
   };
 </script>
+
 <template>
   <button
     class="btn btn-primary w-fit"
@@ -27,9 +28,7 @@
     <span
       v-if="isSubmitting"
       class="loading loading-spinner"
-      data-testId="loading">
-      loading
-    </span>
+      data-testId="loading" />
     <span v-else data-testId="button-text">{{ text }}</span>
   </button>
 </template>
