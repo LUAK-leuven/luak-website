@@ -38,11 +38,11 @@
     "prettier": "^3.8.3",
     "prettier-plugin-organize-attributes": "^1.0.0",
     "sass": "^1.99.0",
-    "supabase": "^2.98.0",
+    "supabase": "^2.98.2",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.1",
     "vitest": "^4.1.4",
-    "vue": "^3.5.33",
+    "vue": "^3.5.34",
     "vue-router": "^4.6.4"
   },
   "dependencies": {
