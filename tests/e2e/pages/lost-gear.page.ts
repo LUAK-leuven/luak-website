@@ -10,7 +10,7 @@ export class LostGearPage {
   }
 
   get submitButton() {
-    return this.page.getByRole('button', { name: 'Submit' });
+    return this.page.getByTestId('submit');
   }
 
   get rentalId() {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import TextField from '~/components/input/TextField.vue';
-  import LoadingButton from '~/components/shared/LoadingButton.vue';
+  import SubmitButton from '~/components/shared/SubmitButton.vue';
   import * as yup from 'yup';
   import type { RentalId } from '~/types/rental';
   import type { GearInventoryId, GearItemId } from '~/types/gear';
@@ -23,7 +23,7 @@
     lostAmount: yup.number().positive().required(),
   });
 
-  const { handleSubmit } = useForm({
+  const { handleSubmit, isSubmitting } = useForm({
     validationSchema: toTypedSchema(formSchema),
   });
 
@@ -46,7 +46,7 @@
 </script>
 
 <template>
-  <form @submit.prevent>
+  <form @submit.prevent="onSubmit">
     <TextField
       name="rentalId"
       label="Rental id:"
@@ -74,7 +74,10 @@
       placeholder=""
       data-testId="lost-amount" />
     <div class="mt-4 flex flex-row justify-end">
-      <LoadingButton text="Submit" :click-handler="onSubmit" />
+      <SubmitButton
+        text="Submit"
+        :is-loading="isSubmitting"
+        data-testId="submit" />
     </div>
   </form>
 </template>

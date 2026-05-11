@@ -13,6 +13,7 @@
     "lint:eslint": "eslint .",
     "lint:prettier": "prettier . --check",
     "lintfix": "eslint . --fix && prettier --write --list-different .",
+    "test": "yarn test:unit && yarn test:e2e",
     "test:e2e": "playwright test",
     "test:unit": "vitest run --config tests/unit/vitest.config.ts"
   },

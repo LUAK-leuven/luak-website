@@ -60,6 +60,8 @@
         @focus="autoFillPlaceholder" />
       <slot name="label-end" />
     </label>
-    <span v-if="error" class="text-error" data-testId="error-message">{{ error }}</span>
+    <span v-if="error" class="text-error" data-testId="error-message">
+      {{ error }}
+    </span>
   </div>
 </template>
