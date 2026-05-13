@@ -28,8 +28,7 @@ class GearService {
           .order('name');
 
         if (error) {
-          console.warn('getAllGearItems:', error);
-          return [];
+          throw new Error('getAllGearItems:', { cause: error });
         }
 
         return gear.map((gearItem) => {

@@ -2,6 +2,7 @@
   import type { RentalId, UnsavedRental } from '~/types/rental';
   import { computeRentalStatus } from '~/utils/rental/computeStatus';
   import { useToast } from '~/composables/useToast';
+  import { useRentalService } from '~/composables/useRentalService';
 
   const { show: showPopup } = useToast();
   const route = useRoute();
@@ -55,17 +56,17 @@
       state.status =
         state.status === 'reserved'
           ? 'reserved'
-          : computeRentalStatus(
-              state.gear,
-              Object.fromEntries(
-                rental.value.gear.map((g) => [g.id, g.returnedAmount]),
+          : computeRentalStatus({
+              returnedGear: state.gear,
+              rentedGear: Object.fromEntries(
+                rental.value.gear.map((g) => [g.id, g.rentedAmount]),
               ),
-              state.topos,
-              Object.fromEntries(
-                rental.value.topos.map((t) => [t.id, t.returnedAmount]),
+              returnedTopos: state.topos,
+              rentedTopos: Object.fromEntries(
+                rental.value.topos.map((t) => [t.id, t.rentedAmount]),
               ),
-              rental.value.depositReturned,
-            );
+              depositReturned: rental.value.depositReturned,
+            });
       const { error } = await edit(rentalId, state);
       if (!error) {
         showPopup('success', 'Rental saved successfully!');

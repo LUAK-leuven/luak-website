@@ -6,6 +6,7 @@
   import type { UserId } from '~/types/user';
   import Text from '~/components/input/Text.vue';
   import { useToast } from '~/composables/useToast';
+  import { useRentalForm } from '~/composables/board/rental/useRentalForm';
 
   const props = defineProps<{
     boardMemberName: string;
@@ -215,9 +216,4 @@
         data-testId="rental.form.submit" />
     </div>
   </form>
-
-  <!-- <p>SelectedGear: {{ selectedGear }}</p> -->
-  <!-- <p>Values: {{ values }}</p>
-  <p>Errors: {{ errors }}</p>
-  <p>Meta: {{ meta }}</p> -->
 </template>

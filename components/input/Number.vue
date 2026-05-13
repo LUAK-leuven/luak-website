@@ -6,17 +6,23 @@
     { textBoxColor: '' },
   );
 
-  const model = defineModel<number>();
+  const model = defineModel<number | undefined>();
+
+  function setModel(value: string | null) {
+    if (value === null || value === '') model.value = undefined;
+    else model.value = +value;
+  }
 </script>
 
 <template>
   <div class="form-control">
     <label class="input input-bordered border-2 h-8 flex w-fit">
       <input
-        v-model="model"
         class="max-w-10 flex-shrink"
         :class="textBoxColor"
-        type="number" />
+        :value="model"
+        type="number"
+        @input="(e) => setModel(e.data)" />
       <slot name="label-end" />
     </label>
   </div>

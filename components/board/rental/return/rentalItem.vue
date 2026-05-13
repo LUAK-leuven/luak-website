@@ -1,10 +1,11 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends EntityId<unknown>">
   import NumberInput from '~/components/input/Number.vue';
+  import type { EntityId } from '~/types/ddd';
 
   defineProps<{
     name: string;
     rentedAmount: number;
-    returnedAmount: number;
+    returnedAmount: number | undefined;
     bouncing: boolean | undefined;
   }>();
 
@@ -42,7 +43,9 @@
         }"
         :model-value="returnedAmount"
         :text-box-color="
-          returnedAmount < 0 || returnedAmount > rentedAmount
+          returnedAmount === undefined ||
+          returnedAmount < 0 ||
+          returnedAmount > rentedAmount
             ? 'input-error'
             : ''
         "

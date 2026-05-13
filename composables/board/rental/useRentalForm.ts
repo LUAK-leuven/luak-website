@@ -10,8 +10,8 @@ type RentalFormState = {
   contactInfo:
     | {
         fullName: string;
-        email?: string;
-        phone?: string;
+        email: string | undefined;
+        phone: string | undefined;
       }
     | undefined;
   dateBorrow: string;
@@ -65,7 +65,7 @@ export function useRentalForm(
   allGear: RentalItem<GearItemId>[],
   allTopos: RentalItem<TopoId>[],
 ) {
-  const formSchema: yup.ObjectSchema<RentalFormState> = yup.object({
+  const formSchema = yup.object({
     memberId: yup
       .string<UserId | 'non-user'>()
       .required('You must select a member.'),
