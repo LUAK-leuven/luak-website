@@ -1,9 +1,11 @@
 <script setup lang="ts">
   import TextField from '~/components/input/TextField.vue';
-  import * as yup from 'yup';
   import type { RentalId } from '~/types/rental';
   import type { GearInventoryId, GearItemId } from '~/types/gear';
   import LoadingButton from '~/components/shared/LoadingButton.vue';
+  import { useLostGearForm } from '~/composables/board/useLostGearForm';
+  import type { Database } from '~/types/database.types';
+  import type { EntityId } from '~/types/ddd';
 
   const emit = defineEmits<{
     submit: [
@@ -15,26 +17,46 @@
     ];
   }>();
 
-  const formSchema = yup.object({
-    rentalId: yup.string().uuid().required(),
-    gearItemId: yup.string().uuid().required(),
-    inventoryId: yup.string().uuid().required(),
-    dateLost: yup.string().required(),
-    lostAmount: yup.number().positive().required(),
-  });
+  type GetTablesWithId<T extends Record<string, { Row: unknown }>> = {
+    [K in keyof T]: T[K]['Row'] extends { id: string } ? K : never;
+  }[keyof T];
 
-  const { handleSubmit } = useForm({
-    validationSchema: toTypedSchema(formSchema),
-  });
+  const getIds = async <Id extends EntityId<unknown>>(
+    table: GetTablesWithId<Database['public']['Tables']>,
+  ) => {
+    const { data } = await useAsyncData(
+      `${table}-ids`,
+      async () => {
+        const { data, error } = await useSupabaseClient()
+          .from(table)
+          .select('id');
+        if (error)
+          throw new Error(`Failed to fetch ${table} ids`, { cause: error });
+        return data.map(({ id }) => id as Id);
+      },
+      { lazy: true },
+    );
+    return computed(() => data.value ?? []);
+  };
+
+  const rentalIds = await getIds<RentalId>('Rentals');
+  const gearItemIds = await getIds<GearItemId>('GearItems');
+  const inventoryIds = await getIds<GearInventoryId>('GearInventory');
+
+  const { handleSubmit } = useLostGearForm(
+    rentalIds,
+    gearItemIds,
+    inventoryIds,
+  );
 
   const onSubmit: () => Promise<void> = handleSubmit(
     (formState) => {
       console.log(formState);
       emit(
         'submit',
-        formState.rentalId as RentalId,
-        formState.gearItemId as GearItemId,
-        formState.inventoryId as GearInventoryId,
+        formState.rentalId,
+        formState.gearItemId,
+        formState.inventoryId,
         formState.dateLost,
         formState.lostAmount,
       );
@@ -52,16 +74,19 @@
       label="Rental id:"
       placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
       data-testId="rental-id" />
+    {{ rentalIds }}
     <TextField
       name="gearItemId"
       label="Gear item id:"
       placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
       data-testId="gear-item-id" />
+    {{ gearItemIds }}
     <TextField
       name="inventoryId"
       label="Gear inventory id:"
       placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
       data-testId="inventory-id" />
+    {{ inventoryIds }}
     <TextField
       name="dateLost"
       label="Date lost:"

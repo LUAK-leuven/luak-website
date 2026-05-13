@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import LostGearForm from '~/components/board/LostGearForm.vue';
+  import LostGearForm from '~/components/board/LostGearForm/index.vue';
   import FullPageCard from '~/components/FullPageCard.vue';
 </script>
 
