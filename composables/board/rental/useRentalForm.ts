@@ -28,7 +28,7 @@ function selectionFrom<T extends EntityId<unknown>>(
   selection: { id: T; name: string; totalAmount: number }[],
 ) {
   return yup
-    .object<Record<T, number>, Record<T, yup.NumberSchema>>()
+    .object<Record<T, number>, Record<T, yup.NumberSchema<number>>>()
     .default(() => ({}) as Record<T, number>)
     .required()
     .test(function (items: Record<T, number>) {

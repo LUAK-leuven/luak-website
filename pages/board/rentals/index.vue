@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { useDebounceFn } from '@vueuse/core';
   import Text from '~/components/input/Text.vue';
+  import { useRentalService } from '~/composables/useRentalService';
 
   definePageMeta({
     layout: false,

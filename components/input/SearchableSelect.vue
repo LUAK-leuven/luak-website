@@ -9,11 +9,11 @@
 
   const props = withDefaults(
     defineProps<{
-      label?: string;
+      label?: string | undefined;
       optionsProvider: (searchTerm: string | undefined) => T[] | undefined;
       placeholder: string;
-      selectedItem?: T;
-      errorMessage?: string;
+      selectedItem?: T | undefined;
+      errorMessage?: string | undefined;
       loadingMessage?: string;
       disable?: boolean;
     }>(),

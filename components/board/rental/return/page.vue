@@ -21,7 +21,7 @@
 
   const { bouncing, triggerBounce } = useBounce();
 
-  function mapStuff<T extends EntityId<unknown>>(
+  function mapFormRentedItems<T extends EntityId<unknown>>(
     formReturnedItems: Record<T, number>,
     rentalRentedItems: { id: T; returnedAmount: number }[],
   ) {
@@ -34,7 +34,7 @@
 
   const save = handleSubmit(
     async (formState) => {
-      const updatedReturnedGear = mapStuff(
+      const updatedReturnedGear = mapFormRentedItems(
         formState.returnedGear,
         props.rental.gear,
       ).map(([gear_item_id, returned_amount]) => ({
@@ -42,7 +42,7 @@
         returned_amount,
       }));
 
-      const updatedReturnedTopos = mapStuff(
+      const updatedReturnedTopos = mapFormRentedItems(
         formState.returnedTopos,
         props.rental.topos,
       ).map(([topo_id, returned_amount]) => ({

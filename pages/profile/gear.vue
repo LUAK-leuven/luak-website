@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import PublicRentalDetails from '~/components/board/rental/PublicRentalDetails.vue';
+  import { useRentalService } from '~/composables/useRentalService';
 
   const { data: user } = await useLuakMember();
 

@@ -3,7 +3,7 @@
   import dayjs from 'dayjs';
 
   const props = defineProps<{
-    retirementDate?: Dayjs;
+    retirementDate: Dayjs | undefined;
   }>();
 
   const badgeColor = computed(() => {

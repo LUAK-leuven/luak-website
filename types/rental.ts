@@ -13,7 +13,7 @@ type BaseRental = {
   depositFee: number;
   paymentMethod: Enums<'payment_method'>;
   status: Enums<'rental_status'>;
-  comments?: string;
+  comments: string | undefined;
 };
 
 export type UnsavedRental = Omit<BaseRental, 'id'> & {

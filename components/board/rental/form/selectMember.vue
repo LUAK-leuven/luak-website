@@ -5,7 +5,7 @@
   withDefaults(
     defineProps<{
       disable?: boolean;
-      error?: string;
+      error?: string | undefined;
     }>(),
     {
       disable: false,
@@ -14,9 +14,9 @@
   );
 
   const selectedUserId = defineModel<UserId | 'non-user' | undefined>('userId');
-  const fullName = defineModel<string>('fullName');
-  const email = defineModel<string>('email');
-  const phone = defineModel<string>('phone');
+  const fullName = defineModel<string | undefined>('fullName');
+  const email = defineModel<string | undefined>('email');
+  const phone = defineModel<string | undefined>('phone');
 
   const { data: users, pending } = await userService().getAllUsers();
   type SelectableUser = {

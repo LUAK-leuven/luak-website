@@ -19,7 +19,9 @@ function rentedItemSchema<T extends EntityId<unknown>>(
       yupNumber().required().min(0).max(rentedAmount),
     ]),
   );
-  return yupObject(x as Record<T, (typeof x)[string]>);
+  return yupObject(x as Record<T, (typeof x)[string]>)
+    .required()
+    .default({});
 }
 
 export function useRentalReturnForm(rental: RentalDetails) {
@@ -32,7 +34,7 @@ export function useRentalReturnForm(rental: RentalDetails) {
       .label('return date'),
     returnedGear: rentedItemSchema(rental.gear),
     returnedTopos: rentedItemSchema(rental.topos),
-    depositReturned: yupBool().default(false),
+    depositReturned: yupBool().required().default(false),
     comments: yupString(),
   });
 

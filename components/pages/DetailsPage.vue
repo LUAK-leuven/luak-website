@@ -4,12 +4,12 @@
 
   withDefaults(
     defineProps<{
-      title?: string;
-      subTitle?: string;
+      title?: string | undefined;
+      subTitle?: string | undefined;
       data: T;
       isLoading: boolean;
-      error?: string;
-      backTo?: RoutesNamedLocations;
+      error?: string | undefined;
+      backTo?: RoutesNamedLocations | undefined;
       defaultError?: string | undefined;
     }>(),
     {

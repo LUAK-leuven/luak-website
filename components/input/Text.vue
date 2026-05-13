@@ -5,12 +5,12 @@
     defineProps<{
       label?: string | undefined;
       type?: InputTypeHTMLAttribute;
-      error?: string;
+      error?: string | undefined;
       placeholder?: string;
       disabled?: boolean;
       autoFillWithPlaceholder?: boolean;
       round?: boolean;
-      autocomplete?: AutoFillField;
+      autocomplete?: AutoFillField | undefined;
     }>(),
     {
       type: 'text',
