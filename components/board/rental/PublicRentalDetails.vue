@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import type { PublicRentalDetails, RentalDetails } from '~/types/rental';
+  import type { PublicRentalDetails } from '~/types/rental';
 
   const { rental } = defineProps<{
-    rental: RentalDetails | PublicRentalDetails;
+    rental: PublicRentalDetails;
   }>();
 </script>
 
@@ -10,18 +10,6 @@
   <div class="card border shadow">
     <div class="card-body">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div v-if="'member' in rental" class="flex flex-col">
-          <span>Member: {{ rental.member.fullName }}</span>
-          <span v-if="rental.member.email" class="ml-3">
-            ✉️: <SharedMailTo :email="rental.member.email" />
-          </span>
-          <span v-if="rental.member.phoneNumber" class="ml-3">
-            ☎️: <SharedWhatsappLink :phone-number="rental.member.phoneNumber" />
-          </span>
-        </div>
-        <div v-if="'boardMember' in rental">
-          Board member: {{ rental.boardMember }}
-        </div>
         <div class="flex flex-row gap-x-1 items-center flex-wrap">
           <span>Date borrow:</span>
           <span>{{ rental.dateBorrow }}</span>

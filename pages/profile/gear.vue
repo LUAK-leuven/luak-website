@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import PublicRentalDetails from '~/components/board/rental/PublicRentalDetails.vue';
+
   const { data: user } = await useLuakMember();
 
   const { getForUser } = useRentalService();
@@ -34,7 +36,7 @@
       <div v-if="activeRentals.length === 0">
         <span>You have currently no active rentals</span>
       </div>
-      <BoardRentalDetailsOverview
+      <PublicRentalDetails
         v-for="rental of activeRentals"
         :key="rental.id"
         :rental="rental" />
@@ -66,7 +68,7 @@
             <span>You have no past rentals</span>
           </div>
           <template v-for="rental of returnedRentals" :key="rental.id">
-            <BoardRentalDetailsOverview :rental="rental" />
+            <PublicRentalDetails :rental="rental" />
           </template>
         </div>
       </template>
