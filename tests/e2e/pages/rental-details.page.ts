@@ -78,7 +78,9 @@ export class RentalDetailsPage {
       item,
       rentedAmount: item.getByTestId('rentedAmount'),
       returnedAmount: item.getByTestId('returnedAmount'),
-      returnedAmountInput: item.getByTestId('returnedAmountInput'),
+      returnedAmountInput: item
+        .getByTestId('returnedAmountInput')
+        .getByRole('spinbutton'),
       quickReturn: item.getByTestId('quickReturn'),
     };
   }

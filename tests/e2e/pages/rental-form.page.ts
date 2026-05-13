@@ -61,7 +61,7 @@ export class RentalFormPage {
           .filter({ hasText: name });
         return {
           name: item.getByTestId('name'),
-          amount: item.getByTestId('amount'),
+          amount: item.getByTestId('amount').getByRole('spinbutton'),
           deposit: item.getByTestId('deposit'),
           remove: item.getByTestId('remove'),
         };

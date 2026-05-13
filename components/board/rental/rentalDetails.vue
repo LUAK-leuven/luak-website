@@ -239,11 +239,16 @@
     </div>
     <hr class="my-3" />
     <div
-      class="border rounded-sm grid grid-cols-[3fr_1fr_1fr]"
+      class="border rounded-sm grid"
+      :class="
+        editMode ? 'grid-cols-[3fr_auto_1fr_auto]' : 'grid-cols-[3fr_1fr_1fr]'
+      "
       data-testId="gear-and-topos-overview">
       <b class="border px-1">Gear</b>
+      <b v-if="editMode" class="border px-1"></b>
       <b class="border px-1">Amount</b>
-      <b class="border px-1">Returned amount</b>
+      <b v-if="!editMode" class="border px-1">Returned amount</b>
+      <b v-if="editMode" class="border px-1" />
       <BoardRentalItem
         v-for="({ title, rentedAmount, returnedAmount }, idx) of rental.topos"
         :key="idx"

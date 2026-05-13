@@ -2,7 +2,10 @@
 
 ## Project Overview
 
-Project information (tech stack, structure, etc.) can be found in the [`README.md`](./README.md).
+The LUAK website is a website for a climbing club. It is mostly content based. The club regularely organizes activities, which are shown on the activities page (and news page).
+The website is also used by the board to keep track of rented gear (LUAK has a lot of climbing gear and topos that can be rented by its members). This is all part of the board section.
+
+Technical project information (tech stack, structure, etc.) can be found in the [`README.md`](./README.md).
 
 ---
 

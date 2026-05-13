@@ -14,7 +14,7 @@
   }>();
 </script>
 <template>
-  <div :data-testId="`rental-item-${name}`" class="contents">
+  <div class="contents" :data-testId="`rental-item-${name}`">
     <div
       class="border p-1 flex items-center"
       :class="
@@ -29,7 +29,6 @@
     <div
       class="border p-1 flex flex-row justify-between items-center"
       data-testId="rentedAmount">
-      {{ rentedAmount }}
       <button
         v-if="editMode"
         class="btn btn-circle btn-xs btn-outline"
@@ -37,6 +36,7 @@
         @click="emit('updateReturnedAmount', rentedAmount)">
         <span class="material-symbols-outlined text-sm">arrow_forward</span>
       </button>
+      <span v-else>{{ rentedAmount }}</span>
     </div>
     <div class="border p-1 flex flex-row items-center">
       <NumberInput
@@ -55,8 +55,27 @@
           (amount) => {
             if (amount !== undefined) emit('updateReturnedAmount', amount);
           }
-        " />
+        ">
+        <template #label-end>
+          <span class="m-0 w-max"> / {{ rentedAmount }}</span>
+        </template>
+      </NumberInput>
       <span v-else data-testId="returnedAmount">{{ returnedAmount }}</span>
+    </div>
+    <!-- Option D: kebab menu in its own column (only in editMode) -->
+    <div v-if="editMode" class="border p-1 flex items-center justify-center">
+      <div class="dropdown dropdown-end">
+        <button class="btn btn-circle btn-xs btn-ghost" tabindex="0">
+          <span class="material-symbols-outlined">more_vert</span>
+        </button>
+        <ul
+          class="dropdown-content menu bg-base-100 rounded-box z-10 w-36 p-1 shadow-sm text-sm"
+          tabindex="0">
+          <li>
+            <a class="text-error">Mark as lost</a>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
