@@ -1,17 +1,11 @@
 <script setup lang="ts">
   import DetailsPage from '~/components/pages/DetailsPage.vue';
-  import type { RentalId, RentalUpdate } from '~/types/rental';
+  import type { RentalId } from '~/types/rental';
 
-  const { update, get } = useRentalService();
+  const { get } = useRentalService();
 
   const retnalId = useRoute().params.id as RentalId;
-  const { rentals: data, pending, refresh } = await get(retnalId);
-
-  async function updateRental(rental: RentalUpdate) {
-    const { error } = await update(rental.id, rental);
-    if (!error) await refresh();
-    return !error;
-  }
+  const { rentals: data, pending } = await get(retnalId);
 </script>
 
 <template>
@@ -22,6 +16,6 @@
     :is-loading="pending"
     default-error="Failed to load rentals"
     :back-to="{ name: 'board-rentals' }">
-    <BoardRentalDetailsPage :rental="rental" :update="updateRental" />
+    <BoardRentalDetailsPage :rental="rental" />
   </DetailsPage>
 </template>

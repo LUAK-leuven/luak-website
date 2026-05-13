@@ -5,7 +5,6 @@
     name: string;
     rentedAmount: number;
     returnedAmount: number;
-    editMode: boolean;
     bouncing: boolean | undefined;
   }>();
 
@@ -30,17 +29,14 @@
       class="border p-1 flex flex-row justify-between items-center"
       data-testId="rentedAmount">
       <button
-        v-if="editMode"
         class="btn btn-circle btn-xs btn-outline"
         data-testId="quickReturn"
         @click="emit('updateReturnedAmount', rentedAmount)">
         <span class="material-symbols-outlined text-sm">arrow_forward</span>
       </button>
-      <span v-else>{{ rentedAmount }}</span>
     </div>
     <div class="border p-1 flex flex-row items-center">
       <NumberInput
-        v-if="editMode"
         :class="{
           'animate-bounceInput': bouncing,
         }"
@@ -60,10 +56,8 @@
           <span class="m-0 w-max"> / {{ rentedAmount }}</span>
         </template>
       </NumberInput>
-      <span v-else data-testId="returnedAmount">{{ returnedAmount }}</span>
     </div>
-    <!-- Option D: kebab menu in its own column (only in editMode) -->
-    <div v-if="editMode" class="border p-1 flex items-center justify-center">
+    <div class="border p-1 flex items-center justify-center">
       <div class="dropdown dropdown-end">
         <button class="btn btn-circle btn-xs btn-ghost" tabindex="0">
           <span class="material-symbols-outlined">more_vert</span>
