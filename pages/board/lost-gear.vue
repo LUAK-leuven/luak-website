@@ -8,6 +8,7 @@
   import PaymentBadge from '~/components/board/rental/PaymentBadge.vue';
   import TopoItem from '~/components/board/lost-gear/TopoItem.vue';
   import GearItem from '~/components/board/lost-gear/GearItem.vue';
+  import BackButton from '~/components/shared/BackButton.vue';
 
   const route = useRoute('board-lost-gear');
   const rentalId = computed(
@@ -49,6 +50,12 @@
     <template #title> Lost Gear </template>
 
     <h2 class="mt-0 text-center">Rental</h2>
+    <BackButton
+      :to="{
+        name: 'board-rentals-id-return',
+        params: { id: rentalId },
+      }" />
+
     <WithLazyResource
       v-slot="{ data: rental }"
       :data="data"
@@ -88,6 +95,7 @@
 
       <TopoItem
         v-if="itemId?.type === 'topo'"
+        :rental-id="rentalId"
         :topo="getBy(rental.topos, 'id', itemId.id)" />
       <GearItem v-else-if="itemId?.type === 'gear'" :gear-item-id="itemId.id" />
       <div v-else>KAPOT!</div>

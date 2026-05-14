@@ -1,11 +1,13 @@
 <script setup lang="ts">
   import Number from '~/components/input/Number.vue';
   import WithLazyResource from '~/components/pages/WithLazyResource.vue';
-  import type { RentalDetails } from '~/types/rental';
+  import type { RentalDetails, RentalId } from '~/types/rental';
   import { object as yupObject, number as yupNumber } from 'yup';
   import { ErrorMessage } from 'vee-validate';
+  import LoadingButton from '~/components/shared/LoadingButton.vue';
 
   const props = defineProps<{
+    rentalId: RentalId;
     topo: RentalDetails['topos'][number];
   }>();
 
@@ -21,12 +23,22 @@
     lostAmount: yupNumber().required().min(1).max(unReturnedAmount.value),
   });
 
-  const { defineField, errors } = useForm({
+  const { defineField, errors, handleSubmit } = useForm({
     validationSchema: toTypedSchema(formSchema),
     initialValues: { lostAmount: 1 },
   });
 
   const [lostAmount] = defineField('lostAmount');
+
+  const onSubmit = handleSubmit(async (formState) => {
+    console.log(
+      `mark topo as lost: {rentalId: ${props.rentalId}, topoId: ${props.topo.id}, lostAmount: ${formState.lostAmount.toFixed()}}`,
+    );
+    await navigateTo({
+      name: 'board-rentals-id',
+      params: { id: props.rentalId },
+    });
+  });
 </script>
 <template>
   <h2 class="text-center">Topo</h2>
@@ -36,7 +48,7 @@
     :data="data"
     :is-loading="pending"
     :error="error?.message">
-    <form>
+    <form @submit.prevent>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>Title: {{ topo.title }}</div>
         <div>Year: {{ topoDetails.year_published }}</div>
@@ -51,6 +63,9 @@
           </div>
           <ErrorMessage class="text-error" name="lostAmount" />
         </div>
+      </div>
+      <div class="flex flex-row justify-end mt-3">
+        <LoadingButton text="Save changes" :click-handler="onSubmit" />
       </div>
     </form>
   </WithLazyResource>
