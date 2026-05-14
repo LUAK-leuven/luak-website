@@ -69,3 +69,13 @@ export type PublicRentalDetails = {
   paymentMethod: Enums<'payment_method'>;
   status: Enums<'rental_status'>;
 };
+
+export type RentalItemId =
+  | {
+      id: GearItemId;
+      type: 'gear';
+    }
+  | {
+      id: TopoId;
+      type: 'topo';
+    };

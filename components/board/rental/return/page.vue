@@ -173,6 +173,8 @@
         :name="title"
         :rented-amount="rentedAmount"
         :returned-amount="values.returnedTopos![id]"
+        :rental-id="rental.id"
+        :item-id="{ type: 'topo', id }"
         @update-returned-amount="
           (amount) => updateReturnedItem({ type: 'topo', id, amount })
         " />
@@ -183,6 +185,8 @@
         :name="name"
         :rented-amount="rentedAmount"
         :returned-amount="values.returnedGear![id]"
+        :rental-id="rental.id"
+        :item-id="{ type: 'gear', id }"
         @update-returned-amount="
           (amount) => updateReturnedItem({ type: 'gear', id, amount })
         " />

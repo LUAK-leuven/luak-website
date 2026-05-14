@@ -32,6 +32,7 @@ export function useRentalService() {
         rentals: data as Ref<Unwrap<ExtractFunctionReturn<Fn>> | null>,
         pending,
         refresh,
+        error,
       };
     };
   }

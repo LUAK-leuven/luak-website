@@ -24,7 +24,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     data.length === 0
     // data.some((it) => it.Payments.length === 0)
   ) {
-    // TODO: redirect to 'become a member'
+    // TODO: redirect to 'become a member' + toast
     return abortNavigation(
       createError({
         status: 403,

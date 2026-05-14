@@ -1,8 +1,13 @@
 <script setup lang="ts" generic="T extends EntityId<unknown>">
   import NumberInput from '~/components/input/Number.vue';
   import type { EntityId } from '~/types/ddd';
+  import ItemMenu from './itemMenu.vue';
+  import type { ItemStatus } from '~/types/board/form/RentalItem';
+  import type { RentalId, RentalItemId } from '~/types/rental';
 
-  defineProps<{
+  const props = defineProps<{
+    rentalId: RentalId;
+    itemId: RentalItemId;
     name: string;
     rentedAmount: number;
     returnedAmount: number | undefined;
@@ -12,18 +17,31 @@
   const emit = defineEmits<{
     updateReturnedAmount: [returnedAmount: number];
   }>();
+
+  const status = computed<ItemStatus>(() =>
+    props.returnedAmount === props.rentedAmount
+      ? 'returned'
+      : props.returnedAmount === 0
+        ? 'not-returned'
+        : 'partially-returned',
+  );
+
+  const bgColor = computed(() => {
+    switch (status.value) {
+      case 'returned':
+        return 'bg-green-100';
+      case 'not-returned':
+        return 'bg-red-100';
+      case 'partially-returned':
+        return 'bg-yellow-100';
+      default:
+        return '';
+    }
+  });
 </script>
 <template>
   <div class="contents" :data-testId="`rental-item-${name}`">
-    <div
-      class="border p-1 flex items-center"
-      :class="
-        returnedAmount === rentedAmount
-          ? 'bg-green-100'
-          : returnedAmount === 0
-            ? 'bg-red-100'
-            : 'bg-yellow-100'
-      ">
+    <div class="border p-1 flex items-center" :class="bgColor">
       {{ name }}
     </div>
     <div
@@ -61,18 +79,7 @@
       </NumberInput>
     </div>
     <div class="border p-1 flex items-center justify-center">
-      <div class="dropdown dropdown-end">
-        <button class="btn btn-circle btn-xs btn-ghost" tabindex="0">
-          <span class="material-symbols-outlined">more_vert</span>
-        </button>
-        <ul
-          class="dropdown-content menu bg-base-100 rounded-box z-10 w-36 p-1 shadow-sm text-sm"
-          tabindex="0">
-          <li>
-            <a class="text-error">Mark as lost</a>
-          </li>
-        </ul>
-      </div>
+      <ItemMenu :item-id="itemId" :rental-id="rentalId" />
     </div>
   </div>
 </template>
