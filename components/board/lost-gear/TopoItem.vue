@@ -11,6 +11,8 @@
     topo: RentalDetails['topos'][number];
   }>();
 
+  const { show } = useToast();
+
   const { data, pending, error } = await gearService().getTopoDetails(
     props.topo.id,
   );
@@ -31,13 +33,24 @@
   const [lostAmount] = defineField('lostAmount');
 
   const onSubmit = handleSubmit(async (formState) => {
-    console.log(
-      `mark topo as lost: {rentalId: ${props.rentalId}, topoId: ${props.topo.id}, lostAmount: ${formState.lostAmount.toFixed()}}`,
-    );
-    await navigateTo({
-      name: 'board-rentals-id',
-      params: { id: props.rentalId },
+    const { error } = await useFetch('/api/topos/mark-as-lost', {
+      method: 'post',
+      body: {
+        rentalId: props.rentalId,
+        topoId: props.topo.id,
+        lostAmount: formState.lostAmount,
+      },
     });
+
+    if (error.value) {
+      console.error(error.value.message);
+      show('error', 'Failed to save changes');
+    } else {
+      await navigateTo({
+        name: 'board-rentals-id',
+        params: { id: props.rentalId },
+      });
+    }
   });
 </script>
 <template>
