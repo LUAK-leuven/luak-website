@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import type { Enums } from '~/types/database.types';
+  import TopoCondition from '~/components/topoLibrary/TopoCondition.vue';
   import type { TopoId } from '~/types/gear';
 
   definePageMeta({ middleware: 'active-member-guard' });
@@ -7,13 +7,6 @@
   const { data: user } = await useLuakMember();
   const topoId = useRoute().params.id as TopoId;
   const { data, pending, error } = await gearService().getTopoDetails(topoId);
-
-  const conditionMap: Record<Enums<'topo_condition'>, string> = {
-    as_good_as_new: 'New',
-    good: 'Good',
-    used: 'Used',
-    damaged: 'Damaged',
-  };
 </script>
 
 <template>
@@ -41,17 +34,7 @@
           <span>{{ topo.countries.join(', ') }}</span>
         </TopoLibraryTopoDetailItem>
         <TopoLibraryTopoDetailItem name="Condition">
-          <span
-            class="badge"
-            :class="{
-              'badge-success':
-                topo.condition === 'as_good_as_new' ||
-                topo.condition === 'good',
-              'badge-warning': topo.condition === 'used',
-              'badge-error': topo.condition === 'damaged',
-            }">
-            {{ conditionMap[topo.condition] }}
-          </span>
+          <TopoCondition :topo-condition="topo.condition" />
         </TopoLibraryTopoDetailItem>
         <TopoLibraryTopoDetailItem name="Amount">
           <span v-if="user.isBoard">

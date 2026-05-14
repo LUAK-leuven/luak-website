@@ -16,10 +16,11 @@
 
 <template>
   <div class="form-control">
-    <label class="input input-bordered border-2 h-8 flex w-fit">
+    <label
+      class="input input-bordered border-2 h-8 flex w-fit"
+      :class="textBoxColor">
       <input
         class="max-w-10 flex-shrink"
-        :class="textBoxColor"
         :value="model"
         type="number"
         @input="(e) => setModel((e.target as HTMLInputElement).value)" />

@@ -55,7 +55,7 @@
       :is-loading="pending"
       :error="error?.message">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div class="flex flex-col" data-testId="member.fullName">
+        <div data-testId="member.fullName">
           Member: {{ rental.member.fullName }}
         </div>
         <div class="flex flex-row gap-1 items-center">
@@ -86,7 +86,9 @@
 
       <hr class="my-2" />
 
-      <TopoItem v-if="itemId?.type === 'topo'" :topo-id="itemId.id" />
+      <TopoItem
+        v-if="itemId?.type === 'topo'"
+        :topo="getBy(rental.topos, 'id', itemId.id)" />
       <GearItem v-else-if="itemId?.type === 'gear'" :gear-item-id="itemId.id" />
       <div v-else>KAPOT!</div>
     </WithLazyResource>
