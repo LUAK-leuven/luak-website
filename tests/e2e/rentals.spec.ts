@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
-import { RentalFormPage } from './pages/rental-form.page';
+import { RentalFormPage } from './pages/rental/form.page';
 import { LoginPage } from './pages/login.page';
 import { navigateTo, testUsers } from './fixtures';
 import dayjs from 'dayjs';
-import { RentalDetailsPage } from '~/tests/e2e/pages/rental-details.page';
+import { RentalDetailsPage } from '~/tests/e2e/pages/rental/details.page';
 import { RentalsOverviewPage } from '~/tests/e2e/pages/rentals-overview.page';
 import { uuidRegex } from '~/utils/utils';
 
@@ -82,7 +82,7 @@ test.describe('create a new rental', () => {
       comments: '',
       numberOfItems: 1,
     });
-    await rentalDetailsPage.expectItem('BD C4 .4', 1);
+    await rentalDetailsPage.expectItem({ name: 'BD C4 .4', rentedAmount: 1 });
 
     // --- return the rental ---
     await rentalDetailsPage.returnButton.click();
@@ -96,7 +96,11 @@ test.describe('create a new rental', () => {
       status: 'Returned',
       numberOfItems: 1,
     });
-    await rentalDetailsPage.expectItem('BD C4 .4', 1, 1);
+    await rentalDetailsPage.expectItem({
+      name: 'BD C4 .4',
+      rentedAmount: 1,
+      returnedAmount: 1,
+    });
   });
 
   test('create & partial return - a full rental', async ({ page }) => {
@@ -131,9 +135,12 @@ test.describe('create a new rental', () => {
       status: 'Not returned',
       numberOfItems: 3,
     });
-    await rentalDetailsPage.expectItem('quickdraw', 14);
-    await rentalDetailsPage.expectItem('single rope 000', 1);
-    await rentalDetailsPage.expectItem('Ailefriode', 1);
+    await rentalDetailsPage.expectItem({ name: 'quickdraw', rentedAmount: 14 });
+    await rentalDetailsPage.expectItem({
+      name: 'single rope 000',
+      rentedAmount: 1,
+    });
+    await rentalDetailsPage.expectItem({ name: 'Ailefriode', rentedAmount: 1 });
 
     const rentalsOverviewPage = new RentalsOverviewPage(page);
     await navigateTo(page, rentalsOverviewPage.path);
@@ -162,9 +169,21 @@ test.describe('create a new rental', () => {
       status: 'Partially returned',
       numberOfItems: 3,
     });
-    await rentalDetailsPage.expectItem('quickdraw', 14, 10);
-    await rentalDetailsPage.expectItem('single rope 000', 1, 1);
-    await rentalDetailsPage.expectItem('Ailefriode', 1, 0);
+    await rentalDetailsPage.expectItem({
+      name: 'quickdraw',
+      rentedAmount: 14,
+      returnedAmount: 10,
+    });
+    await rentalDetailsPage.expectItem({
+      name: 'single rope 000',
+      rentedAmount: 1,
+      returnedAmount: 1,
+    });
+    await rentalDetailsPage.expectItem({
+      name: 'Ailefriode',
+      rentedAmount: 1,
+      returnedAmount: 0,
+    });
   });
 
   test('create & edit - a rental for non-member', async ({ page }) => {

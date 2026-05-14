@@ -63,22 +63,35 @@
     :error="error?.message">
     <form @submit.prevent>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div>Title: {{ topo.title }}</div>
-        <div>Year: {{ topoDetails.year_published }}</div>
-        <div>Rented amount: {{ topo.rentedAmount }}</div>
-        <div>Unreturned amount: {{ unReturnedAmount }}</div>
+        <div data-testid="topo.title">Title: {{ topo.name }}</div>
+        <div data-testid="topo.year_published">
+          Year: {{ topoDetails.year_published }}
+        </div>
+        <div data-testid="rentedAmount">
+          Rented amount: {{ topo.rentedAmount }}
+        </div>
+        <div data-testid="unreturnedAmount">
+          Unreturned amount: {{ unReturnedAmount }}
+        </div>
         <div>
           <div class="col-span-full flex flex-row gap-2 items-center">
             Lost amount:
             <Number
               v-model="lostAmount"
-              :text-box-color="errors.lostAmount ? 'input-error' : ''" />
+              :text-box-color="errors.lostAmount ? 'input-error' : ''"
+              data-testid="lostAmount" />
           </div>
-          <ErrorMessage class="text-error" name="lostAmount" />
+          <ErrorMessage
+            class="text-error"
+            name="lostAmount"
+            data-testid="lostAmount.error" />
         </div>
       </div>
       <div class="flex flex-row justify-end mt-3">
-        <LoadingButton text="Save changes" :click-handler="onSubmit" />
+        <LoadingButton
+          text="Save changes"
+          :click-handler="onSubmit"
+          data-testid="saveButton" />
       </div>
     </form>
   </WithLazyResource>

@@ -11,9 +11,9 @@ export class RentalDetailsPage {
   }
 
   async getRentalId() {
-    return (await this.page
-      .getByTestId('detailsPage.id')
-      .innerText()) as RentalId;
+    return (await this.page.getByTestId('detailsPage.id').innerText()) as
+      | RentalId
+      | '';
   }
 
   get member() {
@@ -82,6 +82,7 @@ export class RentalDetailsPage {
         .getByTestId('returnedAmountInput')
         .getByRole('spinbutton'),
       quickReturn: item.getByTestId('quickReturn'),
+      lostItems: item.getByTestId('lostItem'),
     };
   }
 
@@ -132,17 +133,27 @@ export class RentalDetailsPage {
     return this.getRentalId();
   }
 
-  async expectItem(
-    name: string,
-    rentedAmount: number,
-    returnedAmount: number = 0,
-  ) {
-    await expect(this.rentedItem(name).item).toBeVisible();
-    await expect(this.rentedItem(name).rentedAmount).toHaveText(
-      rentedAmount.toString(),
+  async expectItem(args: {
+    name: string;
+    rentedAmount: number;
+    returnedAmount?: number;
+    lostItem?: {
+      date: Dayjs;
+      amount: number;
+    };
+  }) {
+    const item = this.rentedItem(args.name);
+    await expect(item.item).toBeVisible();
+    await expect(item.rentedAmount).toHaveText(args.rentedAmount.toString());
+    await expect(item.returnedAmount).toHaveText(
+      args.returnedAmount?.toString() ?? '0',
     );
-    await expect(this.rentedItem(name).returnedAmount).toHaveText(
-      returnedAmount.toString(),
-    );
+
+    if (args.lostItem !== undefined) {
+      await expect(item.lostItems).toHaveCount(1);
+      await expect(item.lostItems).toHaveText(
+        `${args.lostItem.date.format('YYYY-MM-DD')}: ${args.lostItem.amount.toFixed()} item(s) Lost`,
+      );
+    }
   }
 }

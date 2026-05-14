@@ -8,7 +8,10 @@
 </script>
 <template>
   <div class="dropdown dropdown-end">
-    <button class="btn btn-circle btn-xs btn-ghost" tabindex="0">
+    <button
+      class="btn btn-circle btn-xs btn-ghost"
+      tabindex="0"
+      data-testid="rentalItemMenuButton">
       <span class="material-symbols-outlined">more_vert</span>
     </button>
     <ul
@@ -24,7 +27,8 @@
               itemType: itemId.type,
               itemId: itemId.id,
             },
-          }">
+          }"
+          data-testid="markAsLost">
           Mark as lost
         </NuxtLink>
       </li>

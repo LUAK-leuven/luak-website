@@ -9,12 +9,16 @@ import type {
 import type { GearItemId, TopoId } from '~/types/gear';
 import type { UserId } from '~/types/user';
 import { parseEvent } from '~/model/gear';
+import type { SupabaseClient } from '@supabase/supabase-js';
+import type { Database } from '~/types/database.types';
 
-export const rentalService = {
+export const rentalService = (
+  supabaseClient: SupabaseClient<Database> = useSupabaseClient(),
+) => ({
   async saveRental(
     rental: UnsavedRental,
   ): Promise<{ id: RentalId | undefined; error: string | undefined }> {
-    const { error, data } = await useSupabaseClient().rpc('create_rental', {
+    const { error, data } = await supabaseClient.rpc('create_rental', {
       p_board_member_id: rental.boardMemberId,
       p_member_id: rental.memberId ?? null,
       p_date_borrow: rental.dateBorrow,
@@ -47,10 +51,8 @@ export const rentalService = {
   },
 
   async getRentals() {
-    const { data, error } = await useSupabaseClient()
-      .from('Rentals')
-      .select(
-        `
+    const { data, error } = await supabaseClient.from('Rentals').select(
+      `
           id,
           member:Users!Rentals_member_id_fkey (
             first_name,
@@ -61,7 +63,7 @@ export const rentalService = {
           status,
           contact_info
           `,
-      );
+    );
 
     if (error) {
       console.warn('failed to load rentals', error);
@@ -87,7 +89,7 @@ export const rentalService = {
   },
 
   async getRental(rentalId: RentalId): Promise<RentalDetails | null> {
-    const { data: rental, error } = await useSupabaseClient()
+    const { data: rental, error } = await supabaseClient
       .from('Rentals')
       .select(
         `
@@ -214,7 +216,7 @@ export const rentalService = {
   },
 
   async updateRental(id: RentalId, rentalUpdate: Omit<RentalUpdate, 'id'>) {
-    const { error } = await useSupabaseClient().rpc('update_rental', {
+    const { error } = await supabaseClient.rpc('update_rental', {
       p_rental_id: id,
       p_date_return: rentalUpdate.dateReturn,
       p_deposit_returned: rentalUpdate.depositReturned,
@@ -231,7 +233,7 @@ export const rentalService = {
     id: RentalId,
     rental: Omit<Omit<UnsavedRental, 'memberId'>, 'boardMemberId'>,
   ) {
-    const { error } = await useSupabaseClient().rpc('edit_rental', {
+    const { error } = await supabaseClient.rpc('edit_rental', {
       p_rental_id: id,
       p_contact_info: rental.contactInfo
         ? JSON.stringify(rental.contactInfo)
@@ -262,7 +264,7 @@ export const rentalService = {
   async getRentalsForUser(
     userId: UserId,
   ): Promise<PublicRentalDetails[] | null> {
-    const { data: rentals, error } = await useSupabaseClient()
+    const { data: rentals, error } = await supabaseClient
       .from('Rentals')
       .select(
         `
@@ -331,4 +333,4 @@ export const rentalService = {
         }) satisfies PublicRentalDetails,
     );
   },
-};
+});

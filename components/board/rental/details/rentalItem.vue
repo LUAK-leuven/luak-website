@@ -22,7 +22,10 @@
       ">
       {{ name }}
       <ul v-if="itemsLost.length > 0" class="ml-5">
-        <li v-for="({ date, amount }, idx) of itemsLost" :key="idx">
+        <li
+          v-for="({ date, amount }, idx) of itemsLost"
+          :key="idx"
+          data-testid="lostItem">
           {{ dayjs(date).format('YYYY-MM-DD') }}: {{ amount }} item(s) Lost
         </li>
       </ul>

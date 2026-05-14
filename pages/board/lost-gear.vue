@@ -62,15 +62,16 @@
       :is-loading="pending"
       :error="error?.message">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div data-testId="member.fullName">
-          Member: {{ rental.member.fullName }}
-        </div>
+        <div data-testid="member">Member: {{ rental.member.fullName }}</div>
         <div class="flex flex-row gap-1 items-center">
           <span>Deposit:</span>
-          <span data-testId="depositFee">
+          <span data-testid="depositFee">
             {{ rental.depositFee.toFixed(2) }} €
           </span>
-          <PaymentBadge class="ml-2" :payment-method="rental.paymentMethod" />
+          <PaymentBadge
+            class="ml-2"
+            :payment-method="rental.paymentMethod"
+            data-testid="paymentMethod" />
           <span v-if="rental.depositReturned" class="badge badge-success">
             returned
           </span>
@@ -78,7 +79,7 @@
 
         <div class="flex flex-row gap-x-1 items-center flex-wrap">
           <span>Date borrow:</span>
-          <span data-testId="dateBorrow">{{ rental.dateBorrow }}</span>
+          <span data-testid="dateBorrow">{{ rental.dateBorrow }}</span>
         </div>
         <div class="flex flex-row gap-x-1 items-center flex-wrap">
           <span class="w-max flex-shrink-0">Return date:</span>
@@ -86,7 +87,7 @@
             <BoardRentalReturnDate
               :date="rental.dateReturn"
               :ghost="rental.status === 'returned'"
-              data-testId="dateReturn" />
+              data-testid="dateReturn" />
           </span>
         </div>
       </div>

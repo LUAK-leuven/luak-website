@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '~/types/database.types';
 import { validateSupabaseUrl } from '~/tests/e2e/global-setup-and-teardown/validateSupabaseUrl';
+import dayjs from 'dayjs';
 
 class TestDao {
   private readonly supabase;
@@ -17,7 +18,7 @@ class TestDao {
     const { error } = await this.supabase
       .from('InventoryItemEvents')
       .delete()
-      .neq('id', '');
+      .neq('occured_on', dayjs().toISOString());
     if (error) {
       console.warn(`
 Failed to clear InventoryItemEvents:

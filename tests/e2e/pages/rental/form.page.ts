@@ -9,6 +9,10 @@ export class RentalFormPage {
     this.page = page;
   }
 
+  async navigate() {
+    await this.page.goto(this.path);
+  }
+
   get boardMember() {
     return this.page
       .getByTestId('rental.form.boardMember')
