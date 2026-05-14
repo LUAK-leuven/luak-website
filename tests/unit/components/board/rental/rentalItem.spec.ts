@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { mountSuspended } from '@nuxt/test-utils/runtime';
-import RentalItem from '~/components/board/rental/rentalItem.vue';
+import RentalItem from '~/components/board/rental/return/rentalItem.vue';
 
 describe('RentalItem', () => {
   test.each([
@@ -23,7 +23,6 @@ describe('RentalItem', () => {
           name: 'quickdraw',
           rentedAmount: rentedAmount,
           returnedAmount: returnedAmount,
-          editMode: true,
           bouncing: false,
         },
       });
@@ -35,9 +34,26 @@ describe('RentalItem', () => {
       const rentedAmountInput = wrapper.find('input');
       await rentedAmountInput.setValue(updatedReturnedAmount);
 
-      const updateEvent = wrapper.emitted('updateReturnedAmount');
+      const updateEvent = wrapper.emitted('updateReturnedAmount')!;
       expect(updateEvent).toHaveLength(1);
-      expect(updateEvent![0]).toEqual([updatedReturnedAmount]);
+      expect(updateEvent[0]).toEqual([updatedReturnedAmount]);
     },
   );
+
+  test('clearing the value does not emit updateReturnedAmount', async () => {
+    const wrapper = await mountSuspended(RentalItem, {
+      props: {
+        name: 'quickdraw',
+        rentedAmount: 1,
+        returnedAmount: 0,
+        bouncing: false,
+      },
+    });
+
+    const rentedAmountInput = wrapper.find('input');
+    await rentedAmountInput.setValue();
+
+    const updateEvent = wrapper.emitted('updateReturnedAmount');
+    expect(updateEvent).toBeUndefined();
+  });
 });

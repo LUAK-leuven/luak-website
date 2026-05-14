@@ -22,7 +22,7 @@
         :class="textBoxColor"
         :value="model"
         type="number"
-        @input="(e) => setModel(e.data)" />
+        @input="(e) => setModel((e.target as HTMLInputElement).value)" />
       <slot name="label-end" />
     </label>
   </div>
