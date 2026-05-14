@@ -167,18 +167,6 @@
       <b class="border px-1">Amount</b>
       <b class="border px-1" />
       <RentalItem
-        v-for="{ title, rentedAmount, id } of rental.topos"
-        :key="id"
-        :bouncing="bouncing[`returnedTopos.${id}`]"
-        :name="title"
-        :rented-amount="rentedAmount"
-        :returned-amount="values.returnedTopos![id]"
-        :rental-id="rental.id"
-        :item-id="{ type: 'topo', id }"
-        @update-returned-amount="
-          (amount) => updateReturnedItem({ type: 'topo', id, amount })
-        " />
-      <RentalItem
         v-for="{ name, rentedAmount, id } of rental.gear"
         :key="id"
         :bouncing="bouncing[`returnedGear.${id}`]"
@@ -189,6 +177,18 @@
         :item-id="{ type: 'gear', id }"
         @update-returned-amount="
           (amount) => updateReturnedItem({ type: 'gear', id, amount })
+        " />
+      <RentalItem
+        v-for="{ name, rentedAmount, id } of rental.topos"
+        :key="id"
+        :bouncing="bouncing[`returnedTopos.${id}`]"
+        :name="name"
+        :rented-amount="rentedAmount"
+        :returned-amount="values.returnedTopos![id]"
+        :rental-id="rental.id"
+        :item-id="{ type: 'topo', id }"
+        @update-returned-amount="
+          (amount) => updateReturnedItem({ type: 'topo', id, amount })
         " />
     </div>
     <hr class="my-3" />

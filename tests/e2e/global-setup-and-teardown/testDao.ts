@@ -13,6 +13,19 @@ class TestDao {
     );
   }
 
+  async cleanInventoryEvents() {
+    const { error } = await this.supabase
+      .from('InventoryItemEvents')
+      .delete()
+      .neq('id', '');
+    if (error) {
+      console.warn(`
+Failed to clear InventoryItemEvents:
+  error: ${JSON.stringify(error)}
+      `);
+    }
+  }
+
   async clearRentals() {
     const { error } = await this.supabase
       .from('Rentals')

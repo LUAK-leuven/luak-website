@@ -54,28 +54,21 @@ export type PublicRentalDetails = {
   dateReturn: string;
   depositFee: number;
   depositReturned: boolean;
-  gear: {
-    id: GearItemId;
-    name: string;
-    rentedAmount: number;
-    returnedAmount: number;
-    itemsLost: {
-      date: string;
-      amount: number;
-    }[];
-  }[];
-  topos: {
-    id: TopoId;
-    title: string;
-    rentedAmount: number;
-    returnedAmount: number;
-    itemsLost: {
-      date: string;
-      amount: number;
-    }[];
-  }[];
+  gear: RentedItem<GearItemId>[];
+  topos: RentedItem<TopoId>[];
   paymentMethod: Enums<'payment_method'>;
   status: Enums<'rental_status'>;
+};
+
+type RentedItem<T extends EntityId<unknown>> = {
+  id: T;
+  name: string;
+  rentedAmount: number;
+  returnedAmount: number;
+  itemsLost: {
+    date: string;
+    amount: number;
+  }[];
 };
 
 export type RentalItemId =

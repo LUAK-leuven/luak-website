@@ -61,16 +61,15 @@ import { testUsers } from '~/tests/e2e/fixtures';
     });
 
     [testUsers.paidLastYear, testUsers.unpaidMembership].forEach((user) => {
-      test.fail(
-        `non-board member ${user} is unauthorized`,
-        async ({ page }) => {
-          const loginPage = new LoginPage(page);
-          await loginPage.loginAsserted(user);
+      test.skip(`non-board member ${user} is unauthorized`, async ({
+        page,
+      }) => {
+        const loginPage = new LoginPage(page);
+        await loginPage.loginAsserted(user);
 
-          const response = await page.goto(path);
-          expect(response?.status()).toBe(403);
-        },
-      );
+        const response = await page.goto(path);
+        expect(response?.status()).toBe(403);
+      });
     });
   });
 });

@@ -82,17 +82,17 @@
     <b class="border px-1">Returned amount</b>
     <RentalItem
       v-for="(
-        { title, rentedAmount, returnedAmount, itemsLost }, idx
-      ) of rental.topos"
+        { name, rentedAmount, returnedAmount, itemsLost }, idx
+      ) of rental.gear"
       :key="idx"
-      :name="title"
+      :name="name"
       :rented-amount="rentedAmount"
       :returned-amount="returnedAmount"
       :items-lost="itemsLost" />
     <RentalItem
       v-for="(
         { name, rentedAmount, returnedAmount, itemsLost }, idx
-      ) of rental.gear"
+      ) of rental.topos"
       :key="idx"
       :name="name"
       :rented-amount="rentedAmount"
