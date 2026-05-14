@@ -21,7 +21,8 @@
             name: 'board-lost-gear',
             query: {
               rentalId: rentalId,
-              gearItemId: itemId.id,
+              itemType: itemId.type,
+              itemId: itemId.id,
             },
           }">
           Mark as lost
