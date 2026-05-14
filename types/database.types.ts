@@ -174,6 +174,7 @@ export type Database = {
           item_id: string;
           item_type: Database['public']['Enums']['item_type'];
           occured_on: string;
+          rental_id: string | null;
         };
         Insert: {
           event: Json;
@@ -181,6 +182,7 @@ export type Database = {
           item_id: string;
           item_type: Database['public']['Enums']['item_type'];
           occured_on?: string;
+          rental_id?: string | null;
         };
         Update: {
           event?: Json;
@@ -188,8 +190,17 @@ export type Database = {
           item_id?: string;
           item_type?: Database['public']['Enums']['item_type'];
           occured_on?: string;
+          rental_id?: string | null;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: 'InventoryItemEvents_rental_id_fkey';
+            columns: ['rental_id'];
+            isOneToOne: false;
+            referencedRelation: 'Rentals';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       Memberships: {
         Row: {

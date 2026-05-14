@@ -36,6 +36,7 @@ create table "public"."InventoryItemEvents" (
   "occured_on" timestamp with time zone not null default now(),
   "item_type" public.item_type not null,
   "item_id" uuid not null,
+  "rental_id" uuid,
   "event" jsonb not null
 );
 alter table "public"."InventoryItemEvents" enable row level security;
@@ -43,6 +44,9 @@ alter table "public"."InventoryItemEvents" enable row level security;
 CREATE UNIQUE INDEX "InventoryItemEvents_pkey" ON public."InventoryItemEvents" USING btree (id);
 
 alter table "public"."InventoryItemEvents" add constraint "InventoryItemEvents_pkey" PRIMARY KEY using index "InventoryItemEvents_pkey";
+
+alter table "public"."InventoryItemEvents" add constraint "InventoryItemEvents_rental_id_fkey" FOREIGN KEY (rental_id) REFERENCES "Rentals"(id) not valid;
+alter table "public"."InventoryItemEvents" validate constraint "InventoryItemEvents_rental_id_fkey";
 
 grant delete on table "public"."InventoryItemEvents" to "anon";
 grant insert on table "public"."InventoryItemEvents" to "anon";

@@ -1,6 +1,7 @@
 import { z } from 'zod';
+import { itemLostEvent } from '~/model/gear';
 import { gearDao } from '~/server/repository/gear';
-import { itemLostEvent, type TopoId } from '~/types/gear';
+import type { TopoId } from '~/types/gear';
 import type { RentalId } from '~/types/rental';
 
 const lostTopo = z.object({
@@ -26,9 +27,7 @@ export default defineEventHandler(async (event) => {
   await gearRepository.saveInventoryItemEvent({
     itemType: 'topo',
     itemId: result.data.topoId as TopoId,
-    event: itemLostEvent(
-      result.data.rentalId as RentalId,
-      result.data.lostAmount,
-    ),
+    rentalId: result.data.rentalId as RentalId,
+    event: itemLostEvent(result.data.lostAmount),
   });
 });

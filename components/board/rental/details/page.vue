@@ -81,17 +81,23 @@
     <b class="border px-1">Amount</b>
     <b class="border px-1">Returned amount</b>
     <RentalItem
-      v-for="({ title, rentedAmount, returnedAmount }, idx) of rental.topos"
+      v-for="(
+        { title, rentedAmount, returnedAmount, itemsLost }, idx
+      ) of rental.topos"
       :key="idx"
       :name="title"
       :rented-amount="rentedAmount"
-      :returned-amount="returnedAmount" />
+      :returned-amount="returnedAmount"
+      :items-lost="itemsLost" />
     <RentalItem
-      v-for="({ name, rentedAmount, returnedAmount }, idx) of rental.gear"
+      v-for="(
+        { name, rentedAmount, returnedAmount, itemsLost }, idx
+      ) of rental.gear"
       :key="idx"
       :name="name"
       :rented-amount="rentedAmount"
-      :returned-amount="returnedAmount" />
+      :returned-amount="returnedAmount"
+      :items-lost="itemsLost" />
   </div>
   <hr class="my-3" />
   <div class="flex justify-end gap-3">

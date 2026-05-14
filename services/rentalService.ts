@@ -8,6 +8,7 @@ import type {
 } from '~/types/rental';
 import type { GearItemId, TopoId } from '~/types/gear';
 import type { UserId } from '~/types/user';
+import { parseEvent } from '~/model/gear';
 
 export const rentalService = {
   async saveRental(
@@ -111,7 +112,8 @@ export const rentalService = {
           RentedGear(
             GearItems(
               id,
-              name
+              name,
+              GearInventory(id)
             ),
             rented_amount,
             returned_amount
@@ -125,8 +127,9 @@ export const rentalService = {
             returned_amount
           ),
           contact_info,
-          comments
-          `,
+          comments,
+          InventoryItemEvents(*)
+        `,
       )
       .eq('id', rentalId)
       .single();
@@ -161,21 +164,49 @@ export const rentalService = {
       depositFee: rental.deposit,
       depositReturned: rental.deposit_returned,
       gear: sortBy(
-        rental.RentedGear.map((gearItem) => ({
-          id: gearItem.GearItems.id as GearItemId,
-          name: gearItem.GearItems.name,
-          rentedAmount: gearItem.rented_amount,
-          returnedAmount: gearItem.returned_amount,
-        })),
+        rental.RentedGear.map((gearItem) => {
+          const events = rental.InventoryItemEvents.filter(
+            (it) =>
+              it.item_type === 'gear' &&
+              gearItem.GearItems.GearInventory.some(
+                ({ id: inventoryId }) => inventoryId === it.item_id,
+              ),
+          ).map((it) => ({
+            occuredOn: it.occured_on,
+            ...parseEvent(it.event),
+          }));
+          return {
+            id: gearItem.GearItems.id as GearItemId,
+            name: gearItem.GearItems.name,
+            rentedAmount: gearItem.rented_amount,
+            returnedAmount: gearItem.returned_amount,
+            itemsLost: events.map((it) => ({
+              date: it.occuredOn,
+              amount: it.lostAmount,
+            })),
+          };
+        }),
         'name',
       ),
       topos: sortBy(
-        rental.RentedTopos.map((topo) => ({
-          id: topo.Topos.id as TopoId,
-          title: topo.Topos.title,
-          rentedAmount: topo.rented_amount,
-          returnedAmount: topo.returned_amount,
-        })),
+        rental.RentedTopos.map((topo) => {
+          const events = rental.InventoryItemEvents.filter(
+            (it) => it.item_type === 'topo' && topo.Topos.id === it.item_id,
+          ).map((it) => ({
+            occuredOn: it.occured_on,
+            ...parseEvent(it.event),
+          }));
+          return {
+            id: topo.Topos.id as TopoId,
+            title: topo.Topos.title,
+            rentedAmount: topo.rented_amount,
+            returnedAmount: topo.returned_amount,
+            itemsLost: events.map((it) => ({
+              date: it.occuredOn,
+              amount: it.lostAmount,
+            })),
+          };
+        }),
         'title',
       ),
       paymentMethod: rental.payment_method,

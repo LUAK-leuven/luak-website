@@ -59,12 +59,20 @@ export type PublicRentalDetails = {
     name: string;
     rentedAmount: number;
     returnedAmount: number;
+    itemsLost: {
+      date: string;
+      amount: number;
+    }[];
   }[];
   topos: {
     id: TopoId;
     title: string;
     rentedAmount: number;
     returnedAmount: number;
+    itemsLost: {
+      date: string;
+      amount: number;
+    }[];
   }[];
   paymentMethod: Enums<'payment_method'>;
   status: Enums<'rental_status'>;
