@@ -52,14 +52,6 @@ export class RentalDetailsPage {
     return this.page.getByTestId('comments');
   }
 
-  get editComments() {
-    return this.page.getByTestId('editComments');
-  }
-
-  get depositReturned() {
-    return this.page.getByTestId('depositReturned');
-  }
-
   get editButton() {
     return this.page.getByTestId('editButton');
   }
@@ -68,20 +60,12 @@ export class RentalDetailsPage {
     return this.page.getByTestId('returnButton');
   }
 
-  get saveButton() {
-    return this.page.getByTestId('saveButton');
-  }
-
   rentedItem(name: string) {
     const item = this.page.getByTestId(`rental-item-${name}`);
     return {
       item,
       rentedAmount: item.getByTestId('rentedAmount'),
       returnedAmount: item.getByTestId('returnedAmount'),
-      returnedAmountInput: item
-        .getByTestId('returnedAmountInput')
-        .getByRole('spinbutton'),
-      quickReturn: item.getByTestId('quickReturn'),
       lostItems: item.getByTestId('lostItem'),
     };
   }

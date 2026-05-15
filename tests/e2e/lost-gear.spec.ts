@@ -15,6 +15,7 @@ test.describe('lost gear form', () => {
     const rentalFormPage = new RentalFormPage(page);
     await rentalFormPage.navigate();
 
+    // Create a rental
     await rentalFormPage.fillForm({
       member: testUsers.paidMembership,
       paymentMethod: 'cash',
@@ -27,9 +28,16 @@ test.describe('lost gear form', () => {
     await rentalDetailsPage.returnButton.click();
 
     const rentalReturnPage = new RentalReturnPage(page);
-    const more = rentalReturnPage.rentedItem('Topo Flone').more;
-    await more.menuButton.click();
-    await more.markAsLost.click();
+    const topoFlone = rentalReturnPage.rentedItem('Topo Flone');
+
+    // Return 1 item
+    await topoFlone.returnedAmountInput.fill('1');
+    await rentalReturnPage.saveButton.click();
+
+    // Mark as lost
+    await rentalDetailsPage.returnButton.click();
+    await topoFlone.more.menuButton.click();
+    await topoFlone.more.markAsLost.click();
 
     const lostGearPage = new LostGearPage(page);
     await expect(lostGearPage.title).toHaveText('Lost Gear');
@@ -43,7 +51,7 @@ test.describe('lost gear form', () => {
         title: 'Topo Flone',
         year: 2019,
         rentedAmount: 2,
-        unreturnedAmount: 2,
+        unreturnedAmount: 1,
         lostAmount: 1,
       },
     });
@@ -57,10 +65,14 @@ test.describe('lost gear form', () => {
     await lostGearPage.saveButton.click();
     await expect(page).toHaveURL(/\/board\/rentals\/[d-]*/);
 
+    await rentalDetailsPage.expectToHave({
+      status: 'Returned',
+    });
+
     await rentalDetailsPage.expectItem({
       name: 'Topo Flone',
       rentedAmount: 2,
-      returnedAmount: 0,
+      returnedAmount: 1,
       lostItem: {
         date: dayjs(),
         amount: 1,

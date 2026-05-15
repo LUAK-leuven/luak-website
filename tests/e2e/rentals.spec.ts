@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import { RentalDetailsPage } from '~/tests/e2e/pages/rental/details.page';
 import { RentalsOverviewPage } from '~/tests/e2e/pages/rentals-overview.page';
 import { uuidRegex } from '~/utils/utils';
+import { RentalReturnPage } from './pages/rental/return.page';
 
 test.describe('create a new rental', () => {
   test.beforeEach(async ({ page }) => {
@@ -86,11 +87,12 @@ test.describe('create a new rental', () => {
 
     // --- return the rental ---
     await rentalDetailsPage.returnButton.click();
-    await rentalDetailsPage.rentedItem('BD C4 .4').quickReturn.click();
-    await rentalDetailsPage.depositReturned.check();
+    const rentalReturnPage = new RentalReturnPage(page);
 
-    await rentalDetailsPage.saveButton.click();
-    await expect(rentalDetailsPage.editComments).toBeHidden();
+    await rentalReturnPage.rentedItem('BD C4 .4').quickReturn.click();
+    await rentalReturnPage.depositReturned.check();
+
+    await rentalReturnPage.saveButton.click();
 
     await rentalDetailsPage.expectToHave({
       status: 'Returned',
@@ -152,17 +154,17 @@ test.describe('create a new rental', () => {
     await expect(page).toHaveURL(`/board/rentals/${rentalId}`);
 
     await rentalDetailsPage.returnButton.click();
-    await rentalDetailsPage.editComments.fill('a test comment');
-    await rentalDetailsPage
+    const rentalReturnPage = new RentalReturnPage(page);
+    await rentalReturnPage.comments.fill('a test comment');
+    await rentalReturnPage
       .rentedItem('quickdraw')
       .returnedAmountInput.fill('10');
-    await rentalDetailsPage.rentedItem('single rope 000').quickReturn.click();
+    await rentalReturnPage.rentedItem('single rope 000').quickReturn.click();
     await expect(
-      rentalDetailsPage.rentedItem('single rope 000').returnedAmountInput,
+      rentalReturnPage.rentedItem('single rope 000').returnedAmountInput,
     ).toHaveValue('1');
 
-    await rentalDetailsPage.saveButton.click();
-    await expect(rentalDetailsPage.editComments).toBeHidden();
+    await rentalReturnPage.saveButton.click();
 
     await rentalDetailsPage.expectToHave({
       comments: 'a test comment',

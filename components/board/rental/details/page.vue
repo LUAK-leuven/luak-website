@@ -19,7 +19,7 @@
 
 <template>
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-    <div v-if="rental.member" class="flex flex-col">
+    <div class="flex flex-col">
       <span data-testId="member.fullName">
         Member: {{ rental.member.fullName }}
       </span>
@@ -34,9 +34,7 @@
           data-testId="member.phone" />
       </span>
     </div>
-    <div v-if="rental.boardMember" data-testId="boardMember">
-      Board member: {{ rental.boardMember }}
-    </div>
+    <div data-testId="boardMember">Board member: {{ rental.boardMember }}</div>
     <div class="flex flex-row gap-x-1 items-center flex-wrap">
       <span>Date borrow:</span>
       <span data-testId="dateBorrow">{{ rental.dateBorrow }}</span>

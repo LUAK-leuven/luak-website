@@ -7,6 +7,14 @@ export class RentalReturnPage {
     this.page = page;
   }
 
+  get depositReturned() {
+    return this.page.getByTestId('depositReturned');
+  }
+
+  get comments() {
+    return this.page.getByTestId('editComments');
+  }
+
   rentedItem(name: string) {
     const item = this.page.getByTestId(`rental-item-${name}`);
     return {
@@ -22,5 +30,9 @@ export class RentalReturnPage {
         markAsLost: item.getByTestId('markAsLost'),
       },
     };
+  }
+
+  get saveButton() {
+    return this.page.getByTestId('saveButton');
   }
 }
