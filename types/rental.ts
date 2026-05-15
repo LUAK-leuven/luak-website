@@ -12,7 +12,6 @@ type BaseRental = {
   dateReturn: string;
   depositFee: number;
   paymentMethod: Enums<'payment_method'>;
-  status: Enums<'rental_status'>;
   comments: string | undefined;
 };
 
@@ -37,7 +36,6 @@ export type RentalUpdate = {
   gear: { gear_item_id: GearItemId; returned_amount: number }[];
   topos: { topo_id: TopoId; returned_amount: number }[];
   depositReturned: boolean;
-  status: Enums<'rental_status'>;
   comments: string | undefined;
 };
 
@@ -57,7 +55,7 @@ export type PublicRentalDetails = {
   gear: RentedItem<GearItemId>[];
   topos: RentedItem<TopoId>[];
   paymentMethod: Enums<'payment_method'>;
-  status: Enums<'rental_status'>;
+  status: RentalStatus;
 };
 
 type RentedItem<T extends EntityId<unknown>> = {
@@ -80,3 +78,9 @@ export type RentalItemId =
       id: TopoId;
       type: 'topo';
     };
+
+export type ComputedRentalStatus =
+  | 'returned'
+  | 'partially_returned'
+  | 'not_returned';
+export type RentalStatus = ComputedRentalStatus | 'reserved';

@@ -32,6 +32,7 @@ test.describe('lost gear form', () => {
 
     // Return 1 item
     await topoFlone.returnedAmountInput.fill('1');
+    await rentalReturnPage.depositReturned.check(); // return deposit so that we can make a 'returned' rental later on
     await rentalReturnPage.saveButton.click();
 
     // Mark as lost

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-  import type { Enums } from '~/types/database.types';
+  import type { RentalStatus } from '~/types/rental';
 
   defineProps<{
     rental: {
       memberName: string;
       dateReturn: string;
       dateBorrow: string;
-      status: Enums<'rental_status'>;
+      status: RentalStatus;
     };
   }>();
 </script>

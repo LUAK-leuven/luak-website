@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import type { Enums } from '~/types/database.types';
   import { computeRentalStatus } from '~/utils/rental/computeStatus';
   import TextField from '~/components/input/TextField.vue';
   import { useToast } from '~/composables/useToast';
@@ -56,7 +55,6 @@
         depositReturned: formState.depositReturned,
         gear: updatedReturnedGear,
         topos: updatedReturnedTopos,
-        status: computedStatus.value,
         comments: formState.comments,
       });
 
@@ -74,7 +72,7 @@
     },
   );
 
-  const computedStatus: ComputedRef<Enums<'rental_status'>> = computed(() => {
+  const computedStatus = computed(() => {
     return computeRentalStatus({
       rentedGear: Object.fromEntries(
         props.rental.gear.map((it) => [it.id, it.rentedAmount]),
@@ -84,6 +82,12 @@
         props.rental.topos.map((it) => [it.id, it.rentedAmount]),
       ),
       returnedTopos: values.returnedTopos!,
+      lostTopos: Object.fromEntries(
+        props.rental.topos.map((topo) => [
+          topo.id,
+          sumOf(topo.itemsLost, 'amount'),
+        ]),
+      ),
       depositReturned: values.depositReturned!,
     });
   });
@@ -167,24 +171,26 @@
       <b class="border px-1">Amount</b>
       <b class="border px-1" />
       <RentalItem
-        v-for="{ name, rentedAmount, id } of rental.gear"
+        v-for="{ name, rentedAmount, id, itemsLost } of rental.gear"
         :key="id"
         :bouncing="bouncing[`returnedGear.${id}`]"
         :name="name"
         :rented-amount="rentedAmount"
         :returned-amount="values.returnedGear![id]"
+        :lost-amount="sumOf(itemsLost, 'amount')"
         :rental-id="rental.id"
         :item-id="{ type: 'gear', id }"
         @update-returned-amount="
           (amount) => updateReturnedItem({ type: 'gear', id, amount })
         " />
       <RentalItem
-        v-for="{ name, rentedAmount, id } of rental.topos"
+        v-for="{ name, rentedAmount, id, itemsLost } of rental.topos"
         :key="id"
         :bouncing="bouncing[`returnedTopos.${id}`]"
         :name="name"
         :rented-amount="rentedAmount"
         :returned-amount="values.returnedTopos![id]"
+        :lost-amount="sumOf(itemsLost, 'amount')"
         :rental-id="rental.id"
         :item-id="{ type: 'topo', id }"
         @update-returned-amount="

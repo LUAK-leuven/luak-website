@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import type { RentalId, UnsavedRental } from '~/types/rental';
-  import { computeRentalStatus } from '~/utils/rental/computeStatus';
   import { useToast } from '~/composables/useToast';
   import { useRentalService } from '~/composables/useRentalService';
 
@@ -53,20 +52,6 @@
           state.topos[id] = 0;
         }
       }
-      state.status =
-        state.status === 'reserved'
-          ? 'reserved'
-          : computeRentalStatus({
-              returnedGear: state.gear,
-              rentedGear: Object.fromEntries(
-                rental.value.gear.map((g) => [g.id, g.rentedAmount]),
-              ),
-              returnedTopos: state.topos,
-              rentedTopos: Object.fromEntries(
-                rental.value.topos.map((t) => [t.id, t.rentedAmount]),
-              ),
-              depositReturned: rental.value.depositReturned,
-            });
       const { error } = await edit(rentalId, state);
       if (!error) {
         showPopup('success', 'Rental saved successfully!');
@@ -132,7 +117,6 @@
         ),
         depositFee: rental.depositFee,
         paymentMethod: rental.paymentMethod,
-        markAsReserved: rental.status === 'reserved',
         comments: rental.comments,
       }" />
   </FullPageCard>

@@ -5,12 +5,15 @@ import type {
   UnsavedRental,
   RentalDetails,
   PublicRentalDetails,
+  RentalStatus,
 } from '~/types/rental';
 import type { GearItemId, TopoId } from '~/types/gear';
 import type { UserId } from '~/types/user';
 import { parseEvent } from '~/model/gear';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '~/types/database.types';
+import { computeRentalStatus } from '~/utils/rental/computeStatus';
+import dayjs from 'dayjs';
 
 export const rentalService = (
   supabaseClient: SupabaseClient<Database> = useSupabaseClient(),
@@ -24,7 +27,6 @@ export const rentalService = (
       p_date_borrow: rental.dateBorrow,
       p_date_return: rental.dateReturn,
       p_deposit: rental.depositFee,
-      p_status: rental.status,
       p_gear: Object.entries(rental.gear)
         .filter(([_, amount]) => amount !== undefined)
         .map(([id, amount]) => ({
@@ -60,8 +62,19 @@ export const rentalService = (
           ),
           date_return,
           date_borrow,
-          status,
-          contact_info
+          contact_info,
+          deposit_returned,
+          RentedGear(
+            gear_item_id,
+            rented_amount,
+            returned_amount
+          ),
+          RentedTopos(
+            topo_id,
+            rented_amount,
+            returned_amount
+          ),
+          InventoryItemEvents(*)
           `,
     );
 
@@ -74,6 +87,7 @@ export const rentalService = (
       const contactInfo: ContactInfo | undefined = rental.contact_info
         ? (JSON.parse(rental.contact_info) as ContactInfo)
         : undefined;
+
       return {
         id: rental.id as RentalId,
         memberName: rental.member
@@ -83,7 +97,7 @@ export const rentalService = (
             : 'Failed to load name',
         dateReturn: rental.date_return,
         dateBorrow: rental.date_borrow,
-        status: rental.status,
+        status: getStatus(rental),
       };
     });
   },
@@ -110,10 +124,9 @@ export const rentalService = (
           deposit,
           deposit_returned,
           payment_method,
-          status,
           RentedGear(
+            gear_item_id,
             GearItems(
-              id,
               name,
               GearInventory(id)
             ),
@@ -121,8 +134,8 @@ export const rentalService = (
             returned_amount
           ),
           RentedTopos(
+            topo_id,
             Topos(
-              id,
               title
             ),
             rented_amount,
@@ -168,7 +181,7 @@ export const rentalService = (
         ...parseEvent(it.event),
       }));
       return {
-        id: gearItem.GearItems.id as GearItemId,
+        id: gearItem.gear_item_id as GearItemId,
         name: gearItem.GearItems.name,
         rentedAmount: gearItem.rented_amount,
         returnedAmount: gearItem.returned_amount,
@@ -181,13 +194,13 @@ export const rentalService = (
 
     const topos = rental.RentedTopos.map((topo) => {
       const events = rental.InventoryItemEvents.filter(
-        (it) => it.item_type === 'topo' && topo.Topos.id === it.item_id,
+        (it) => it.item_type === 'topo' && topo.topo_id === it.item_id,
       ).map((it) => ({
         occuredOn: it.occured_on,
         ...parseEvent(it.event),
       }));
       return {
-        id: topo.Topos.id as TopoId,
+        id: topo.topo_id as TopoId,
         name: topo.Topos.title,
         rentedAmount: topo.rented_amount,
         returnedAmount: topo.returned_amount,
@@ -210,7 +223,7 @@ export const rentalService = (
       gear: sortBy(gear, 'name'),
       topos: sortBy(topos, 'name'),
       paymentMethod: rental.payment_method,
-      status: rental.status,
+      status: getStatus(rental),
       comments: rental.comments ?? undefined,
     } satisfies RentalDetails;
   },
@@ -220,7 +233,6 @@ export const rentalService = (
       p_rental_id: id,
       p_date_return: rentalUpdate.dateReturn,
       p_deposit_returned: rentalUpdate.depositReturned,
-      p_status: rentalUpdate.status,
       p_gear: rentalUpdate.gear,
       p_topos: rentalUpdate.topos,
       p_comments: rentalUpdate.comments ?? null,
@@ -254,7 +266,6 @@ export const rentalService = (
           rented_amount: amount,
         })),
       p_payment_method: rental.paymentMethod,
-      p_status: rental.status,
       p_comments: rental.comments ?? null,
     });
     if (error) console.warn('editRental: ', error);
@@ -274,24 +285,24 @@ export const rentalService = (
           deposit,
           deposit_returned,
           payment_method,
-          status,
           RentedGear(
+            gear_item_id,
             GearItems(
-              id,
               name
             ),
             rented_amount,
             returned_amount
           ),
           RentedTopos(
+            topo_id,
             Topos(
-              id,
               title
             ),
             rented_amount,
             returned_amount
-          )
-          `,
+          ),
+          InventoryItemEvents(*)
+        `,
       )
       .eq('member_id', userId);
 
@@ -308,10 +319,10 @@ export const rentalService = (
           dateReturn: rental.date_return,
           depositFee: rental.deposit,
           depositReturned: rental.deposit_returned,
-          status: rental.status,
+          status: getStatus(rental),
           gear: sortBy(
             rental.RentedGear.map((gearItem) => ({
-              id: gearItem.GearItems.id as GearItemId,
+              id: gearItem.gear_item_id as GearItemId,
               name: gearItem.GearItems.name,
               rentedAmount: gearItem.rented_amount,
               returnedAmount: gearItem.returned_amount,
@@ -321,7 +332,7 @@ export const rentalService = (
           ),
           topos: sortBy(
             rental.RentedTopos.map((topo) => ({
-              id: topo.Topos.id as TopoId,
+              id: topo.topo_id as TopoId,
               name: topo.Topos.title,
               rentedAmount: topo.rented_amount,
               returnedAmount: topo.returned_amount,
@@ -334,3 +345,64 @@ export const rentalService = (
     );
   },
 });
+
+function getStatus(rental: {
+  RentedGear: {
+    gear_item_id: string;
+    rented_amount: number;
+    returned_amount: number;
+  }[];
+  RentedTopos: {
+    topo_id: string;
+    rented_amount: number;
+    returned_amount: number;
+  }[];
+  InventoryItemEvents: Database['public']['Tables']['InventoryItemEvents']['Row'][];
+  deposit_returned: boolean;
+  date_borrow: string;
+}): RentalStatus {
+  const itemEvents = rental.InventoryItemEvents.filter(
+    ({ item_type }) => item_type === 'topo',
+  ).map((itemEvent) => ({
+    itemId: itemEvent.item_id,
+    ...parseEvent(itemEvent.event),
+  }));
+  const groupedEvents = groupBy(itemEvents, (e) => e.itemId);
+
+  const rentalStatus = computeRentalStatus({
+    rentedGear: Object.fromEntries(
+      rental.RentedGear.map(({ gear_item_id, rented_amount }) => [
+        gear_item_id,
+        rented_amount,
+      ]),
+    ),
+    returnedGear: Object.fromEntries(
+      rental.RentedGear.map(({ gear_item_id, returned_amount }) => [
+        gear_item_id,
+        returned_amount,
+      ]),
+    ),
+    rentedTopos: Object.fromEntries(
+      rental.RentedTopos.map(({ topo_id, rented_amount }) => [
+        topo_id,
+        rented_amount,
+      ]),
+    ),
+    returnedTopos: Object.fromEntries(
+      rental.RentedTopos.map(({ topo_id, returned_amount }) => [
+        topo_id,
+        returned_amount,
+      ]),
+    ),
+    lostTopos: Object.fromEntries(
+      Object.entries(groupedEvents).map(([itemId, event]) => [
+        itemId,
+        sumOf(event, 'lostAmount'),
+      ]),
+    ),
+    depositReturned: rental.deposit_returned,
+  });
+
+  const isReserved = dayjs(rental.date_borrow).isAfter(dayjs());
+  return isReserved ? 'reserved' : rentalStatus;
+}

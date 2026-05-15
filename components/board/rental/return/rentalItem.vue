@@ -2,8 +2,8 @@
   import NumberInput from '~/components/input/Number.vue';
   import type { EntityId } from '~/types/ddd';
   import ItemMenu from './itemMenu.vue';
-  import type { ItemStatus } from '~/types/board/form/RentalItem';
   import type { RentalId, RentalItemId } from '~/types/rental';
+  import { computeRentedItemStatus } from '~/utils/rental/computeStatus';
 
   const props = defineProps<{
     rentalId: RentalId;
@@ -12,36 +12,34 @@
     rentedAmount: number;
     returnedAmount: number | undefined;
     bouncing: boolean | undefined;
+    lostAmount: number;
   }>();
 
   const emit = defineEmits<{
     updateReturnedAmount: [returnedAmount: number];
   }>();
 
-  const status = computed<ItemStatus>(() =>
-    props.returnedAmount === props.rentedAmount
-      ? 'returned'
-      : props.returnedAmount === 0
-        ? 'not-returned'
-        : 'partially-returned',
-  );
-
-  const bgColor = computed(() => {
-    switch (status.value) {
-      case 'returned':
+  const itemStatusColor = computed(() => {
+    const itemStatus = computeRentedItemStatus({
+      rentedAmount: props.rentedAmount,
+      returnedAmount: props.returnedAmount ?? 0,
+      lostAmount: props.lostAmount,
+    });
+    switch (itemStatus) {
+      case 'allReturned':
         return 'bg-green-100';
-      case 'not-returned':
+      case 'noneReturned':
         return 'bg-red-100';
-      case 'partially-returned':
+      case 'someReturned':
         return 'bg-yellow-100';
       default:
-        return '';
+        throw Error();
     }
   });
 </script>
 <template>
   <div class="contents" :data-testId="`rental-item-${name}`">
-    <div class="border p-1 flex items-center" :class="bgColor">
+    <div class="border p-1 flex items-center" :class="itemStatusColor">
       {{ name }}
     </div>
     <div

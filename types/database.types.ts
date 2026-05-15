@@ -285,7 +285,6 @@ export type Database = {
           id: string;
           member_id: string | null;
           payment_method: Database['public']['Enums']['payment_method'];
-          status: Database['public']['Enums']['rental_status'];
         };
         Insert: {
           board_member_id?: string;
@@ -299,7 +298,6 @@ export type Database = {
           id?: string;
           member_id?: string | null;
           payment_method: Database['public']['Enums']['payment_method'];
-          status?: Database['public']['Enums']['rental_status'];
         };
         Update: {
           board_member_id?: string;
@@ -313,7 +311,6 @@ export type Database = {
           id?: string;
           member_id?: string | null;
           payment_method?: Database['public']['Enums']['payment_method'];
-          status?: Database['public']['Enums']['rental_status'];
         };
         Relationships: [
           {
@@ -504,7 +501,6 @@ export type Database = {
           p_gear: Json;
           p_member_id: string;
           p_payment_method: Database['public']['Enums']['payment_method'];
-          p_status: Database['public']['Enums']['rental_status'];
           p_topos: Json;
         };
         Returns: string;
@@ -519,7 +515,6 @@ export type Database = {
           p_gear: Json;
           p_payment_method: Database['public']['Enums']['payment_method'];
           p_rental_id: string;
-          p_status: Database['public']['Enums']['rental_status'];
           p_topos: Json;
         };
         Returns: string;
@@ -533,7 +528,6 @@ export type Database = {
           p_deposit_returned: boolean;
           p_gear: Json;
           p_rental_id: string;
-          p_status: Database['public']['Enums']['rental_status'];
           p_topos: Json;
         };
         Returns: undefined;
@@ -544,11 +538,6 @@ export type Database = {
       item_type: 'topo' | 'gear';
       kbf_uiaa: 'not' | 'kbf_luak' | 'kbf_other' | 'uiaa';
       payment_method: 'cash' | 'transfer';
-      rental_status:
-        | 'returned'
-        | 'partially_returned'
-        | 'not_returned'
-        | 'reserved';
       student: 'student_kul' | 'phd_kul' | 'student_other' | 'not_student';
       topo_condition:
         | 'as_good_as_new'
@@ -1238,12 +1227,6 @@ export const Constants = {
       item_type: ['topo', 'gear'],
       kbf_uiaa: ['not', 'kbf_luak', 'kbf_other', 'uiaa'],
       payment_method: ['cash', 'transfer'],
-      rental_status: [
-        'returned',
-        'partially_returned',
-        'not_returned',
-        'reserved',
-      ],
       student: ['student_kul', 'phd_kul', 'student_other', 'not_student'],
       topo_condition: [
         'as_good_as_new',

@@ -20,7 +20,6 @@ type RentalFormState = {
   topos: Record<TopoId, number>;
   depositFee: number;
   paymentMethod: Enums<'payment_method'>;
-  markAsReserved: boolean;
   comments: string | undefined;
 };
 
@@ -104,7 +103,6 @@ export function useRentalForm(
         }
         return true;
       }),
-    markAsReserved: yup.bool().default(false),
     comments: yup.string(),
   });
 
@@ -128,7 +126,6 @@ export function useRentalForm(
       topos: initialState.topos ?? {},
       depositFee: initialState.depositFee,
       paymentMethod: initialState.paymentMethod,
-      markAsReserved: initialState.markAsReserved ?? false,
       comments: initialState.comments,
     },
     validateOnMount: false,
@@ -177,13 +174,6 @@ export function useRentalForm(
     },
   });
 
-  const markAsReserved = computed({
-    get: () => values.markAsReserved ?? false,
-    set: (value: boolean) => {
-      setFieldValue('markAsReserved', value);
-    },
-  });
-
   const comments = computed({
     get: () => values.comments,
     set: (value: string) => {
@@ -210,7 +200,6 @@ export function useRentalForm(
     depositFee,
     depositFeeAttr,
     paymentMethod,
-    markAsReserved,
     comments,
     meta,
     handleSubmit,

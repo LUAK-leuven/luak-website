@@ -1,5 +1,3 @@
-create type "public"."item_type" as enum ('topo', 'gear');
-
 -- Drop GearLogs table
 revoke delete on table "public"."GearLogs" from "anon";
 revoke insert on table "public"."GearLogs" from "anon";
@@ -29,6 +27,9 @@ alter table "public"."GearLogs" drop constraint "GearLogs_gear_inventory_id_fkey
 alter table "public"."GearLogs" drop constraint "GearLogs_pkey";
 drop index if exists "public"."GearLogs_pkey";
 drop table "public"."GearLogs";
+--
+
+create type "public"."item_type" as enum ('topo', 'gear');
 
 -- Create InventoryItemEvents table
 create table "public"."InventoryItemEvents" (
@@ -81,3 +82,4 @@ using ((( SELECT auth.uid() AS uid) IN ( SELECT "BoardMembers".user_id
    FROM "BoardMembers")))
 with check ((( SELECT auth.uid() AS uid) IN ( SELECT "BoardMembers".user_id
    FROM "BoardMembers")));
+--
