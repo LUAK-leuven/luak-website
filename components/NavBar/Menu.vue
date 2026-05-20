@@ -76,9 +76,12 @@
           </li>
           <li>
             <NuxtLink
-              :to="{ name: 'pages-slug', params: { slug: ['christmas-bets'] } }"
-              >Christmas Bets</NuxtLink
-            >
+              :to="{
+                name: 'pages-slug',
+                params: { slug: ['christmas-bets'] },
+              }">
+              Christmas Bets
+            </NuxtLink>
           </li>
         </ul>
       </details>
@@ -89,7 +92,7 @@
         <ul class="p-2 bg-base-200 rounded-t-none w-52">
           <li>
             <NuxtLink :to="{ name: 'board-subscriptions-overview' }">
-              👥 Members overview
+              👥 Members
             </NuxtLink>
           </li>
           <li>
@@ -98,12 +101,10 @@
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink :to="{ name: 'board-rentals' }">
-              👀 Rental overview
-            </NuxtLink>
+            <NuxtLink :to="{ name: 'board-rentals' }"> 👀 Rentals </NuxtLink>
           </li>
           <li>
-            <NuxtLink :to="{ name: 'board-gear' }"> ⚙️ Gear overview </NuxtLink>
+            <NuxtLink :to="{ name: 'board-gear' }"> ⚙️ Gear </NuxtLink>
           </li>
           <li>
             <a href="/_studio"> 📝 Studio Mode </a>
