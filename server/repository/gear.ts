@@ -2,12 +2,10 @@ import type { Database } from '~/types/database.types';
 import type { GearInventoryId, TopoId } from '~/types/gear';
 import type { RentalId } from '~/types/rental';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { H3Event } from '#build/types/nitro-imports';
-import { serverSupabaseClient } from '#supabase/server';
 import { parseEvent } from '~/model/gear';
 import type { ItemEvent } from '~/model/gear';
 
-class GearDao {
+export class GearDao {
   private readonly supabaseClient;
 
   constructor(supabaseClient: SupabaseClient<Database>) {
@@ -71,8 +69,3 @@ class GearDao {
     });
   }
 }
-
-export const gearDao = async (event: H3Event) => {
-  const supabaseClient = await serverSupabaseClient<Database>(event);
-  return new GearDao(supabaseClient);
-};

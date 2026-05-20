@@ -86,7 +86,6 @@ test.describe('lost gear form', () => {
     const topoDetailsPage =
       await topoLibraryPage.navigateToDetails('Topo Flone');
 
-    await expect(topoDetailsPage.availableAmount).toHaveText('1');
-    await expect(topoDetailsPage.totalAmount).toHaveText('1');
+    await expect(topoDetailsPage.amount).toHaveText('1');
   });
 });

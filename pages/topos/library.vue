@@ -7,7 +7,7 @@
   const { data: topos, pending, error } = await gearService().getTopoLibrary();
 
   const allTypesOfClimbing = computed(() =>
-    [...new Set(topos.value?.flatMap((it) => it.types_of_climbing))].toSorted(),
+    [...new Set(topos.value?.flatMap((it) => it.typesOfClimbing))].toSorted(),
   );
   const allCountries = computed(() =>
     [...new Set(topos.value?.flatMap((it) => it.countries))].toSorted(),
@@ -31,7 +31,7 @@
         const matchesTags = matchAny(topo.tags, matchedTags.value);
         const matchesTypesOfClimbing =
           selectedTypesOfClimbing.value.length == 0 ||
-          matchAny(topo.types_of_climbing, selectedTypesOfClimbing.value);
+          matchAny(topo.typesOfClimbing, selectedTypesOfClimbing.value);
         const matchesCountries =
           selectedCountries.value.length == 0 ||
           matchAny(topo.countries, selectedCountries.value);
@@ -132,11 +132,11 @@
                     </div>
                   </NuxtLink>
                 </td>
-                <td v-if="user.isBoard">{{ topo.place_in_library }}</td>
-                <td>{{ topo.year_published }}</td>
+                <td v-if="user.isBoard">{{ topo.placeInLibrary }}</td>
+                <td>{{ topo.yearPublished }}</td>
                 <td>{{ topo.countries.join(', ') }}</td>
                 <td>
-                  {{ topo.types_of_climbing.join(', ') }}
+                  {{ topo.typesOfClimbing.join(', ') }}
                 </td>
               </tr>
             </tbody>

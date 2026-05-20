@@ -1,5 +1,6 @@
-import type { ContactInfo, RentalId } from '~/types/rental';
+import type { RentalId } from '~/types/rental';
 import type { GearInventoryId, GearItemId, TopoId } from '~/types/gear';
+import { parseContactInfo } from '~/model/rental';
 
 class GearService {
   private readonly supabase = useSupabaseClient();
@@ -130,7 +131,9 @@ class GearService {
       async () => {
         const { data: topos, error } = await this.supabase
           .from('Topos')
-          .select('*');
+          .select(
+            'id, authors, condition, countries, place_in_library, tags, title, types_of_climbing, year_published',
+          );
 
         if (topos === null) {
           console.warn('getAllTopos', error);
@@ -138,18 +141,14 @@ class GearService {
         }
 
         return topos.map((topo) => ({
-          amount: topo.amount,
           authors: topo.authors,
-          condition: topo.condition,
           countries: topo.countries,
-          details: topo.details ?? undefined,
           id: topo.id as TopoId,
-          languages: topo.languages,
-          place_in_library: topo.place_in_library,
+          placeInLibrary: topo.place_in_library,
           tags: topo.tags.map((it) => it.trimStart()),
           title: topo.title,
-          types_of_climbing: topo.types_of_climbing,
-          year_published: topo.year_published,
+          typesOfClimbing: topo.types_of_climbing,
+          yearPublished: topo.year_published,
         }));
       },
       { lazy: true },
@@ -157,69 +156,7 @@ class GearService {
   }
 
   public async getTopoDetails(topoId: TopoId) {
-    return useAsyncData(
-      `topo-${topoId}`,
-      async () => {
-        const { data: topo, error } = await this.supabase
-          .from('Topos')
-          .select(
-            `
-            *,
-            RentedTopos(
-              rental_id,
-              rented_amount,
-              returned_amount,
-              Rentals(
-                Users!member_id(
-                  first_name,
-                  last_name
-                ),
-                contact_info
-              )
-            )`,
-          )
-          .eq('id', topoId)
-          .single();
-
-        if (error) {
-          console.warn(`getTopo(${topoId})`, error);
-          return undefined;
-        }
-
-        const rentedAmount = sumBy(
-          topo.RentedTopos,
-          (rt) => rt.rented_amount - rt.returned_amount,
-        );
-
-        return {
-          totalAmount: topo.amount,
-          availableAmount: topo.amount - rentedAmount,
-          authors: topo.authors,
-          condition: topo.condition,
-          countries: topo.countries,
-          details: topo.details ?? undefined,
-          id: topo.id as TopoId,
-          languages: topo.languages,
-          place_in_library: topo.place_in_library,
-          tags: topo.tags.map((it) => it.trimStart()),
-          title: topo.title,
-          types_of_climbing: topo.types_of_climbing,
-          year_published: topo.year_published,
-          rentals: topo.RentedTopos.filter(
-            (r) => r.rented_amount !== r.returned_amount,
-          ).map((r) => ({
-            id: r.rental_id as RentalId,
-            amount: r.rented_amount - r.returned_amount,
-            memberName: r.Rentals.Users
-              ? getFullName(r.Rentals.Users)
-              : r.Rentals.contact_info
-                ? (JSON.parse(r.Rentals.contact_info) as ContactInfo).fullName
-                : 'Failed to get name',
-          })),
-        };
-      },
-      { lazy: true },
-    );
+    return await useLazyFetch(`/api/topos/${topoId}`, { method: 'get' });
   }
 
   public getGearItemDetails(gearItemId: GearItemId) {
@@ -296,7 +233,7 @@ class GearService {
             memberName: r.Rentals.Users
               ? getFullName(r.Rentals.Users)
               : r.Rentals.contact_info
-                ? (JSON.parse(r.Rentals.contact_info) as ContactInfo).fullName
+                ? parseContactInfo(JSON.parse(r.Rentals.contact_info)).fullName
                 : 'Failed to get name',
           })),
         };

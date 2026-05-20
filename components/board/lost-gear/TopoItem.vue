@@ -65,7 +65,7 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div data-testid="topo.title">Title: {{ topo.name }}</div>
         <div data-testid="topo.year_published">
-          Year: {{ topoDetails.year_published }}
+          Year: {{ topoDetails.yearPublished }}
         </div>
         <div data-testid="rentedAmount">
           Rented amount: {{ topo.rentedAmount }}

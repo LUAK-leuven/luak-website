@@ -2,6 +2,7 @@ import type { EntityId } from './ddd';
 import type { Enums } from './database.types';
 import type { GearItemId, TopoId } from './gear';
 import type { UserId } from './user';
+import type { ContactInfo } from '~/model/rental';
 
 export type RentalId = EntityId<'rental'>;
 
@@ -23,12 +24,6 @@ export type UnsavedRental = Omit<BaseRental, 'id'> & {
 };
 
 export type SavedRental = UnsavedRental & { id: RentalId };
-
-export type ContactInfo = {
-  fullName: string;
-  email: string | undefined;
-  phoneNumber: string | undefined;
-};
 
 export type RentalUpdate = {
   id: RentalId;

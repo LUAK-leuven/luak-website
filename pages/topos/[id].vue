@@ -4,7 +4,6 @@
 
   definePageMeta({ middleware: 'active-member-guard' });
 
-  const { data: user } = await useLuakMember();
   const topoId = useRoute().params.id as TopoId;
   const { data, pending, error } = await gearService().getTopoDetails(topoId);
 </script>
@@ -28,7 +27,7 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-2 gap-y-3 mt-2 mb-4">
         <p class="sm:col-span-2">{{ topo.details }}</p>
         <TopoLibraryTopoDetailItem name="Types of climbing">
-          <span>{{ topo.types_of_climbing.join(', ') }}</span>
+          <span>{{ topo.typesOfClimbing.join(', ') }}</span>
         </TopoLibraryTopoDetailItem>
         <TopoLibraryTopoDetailItem name="Countries">
           <span>{{ topo.countries.join(', ') }}</span>
@@ -37,52 +36,27 @@
           <TopoCondition :topo-condition="topo.condition" />
         </TopoLibraryTopoDetailItem>
         <TopoLibraryTopoDetailItem name="Amount">
-          <span v-if="user.isBoard">
-            <span data-testid="available">{{ topo.availableAmount }}</span> /
-            <span data-testid="total">{{ topo.totalAmount }}</span>
-          </span>
-          <span v-else class="badge badge-ghost">
-            {{ topo.totalAmount }}
+          <span class="badge badge-ghost" data-testid="amount">
+            {{ topo.amount }}
           </span>
         </TopoLibraryTopoDetailItem>
         <TopoLibraryTopoDetailItem name="Languages">
           <span>{{ topo.languages.join(', ') }}</span>
         </TopoLibraryTopoDetailItem>
         <TopoLibraryTopoDetailItem name="Place in library">
-          <span>{{ topo.place_in_library }}</span>
+          <span>{{ topo.placeInLibrary }}</span>
         </TopoLibraryTopoDetailItem>
         <TopoLibraryTopoDetailItem name="Tags">
           <span>{{ topo.tags.join(', ') }}</span>
         </TopoLibraryTopoDetailItem>
         <TopoLibraryTopoDetailItem name="Year published">
-          <span class="badge badge-info">{{ topo.year_published }}</span>
+          <span class="badge badge-info">{{ topo.yearPublished }}</span>
         </TopoLibraryTopoDetailItem>
       </div>
-
-      <template v-if="user.isBoard">
-        <template v-if="topo.rentals.length > 0">
-          <hr class="my-3" />
-          <b>Rentals</b>
-          <div
-            class="grid grid-cols-[3fr_1fr] border rounded-sm overflow-x-scroll">
-            <b class="border px-1">Name</b>
-            <b class="border px-1">Amount</b>
-            <template
-              v-for="{ id, memberName, amount } of topo.rentals"
-              :key="id">
-              <SharedLinkTo
-                class="border p-1"
-                :text="memberName"
-                :to="{ name: 'board-rentals-id', params: { id } }" />
-              <div class="border p-1">{{ amount }}</div>
-            </template>
-          </div>
-        </template>
-        <hr class="my-3" />
-        <div class="flex flex-row justify-center">
-          <i class="text-sm w-fit">{{ topo.id }}</i>
-        </div>
-      </template>
+      <hr class="my-3" />
+      <div class="flex flex-row justify-center">
+        <i class="text-sm w-fit">{{ topo.id }}</i>
+      </div>
     </PagesWithLazyResource>
   </FullPageCard>
 </template>

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { itemLostEvent } from '~/model/gear';
-import { gearDao } from '~/server/repository/gear';
+import luakEventHandler from '~/server/luakEventHandler';
 import type { TopoId } from '~/types/gear';
 import type { RentalId } from '~/types/rental';
 
@@ -10,7 +10,7 @@ const lostTopo = z.object({
   lostAmount: z.number().min(1),
 });
 
-export default defineEventHandler(async (event) => {
+export default luakEventHandler(async ({ gearRepo }, event) => {
   const result = await readValidatedBody(event, (body) =>
     lostTopo.safeParse(body),
   );
@@ -22,9 +22,7 @@ export default defineEventHandler(async (event) => {
       cause: result.error,
     });
 
-  const gearRepository = await gearDao(event);
-
-  await gearRepository.saveInventoryItemEvent({
+  await gearRepo().saveInventoryItemEvent({
     itemType: 'topo',
     itemId: result.data.topoId as TopoId,
     rentalId: result.data.rentalId as RentalId,
