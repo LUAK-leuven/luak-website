@@ -39,7 +39,9 @@
               : 'bg-base-100'
         ">
         <span>{{ data.availableAmount < 0 ? '⚠️ ' : '' }}{{ data.name }}</span>
-        <span>{{ data.availableAmount }}</span>
+        <span data-testid="search.availableAmount">
+          {{ data.availableAmount }}
+        </span>
       </div>
     </template>
   </InputSearchableSelect>

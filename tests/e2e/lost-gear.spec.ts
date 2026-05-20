@@ -87,5 +87,12 @@ test.describe('lost gear form', () => {
       await topoLibraryPage.navigateToDetails('Topo Flone');
 
     await expect(topoDetailsPage.amount).toHaveText('1');
+
+    await rentalFormPage.navigate();
+    const { search, select } = rentalFormPage.selectComponent('topos');
+    await search.click();
+    await expect(
+      select('Topo Flone').getByTestId('search.availableAmount'),
+    ).toHaveText('1');
   });
 });

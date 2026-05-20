@@ -4,7 +4,7 @@
 
   definePageMeta({ middleware: 'active-member-guard' });
 
-  const topoId = useRoute().params.id as TopoId;
+  const topoId = useRoute('topos-id').params.id as TopoId;
   const { data, pending, error } = await gearService().getTopoDetails(topoId);
 </script>
 
