@@ -1,15 +1,27 @@
 <script setup lang="ts">
-  import type { Enums } from '~/types/database.types';
+  import type { Database } from '~/types/database.types';
+
+  type TopoCondition =
+    Database['public']['Tables']['Topos']['Row']['condition'];
 
   defineProps<{
-    topoCondition: Enums<'topo_condition'>;
+    topoCondition: TopoCondition;
   }>();
 
-  const conditionMap: Record<Enums<'topo_condition'>, string> = {
-    as_good_as_new: 'New',
-    good: 'Good',
-    used: 'Used',
-    damaged: 'Damaged',
+  const conditionMap = (condition: TopoCondition) => {
+    switch (condition) {
+      case 'as_good_as_new':
+        return 'New';
+      case 'good':
+        return 'Good';
+      case 'used':
+        return 'Used';
+      case 'damaged':
+      case 'falling_appart':
+        return 'Damaged';
+      default:
+        return '-';
+    }
   };
 </script>
 <template>
@@ -21,6 +33,6 @@
       'badge-warning': topoCondition === 'used',
       'badge-error': topoCondition === 'damaged',
     }">
-    {{ conditionMap[topoCondition] }}
+    {{ conditionMap(topoCondition) }}
   </span>
 </template>

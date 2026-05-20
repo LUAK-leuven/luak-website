@@ -118,7 +118,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="topo in filteredTopos" :key="topo.id">
+              <tr
+                v-for="topo in filteredTopos"
+                :key="topo.id"
+                :data-testid="`topo-${topo.title}`">
                 <td>
                   <NuxtLink :to="{ name: 'topos-id', params: { id: topo.id } }">
                     <div class="flex flex-row gap-1 items-center">

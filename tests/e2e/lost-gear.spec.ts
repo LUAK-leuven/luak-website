@@ -5,6 +5,7 @@ import { RentalFormPage } from './pages/rental/form.page';
 import { RentalDetailsPage } from './pages/rental/details.page';
 import { RentalReturnPage } from './pages/rental/return.page';
 import dayjs from 'dayjs';
+import { TopoLibraryPage } from './pages/topos/library.page';
 
 test.describe('lost gear form', () => {
   test.beforeEach(async ({ page }) => {
@@ -79,5 +80,13 @@ test.describe('lost gear form', () => {
         amount: 1,
       },
     });
+
+    const topoLibraryPage = new TopoLibraryPage(page);
+    await topoLibraryPage.navigate();
+    const topoDetailsPage =
+      await topoLibraryPage.navigateToDetails('Topo Flone');
+
+    await expect(topoDetailsPage.availableAmount).toHaveText('1');
+    await expect(topoDetailsPage.totalAmount).toHaveText('1');
   });
 });

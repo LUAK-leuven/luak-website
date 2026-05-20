@@ -38,7 +38,8 @@
         </TopoLibraryTopoDetailItem>
         <TopoLibraryTopoDetailItem name="Amount">
           <span v-if="user.isBoard">
-            {{ topo.availableAmount }} / {{ topo.totalAmount }}
+            <span data-testid="available">{{ topo.availableAmount }}</span> /
+            <span data-testid="total">{{ topo.totalAmount }}</span>
           </span>
           <span v-else class="badge badge-ghost">
             {{ topo.totalAmount }}
