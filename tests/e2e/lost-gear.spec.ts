@@ -95,4 +95,47 @@ test.describe('lost gear form', () => {
       select('Topo Flone').getByTestId('search.availableAmount'),
     ).toHaveText('1');
   });
+
+  test('can mark a gear item as lost', async ({ page }) => {
+    const rentalFormPage = new RentalFormPage(page);
+    await rentalFormPage.navigate();
+
+    // Create a rental
+    await rentalFormPage.fillForm({
+      member: testUsers.paidMembership,
+      paymentMethod: 'cash',
+    });
+
+    const gearItemName = 'BD C4 .5';
+    await rentalFormPage.addItem('gear', gearItemName, 2);
+    await rentalFormPage.submit();
+    await expect(page).toHaveURL(/\/board\/rentals\/[d-]*/);
+
+    const rentalDetailsPage = new RentalDetailsPage(page);
+    await rentalDetailsPage.returnButton.click();
+
+    const rentalReturnPage = new RentalReturnPage(page);
+    const gearItem = rentalReturnPage.rentedItem(gearItemName);
+
+    // Return 1 item
+    await gearItem.returnedAmountInput.fill('1');
+    await rentalReturnPage.depositReturned.check(); // return deposit so that we can make a 'returned' rental later on
+    await rentalReturnPage.saveButton.click();
+
+    // Mark as lost
+    await rentalDetailsPage.returnButton.click();
+    await gearItem.more.menuButton.click();
+    await gearItem.more.markAsLost.click();
+
+    const lostGearPage = new LostGearPage(page);
+    await expect(lostGearPage.title).toHaveText('Lost Gear');
+    await lostGearPage.expectToHave({
+      rental: {
+        member: testUsers.paidMembership,
+        depositFee: 20,
+        paymentMethod: 'cash',
+      },
+      gear: null,
+    });
+  });
 });

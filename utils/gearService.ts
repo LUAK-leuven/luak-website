@@ -159,7 +159,7 @@ class GearService {
     return await useLazyFetch(`/api/topos/${topoId}`, { method: 'get' });
   }
 
-  public getGearItemDetails(gearItemId: GearItemId) {
+  public async getGearItemDetails(gearItemId: GearItemId) {
     return useAsyncData(
       `gearItem-${gearItemId}`,
       async () => {

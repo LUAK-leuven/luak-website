@@ -46,22 +46,28 @@ export class LostGearPage extends FullPageCard {
     await navigateTo(this.page, LostGearPage.path);
   }
 
-  async expectToHave(args: {
-    rental: {
-      member?: string;
-      depositFee?: number;
-      paymentMethod?: 'cash' | 'transfer';
-      dateBorrow?: string;
-      dateReturn?: string;
-    };
-    topo: {
-      title?: string;
-      year?: number;
-      rentedAmount?: number;
-      unreturnedAmount?: number;
-      lostAmount?: number;
-    };
-  }) {
+  async expectToHave(
+    args: {
+      rental: {
+        member?: string;
+        depositFee?: number;
+        paymentMethod?: 'cash' | 'transfer';
+        dateBorrow?: string;
+        dateReturn?: string;
+      };
+    } & (
+      | {
+          topo: {
+            title?: string;
+            year?: number;
+            rentedAmount?: number;
+            unreturnedAmount?: number;
+            lostAmount?: number;
+          };
+        }
+      | { gear: null }
+    ),
+  ) {
     if (args.rental.member !== undefined) {
       await expect(this.member).toContainText(args.rental.member);
     }
@@ -79,24 +85,28 @@ export class LostGearPage extends FullPageCard {
     if (args.rental.dateReturn !== undefined) {
       await expect(this.dateReturn).toHaveText(args.rental.dateReturn);
     }
-    if (args.topo.title !== undefined) {
-      await expect(this.topoTitle).toContainText(args.topo.title);
-    }
-    if (args.topo.year !== undefined) {
-      await expect(this.year).toContainText(args.topo.year.toFixed());
-    }
-    if (args.topo.rentedAmount !== undefined) {
-      await expect(this.rentedAmount).toContainText(
-        args.topo.rentedAmount.toFixed(),
-      );
-    }
-    if (args.topo.unreturnedAmount !== undefined) {
-      await expect(this.unreturnedAmount).toContainText(
-        args.topo.unreturnedAmount.toFixed(),
-      );
-    }
-    if (args.topo.lostAmount !== undefined) {
-      await expect(this.lostAmount).toHaveValue(args.topo.lostAmount.toFixed());
+    if ('topo' in args) {
+      if (args.topo.title !== undefined) {
+        await expect(this.topoTitle).toContainText(args.topo.title);
+      }
+      if (args.topo.year !== undefined) {
+        await expect(this.year).toContainText(args.topo.year.toFixed());
+      }
+      if (args.topo.rentedAmount !== undefined) {
+        await expect(this.rentedAmount).toContainText(
+          args.topo.rentedAmount.toFixed(),
+        );
+      }
+      if (args.topo.unreturnedAmount !== undefined) {
+        await expect(this.unreturnedAmount).toContainText(
+          args.topo.unreturnedAmount.toFixed(),
+        );
+      }
+      if (args.topo.lostAmount !== undefined) {
+        await expect(this.lostAmount).toHaveValue(
+          args.topo.lostAmount.toFixed(),
+        );
+      }
     }
   }
 }

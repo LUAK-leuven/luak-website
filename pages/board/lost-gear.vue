@@ -98,7 +98,10 @@
         v-if="itemId?.type === 'topo'"
         :rental-id="rentalId"
         :topo="getBy(rental.topos, 'id', itemId.id)" />
-      <GearItem v-else-if="itemId?.type === 'gear'" :gear-item-id="itemId.id" />
+      <GearItem
+        v-else-if="itemId?.type === 'gear'"
+        :gear-item-id="itemId.id"
+        :gear-item="getBy(rental.gear, 'id', itemId.id)" />
       <div v-else>KAPOT!</div>
     </WithLazyResource>
   </FullPageCard>

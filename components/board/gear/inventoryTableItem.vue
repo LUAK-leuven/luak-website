@@ -7,7 +7,7 @@
 </script>
 <template>
   <div
-    class="border p-1"
+    class="border p-1 bg-inherit"
     :class="{ 'bg-gray-100 italic': status === 'archived' }">
     <slot />
   </div>
