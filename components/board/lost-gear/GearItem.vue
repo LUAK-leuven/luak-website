@@ -2,8 +2,8 @@
   import WithLazyResource from '~/components/pages/WithLazyResource.vue';
   import LoadingButton from '~/components/shared/LoadingButton.vue';
   import Number from '~/components/input/Number.vue';
-  import type { GearInventoryId, GearItemId } from '~/types/gear';
-  import type { RentalDetails } from '~/types/rental';
+  import type { GearInventoryId } from '~/types/gear';
+  import type { RentalDetails, RentalId } from '~/types/rental';
   import {
     object as yupObject,
     number as yupNumber,
@@ -12,14 +12,14 @@
   import GearInventorySelection from './GearInventorySelection.vue';
 
   const props = defineProps<{
-    gearItemId: GearItemId;
+    rentalId: RentalId;
     gearItem: RentalDetails['gear'][number];
   }>();
 
   const { show } = useToast();
 
   const { data, pending, error } = await gearService().getGearItemDetails(
-    props.gearItemId,
+    props.gearItem.id,
   );
 
   const unReturnedAmount = computed(
@@ -46,14 +46,31 @@
     return true;
   });
 
-  const { defineField, errors, handleSubmit, values } = useForm({
+  const { defineField, errors, handleSubmit } = useForm({
     validationSchema: toTypedSchema(formSchema),
     initialValues: { lostAmount: 1 },
   });
 
   const onSubmit = handleSubmit(
-    (formState) => {
-      console.log('click', formState);
+    async (formState) => {
+      console.log('submit', formState);
+      const { error } = await useFetch('/api/gear/mark-as-lost', {
+        method: 'post',
+        body: {
+          rentalId: props.rentalId,
+          inventoryId: formState.inventoryItem,
+          lostAmount: formState.lostAmount,
+        },
+      });
+      if (error.value) {
+        console.error(error.value.message);
+        show('error', 'Server error: Failed to submit response.');
+      } else {
+        await navigateTo({
+          name: 'board-rentals-id',
+          params: { id: props.rentalId },
+        });
+      }
     },
     ({ errors }) => {
       show('error', errors.inventoryItem ?? errors.lostAmount ?? '');
@@ -65,9 +82,6 @@
 </script>
 <template>
   <h2 class="text-center">Gear item</h2>
-
-  <p>values: {{ values }}</p>
-  <p>errors: {{ errors }}</p>
 
   <form @submit.prevent>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">

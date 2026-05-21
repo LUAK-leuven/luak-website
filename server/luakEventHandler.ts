@@ -5,9 +5,9 @@ export default <T>(
   block: (
     services: Awaited<ReturnType<typeof serviceBuilder>>,
     event: H3Event,
-  ) => T,
+  ) => Promise<T>,
 ) =>
   defineEventHandler(async (event) => {
     const sb = await serviceBuilder(event);
-    return block(sb, event);
+    return await block(sb, event);
   });
