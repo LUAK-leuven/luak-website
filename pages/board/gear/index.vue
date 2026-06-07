@@ -80,14 +80,18 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="gearItem of filteredGear" :key="gearItem.id">
+              <tr
+                v-for="gearItem of filteredGear"
+                :key="gearItem.id"
+                :data-testid="`gearItem-${gearItem.name}`">
                 <td>
                   <SharedLinkTo
                     :text="gearItem.name"
                     :to="{
                       name: 'board-gear-id',
                       params: { id: gearItem.id },
-                    }" />
+                    }"
+                    data-testid="linkToDetails" />
                 </td>
                 <td v-if="sm">
                   <RetirementDate
@@ -97,7 +101,13 @@
                     " />
                 </td>
                 <td>
-                  {{ gearItem.availableAmount }} / {{ gearItem.totalAmount }}
+                  <span data-testid="availableAmount">
+                    {{ gearItem.availableAmount }}
+                  </span>
+                  /
+                  <span data-testid="totalAmount">
+                    {{ gearItem.totalAmount }}
+                  </span>
                 </td>
               </tr>
             </tbody>

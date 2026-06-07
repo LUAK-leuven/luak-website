@@ -85,7 +85,7 @@
 
   <form @submit.prevent>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      <div data-testid="topo.title">Gear item: {{ gearItem.name }}</div>
+      <div data-testid="gear.name">Gear item: {{ gearItem.name }}</div>
 
       <div data-testid="rentedAmount">
         Rented amount: {{ gearItem.rentedAmount }}

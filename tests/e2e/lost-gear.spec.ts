@@ -135,7 +135,48 @@ test.describe('lost gear form', () => {
         depositFee: 20,
         paymentMethod: 'cash',
       },
-      gear: null,
+      gear: {
+        name: gearItemName,
+        rentedAmount: 2,
+        unreturnedAmount: 1,
+        lostAmount: 1,
+      },
     });
+
+    await lostGearPage.lostAmount.fill('1');
+    await expect(lostGearPage.lostAmountError).toBeHidden();
+
+    await lostGearPage.inventorySelection.getByRole('radio').first().click();
+
+    await lostGearPage.saveButton.click();
+    await expect(page).toHaveURL(/\/board\/rentals\/[d-]*/);
+
+    await rentalDetailsPage.expectToHave({
+      status: 'Returned',
+    });
+
+    await rentalDetailsPage.expectItem({
+      name: gearItemName,
+      rentedAmount: 2,
+      returnedAmount: 1,
+      lostItem: {
+        date: dayjs(),
+        amount: 1,
+      },
+    });
+
+    // const topoLibraryPage = new TopoLibraryPage(page);
+    // await topoLibraryPage.navigate();
+    // const topoDetailsPage =
+    //   await topoLibraryPage.navigateToDetails('Topo Flone');
+
+    // await expect(topoDetailsPage.amount).toHaveText('1');
+
+    // await rentalFormPage.navigate();
+    // const { search, select } = rentalFormPage.selectComponent('topos');
+    // await search.click();
+    // await expect(
+    //   select('Topo Flone').getByTestId('search.availableAmount'),
+    // ).toHaveText('1');
   });
 });

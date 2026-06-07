@@ -47,7 +47,8 @@
 
 <template>
   <div
-    class="grid grid-cols-[auto_4fr_1fr_2fr_2fr_2fr] border rounded-sm overflow-x-scroll">
+    class="grid grid-cols-[auto_4fr_1fr_2fr_2fr_2fr] border rounded-sm overflow-x-scroll"
+    data-testid="inventory-selection">
     <b class="border px-1"></b>
     <b class="border px-1">Details</b>
     <b class="border px-1">Amount</b>
