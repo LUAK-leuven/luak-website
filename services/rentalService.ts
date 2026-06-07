@@ -10,7 +10,7 @@ import type { UserId } from '~/types/user';
 import { parseEvent } from '~/model/gear';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database, Json, Tables } from '~/types/database.types';
-import { computeRentalStatus_v2 } from '~/utils/rental/computeStatus';
+import { computeRentalStatus } from '~/utils/rental/computeStatus';
 import dayjs from 'dayjs';
 import { parseContactInfo, type ContactInfo } from '~/model/rental';
 
@@ -92,7 +92,7 @@ export const rentalService = (
         ? parseContactInfo(JSON.parse(rental.contact_info))
         : undefined;
 
-      const rentalStatus = computeRentalStatus_v2({
+      const rentalStatus = computeRentalStatus({
         gear: rentedGearFromDb(rental.RentedGear, rental.InventoryItemEvents),
         topos: rentedToposFromDb(
           rental.RentedTopos,
@@ -335,7 +335,7 @@ const rentalFromDb = (rental: {
     paymentMethod: rental.payment_method,
   } satisfies Omit<PublicRentalDetails, 'status'>;
 
-  const rentalStatus = computeRentalStatus_v2(r);
+  const rentalStatus = computeRentalStatus(r);
   const isReserved = dayjs(r.dateBorrow).isAfter(dayjs());
   const status = isReserved ? 'reserved' : rentalStatus;
   return { ...r, status };

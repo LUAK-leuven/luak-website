@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computeRentalStatus_v2 } from '~/utils/rental/computeStatus';
+  import { computeRentalStatus } from '~/utils/rental/computeStatus';
   import TextField from '~/components/input/TextField.vue';
   import { useToast } from '~/composables/useToast';
   import type { RentalDetails, RentalUpdate } from '~/types/rental';
@@ -73,7 +73,7 @@
   );
 
   const computedStatus = computed(() => {
-    return computeRentalStatus_v2({
+    return computeRentalStatus({
       gear: props.rental.gear.map((g) => ({
         ...g,
         returnedAmount: values.returnedGear
