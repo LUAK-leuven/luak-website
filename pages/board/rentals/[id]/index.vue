@@ -5,7 +5,7 @@
 
   const { get } = useRentalService();
 
-  const retnalId = useRoute().params.id as RentalId;
+  const retnalId = useRoute('board-rentals-id').params.id as RentalId;
   const { rentals: data, pending } = await get(retnalId);
 </script>
 

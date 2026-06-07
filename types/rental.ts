@@ -53,7 +53,7 @@ export type PublicRentalDetails = {
   status: RentalStatus;
 };
 
-type RentedItem<T extends EntityId<unknown>> = {
+export type RentedItem<T extends EntityId<unknown>> = {
   id: T;
   name: string;
   rentedAmount: number;

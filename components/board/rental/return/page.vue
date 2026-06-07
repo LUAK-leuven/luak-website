@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computeRentalStatus } from '~/utils/rental/computeStatus';
+  import { computeRentalStatus_v2 } from '~/utils/rental/computeStatus';
   import TextField from '~/components/input/TextField.vue';
   import { useToast } from '~/composables/useToast';
   import type { RentalDetails, RentalUpdate } from '~/types/rental';
@@ -73,22 +73,20 @@
   );
 
   const computedStatus = computed(() => {
-    return computeRentalStatus({
-      rentedGear: Object.fromEntries(
-        props.rental.gear.map((it) => [it.id, it.rentedAmount]),
-      ),
-      returnedGear: values.returnedGear!,
-      rentedTopos: Object.fromEntries(
-        props.rental.topos.map((it) => [it.id, it.rentedAmount]),
-      ),
-      returnedTopos: values.returnedTopos!,
-      lostTopos: Object.fromEntries(
-        props.rental.topos.map((topo) => [
-          topo.id,
-          sumOf(topo.itemsLost, 'amount'),
-        ]),
-      ),
-      depositReturned: values.depositReturned!,
+    return computeRentalStatus_v2({
+      gear: props.rental.gear.map((g) => ({
+        ...g,
+        returnedAmount: values.returnedGear
+          ? (values.returnedGear[g.id] ?? g.returnedAmount)
+          : g.returnedAmount,
+      })),
+      topos: props.rental.topos.map((t) => ({
+        ...t,
+        returnedAmount: values.returnedTopos
+          ? (values.returnedTopos[t.id] ?? t.returnedAmount)
+          : t.returnedAmount,
+      })),
+      depositReturned: values.depositReturned ?? props.rental.depositReturned,
     });
   });
 

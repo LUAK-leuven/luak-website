@@ -26,7 +26,7 @@ export function single<T>(array: T[]): T | undefined {
 export function groupBy<T, K extends keyof any>(
   arr: T[],
   getKey: (i: T) => K,
-): Record<K, T[]> {
+): Record<K, T[] | undefined> {
   return arr.reduce(
     (groups, item) => {
       const key = getKey(item);
@@ -34,7 +34,7 @@ export function groupBy<T, K extends keyof any>(
       groups[key].push(item);
       return groups;
     },
-    {} as Record<K, T[]>,
+    {} as Record<K, T[] | undefined>,
   );
 }
 
