@@ -20,7 +20,6 @@ logs
 .fleet
 .idea
 .vscode
-.opencode
 /planning/
 .playwright-cli
 
@@ -34,3 +33,8 @@ logs
 /test-results/
 /playwright-report/
 tests/e2e/.auth/
+
+# APM dependencies
+apm_modules/
+.agents/
+.opencode/

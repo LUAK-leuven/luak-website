@@ -9,7 +9,7 @@ The techstack used for this project is:
 - supabase for the backend
 - vercel for deployment
 
-- Sentry?
+- Sentry for observability
 - Stripe for payments
 
 ## Setup
@@ -26,6 +26,10 @@ next set the right env variables to connect with supabase. check `.env.example` 
 ### e2e-tests
 
 Firs you need to install playwright: `yarn playwright install`
+
+## Agentic development
+
+We use [apm](https://microsoft.github.io/apm/) as it is tool-agnostic.
 
 ## Nuxt Studio
 
