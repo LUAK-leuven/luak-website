@@ -52,7 +52,7 @@
     "@vee-validate/nuxt": "^4.12.8",
     "@vee-validate/yup": "^4.12.8",
     "@vueuse/core": "^14.3.0",
-    "better-sqlite3": "^12.6.2",
+    "better-sqlite3": "^12.10.0",
     "dayjs": "^1.11.20",
     "dotenv": "^17.4.2",
     "nuxt-typed-router": "^4.0.7",
