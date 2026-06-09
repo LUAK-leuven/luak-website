@@ -22,7 +22,10 @@ To check existing skills, list `.apm/skills` and reveal relevant `SKILL.md` file
 
 ### Step 3 - Make the change
 
-- For a **new skill**: create a directory under `.apm/skills/<skill-name>` and write `SKILL.md` according to the [apm skill documentation](https://microsoft.github.io/apm/producer/author-primitives/skills/).
+- For a **new skill**:
+  1. Fetch the [apm skill documentation](https://microsoft.github.io/apm/producer/author-primitives/skills/) and read it **before** writing anything — the format is non-trivial and must be followed exactly.
+  2. Create a directory under `.apm/skills/<skill-name>/` — this is the **only** correct location. Do not use `.agents/skills/` or `.opencode/skills/`.
+  3. Write `SKILL.md` following the format from the docs.
 - For an **update**: use the edit tool to add or modify only the relevant section of the existing `SKILL.md`. Do not rewrite the whole file.
 
 ## Rules

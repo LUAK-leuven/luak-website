@@ -29,11 +29,17 @@ Answer these questions before upgrading:
 | Is the impacted functionality covered by **e2e tests**? | E2e tests are the strongest signal for runtime correctness. |
 | Can it be verified by a **build** (`yarn build`)? | A successful build confirms build-time tools (type generation, bundlers, content indexing) work. |
 | Is **manual verification** needed? | Some things (UI rendering, edge deployments) require a running server check. |
+| Can the impacted functionality be covered by adding new tests? | This project doesn't have much coverage, so often adding a test is the solution. |
 
-Choose the strongest available verification method. Do not rely solely on unit tests when the package operates at a different layer.
+Choose the strongest available verification method. Do not rely solely on unit tests when the package operates at a different layer. When tests are missing for impacted functionalities, clearly state this.
 
-## Step 4 — Do the upgrade
+## Step 4.1 — A major upgrade
 
+For a **major** upgrade: you will **not implement anything** yet. This upgrade requires thourough analysis and planning.
+
+## Step 4.2 - A minor or patch upgrade
+
+1. Add the missing tests from Step 3.
 1. Edit `package.json`: update the version range to `^<latest>`.
 2. Run `yarn install` (or the project's package manager).
 3. Confirm the lockfile was updated (`success Saved lockfile` for yarn, or equivalent).
@@ -43,7 +49,7 @@ Choose the strongest available verification method. Do not rely solely on unit t
 
 Use the verification method identified in Step 3. In order of preference:
 
-1. **`yarn build`** — the strongest single check: exercises the full build pipeline, content indexing, type generation, and SSR bundling. A successful build with no errors confirms correctness at every layer.
+1. **`yarn build`** — the strongest single check: exercises the full build pipeline, content indexing, type generation, and SSR bundling. A successful build with no errors confirms correctness at every layer. But does not confirm runtime behavior.
 2. **`yarn test:unit`** — confirms component/unit logic is intact.
 3. **`yarn lint`** — catches TypeScript regressions introduced by changed types.
 4. **`yarn test:e2e`** — confirms runtime behaviour end-to-end (slow; use when build alone is insufficient).
