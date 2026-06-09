@@ -3,11 +3,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "nuxt build",
+    "build": "nuxt cleanup && nuxt build",
     "dev": "nuxt dev --dotenv .env.local",
     "dev:prod": "nuxt dev --dotenv .env.production",
     "generate": "nuxt generate",
-    "preview": "NODE_OPTIONS='--import ./public/instrument.server.mjs' nuxt preview",
+    "preview": "NODE_OPTIONS='--import ./public/instrument.server.mjs' nuxt preview --dotenv .env.local",
     "postinstall": "nuxt prepare",
     "lint": "yarn lint:eslint && yarn lint:prettier",
     "lint:eslint": "eslint .",
@@ -27,6 +27,7 @@
     "@types/qrcode": "^1.5.6",
     "@vue/test-utils": "^2.4.6",
     "daisyui": "^3.9.4",
+    "dotenv": "^17.4.2",
     "eslint": "^10.2.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-node": "^0.3.10",
@@ -42,8 +43,7 @@
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.3",
     "vitest": "^4.1.7",
-    "vue": "^3.5.34",
-    "vue-router": "^4.6.4"
+    "vue": "^3.5.34"
   },
   "dependencies": {
     "@floating-ui/vue": "^1.1.11",
@@ -54,7 +54,6 @@
     "@vueuse/core": "^14.3.0",
     "better-sqlite3": "^12.10.0",
     "dayjs": "^1.11.20",
-    "dotenv": "^17.4.2",
     "nuxt-typed-router": "^4.0.7",
     "qrcode": "^1.5.4",
     "yup": "^1.7.1"

@@ -2,4 +2,5 @@ lockfile_version: '1'
 generated_at: '2026-06-09T19:20:09.066952+00:00'
 dependencies: []
 local_deployed_files:
-- .agents/skills/create-or-update-skill
+  - .agents/skills/create-or-update-skill
+  - .agents/skills/upgrade-package
