@@ -19,7 +19,7 @@ export function useRentalService() {
     type Fn = ReturnType<typeof rentalService>[T];
     return async function (...args: ExtractFunctionArguments<Fn>) {
       const { data, pending, error, refresh } = await useAsyncData(
-        `${RENTAL}-${fName}`,
+        `${RENTAL}-${fName}-${JSON.stringify(args)}`,
         async () => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-expect-error

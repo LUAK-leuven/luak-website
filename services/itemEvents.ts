@@ -10,7 +10,10 @@ export const inventoryItemEventsFromDB = (
   inventoryItemEvents: Tables<'InventoryItemEvents'>[],
 ): ItemEventEnvelope[] =>
   inventoryItemEvents.map((event) => {
-    const x = inventoryItemId(inventoryItemEvents);
+    const x = inventoryItemId({
+      itemId: event.item_id,
+      itemType: event.item_type,
+    });
     return {
       ...x,
       occuredOn: event.occured_on,
