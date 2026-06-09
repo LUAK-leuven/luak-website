@@ -1,0 +1,12 @@
+- **LUAK**: The climbing club for which this website is made
+- **user**: An authenticated person
+- **member**: A user is officially member from luak when they have an active membership
+- **membership**: Every year a user needs to pay a membership to become a LUAK member
+- **active membership**: A user has an active membership only when they have paid their membership for this year
+- **board**: The board are the people that organize LUAK
+- **rental**: Members can rent gear and topos, this is tracked by a rental
+- **rentalItem**: An item that can be rented, this is either a gearItem or a topo
+- **gearItem**: Gear that a member can rent. This is an aggregate of an item from the inventory because it needs to be less detailed than the inventory.
+- **inventory**: A very detailed inventory of all the climbing gear. Every item is uniquely identified.
+- **topo**: A topo is a book. It is always uniquely identified.
+- **story**: Members can write stories about adventures they live. These can be posted on the website.

@@ -5,7 +5,7 @@
 The LUAK website is a website for a climbing club. It is mostly content based. The club regularely organizes activities, which are shown on the activities page (and news page).
 The website is also used by the board to keep track of rented gear (LUAK has a lot of climbing gear and topos that can be rented by its members). This is all part of the board section.
 
-Technical project information (tech stack, structure, etc.) can be found in the [`README.md`](./README.md).
+Make sure to read [ai-context](./ai-context/index.md) so that you can load the correct context.
 
 ---
 
@@ -36,35 +36,6 @@ yarn test:e2e
 # Regenerate Supabase TypeScript types
 yarn supabase gen types --lang typescript --local > types/database.types.ts
 ```
-
----
-
-## Architecture
-
-```
-pages/          # File-based routing (Vue + TypeScript + Nuxt conventions)
-components/     # Atomic, composable, and page-specific components
-layouts/        # Site-wide layout wrappers (default, pageWithTitle, picture)
-composables/    # Vue composables prefixed with `use`
-utils/          # Pure utilities
-services/       # Domain service composables (e.g., rentalService.ts)
-model/          # Domain models (e.g., EpcQrCode.ts)
-types/          # TypeScript types and branded IDs
-middleware/     # Route guards (board.global.ts, activeMemberGuard.ts, unauthenticated.ts)
-server/api/     # Nuxt server API routes
-content/        # Markdown content files (Nuxt Content v3)
-yup_schemas/    # Shared yup validation schemas
-supabase/       # DB migrations, seed, edge functions (Deno runtime)
-tests/          # Unit tests (vitest) and e2e tests (playwright)
-```
-
-Key data flows:
-
-- **Auth & membership**: `composables/useLuakMember.ts` + `middleware/board.global.ts`
-- **Database access**: `utils/gearService.ts`, `utils/userService.ts` (singleton classes)
-- **Global toasts**: `useToast()` composable → consumed by `ToastNotification` in `app.vue`
-- **Stripe payments**: `supabase/functions/_shared/stripe.ts` + runtime config payment links
-- **Content**: `content.config.ts` defines collection schemas; use `ContentRenderer` in templates
 
 ---
 
@@ -178,10 +149,8 @@ Shared yup validators (phone, password) live in `utils/yup.ts`.
 
 ## Key Rules for AI Agents
 
-1. Always regenerate `types/database.types.ts` after any Supabase schema change.
-2. Use project composables and middleware for auth/membership logic — do not reinvent them.
-3. Use `~/` path alias, never relative `../../` imports for project files.
-4. Run `yarn lintfix` before committing to fix formatting automatically.
-5. Keep the DaisyUI theme (`nord`) consistent; do not introduce inline styles or raw hex colors.
-6. Do not add new dependencies without good reason — check if `@vueuse/core`, `dayjs`, or existing utils cover the need.
-7. Content-driven features must define their collection in `content.config.ts`.
+1. Use project composables and middleware for auth/membership logic — do not reinvent them.
+2. Use `~/` path alias, never relative `../../` imports for project files.
+3. Run `yarn lint` and `yarn test` before committing to verify you didn't introduce errors.
+4. Keep the DaisyUI theme (`nord`) consistent; do not introduce inline styles or raw hex colors.
+5. Do not add new dependencies without good reason — check if `@vueuse/core`, `dayjs`, or existing utils cover the need.
