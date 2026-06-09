@@ -1,5 +1,28 @@
-import { object, literal, number, discriminatedUnion } from 'zod';
-import type { infer as Infer } from 'zod';
+import { object, literal, number, discriminatedUnion, uuid } from 'zod';
+import type { infer as Infer, ZodType } from 'zod';
+import type { GearInventoryId, TopoId } from '~/types/gear';
+import type { RentalId } from '~/types/rental';
+
+const topoIdSchema = object({
+  itemId: uuid() as unknown as ZodType<TopoId>,
+  itemType: literal('topo'),
+});
+const gearIdSchema = object({
+  itemId: uuid() as unknown as ZodType<GearInventoryId>,
+  itemType: literal('gear'),
+});
+const inventoryItemIdSchema = discriminatedUnion('itemType', [
+  topoIdSchema,
+  gearIdSchema,
+]);
+export type InventoryItemId = Infer<typeof inventoryItemIdSchema>;
+export const inventoryItemId = (x: unknown) => inventoryItemIdSchema.parse(x);
+
+export type ItemEventEnvelope = InventoryItemId & {
+  occuredOn: string;
+  rentalId: RentalId | undefined;
+  event: ItemEvent;
+};
 
 const itemLostEventSchema = object({
   eventName: literal('ItemLostEvent'),

@@ -1,9 +1,11 @@
 import type { Database } from '~/types/database.types';
-import type { GearInventoryId, TopoId } from '~/types/gear';
-import type { RentalId } from '~/types/rental';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { parseEvent } from '~/model/gear';
-import type { ItemEvent } from '~/model/gear';
+import type {
+  InventoryItemId,
+  ItemEvent,
+  ItemEventEnvelope,
+} from '~/model/gear';
 
 export class GearDao {
   private readonly supabaseClient;
@@ -13,19 +15,7 @@ export class GearDao {
   }
 
   public async saveInventoryItemEvent(
-    args: (
-      | {
-          itemType: 'topo';
-          itemId: TopoId;
-        }
-      | {
-          itemType: 'gear';
-          itemId: GearInventoryId;
-        }
-    ) & {
-      rentalId: RentalId | undefined;
-      event: ItemEvent;
-    },
+    args: Omit<ItemEventEnvelope, 'occuredOn'>,
   ) {
     const { error } = await this.supabaseClient
       .from('InventoryItemEvents')
@@ -41,15 +31,7 @@ export class GearDao {
   }
 
   public async getInventoryItemEvents(
-    args:
-      | {
-          itemType: 'topo';
-          itemId: TopoId;
-        }
-      | {
-          itemType: 'gear';
-          itemId: GearInventoryId;
-        },
+    args: InventoryItemId,
   ): Promise<(ItemEvent & { ocurredOn: string })[]> {
     const { data, error } = await this.supabaseClient
       .from('InventoryItemEvents')
