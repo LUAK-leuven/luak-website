@@ -241,64 +241,6 @@ class GearService {
       { lazy: true },
     );
   }
-
-  public async getGearInventory() {
-    return useAsyncData(
-      'gearInventory',
-      async () => {
-        const { data: gear, error } = await this.supabase
-          .from('GearItems')
-          .select(
-            `
-            id,
-            name,
-            lifespan,
-            GearInventory (
-              id,
-              details,
-              production_date,
-              purchase_date,
-              amount
-            ),
-            RentedGear (
-              rented_amount,
-              returned_amount
-            )
-          `,
-          )
-          .eq('GearInventory.status', 'available')
-          .order('name');
-
-        if (error) {
-          console.warn('getAllGearItems:', error);
-          return [];
-        }
-
-        return gear.map((gearItem) => {
-          const totalAmount = sumOf(gearItem.GearInventory, 'amount');
-          const rentedAmount = sumBy(
-            gearItem.RentedGear,
-            ({ rented_amount, returned_amount }) =>
-              rented_amount - returned_amount,
-          );
-          return {
-            id: gearItem.id as GearItemId,
-            name: gearItem.name,
-            totalAmount: totalAmount,
-            availableAmount: totalAmount - rentedAmount,
-            lifespan: gearItem.lifespan,
-            inventory: gearItem.GearInventory.map((i) => ({
-              id: i.id as GearInventoryId,
-              details: i.details,
-              productionDate: i.production_date,
-              purchaseDate: i.purchase_date,
-            })),
-          };
-        });
-      },
-      { lazy: true },
-    );
-  }
 }
 
 let gearServiceInstance: GearService | undefined = undefined;

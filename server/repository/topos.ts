@@ -3,11 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import type { TopoId } from '~/types/gear';
 
 export class TopoDao {
-  private readonly supabaseClient;
-
-  constructor(supabaseClient: SupabaseClient<Database>) {
-    this.supabaseClient = supabaseClient;
-  }
+  constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
 
   async getDetails(topoId: TopoId) {
     const { data: topo, error } = await this.supabaseClient

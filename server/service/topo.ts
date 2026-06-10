@@ -4,17 +4,14 @@ import type { TopoDao } from '../repository/topos';
 import type { GearDao } from '../repository/gear';
 
 export class TopoService {
-  private readonly topoRepo: TopoDao;
-  private readonly gearRepo: GearDao;
-
-  constructor(topoRepository: TopoDao, gearRepository: GearDao) {
-    this.topoRepo = topoRepository;
-    this.gearRepo = gearRepository;
-  }
+  constructor(
+    private readonly topoRepository: TopoDao,
+    private readonly gearRepository: GearDao,
+  ) {}
 
   async getDetails(topoId: TopoId) {
-    const topoDetails = await this.topoRepo.getDetails(topoId);
-    const topoEvents = await this.gearRepo.getInventoryItemEvents({
+    const topoDetails = await this.topoRepository.getDetails(topoId);
+    const topoEvents = await this.gearRepository.getInventoryItemEvents({
       itemType: 'topo',
       itemId: topoId,
     });
