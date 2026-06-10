@@ -19,8 +19,7 @@ class GearService {
             ),
             RentedGear (
               rented_amount,
-              returned_amount,
-              lost_amount
+              returned_amount
             )
           `,
           )
@@ -35,8 +34,8 @@ class GearService {
           const totalAmount = sumOf(gearItem.GearInventory, 'amount');
           const rentedAmount = sumBy(
             gearItem.RentedGear,
-            ({ rented_amount, returned_amount, lost_amount }) =>
-              rented_amount - returned_amount - lost_amount,
+            ({ rented_amount, returned_amount }) =>
+              rented_amount - returned_amount,
           );
           return {
             id: gearItem.id as GearItemId,
