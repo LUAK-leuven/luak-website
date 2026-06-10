@@ -1,12 +1,10 @@
 import type { Page } from '@playwright/test';
+import { GearDetailsPage } from './details.page';
 
 export class GearInventoryPage {
-  private readonly page: Page;
   readonly path = '/board/gear';
 
-  constructor(page: Page) {
-    this.page = page;
-  }
+  constructor(private readonly page: Page) {}
 
   async navigate() {
     await this.page.goto(this.path);
@@ -17,6 +15,7 @@ export class GearInventoryPage {
     return {
       navigateToDetails: async () => {
         await row.getByTestId('linkToDetails').click();
+        return new GearDetailsPage(this.page);
       },
       availableAmount: row.getByTestId('availableAmount'),
       totalAmount: row.getByTestId('totalAmount'),

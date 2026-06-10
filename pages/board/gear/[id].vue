@@ -5,7 +5,7 @@
   import InventoryTableItem from '~/components/board/gear/inventoryTableItem.vue';
   import RetirementDate from '~/components/board/gear/retirementDate.vue';
 
-  const gearItemId = useRoute().params.id as GearItemId;
+  const gearItemId = useRoute('board-gear-id').params.id as GearItemId;
 
   const {
     data: data_,
@@ -67,7 +67,7 @@
     :error="error?.message"
     :back-to="{ name: 'board-gear' }">
     <div class="flex flex-row flex-wrap justify-between gap-3 mt-3">
-      <span>
+      <span data-testid="gearItem-amount">
         Available: {{ gearItems.availableAmount }} /
         {{ gearItems.totalAmount }}
       </span>
@@ -86,7 +86,7 @@
         <b v-if="lg" class="border px-1">Production date</b>
         <b v-if="lg" class="border px-1">Purchase date</b>
         <b class="border px-1">Retirement date</b>
-        <template
+        <div
           v-for="{
             id,
             details,
@@ -96,11 +96,13 @@
             purchaseDate,
             retirementDate,
           } of gearItems.inventory"
-          :key="id">
+          :key="id"
+          class="contents"
+          data-testid="inventory-row">
           <InventoryTableItem :status="status">
             {{ details }}
           </InventoryTableItem>
-          <InventoryTableItem :status="status">
+          <InventoryTableItem :status="status" data-testid="amount">
             {{ amount }}
           </InventoryTableItem>
           <InventoryTableItem v-if="sm" :status="status">
@@ -115,7 +117,7 @@
           <InventoryTableItem :status="status">
             <RetirementDate :retirement-date="retirementDate" />
           </InventoryTableItem>
-        </template>
+        </div>
       </div>
     </ClientOnly>
 

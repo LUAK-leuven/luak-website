@@ -172,7 +172,10 @@ test.describe('lost gear form', () => {
     await expect(gearItemRow.availableAmount).toHaveText('1');
     await expect(gearItemRow.totalAmount).toHaveText('1');
 
-    // await expect(topoDetailsPage.amount).toHaveText('1');
+    const gearDetailsPage = await gearItemRow.navigateToDetails();
+
+    await expect(gearDetailsPage.gearItemAmount).toContainText('1 / 1');
+    await expect(gearDetailsPage.amount).toHaveText('1');
 
     // await rentalFormPage.navigate();
     // const { search, select } = rentalFormPage.selectComponent('topos');
