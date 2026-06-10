@@ -88,7 +88,7 @@
           :class="hidden ? 'hidden' : ''"
           :style="floatingStyles"
           tabindex="0"
-          data-testId="searchable-select-options"
+          :data-testId="`searchable-select-options-${placeholder}`"
           @mouseenter="mouseOnSelection = true"
           @mouseleave="mouseOnSelection = false">
           <li v-if="options === undefined">

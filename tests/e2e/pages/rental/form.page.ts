@@ -1,64 +1,71 @@
-import type { Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 import type { Dayjs } from 'dayjs';
 
 export class RentalFormPage {
   private readonly page: Page;
   readonly path = '/board/rentals/form';
 
+  readonly boardMember: Locator;
+  readonly contactFullName: Locator;
+  readonly contactEmail: Locator;
+  readonly contactPhoneNumber: Locator;
+  readonly dateBorrow: Locator;
+  readonly dateReturn: Locator;
+  readonly comments: Locator;
+  readonly depositFee: Locator;
+  readonly paymentMethod: Locator;
+  readonly submitButton: Locator;
+
   constructor(page: Page) {
     this.page = page;
+
+    this.boardMember = this.page
+      .getByTestId('rental.form.boardMember')
+      .getByRole('textbox');
+    this.contactFullName = this.page
+      .getByTestId('contact.fullName')
+      .getByRole('textbox');
+    this.contactEmail = this.page
+      .getByTestId('contact.email')
+      .getByRole('textbox');
+    this.contactPhoneNumber = this.page
+      .getByTestId('contact.phoneNumber')
+      .getByRole('textbox');
+    this.dateBorrow = this.page
+      .getByTestId('rental.form.dateBorrow')
+      .getByRole('textbox');
+    this.dateReturn = this.page
+      .getByTestId('rental.form.dateReturn')
+      .getByRole('textbox');
+    this.comments = this.page.getByTestId('rental.form.comments');
+    this.depositFee = this.page
+      .getByTestId('rental.form.depositFee')
+      .getByRole('spinbutton');
+    this.paymentMethod = this.page.getByTestId('rental.form.paymentMethod');
+    this.submitButton = this.page.getByTestId('rental.form.submit');
   }
 
   async navigate() {
     await this.page.goto(this.path);
   }
 
-  get boardMember() {
-    return this.page
-      .getByTestId('rental.form.boardMember')
-      .getByRole('textbox');
-  }
-
-  get contactFullName() {
-    return this.page.getByTestId('contact.fullName').getByRole('textbox');
-  }
-
-  get contactEmail() {
-    return this.page.getByTestId('contact.email').getByRole('textbox');
-  }
-
-  get contactPhoneNumber() {
-    return this.page.getByTestId('contact.phoneNumber').getByRole('textbox');
-  }
-
-  get dateBorrow() {
-    return this.page.getByTestId('rental.form.dateBorrow').getByRole('textbox');
-  }
-
-  get dateReturn() {
-    return this.page.getByTestId('rental.form.dateReturn').getByRole('textbox');
-  }
-
-  get comments() {
-    return this.page.getByTestId('rental.form.comments');
-  }
-
   selectComponent(which: 'gear' | 'topos') {
     switch (which) {
       case 'gear':
-        return this.select('Search gear to add');
+        return this.select('Search gear to add ...');
       case 'topos':
-        return this.select('Search topos');
+        return this.select('Search topos ...');
     }
   }
 
   private select(placeholder: string) {
+    const options = this.page.getByTestId(
+      `searchable-select-options-${placeholder}`,
+    );
     return {
       search: this.page.getByPlaceholder(placeholder),
-      select: (name: string) =>
-        this.page
-          .getByTestId('searchable-select-options')
-          .getByRole('button', { name: name }),
+      options,
+      option: (name: string) => options.getByRole('button', { name: name }),
       listItem: (name: string) => {
         const item = this.page
           .getByTestId('rental.form.listItem')
@@ -73,41 +80,19 @@ export class RentalFormPage {
     };
   }
 
-  get depositFee() {
-    return this.page
-      .getByTestId('rental.form.depositFee')
-      .getByRole('spinbutton');
-  }
-
-  get paymentMethod() {
-    return this.page.getByTestId('rental.form.paymentMethod');
-  }
-
-  get submitButton() {
-    return this.page.getByTestId('rental.form.submit');
-  }
-
-  private selectMemberComponent(memberName: string) {
-    return {
-      search: this.page
-        .getByTestId('rental.form.memberSelect')
-        .getByTestId('searchable-select-input-field'),
-      options: this.page
-        .getByTestId('searchable-select-options')
-        .getByRole('button')
-        .getByText(memberName),
-    };
+  private selectMemberComponent() {
+    return this.select('select member');
   }
 
   async selectMember(memberName: string) {
-    const { search, options } = this.selectMemberComponent(memberName);
+    const { search, option } = this.selectMemberComponent();
     await search.click();
     try {
-      await options.click({ timeout: 200 });
+      await option(memberName).click({ timeout: 200 });
     } catch {
       await search.blur();
       await search.click();
-      await options.click({ timeout: 200 });
+      await option(memberName).click({ timeout: 200 });
     }
   }
 
@@ -147,10 +132,22 @@ export class RentalFormPage {
     await this.selectPaymentMethod(args.paymentMethod);
   }
 
+  async selectSearchBar(which: 'gear' | 'topos') {
+    const { search, options } = this.selectComponent(which);
+    await search.click();
+    try {
+      await expect(options).toBeVisible({ timeout: 200 });
+    } catch {
+      await search.blur();
+      await search.click();
+      await expect(options).toBeVisible({ timeout: 200 });
+    }
+  }
+
   async addItem(which: 'gear' | 'topos', name: string, amount?: number) {
-    const { search, select, listItem } = this.selectComponent(which);
+    const { search, option, listItem } = this.selectComponent(which);
     await search.fill(name);
-    await select(name).click();
+    await option(name).click();
     await listItem(name).name.isVisible();
     if (amount !== undefined)
       await listItem(name).amount.fill(amount.toString());

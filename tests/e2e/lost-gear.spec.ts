@@ -6,6 +6,7 @@ import { RentalDetailsPage } from './pages/rental/details.page';
 import { RentalReturnPage } from './pages/rental/return.page';
 import dayjs from 'dayjs';
 import { TopoLibraryPage } from './pages/topos/library.page';
+import { GearInventoryPage } from './pages/gear/inventory.page';
 
 test.describe('lost gear form', () => {
   test.beforeEach(async ({ page }) => {
@@ -89,10 +90,10 @@ test.describe('lost gear form', () => {
     await expect(topoDetailsPage.amount).toHaveText('1');
 
     await rentalFormPage.navigate();
-    const { search, select } = rentalFormPage.selectComponent('topos');
-    await search.click();
+    await rentalFormPage.selectSearchBar('topos');
+    const { option } = rentalFormPage.selectComponent('topos');
     await expect(
-      select('Topo Flone').getByTestId('search.availableAmount'),
+      option('Topo Flone').getByTestId('search.availableAmount'),
     ).toHaveText('1');
   });
 
@@ -165,10 +166,11 @@ test.describe('lost gear form', () => {
       },
     });
 
-    // const topoLibraryPage = new TopoLibraryPage(page);
-    // await topoLibraryPage.navigate();
-    // const topoDetailsPage =
-    //   await topoLibraryPage.navigateToDetails('Topo Flone');
+    const gearInventoryPage = new GearInventoryPage(page);
+    await gearInventoryPage.navigate();
+    const gearItemRow = gearInventoryPage.gearItem(gearItemName);
+    await expect(gearItemRow.availableAmount).toHaveText('1');
+    await expect(gearItemRow.totalAmount).toHaveText('1');
 
     // await expect(topoDetailsPage.amount).toHaveText('1');
 
