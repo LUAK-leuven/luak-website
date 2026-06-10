@@ -121,10 +121,7 @@ export class RentalDetailsPage {
     name: string;
     rentedAmount: number;
     returnedAmount?: number;
-    lostItem?: {
-      date: Dayjs;
-      amount: number;
-    };
+    lostAmount?: number;
   }) {
     const item = this.rentedItem(args.name);
     await expect(item.item).toBeVisible();
@@ -133,10 +130,10 @@ export class RentalDetailsPage {
       args.returnedAmount?.toString() ?? '0',
     );
 
-    if (args.lostItem !== undefined) {
+    if (args.lostAmount !== undefined) {
       await expect(item.lostItems).toHaveCount(1);
       await expect(item.lostItems).toHaveText(
-        `${args.lostItem.date.format('YYYY-MM-DD')}: ${args.lostItem.amount.toFixed()} item(s) Lost`,
+        `${args.lostAmount.toFixed()} item(s) Lost`,
       );
     }
   }

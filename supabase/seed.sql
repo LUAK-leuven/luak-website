@@ -73,19 +73,26 @@ INSERT INTO "Users" (id, first_name, last_name, email) (
   FROM auth.users
 );
 
-insert into "Memberships" (id, user_id, year, student, sportscard, kbf_uiaa_member)
-values
-  ('13550e82-bf84-46d9-a805-8fe0330dcaf1', '49d86240-8648-4700-bcba-7f3a73d6d1de', 2025, 'student_kul', true, 'kbf_luak'),
-  ('d084996a-06ce-45f8-ae1b-0c11a97fd13a', 'ebc0eb9c-e6a5-40ce-a4f4-4d4556ce78ea', 2024, 'phd_kul', false, 'not'),
-  ('25c9c665-6796-4408-a9a4-3819ced8cf39', 'ebc0eb9c-e6a5-40ce-a4f4-4d4556ce78ea', 2025, 'phd_kul', false, 'not'),
-  ('38e173bd-35f5-4892-b90a-a0602bd198fc', '5bc9455f-b641-4582-a880-e69478250b0d', 2024, 'not_student', false, 'kbf_other'),
-  ('7476465d-b5fd-47aa-9ec4-4cd8822ccfa8', '5bc9455f-b641-4582-a880-e69478250b0d', 2025, 'not_student', false, 'kbf_other');
+DO $$
+DECLARE
+  luak_year CONSTANT numeric := get_luak_year();
+BEGIN
+  insert into "Memberships" (id, user_id, year, student, sportscard, kbf_uiaa_member)
+  values
+    ('13550e82-bf84-46d9-a805-8fe0330dcaf1', '49d86240-8648-4700-bcba-7f3a73d6d1de', luak_year, 'student_kul', true, 'kbf_luak'),
+    ('d084996a-06ce-45f8-ae1b-0c11a97fd13a', 'ebc0eb9c-e6a5-40ce-a4f4-4d4556ce78ea', luak_year-1, 'phd_kul', false, 'not'),
+    ('25c9c665-6796-4408-a9a4-3819ced8cf39', 'ebc0eb9c-e6a5-40ce-a4f4-4d4556ce78ea', luak_year, 'phd_kul', false, 'not'),
+    ('38e173bd-35f5-4892-b90a-a0602bd198fc', '5bc9455f-b641-4582-a880-e69478250b0d', luak_year-1, 'not_student', false, 'kbf_other'),
+    ('7476465d-b5fd-47aa-9ec4-4cd8822ccfa8', '5bc9455f-b641-4582-a880-e69478250b0d', luak_year, 'not_student', false, 'kbf_other'),
+    ('7476465d-b5fd-47aa-9ec4-4cd8822ccfa9', '8c771dd8-fc00-40e4-b295-9fa8707612e5', luak_year, 'not_student', false, 'kbf_luak');
+END $$;
 
 insert into "Payments" (id, membership_id, amount, approved)
 values
   ('0', 'd084996a-06ce-45f8-ae1b-0c11a97fd13a', 15, true),
   ('1', '38e173bd-35f5-4892-b90a-a0602bd198fc', 15, true),
-  ('2', '7476465d-b5fd-47aa-9ec4-4cd8822ccfa8', 20, true);
+  ('2', '7476465d-b5fd-47aa-9ec4-4cd8822ccfa8', 20, true),
+  ('3', '7476465d-b5fd-47aa-9ec4-4cd8822ccfa9', 0, true);
 
 insert into "BoardMembers" (user_id) values ('8c771dd8-fc00-40e4-b295-9fa8707612e5');
 

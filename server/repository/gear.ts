@@ -19,9 +19,40 @@ export class GearDao {
     const events = await this.getAllGearInventoryItemEvents();
     const groupedEvents = groupBy(events, (event) => event.gearInventoryId);
 
-    return inventory.map((item) =>
-      this.foldEvents(item, groupedEvents[item.id]),
-    );
+    return inventory.map((item) => {
+      const { totalAmount } = this.foldEvents(
+        item,
+        groupedEvents[item.id] ?? [],
+      );
+      return {
+        gearItemId: item.gearItemId,
+        productionDate: item.productionDate,
+        purchaseDate: item.purchaseDate,
+        totalAmount,
+      };
+    });
+  }
+
+  public async getInventoryDetails(id: GearItemId) {
+    const inventory = await this._getInventoryItemDetails(id);
+    const events = await this.getAllGearInventoryItemEvents();
+    const groupedEvents = groupBy(events, (event) => event.gearInventoryId);
+
+    return inventory.map((item) => {
+      const { totalAmount } = this.foldEvents(
+        item,
+        groupedEvents[item.id] ?? [],
+      );
+      return {
+        id: item.id,
+        productionDate: item.productionDate,
+        purchaseDate: item.purchaseDate,
+        totalAmount,
+        details: item.details,
+        status: item.status,
+        events: groupedEvents[item.id] ?? [],
+      };
+    });
   }
 
   private async _getInventorySummary() {
@@ -51,6 +82,25 @@ export class GearDao {
     });
   }
 
+  private async _getInventoryItemDetails(id: GearItemId) {
+    const { data } = await this.supabaseClient
+      .from('GearInventory')
+      .select('*')
+      .eq('gear_item_id', id)
+      .throwOnError();
+
+    return data.map((x) => {
+      return {
+        id: x.id as GearInventoryId,
+        productionDate: x.production_date ?? undefined,
+        purchaseDate: x.purchase_date ?? undefined,
+        amount: x.amount,
+        details: x.details,
+        status: x.status,
+      };
+    });
+  }
+
   public async getAllGearItems() {
     const { data } = await this.supabaseClient
       .from('GearItems')
@@ -67,24 +117,31 @@ export class GearDao {
     });
   }
 
+  public async getGearItem(id: GearItemId) {
+    const { data } = await this.supabaseClient
+      .from('GearItems')
+      .select('*')
+      .eq('id', id)
+      .single()
+      .throwOnError();
+
+    return {
+      depositFee: data.deposit_fee,
+      lifespan: data.lifespan,
+      name: data.name,
+    };
+  }
+
   private foldEvents(
     invenotryItem: {
-      id: GearInventoryId;
-      gearItemId: GearItemId;
-      productionDate: string | undefined;
-      purchaseDate: string | undefined;
       amount: number;
     },
-    events: ItemEvent[] | undefined,
+    events: ItemEvent[],
   ) {
     const foldedItem = {
-      id: invenotryItem.id,
-      gearItemId: invenotryItem.gearItemId,
-      productionDate: invenotryItem.productionDate,
-      purchaseDate: invenotryItem.purchaseDate,
       totalAmount: invenotryItem.amount,
     };
-    for (const event of events ?? []) {
+    for (const event of events) {
       switch (event.eventName) {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         case 'ItemLostEvent':
@@ -106,7 +163,6 @@ export class GearDao {
         item_type: args.itemType,
         item_id: args.itemId,
         event: args.event,
-        rental_id: args.rentalId,
       });
     if (error) {
       throw new Error('Failed to save changes', { cause: error });
@@ -143,7 +199,7 @@ export class GearDao {
       const parsedEvent = parseEvent(it.event);
       return {
         gearInventoryId: it.item_id as GearInventoryId,
-        ocurredOn: it.occured_on,
+        occuredOn: it.occured_on,
         ...parsedEvent,
       };
     });

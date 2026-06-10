@@ -80,22 +80,22 @@
     <b class="border px-1">Returned amount</b>
     <RentalItem
       v-for="(
-        { name, rentedAmount, returnedAmount, itemsLost }, idx
+        { name, rentedAmount, returnedAmount, lostAmount }, idx
       ) of rental.gear"
       :key="idx"
       :name="name"
       :rented-amount="rentedAmount"
       :returned-amount="returnedAmount"
-      :items-lost="itemsLost" />
+      :lost-amount="lostAmount" />
     <RentalItem
       v-for="(
-        { name, rentedAmount, returnedAmount, itemsLost }, idx
+        { name, rentedAmount, returnedAmount, lostAmount }, idx
       ) of rental.topos"
       :key="idx"
       :name="name"
       :rented-amount="rentedAmount"
       :returned-amount="returnedAmount"
-      :items-lost="itemsLost" />
+      :lost-amount="lostAmount" />
   </div>
   <hr class="my-3" />
   <div class="flex justify-end gap-3">

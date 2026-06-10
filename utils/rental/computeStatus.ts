@@ -24,11 +24,11 @@ function computeRentedItemsStatus<T extends EntityId<unknown>>(
 ) {
   let isAllReturned = true;
   let isAnyReturned = false;
-  for (const { rentedAmount, returnedAmount, itemsLost } of items) {
+  for (const { rentedAmount, returnedAmount, lostAmount } of items) {
     const itemStatus = computeRentedItemStatus({
       rentedAmount,
       returnedAmount,
-      lostAmount: sumOf(itemsLost, 'amount'),
+      lostAmount,
     });
     if (itemStatus !== 'noneReturned') isAnyReturned = true;
     if (itemStatus !== 'allReturned') isAllReturned = false;

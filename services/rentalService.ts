@@ -4,16 +4,15 @@ import type {
   UnsavedRental,
   RentalDetails,
   PublicRentalDetails,
+  RentalStatus,
 } from '~/types/rental';
 import type { GearItemId, TopoId } from '~/types/gear';
 import type { UserId } from '~/types/user';
-import type { ItemEventEnvelope } from '~/model/gear';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Database, Tables } from '~/types/database.types';
+import type { Database } from '~/types/database.types';
 import { computeRentalStatus } from '~/utils/rental/computeStatus';
 import dayjs from 'dayjs';
 import { parseContactInfo, type ContactInfo } from '~/model/rental';
-import { inventoryItemEventsFromDB } from './itemEvents';
 
 export const rentalService = (
   supabaseClient: SupabaseClient<Database> = useSupabaseClient(),
@@ -52,35 +51,44 @@ export const rentalService = (
     };
   },
 
-  async getRentals() {
+  async getRentals(): Promise<
+    {
+      id: RentalId;
+      memberName: string;
+      dateBorrow: string;
+      dateReturn: string;
+      status: RentalStatus;
+    }[]
+  > {
     const { data, error } = await supabaseClient.from('Rentals').select(
       `
-          id,
-          member:Users!Rentals_member_id_fkey (
-            first_name,
-            last_name
-          ),
-          date_return,
-          date_borrow,
-          contact_info,
-          deposit_returned,
-          RentedGear(
-            gear_item_id,
-            rented_amount,
-            returned_amount,
-            GearItems(
-              name,
-              GearInventory(id)
-            )
-          ),
-          RentedTopos(
-            topo_id,
-            Topos(title),
-            rented_amount,
-            returned_amount
-          ),
-          InventoryItemEvents(*)
-          `,
+        id,
+        member:Users!Rentals_member_id_fkey (
+          first_name,
+          last_name
+        ),
+        date_return,
+        date_borrow,
+        contact_info,
+        deposit_returned,
+        RentedGear(
+          gear_item_id,
+          rented_amount,
+          returned_amount,
+          lost_amount,
+          GearItems(
+            name,
+            GearInventory(id)
+          )
+        ),
+        RentedTopos(
+          topo_id,
+          Topos(title),
+          rented_amount,
+          returned_amount,
+          lost_amount
+        )
+      `,
     );
 
     if (error) {
@@ -93,13 +101,9 @@ export const rentalService = (
         ? parseContactInfo(JSON.parse(rental.contact_info))
         : undefined;
 
-      const inventoryItemEvents = inventoryItemEventsFromDB(
-        rental.InventoryItemEvents,
-      );
-
       const rentalStatus = computeRentalStatus({
-        gear: rentedGearFromDb(rental.RentedGear, inventoryItemEvents),
-        topos: rentedToposFromDb(rental.RentedTopos, inventoryItemEvents),
+        gear: rentedGearFromDb(rental.RentedGear),
+        topos: rentedToposFromDb(rental.RentedTopos),
         depositReturned: rental.deposit_returned,
       });
       const isReserved = dayjs(rental.date_borrow).isAfter(dayjs());
@@ -147,17 +151,18 @@ export const rentalService = (
               GearInventory(id)
             ),
             rented_amount,
-            returned_amount
+            returned_amount,
+            lost_amount
           ),
           RentedTopos(
             topo_id,
             Topos(title),
             rented_amount,
-            returned_amount
+            returned_amount,
+            lost_amount
           ),
           contact_info,
-          comments,
-          InventoryItemEvents(*)
+          comments
         `,
       )
       .eq('id', rentalId)
@@ -165,7 +170,6 @@ export const rentalService = (
 
     if (error) {
       console.warn(`failed to load rental ${rentalId}`, error);
-      console.info('rental:', rental);
       return null;
     }
 
@@ -257,7 +261,8 @@ export const rentalService = (
               GearInventory(id)
             ),
             rented_amount,
-            returned_amount
+            returned_amount,
+            lost_amount
           ),
           RentedTopos(
             topo_id,
@@ -265,9 +270,9 @@ export const rentalService = (
               title
             ),
             rented_amount,
-            returned_amount
-          ),
-          InventoryItemEvents(*)
+            returned_amount,
+            lost_amount
+          )
         `,
       )
       .eq('member_id', userId);
@@ -291,6 +296,7 @@ type DBRentedGear = {
   };
   rented_amount: number;
   returned_amount: number;
+  lost_amount: number;
 };
 
 type DBRentedTopos = {
@@ -300,6 +306,7 @@ type DBRentedTopos = {
   };
   rented_amount: number;
   returned_amount: number;
+  lost_amount: number;
 };
 
 const rentalFromDb = (rental: {
@@ -311,11 +318,9 @@ const rentalFromDb = (rental: {
   payment_method: 'cash' | 'transfer';
   RentedGear: DBRentedGear[];
   RentedTopos: DBRentedTopos[];
-  InventoryItemEvents: Tables<'InventoryItemEvents'>[];
 }): PublicRentalDetails => {
-  const itemEvents = inventoryItemEventsFromDB(rental.InventoryItemEvents);
-  const gear = rentedGearFromDb(rental.RentedGear, itemEvents);
-  const topos = rentedToposFromDb(rental.RentedTopos, itemEvents);
+  const gear = rentedGearFromDb(rental.RentedGear);
+  const topos = rentedToposFromDb(rental.RentedTopos);
 
   const r = {
     id: rental.id as RentalId,
@@ -336,45 +341,23 @@ const rentalFromDb = (rental: {
 
 const rentedGearFromDb = (
   rentedGear: DBRentedGear[],
-  itemEvents: ItemEventEnvelope[],
 ): RentalDetails['gear'] => {
-  return rentedGear.map((gearItem) => {
-    const events = itemEvents.filter(
-      (it) =>
-        it.itemType === 'gear' &&
-        gearItem.GearItems.GearInventory.some(
-          ({ id: inventoryId }) => inventoryId === it.itemId,
-        ),
-    );
-    return {
-      id: gearItem.gear_item_id as GearItemId,
-      name: gearItem.GearItems.name,
-      rentedAmount: gearItem.rented_amount,
-      returnedAmount: gearItem.returned_amount,
-      itemsLost: events.map((it) => ({
-        date: it.occuredOn,
-        amount: it.event.lostAmount,
-      })),
-    } satisfies RentalDetails['gear'][number];
-  });
+  return rentedGear.map((gearItem) => ({
+    id: gearItem.gear_item_id as GearItemId,
+    name: gearItem.GearItems.name,
+    rentedAmount: gearItem.rented_amount,
+    returnedAmount: gearItem.returned_amount,
+    lostAmount: gearItem.lost_amount,
+  }));
 };
 
 const rentedToposFromDb = (
   rentedTopos: DBRentedTopos[],
-  itemEvents: ItemEventEnvelope[],
 ): RentalDetails['topos'] =>
-  rentedTopos.map((topo) => {
-    const events = itemEvents.filter(
-      (it) => it.itemType === 'topo' && topo.topo_id === it.itemId,
-    );
-    return {
-      id: topo.topo_id as TopoId,
-      name: topo.Topos.title,
-      rentedAmount: topo.rented_amount,
-      returnedAmount: topo.returned_amount,
-      itemsLost: events.map((it) => ({
-        date: it.occuredOn,
-        amount: it.event.lostAmount,
-      })),
-    };
-  });
+  rentedTopos.map((topo) => ({
+    id: topo.topo_id as TopoId,
+    name: topo.Topos.title,
+    rentedAmount: topo.rented_amount,
+    returnedAmount: topo.returned_amount,
+    lostAmount: topo.lost_amount,
+  }));

@@ -3,7 +3,7 @@ import type { ZodType } from 'zod';
 import { itemLostEvent } from '~/model/gear';
 import luakEventHandler from '~/server/luakEventHandler';
 import type { EntityId } from '~/types/ddd';
-import type { GearInventoryId } from '~/types/gear';
+import type { GearItemId, GearInventoryId } from '~/types/gear';
 import type { RentalId } from '~/types/rental';
 
 const zodEntityId = <T extends EntityId<unknown> = never>() =>
@@ -12,10 +12,11 @@ const zodEntityId = <T extends EntityId<unknown> = never>() =>
 const bodySchema = zodObject({
   rentalId: zodEntityId<RentalId>(),
   inventoryId: zodEntityId<GearInventoryId>(),
+  gearItemId: zodEntityId<GearItemId>(),
   lostAmount: zodNumber().min(1),
 });
 
-export default luakEventHandler(async ({ gearRepo }, event) => {
+export default luakEventHandler(async ({ gearRepo, rentalRepo }, event) => {
   const result = await readValidatedBody(event, (body) =>
     bodySchema.safeParse(body),
   );
@@ -27,10 +28,18 @@ export default luakEventHandler(async ({ gearRepo }, event) => {
       cause: result.error,
     });
 
+  const { rentalId, inventoryId, gearItemId, lostAmount } = result.data;
+
   await gearRepo().saveInventoryItemEvent({
     itemType: 'gear',
-    itemId: result.data.inventoryId,
-    rentalId: result.data.rentalId,
-    event: itemLostEvent(result.data.lostAmount),
+    itemId: inventoryId,
+    event: itemLostEvent(rentalId, lostAmount),
+  });
+
+  await rentalRepo().incrementLostAmount({
+    rentalId,
+    itemId: gearItemId,
+    itemType: 'gear',
+    lostAmount,
   });
 });

@@ -4,8 +4,7 @@
   import { useRentalService } from '~/composables/useRentalService';
 
   const { show: showPopup } = useToast();
-  const route = useRoute();
-  const rentalId = route.params.id as RentalId;
+  const rentalId = useRoute('board-rentals-id-edit').params.id as RentalId;
 
   const { get, edit } = useRentalService();
 

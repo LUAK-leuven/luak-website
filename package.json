@@ -8,6 +8,7 @@
     "dev:prod": "nuxt dev --dotenv .env.production",
     "generate": "nuxt generate",
     "preview": "NODE_OPTIONS='--import ./public/instrument.server.mjs' nuxt preview --dotenv .env.local",
+    "sb:gentypes": "yarn --silent supabase gen types --lang typescript --local > types/database.types.ts",
     "postinstall": "nuxt prepare",
     "lint": "yarn lint:eslint && yarn lint:prettier",
     "lint:eslint": "eslint .",

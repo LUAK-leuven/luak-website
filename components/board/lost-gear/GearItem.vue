@@ -18,9 +18,25 @@
 
   const { show } = useToast();
 
-  const { data, pending, error } = await gearService().getGearItemDetails(
-    props.gearItem.id,
-  );
+  const { data, pending, error } = await useLazyAsyncData(async () => {
+    const { data } = await useSupabaseClient()
+      .from('GearItems')
+      .select('lifespan, GearInventory(*)')
+      .eq('id', props.gearItem.id)
+      .single()
+      .throwOnError();
+    return {
+      lifespan: data.lifespan,
+      inventory: data.GearInventory.map((item) => ({
+        id: item.id as GearInventoryId,
+        details: item.details,
+        purchaseDate: item.purchase_date ?? undefined,
+        productionDate: item.production_date ?? undefined,
+        amount: item.amount,
+        status: item.status,
+      })),
+    };
+  });
 
   const unReturnedAmount = computed(
     () => props.gearItem.rentedAmount - props.gearItem.returnedAmount,
@@ -58,6 +74,7 @@
         method: 'post',
         body: {
           rentalId: props.rentalId,
+          gearItemId: props.gearItem.id,
           inventoryId: formState.inventoryItem,
           lostAmount: formState.lostAmount,
         },

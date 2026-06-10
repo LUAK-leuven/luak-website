@@ -174,7 +174,6 @@ export type Database = {
           item_id: string;
           item_type: Database['public']['Enums']['item_type'];
           occured_on: string;
-          rental_id: string | null;
         };
         Insert: {
           event: Json;
@@ -182,7 +181,6 @@ export type Database = {
           item_id: string;
           item_type: Database['public']['Enums']['item_type'];
           occured_on?: string;
-          rental_id?: string | null;
         };
         Update: {
           event?: Json;
@@ -190,17 +188,8 @@ export type Database = {
           item_id?: string;
           item_type?: Database['public']['Enums']['item_type'];
           occured_on?: string;
-          rental_id?: string | null;
         };
-        Relationships: [
-          {
-            foreignKeyName: 'InventoryItemEvents_rental_id_fkey';
-            columns: ['rental_id'];
-            isOneToOne: false;
-            referencedRelation: 'Rentals';
-            referencedColumns: ['id'];
-          },
-        ];
+        Relationships: [];
       };
       Memberships: {
         Row: {
@@ -333,6 +322,7 @@ export type Database = {
         Row: {
           gear_item_id: string;
           last_edited_date: string;
+          lost_amount: number;
           rental_id: string;
           rented_amount: number;
           returned_amount: number;
@@ -340,6 +330,7 @@ export type Database = {
         Insert: {
           gear_item_id: string;
           last_edited_date?: string;
+          lost_amount?: number;
           rental_id: string;
           rented_amount: number;
           returned_amount: number;
@@ -347,6 +338,7 @@ export type Database = {
         Update: {
           gear_item_id?: string;
           last_edited_date?: string;
+          lost_amount?: number;
           rental_id?: string;
           rented_amount?: number;
           returned_amount?: number;
@@ -371,6 +363,7 @@ export type Database = {
       RentedTopos: {
         Row: {
           last_edited_date: string;
+          lost_amount: number;
           rental_id: string;
           rented_amount: number;
           returned_amount: number;
@@ -378,6 +371,7 @@ export type Database = {
         };
         Insert: {
           last_edited_date?: string;
+          lost_amount?: number;
           rental_id: string;
           rented_amount: number;
           returned_amount: number;
@@ -385,6 +379,7 @@ export type Database = {
         };
         Update: {
           last_edited_date?: string;
+          lost_amount?: number;
           rental_id?: string;
           rented_amount?: number;
           returned_amount?: number;

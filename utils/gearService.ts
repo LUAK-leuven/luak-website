@@ -1,6 +1,4 @@
-import type { RentalId } from '~/types/rental';
-import type { GearInventoryId, GearItemId, TopoId } from '~/types/gear';
-import { parseContactInfo } from '~/model/rental';
+import type { GearItemId, TopoId } from '~/types/gear';
 
 class GearService {
   private readonly supabase = useSupabaseClient();
@@ -21,7 +19,8 @@ class GearService {
             ),
             RentedGear (
               rented_amount,
-              returned_amount
+              returned_amount,
+              lost_amount
             )
           `,
           )
@@ -36,8 +35,8 @@ class GearService {
           const totalAmount = sumOf(gearItem.GearInventory, 'amount');
           const rentedAmount = sumBy(
             gearItem.RentedGear,
-            ({ rented_amount, returned_amount }) =>
-              rented_amount - returned_amount,
+            ({ rented_amount, returned_amount, lost_amount }) =>
+              rented_amount - returned_amount - lost_amount,
           );
           return {
             id: gearItem.id as GearItemId,
@@ -157,89 +156,6 @@ class GearService {
 
   public async getTopoDetails(topoId: TopoId) {
     return await useLazyFetch(`/api/topos/${topoId}`, { method: 'get' });
-  }
-
-  public async getGearItemDetails(gearItemId: GearItemId) {
-    return useAsyncData(
-      `gearItem-${gearItemId}`,
-      async () => {
-        const { data, error } = await this.supabase
-          .from('GearItems')
-          .select(
-            `
-          id,
-          name,
-          lifespan,
-          deposit_fee,
-          GearInventory(
-            id,
-            details,
-            purchase_date,
-            production_date,
-            amount,
-            status
-          ),
-          RentedGear(
-            rental_id,
-            rented_amount,
-            returned_amount,
-            Rentals(
-              Users!member_id(
-                first_name,
-                last_name
-              ),
-              contact_info
-            )
-          )
-          `,
-          )
-          .eq('id', gearItemId)
-          .single();
-        if (data === null) {
-          console.warn('gearItem', error);
-          return null;
-        }
-
-        const totalAmount = sumBy(data.GearInventory, (i) =>
-          i.status === 'available' ? i.amount : 0,
-        );
-        const rentedAmount = sumBy(
-          data.RentedGear,
-          (rg) => rg.rented_amount - rg.returned_amount,
-        );
-
-        return {
-          id: data.id as GearItemId,
-          name: data.name,
-          lifespan: data.lifespan,
-          depositFee: data.deposit_fee,
-          totalAmount,
-          availableAmount: totalAmount - rentedAmount,
-          inventory: data.GearInventory.map((i) => {
-            return {
-              id: i.id as GearInventoryId,
-              details: i.details,
-              purchaseDate: i.purchase_date ?? undefined,
-              productionDate: i.production_date ?? undefined,
-              amount: i.amount,
-              status: i.status,
-            };
-          }),
-          rentals: data.RentedGear.filter(
-            (r) => r.rented_amount !== r.returned_amount,
-          ).map((r) => ({
-            id: r.rental_id as RentalId,
-            amount: r.rented_amount - r.returned_amount,
-            memberName: r.Rentals.Users
-              ? getFullName(r.Rentals.Users)
-              : r.Rentals.contact_info
-                ? parseContactInfo(JSON.parse(r.Rentals.contact_info)).fullName
-                : 'Failed to get name',
-          })),
-        };
-      },
-      { lazy: true },
-    );
   }
 }
 

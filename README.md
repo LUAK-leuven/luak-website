@@ -73,7 +73,7 @@ To generate a migration file for the diff between you local db and what is defin
 
 > supabase db diff --schema=public -f [migration name]
 
-Esport DB types
+Export DB types
 
  > yarn supabase gen types --lang typescript --local > types/database.types.ts
 

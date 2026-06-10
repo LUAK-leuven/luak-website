@@ -20,18 +20,20 @@ export const inventoryItemId = (x: unknown) => inventoryItemIdSchema.parse(x);
 
 export type ItemEventEnvelope = InventoryItemId & {
   occuredOn: string;
-  rentalId: RentalId | undefined;
   event: ItemEvent;
 };
 
 const itemLostEventSchema = object({
   eventName: literal('ItemLostEvent'),
+  rentalId: uuid() as unknown as ZodType<RentalId>,
   lostAmount: number().min(1),
 });
 export const itemLostEvent = (
+  rentalId: RentalId,
   lostAmount: number,
 ): Infer<typeof itemLostEventSchema> => ({
   eventName: 'ItemLostEvent',
+  rentalId: rentalId,
   lostAmount: lostAmount,
 });
 

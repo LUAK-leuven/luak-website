@@ -160,10 +160,7 @@ test.describe('lost gear form', () => {
       name: gearItemName,
       rentedAmount: 2,
       returnedAmount: 1,
-      lostItem: {
-        date: dayjs(),
-        amount: 1,
-      },
+      lostAmount: 1,
     });
 
     const gearInventoryPage = new GearInventoryPage(page);

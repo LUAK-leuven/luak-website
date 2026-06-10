@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import type { GearItemId } from '~/types/gear';
+  import type { GearInventoryDetails, GearItemId } from '~/types/gear';
   import dayjs from 'dayjs';
   import { useBreakpoints, breakpointsTailwind } from '@vueuse/core';
   import InventoryTableItem from '~/components/board/gear/inventoryTableItem.vue';
@@ -11,7 +11,10 @@
     data: data_,
     pending,
     error,
-  } = await gearService().getGearItemDetails(gearItemId);
+  } = useLazyFetch(() => `/api/gear/inventory/${gearItemId}`, {
+    method: 'get',
+    transform: (x) => x as GearInventoryDetails,
+  });
   const data = computed(() =>
     data_.value
       ? {
@@ -24,17 +27,14 @@
               const purchaseDate = x.purchaseDate
                 ? dayjs(x.purchaseDate)
                 : undefined;
-              const startDate =
-                purchaseDate !== undefined
-                  ? purchaseDate
-                  : productionDate !== undefined
-                    ? productionDate.add(1, 'year')
-                    : undefined;
+              const retirementDate = x.retirementDate
+                ? dayjs(x.retirementDate)
+                : undefined;
               return {
                 ...x,
                 productionDate,
                 purchaseDate,
-                retirementDate: startDate?.add(data_.value!.lifespan, 'y'),
+                retirementDate,
               };
             })
             .sort((a, b) => {
@@ -90,7 +90,7 @@
           v-for="{
             id,
             details,
-            amount,
+            totalAmount,
             status,
             productionDate,
             purchaseDate,
@@ -103,7 +103,7 @@
             {{ details }}
           </InventoryTableItem>
           <InventoryTableItem :status="status" data-testid="amount">
-            {{ amount }}
+            {{ totalAmount }}
           </InventoryTableItem>
           <InventoryTableItem v-if="sm" :status="status">
             {{ status }}
@@ -128,13 +128,13 @@
         <b class="border px-1">Name</b>
         <b class="border px-1">Amount</b>
         <template
-          v-for="{ id, memberName, amount } of gearItems.rentals"
+          v-for="{ id, memberName, rentedAmount } of gearItems.rentals"
           :key="id">
           <SharedLinkTo
             class="border p-1"
             :text="memberName"
             :to="{ name: 'board-rentals-id', params: { id } }" />
-          <div class="border p-1">{{ amount }}</div>
+          <div class="border p-1">{{ rentedAmount }}</div>
         </template>
       </div>
     </template>

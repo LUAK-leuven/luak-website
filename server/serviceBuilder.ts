@@ -24,9 +24,11 @@ export const serviceBuilder = async (h3Event: H3Event) => {
 
   return {
     topoService,
+    gearService,
+
     gearRepo,
     topoRepo,
-    gearService,
+    rentalRepo,
   };
 };
 

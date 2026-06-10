@@ -19,9 +19,7 @@
   );
 
   const itemId = computed<RentalItemId | undefined>(() => {
-    const itemId = yupUuid
-      .label('itemId')
-      .validateSync(route.query['itemId'] as string);
+    const itemId = yupUuid.label('itemId').validateSync(route.query['itemId']);
     const itemType = yupString<'topo' | 'gear'>()
       .required()
       .oneOf(['topo', 'gear'])

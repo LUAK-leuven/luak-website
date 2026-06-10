@@ -5,12 +5,12 @@ import type { TopoId } from '~/types/gear';
 import type { RentalId } from '~/types/rental';
 
 const lostTopo = z.object({
-  rentalId: z.uuid(),
-  topoId: z.uuid(),
+  rentalId: z.uuid() as unknown as z.ZodType<RentalId>,
+  topoId: z.uuid() as unknown as z.ZodType<TopoId>,
   lostAmount: z.number().min(1),
 });
 
-export default luakEventHandler(async ({ gearRepo }, event) => {
+export default luakEventHandler(async ({ gearRepo, rentalRepo }, event) => {
   const result = await readValidatedBody(event, (body) =>
     lostTopo.safeParse(body),
   );
@@ -22,10 +22,18 @@ export default luakEventHandler(async ({ gearRepo }, event) => {
       cause: result.error,
     });
 
+  const { rentalId, topoId, lostAmount } = result.data;
+
   await gearRepo().saveInventoryItemEvent({
     itemType: 'topo',
-    itemId: result.data.topoId as TopoId,
-    rentalId: result.data.rentalId as RentalId,
-    event: itemLostEvent(result.data.lostAmount),
+    itemId: topoId,
+    event: itemLostEvent(rentalId, lostAmount),
+  });
+
+  await rentalRepo().incrementLostAmount({
+    rentalId,
+    itemId: topoId,
+    itemType: 'topo',
+    lostAmount,
   });
 });

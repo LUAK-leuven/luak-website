@@ -169,26 +169,26 @@
       <b class="border px-1">Amount</b>
       <b class="border px-1" />
       <RentalItem
-        v-for="{ name, rentedAmount, id, itemsLost } of rental.gear"
+        v-for="{ name, rentedAmount, id, lostAmount } of rental.gear"
         :key="id"
         :bouncing="bouncing[`returnedGear.${id}`]"
         :name="name"
         :rented-amount="rentedAmount"
         :returned-amount="values.returnedGear![id]"
-        :lost-amount="sumOf(itemsLost, 'amount')"
+        :lost-amount="lostAmount"
         :rental-id="rental.id"
         :item-id="{ type: 'gear', id }"
         @update-returned-amount="
           (amount) => updateReturnedItem({ type: 'gear', id, amount })
         " />
       <RentalItem
-        v-for="{ name, rentedAmount, id, itemsLost } of rental.topos"
+        v-for="{ name, rentedAmount, id, lostAmount } of rental.topos"
         :key="id"
         :bouncing="bouncing[`returnedTopos.${id}`]"
         :name="name"
         :rented-amount="rentedAmount"
         :returned-amount="values.returnedTopos![id]"
-        :lost-amount="sumOf(itemsLost, 'amount')"
+        :lost-amount="lostAmount"
         :rental-id="rental.id"
         :item-id="{ type: 'topo', id }"
         @update-returned-amount="

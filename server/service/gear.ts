@@ -1,6 +1,10 @@
 import { groupBy, min, sumOf } from '~/utils/utils';
 import type { GearDao } from '../repository/gear';
-import type { GearInventorySummary } from '~/types/gear';
+import type {
+  GearInventoryDetails,
+  GearInventorySummary,
+  GearItemId,
+} from '~/types/gear';
 import type { RentalDao } from '../repository/rentals';
 import dayjs from 'dayjs';
 
@@ -34,6 +38,41 @@ export class GearService {
         )?.format('YYYY-MM-DD'),
       };
     });
+  }
+
+  public async getDetails(id: GearItemId): Promise<GearInventoryDetails> {
+    const inventoryDetails = await this.gearRepository.getInventoryDetails(id);
+    const gearItem = await this.gearRepository.getGearItem(id);
+    const rentals = await this.rentalRepository.getRentalsFor(id);
+
+    const totalAmount = sumOf(inventoryDetails, 'totalAmount');
+    const rentedAmount = sumOf(rentals, 'rentedAmount');
+
+    return {
+      id: id,
+      name: gearItem.name,
+      lifespan: gearItem.lifespan,
+      depositFee: gearItem.depositFee,
+      totalAmount: totalAmount,
+      availableAmount: totalAmount - rentedAmount,
+      inventory: inventoryDetails.map((item) => {
+        return {
+          id: item.id,
+          productionDate: item.productionDate,
+          purchaseDate: item.purchaseDate,
+          retirementDate: this.calculateRetirementDate({
+            productionDate: item.productionDate,
+            purchaseDate: item.purchaseDate,
+            lifespan: gearItem.lifespan,
+          })?.format('YYYY-MM-DD'),
+          details: item.details,
+          totalAmount: item.totalAmount,
+          status: item.status,
+          events: item.events,
+        };
+      }),
+      rentals,
+    };
   }
 
   private calculateRetirementDate(args: {

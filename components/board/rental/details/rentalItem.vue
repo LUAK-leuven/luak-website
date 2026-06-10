@@ -1,20 +1,18 @@
 <script setup lang="ts">
-  import dayjs from 'dayjs';
-  import type { RentalDetails } from '~/types/rental';
   import { computeRentedItemStatus } from '~/utils/rental/computeStatus';
 
   const porps = defineProps<{
     name: string;
     rentedAmount: number;
     returnedAmount: number;
-    itemsLost: RentalDetails['gear'][number]['itemsLost'];
+    lostAmount: number;
   }>();
 
   const itemStatusColor = computed(() => {
     const itemStatus = computeRentedItemStatus({
       rentedAmount: porps.rentedAmount,
       returnedAmount: porps.returnedAmount,
-      lostAmount: sumOf(porps.itemsLost, 'amount'),
+      lostAmount: porps.lostAmount,
     });
     switch (itemStatus) {
       case 'allReturned':
@@ -34,13 +32,8 @@
       class="border p-1 flex flex-col items-start justify-center"
       :class="itemStatusColor">
       {{ name }}
-      <ul v-if="itemsLost.length > 0" class="ml-5">
-        <li
-          v-for="({ date, amount }, idx) of itemsLost"
-          :key="idx"
-          data-testid="lostItem">
-          {{ dayjs(date).format('YYYY-MM-DD') }}: {{ amount }} item(s) Lost
-        </li>
+      <ul v-if="lostAmount > 0" class="ml-5">
+        <li data-testid="lostItem">{{ lostAmount }} item(s) Lost</li>
       </ul>
     </div>
     <div
