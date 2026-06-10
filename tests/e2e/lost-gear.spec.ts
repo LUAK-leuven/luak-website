@@ -174,11 +174,11 @@ test.describe('lost gear form', () => {
     await expect(gearDetailsPage.gearItemAmount).toContainText('1 / 1');
     await expect(gearDetailsPage.amount).toHaveText('1');
 
-    // await rentalFormPage.navigate();
-    // const { search, select } = rentalFormPage.selectComponent('topos');
-    // await search.click();
-    // await expect(
-    //   select('Topo Flone').getByTestId('search.availableAmount'),
-    // ).toHaveText('1');
+    await rentalFormPage.navigate();
+    await rentalFormPage.selectSearchBar('gear');
+    const { option } = rentalFormPage.selectComponent('gear');
+    await expect(
+      option(gearItemName).getByTestId('search.availableAmount'),
+    ).toHaveText('1');
   });
 });
