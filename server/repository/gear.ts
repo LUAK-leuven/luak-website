@@ -1,11 +1,7 @@
 import type { Database } from '~/types/database.types';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { parseEvent } from '~/model/gear';
-import type {
-  InventoryItemId,
-  ItemEvent,
-  ItemEventEnvelope,
-} from '~/model/gear';
+import type { InventoryItemId, ItemEvent } from '~/model/gear';
 import type { GearInventoryId, GearItemId } from '~/types/gear';
 import { groupBy } from '~/utils/utils';
 
@@ -154,21 +150,6 @@ export class GearDao {
 
   // --- Item Events ---
 
-  public async saveInventoryItemEvent(
-    args: Omit<ItemEventEnvelope, 'occuredOn'>,
-  ) {
-    const { error } = await this.supabaseClient
-      .from('InventoryItemEvents')
-      .insert({
-        item_type: args.itemType,
-        item_id: args.itemId,
-        event: args.event,
-      });
-    if (error) {
-      throw new Error('Failed to save changes', { cause: error });
-    }
-  }
-
   public async getInventoryItemEvents(
     args: InventoryItemId,
   ): Promise<(ItemEvent & { ocurredOn: string })[]> {
@@ -203,20 +184,5 @@ export class GearDao {
         ...parsedEvent,
       };
     });
-  }
-
-  async getLostAmounts(): Promise<Record<GearInventoryId, number | undefined>> {
-    const data = await this.getAllGearInventoryItemEvents();
-
-    return data.reduce<Record<GearInventoryId, number | undefined>>(
-      (lostAmounts, event) => {
-        const lostAmount = lostAmounts[event.gearInventoryId] ?? 0;
-        return {
-          ...lostAmounts,
-          [event.gearInventoryId]: lostAmount + event.lostAmount,
-        };
-      },
-      {},
-    );
   }
 }

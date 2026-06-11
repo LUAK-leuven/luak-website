@@ -69,18 +69,14 @@
 
   const onSubmit = handleSubmit(
     async (formState) => {
-      console.log('submit', formState);
-      const { error } = await useFetch('/api/gear/mark-as-lost', {
-        method: 'post',
-        body: {
-          rentalId: props.rentalId,
-          gearItemId: props.gearItem.id,
-          inventoryId: formState.inventoryItem,
-          lostAmount: formState.lostAmount,
-        },
+      const { error } = await useSupabaseClient().rpc('mark_gear_as_lost', {
+        p_gear_item_id: props.gearItem.id,
+        p_rental_id: props.rentalId,
+        p_inventory_item_id: formState.inventoryItem,
+        p_lost_amount: formState.lostAmount,
       });
-      if (error.value) {
-        console.error(error.value.message);
+      if (error) {
+        console.error(error.message);
         show('error', 'Server error: Failed to submit response.');
       } else {
         await navigateTo({

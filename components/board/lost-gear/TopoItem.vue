@@ -33,17 +33,14 @@
   const [lostAmount] = defineField('lostAmount');
 
   const onSubmit = handleSubmit(async (formState) => {
-    const { error } = await useFetch('/api/topos/mark-as-lost', {
-      method: 'post',
-      body: {
-        rentalId: props.rentalId,
-        topoId: props.topo.id,
-        lostAmount: formState.lostAmount,
-      },
+    const { error } = await useSupabaseClient().rpc('mark_topo_as_lost', {
+      p_lost_amount: formState.lostAmount,
+      p_rental_id: props.rentalId,
+      p_topo_id: props.topo.id,
     });
 
-    if (error.value) {
-      console.error(error.value.message);
+    if (error) {
+      console.error(error.message);
       show('error', 'Failed to save changes');
     } else {
       await navigateTo({

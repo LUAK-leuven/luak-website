@@ -13,7 +13,7 @@ export const serviceBuilder = async (h3Event: H3Event) => {
 
   const gearRepo = useSingleton(() => new GearDao(supabase));
   const topoRepo = useSingleton(() => new TopoDao(supabase));
-  const rentalRepo = useSingleton(() => new RentalDao(supabase, gearRepo()));
+  const rentalRepo = useSingleton(() => new RentalDao(supabase));
 
   const topoService = useSingleton(
     () => new TopoService(topoRepo(), gearRepo()),

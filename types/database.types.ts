@@ -516,6 +516,19 @@ export type Database = {
       };
       get_luak_year: { Args: never; Returns: number };
       has_membership: { Args: never; Returns: string };
+      mark_gear_as_lost: {
+        Args: {
+          p_gear_item_id: string;
+          p_inventory_item_id: string;
+          p_lost_amount: number;
+          p_rental_id: string;
+        };
+        Returns: undefined;
+      };
+      mark_topo_as_lost: {
+        Args: { p_lost_amount: number; p_rental_id: string; p_topo_id: string };
+        Returns: undefined;
+      };
       update_rental: {
         Args: {
           p_comments: string;

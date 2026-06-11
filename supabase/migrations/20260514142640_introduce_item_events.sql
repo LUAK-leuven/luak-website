@@ -82,3 +82,55 @@ with check ((( SELECT auth.uid() AS uid) IN ( SELECT "BoardMembers".user_id
 -- Add lost_amount on RentedGear and RentedTopos
 alter table "public"."RentedGear" add column "lost_amount" numeric not null default 0;
 alter table "public"."RentedTopos" add column "lost_amount" numeric not null default 0;
+
+-- Functions to mark gear and topos as lost
+create or replace function public.mark_gear_as_lost(
+  p_gear_item_id uuid,
+  p_rental_id uuid,
+  p_inventory_item_id uuid,
+  p_lost_amount numeric
+)
+returns void
+language plpgsql
+as $$
+begin
+  insert into "InventoryItemEvents" (item_type, item_id, event)
+  values (
+    'gear',
+    p_inventory_item_id,
+    jsonb_build_object(
+      'eventName', 'ItemLostEvent',
+      'rentalId', p_rental_id,
+      'lostAmount', p_lost_amount
+    )
+  );
+
+  update "RentedGear"
+  set lost_amount = p_lost_amount
+  where gear_item_id = p_gear_item_id and rental_id = p_rental_id;
+end;$$;
+
+create or replace function public.mark_topo_as_lost(
+  p_topo_id uuid,
+  p_rental_id uuid,
+  p_lost_amount numeric
+)
+returns void
+language plpgsql
+as $$
+begin
+  insert into "InventoryItemEvents" (item_type, item_id, event)
+  values (
+    'topo',
+    p_topo_id,
+    jsonb_build_object(
+      'eventName', 'ItemLostEvent',
+      'rentalId', p_rental_id,
+      'lostAmount', p_lost_amount
+    )
+  );
+
+  update "RentedTopos"
+  set lost_amount = p_lost_amount
+  where topo_id = p_topo_id and rental_id = p_rental_id;
+end;$$;
