@@ -5,7 +5,7 @@ import { navigateTo, testUsers } from './fixtures';
 import dayjs from 'dayjs';
 import { RentalDetailsPage } from '~/tests/e2e/pages/rental/details.page';
 import { RentalsOverviewPage } from '~/tests/e2e/pages/rentals-overview.page';
-import { uuidRegex } from '~/utils/utils';
+import { uuidRegex, sleep } from '~/utils/utils';
 import { RentalReturnPage } from './pages/rental/return.page';
 
 test.describe('create a new rental', () => {
@@ -61,6 +61,7 @@ test.describe('create a new rental', () => {
     // --- Edit the rental ---
     await rentalsOverviewPage.rentalSummary(rentalId).click();
     await expect(page).toHaveURL(`/board/rentals/${rentalId}`);
+    await sleep(200);
     await rentalDetailsPage.editButton.click();
     await expect(page).toHaveURL(`/board/rentals/${rentalId}/edit`);
 
@@ -226,6 +227,7 @@ test.describe('create a new rental', () => {
     // --- Edit the rental ---
     await rentalsOverviewPage.rentalSummary(rentalId).click();
     await expect(page).toHaveURL(`/board/rentals/${rentalId}`);
+    await sleep(200);
     await rentalDetailsPage.editButton.click();
     await expect(page).toHaveURL(`/board/rentals/${rentalId}/edit`);
 

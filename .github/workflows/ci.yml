@@ -33,3 +33,5 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+      - name: Stop supabase server
+        run: yarn supabase stop
