@@ -27,6 +27,7 @@ describe('RentalItem', () => {
           name: 'quickdraw',
           rentedAmount: rentedAmount,
           returnedAmount: returnedAmount,
+          lostAmount: 0,
           bouncing: false,
         },
       });
@@ -52,6 +53,7 @@ describe('RentalItem', () => {
         name: 'quickdraw',
         rentedAmount: 1,
         returnedAmount: 0,
+        lostAmount: 0,
         bouncing: false,
       },
     });

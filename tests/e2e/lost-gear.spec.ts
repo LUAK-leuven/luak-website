@@ -76,10 +76,7 @@ test.describe('lost gear form', () => {
       name: 'Topo Flone',
       rentedAmount: 2,
       returnedAmount: 1,
-      lostItem: {
-        date: dayjs(),
-        amount: 1,
-      },
+      lostAmount: 1,
     });
 
     const topoLibraryPage = new TopoLibraryPage(page);

@@ -103,7 +103,7 @@
       class="btn btn-secondary"
       data-testId="editButton"
       @click="
-        () =>
+        async () =>
           navigateTo({
             name: 'board-rentals-id-edit',
             params: { id: rental.id },
