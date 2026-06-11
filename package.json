@@ -20,7 +20,7 @@
     "@nuxt/devtools": "^3.2.4",
     "@nuxt/eslint": "^1.15.2",
     "@nuxt/test-utils": "^4.0.3",
-    "@nuxtjs/supabase": "^2.0.6",
+    "@nuxtjs/supabase": "^2.0.9",
     "@nuxtjs/tailwindcss": "^6.8.0",
     "@playwright/test": "^1.60.0",
     "@types/qrcode": "^1.5.6",
