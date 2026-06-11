@@ -1,18 +1,9 @@
-import { createClient } from '@supabase/supabase-js';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '~/types/database.types';
-import { validateSupabaseUrl } from '~/tests/e2e/global-setup-and-teardown/validateSupabaseUrl';
 import dayjs from 'dayjs';
 
-class TestDao {
-  private readonly supabase;
-
-  constructor() {
-    validateSupabaseUrl(process.env.NUXT_PUBLIC_SUPABASE_URL!);
-    this.supabase = createClient<Database>(
-      process.env.NUXT_PUBLIC_SUPABASE_URL!,
-      process.env.NUXT_SUPABASE_SECRET_KEY!, // IMPORTANT: secret key in order to bypass RLS
-    );
-  }
+export class TestDao {
+  constructor(private readonly supabase: SupabaseClient<Database>) {}
 
   async cleanInventoryEvents() {
     const { error } = await this.supabase
@@ -40,10 +31,3 @@ Failed to clear rentals:
     }
   }
 }
-
-let instance: TestDao | undefined;
-
-export const testDao = () => {
-  if (instance === undefined) instance = new TestDao();
-  return instance;
-};
