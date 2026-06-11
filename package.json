@@ -32,7 +32,7 @@
     "eslint-plugin-nuxt": "^4.0.0",
     "eslint-plugin-prettier": "^5.5.5",
     "happy-dom": "^20.9.0",
-    "nuxt": "^3.21.4",
+    "nuxt": "^4.4.8",
     "nuxt-studio": "^1.7.0",
     "prettier": "^3.8.3",
     "prettier-plugin-organize-attributes": "^1.0.0",
