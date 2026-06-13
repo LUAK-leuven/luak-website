@@ -70,8 +70,7 @@ class GearService {
           .order('title');
 
         if (topos === null) {
-          console.warn('getAllTopos', error);
-          return [];
+          throw new Error('getAllTopos', { cause: error });
         }
 
         return topos.map((topo) => ({
@@ -107,8 +106,7 @@ class GearService {
           `,
           );
         if (error) {
-          console.warn('getCompositeGearItems: ', error);
-          return [];
+          throw new Error('getCompositeGearItems', { cause: error });
         }
 
         return data.map((it) => ({
@@ -134,8 +132,7 @@ class GearService {
           );
 
         if (topos === null) {
-          console.warn('getAllTopos', error);
-          return [];
+          throw new Error('getAllTopos', { cause: error });
         }
 
         return topos.map((topo) => ({
@@ -158,9 +155,6 @@ class GearService {
   }
 }
 
-let gearServiceInstance: GearService | undefined = undefined;
 export function gearService(): GearService {
-  if (gearServiceInstance === undefined)
-    gearServiceInstance = new GearService();
-  return gearServiceInstance;
+  return new GearService();
 }
