@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import type { Dayjs } from 'dayjs';
+import { navigateTo } from '~/tests/e2e/fixtures';
 
 export class RentalFormPage {
   private readonly page: Page;
@@ -46,7 +47,13 @@ export class RentalFormPage {
   }
 
   async navigate() {
-    await this.page.goto(this.path);
+    await navigateTo(this.page, this.path);
+  }
+
+  static async navigate(page: Page) {
+    const instance = new RentalFormPage(page);
+    await instance.navigate();
+    return instance;
   }
 
   selectComponent(which: 'gear' | 'topos') {
@@ -87,7 +94,7 @@ export class RentalFormPage {
   async selectMember(memberName: string) {
     const { search, option } = this.selectMemberComponent();
     await search.click();
-    await option(memberName).click({ timeout: 2000 });
+    await option(memberName).click();
   }
 
   async selectPaymentMethod(paymentMethod: 'cash' | 'transfer') {
@@ -129,7 +136,7 @@ export class RentalFormPage {
   async selectSearchBar(which: 'gear' | 'topos') {
     const { search, options } = this.selectComponent(which);
     await search.click();
-    await expect(options).toBeVisible({ timeout: 2000 });
+    await expect(options).toBeVisible();
   }
 
   async addItem(which: 'gear' | 'topos', name: string, amount?: number) {

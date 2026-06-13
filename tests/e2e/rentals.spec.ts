@@ -1,17 +1,21 @@
 import { expect, test } from '@playwright/test';
 import { RentalFormPage } from './pages/rental/form.page';
-import { LoginPage } from './pages/login.page';
-import { cleanDatabase, navigateTo, testUsers } from './fixtures';
+import {
+  authStateFile,
+  cleanDatabase,
+  navigateTo,
+  testUsers,
+} from './fixtures';
 import dayjs from 'dayjs';
 import { RentalDetailsPage } from '~/tests/e2e/pages/rental/details.page';
 import { RentalsOverviewPage } from '~/tests/e2e/pages/rentals-overview.page';
 import { uuidRegex, sleep } from '~/utils/utils';
 import { RentalReturnPage } from './pages/rental/return.page';
 
+test.use({ storageState: authStateFile('boardMember') });
+
 test.describe('create a new rental', () => {
   test.beforeEach(async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    await loginPage.loginAsserted(testUsers.boardMember);
     await navigateTo(page, '/board/rentals/form');
   });
 

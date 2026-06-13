@@ -1,29 +1,27 @@
 import { expect, test } from '@playwright/test';
-import { login, testUsers } from '~/tests/e2e/fixtures';
-import { LoginPage } from '~/tests/e2e/pages/login.page';
+import { authStateFile, testUsers } from '~/tests/e2e/fixtures';
 import { ProfileOverviewPage } from '~/tests/e2e/pages/profile-overview.page';
 
 Object.entries(testUsers).forEach(([testUser, email]) => {
-  test(`${testUser} - overview page shows name`, async ({ page }) => {
-    await login(page, email);
-    const profilePage = new ProfileOverviewPage(page);
-    await expect(profilePage.hiUserName).toHaveText(`Hi ${email} 👋`);
+  test.describe(testUser, () => {
+    test.use({
+      storageState: authStateFile(testUser as keyof typeof testUsers),
+    });
+
+    test(`Overview page shows name`, async ({ page }) => {
+      const profilePage = await ProfileOverviewPage.navigate(page);
+      await expect(profilePage.hiUserName).toHaveText(`Hi ${email} 👋`);
+    });
   });
 });
 
-[
-  testUsers.unpaidMembership,
-  testUsers.nonMember,
-  testUsers.paidLastYear,
-].forEach((user) => {
+(['unpaidMembership', 'nonMember', 'paidLastYear'] as const).forEach((user) => {
   test.describe(user, () => {
-    test.beforeEach(async ({ page }) => {
-      const loginPage = new LoginPage(page);
-      await loginPage.loginAsserted(user);
-    });
+    test.use({ storageState: authStateFile(user) });
 
     test(`buyMembership - card is visible`, async ({ page }) => {
-      const profilePage = new ProfileOverviewPage(page);
+      const profilePage = await ProfileOverviewPage.navigate(page);
+
       await expect(profilePage.buyMembershipButton).toBeVisible();
 
       await profilePage.buyMembershipButton.click();
@@ -31,10 +29,13 @@ Object.entries(testUsers).forEach(([testUser, email]) => {
   });
 });
 
-test('buyMembership - card is hidden and membership card is visible', async ({
-  page,
-}) => {
-  await login(page, testUsers.paidMembership);
-  const profilePage = new ProfileOverviewPage(page);
-  await expect(profilePage.buyMembershipButton).toBeHidden();
+test.describe('paidMembership', () => {
+  test.use({ storageState: authStateFile('paidMembership') });
+
+  test('buyMembership - card is hidden and membership card is visible', async ({
+    page,
+  }) => {
+    const profilePage = await ProfileOverviewPage.navigate(page);
+    await expect(profilePage.buyMembershipButton).toBeHidden();
+  });
 });

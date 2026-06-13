@@ -1,24 +1,21 @@
 import { expect, test } from '@playwright/test';
 import { LostGearPage } from './pages/lost-gear.page';
-import { cleanDatabase, login, testUsers } from './fixtures';
+import { authStateFile, cleanDatabase, testUsers } from './fixtures';
 import { RentalFormPage } from './pages/rental/form.page';
 import { RentalDetailsPage } from './pages/rental/details.page';
 import { RentalReturnPage } from './pages/rental/return.page';
 import { TopoLibraryPage } from './pages/topos/library.page';
 import { GearInventoryPage } from './pages/gear/inventory.page';
 
-test.describe('lost gear form', () => {
-  test.beforeEach(async ({ page }) => {
-    await login(page, testUsers.boardMember);
-  });
+test.use({ storageState: authStateFile('boardMember') });
 
+test.describe('lost gear form', () => {
   test.beforeAll(async () => {
     await cleanDatabase();
   });
 
   test('can mark a topo as lost', async ({ page }) => {
-    const rentalFormPage = new RentalFormPage(page);
-    await rentalFormPage.navigate();
+    const rentalFormPage = await RentalFormPage.navigate(page);
 
     // Create a rental
     await rentalFormPage.fillForm({
@@ -98,8 +95,7 @@ test.describe('lost gear form', () => {
   });
 
   test('can mark a gear item as lost', async ({ page }) => {
-    const rentalFormPage = new RentalFormPage(page);
-    await rentalFormPage.navigate();
+    const rentalFormPage = await RentalFormPage.navigate(page);
 
     // Create a rental
     await rentalFormPage.fillForm({

@@ -30,9 +30,9 @@ export class LoginPage {
   }
 
   async login(email: string, password: string = '123456789') {
-    await this.email.fill(email, { timeout: 2000 });
-    await this.password.fill(password, { timeout: 2000 });
-    await this.submitButton.click({ timeout: 2000 });
+    await this.email.fill(email);
+    await this.password.fill(password);
+    await this.submitButton.click();
 
     try {
       await expect
@@ -72,7 +72,7 @@ export class LoginPage {
       }
       case 'loading': {
         await expect(this.submitButton.getByTestId('loading')).toBeHidden();
-        await this.page.waitForURL('/profile/overview', { timeout: 2_000 });
+        await this.page.waitForURL('/profile/overview');
         return;
       }
     }
@@ -81,6 +81,6 @@ export class LoginPage {
   async logout() {
     await navigateTo(this.page, '/profile/overview');
     await this.logoutButton.click();
-    await this.page.waitForURL(LoginPage.path, { timeout: 2_000 });
+    await this.page.waitForURL(LoginPage.path);
   }
 }

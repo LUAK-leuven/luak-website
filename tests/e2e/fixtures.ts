@@ -9,11 +9,15 @@ export const testUsers = {
   paidLastYear: 'paid_last_year@test.com',
   paidMembership: 'paid_this_year@test.com',
   boardMember: 'board_member@test.com',
-};
+} as const;
 
 export async function login(page: Page, user: string) {
   const loginPage = new LoginPage(page);
   await loginPage.loginAsserted(user);
+}
+
+export function authStateFile(user: keyof typeof testUsers) {
+  return `./tests/e2e/.auth/${user}.json`;
 }
 
 export async function navigateTo(page: Page, url: string) {
