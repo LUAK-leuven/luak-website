@@ -51,17 +51,19 @@ export class RentalDao {
       .eq('RentedGear.gear_item_id', gearItemId)
       .throwOnError();
 
-    return data.map((x) => ({
-      id: x.id as RentalId,
-      rentedAmount: sumBy(
-        x.RentedGear,
-        (x) => x.rented_amount - x.returned_amount - x.lost_amount,
-      ),
-      memberName: x.Users
-        ? getFullName(x.Users)
-        : x.contact_info
-          ? parseContactInfo(JSON.parse(x.contact_info)).fullName
-          : 'Failed to get name',
-    }));
+    return data
+      .map((x) => ({
+        id: x.id as RentalId,
+        rentedAmount: sumBy(
+          x.RentedGear,
+          (x) => x.rented_amount - x.returned_amount - x.lost_amount,
+        ),
+        memberName: x.Users
+          ? getFullName(x.Users)
+          : x.contact_info
+            ? parseContactInfo(JSON.parse(x.contact_info)).fullName
+            : 'Failed to get name',
+      }))
+      .filter((x) => x.rentedAmount > 0);
   }
 }
