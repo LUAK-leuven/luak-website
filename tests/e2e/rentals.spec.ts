@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { RentalFormPage } from './pages/rental/form.page';
 import { LoginPage } from './pages/login.page';
-import { navigateTo, testUsers } from './fixtures';
+import { cleanDatabase, navigateTo, testUsers } from './fixtures';
 import dayjs from 'dayjs';
 import { RentalDetailsPage } from '~/tests/e2e/pages/rental/details.page';
 import { RentalsOverviewPage } from '~/tests/e2e/pages/rentals-overview.page';
@@ -13,6 +13,10 @@ test.describe('create a new rental', () => {
     const loginPage = new LoginPage(page);
     await loginPage.loginAsserted(testUsers.boardMember);
     await navigateTo(page, '/board/rentals/form');
+  });
+
+  test.beforeAll(async () => {
+    await cleanDatabase();
   });
 
   test('create - defaults should be filled in', async ({ page }) => {

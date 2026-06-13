@@ -1,23 +1,19 @@
 import { expect, test } from '@playwright/test';
 import { LostGearPage } from './pages/lost-gear.page';
-import { login, testUsers } from './fixtures';
+import { cleanDatabase, login, testUsers } from './fixtures';
 import { RentalFormPage } from './pages/rental/form.page';
 import { RentalDetailsPage } from './pages/rental/details.page';
 import { RentalReturnPage } from './pages/rental/return.page';
 import { TopoLibraryPage } from './pages/topos/library.page';
 import { GearInventoryPage } from './pages/gear/inventory.page';
-import { TestDao } from './global-setup-and-teardown/testDao';
-import { getSupabaseClientForTests } from './global-setup-and-teardown/validateSupabaseUrl';
 
 test.describe('lost gear form', () => {
   test.beforeEach(async ({ page }) => {
     await login(page, testUsers.boardMember);
   });
 
-  test.afterAll(async () => {
-    const testDao = new TestDao(getSupabaseClientForTests()!);
-    await testDao.cleanInventoryEvents();
-    await testDao.clearRentals();
+  test.beforeAll(async () => {
+    await cleanDatabase();
   });
 
   test('can mark a topo as lost', async ({ page }) => {

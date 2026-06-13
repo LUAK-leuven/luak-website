@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
 
-dotenv.config({ path: ['.env', '.env.local', '.env.test'], quiet: true });
+dotenv.config({ path: ['.env', '.env.local'], quiet: true });
 
 export default defineConfig({
   globalSetup: './tests/e2e/global-setup-and-teardown/prodDbGuard.ts',
@@ -10,9 +10,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 1 : 1,
-  reporter: process.env.CI
-    ? [['github'], ['dot'], ['html', { open: 'never' }]]
-    : 'html',
+  reporter: process.env.CI ? [['dot'], ['html', { open: 'never' }]] : 'html',
 
   use: {
     baseURL: process.env.BASE_URL,

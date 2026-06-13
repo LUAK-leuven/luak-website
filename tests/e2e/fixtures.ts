@@ -1,5 +1,7 @@
 import type { Page } from '@playwright/test';
 import { LoginPage } from '~/tests/e2e/pages/login.page';
+import { TestDao } from './global-setup-and-teardown/testDao';
+import { getSupabaseClientForTests } from './global-setup-and-teardown/validateSupabaseUrl';
 
 export const testUsers = {
   nonMember: 'non_member@test.com',
@@ -16,4 +18,15 @@ export async function login(page: Page, user: string) {
 
 export async function navigateTo(page: Page, url: string) {
   await page.goto(url);
+}
+
+export async function cleanDatabase() {
+  const supabaseClient = getSupabaseClientForTests();
+  if (supabaseClient) {
+    const testDao = new TestDao(supabaseClient);
+    await testDao.cleanInventoryEvents();
+    await testDao.clearRentals();
+  } else {
+    console.warn('Supabase client not available, skipping database cleanup');
+  }
 }
