@@ -1,41 +1,29 @@
-export async function useMemberService() {
+import { UserService } from '~/services/userService';
+import type { UserId } from '~/types/user';
+
+export function useUserService() {
   const user = useSupabaseUser();
+  const supabaseClient = useSupabaseClient();
+  const userService = new UserService(supabaseClient);
 
-  const { data: paidMemberships, error } = await useAsyncData(
-    'membershipInfo',
-    async () => {
-      if (user.value === null) return null;
-      const { data, error } = await useSupabaseClient()
-        .from('Users')
-        .select('first_name, last_name, Memberships(year, Payments(approved))')
-        .eq('id', user.value.sub)
-        .eq('Memberships.Payments.approved', true)
-        .single();
-      if (error) {
-        console.warn('error', error);
-        throw error;
-      }
-      return data.Memberships.filter(({ Payments }) =>
-        Payments.some(({ approved }) => approved),
-      ).map(({ year }) => year);
-    },
-    { watch: [user], lazy: false },
-  );
-  if (error.value) console.warn('membershipInfo', error.value);
-
-  const wasMemberLastYear = computed(() => {
-    if (paidMemberships.value === null) return false;
-    const currentYear = getLuakYear();
-    return (
-      !paidMemberships.value.includes(currentYear) &&
-      paidMemberships.value.includes(currentYear - 1)
+  const getAllUsers = async () =>
+    await useLazyAsyncData(
+      'getAllUsers',
+      async () => await userService.getAllUsers(),
     );
-  });
 
-  const isFirstTimeMember = computed(() => {
-    if (paidMemberships.value === null) return false;
-    return paidMemberships.value.length === 0;
-  });
+  const getMembershipInfo = async () => {
+    const { data, error } = await useAsyncData(
+      `getMembershipInfo-${user.value?.sub ?? 'null'}`,
+      async () => {
+        if (user.value === null) throw new Error('User not logged in');
+        return await userService.getMembershipYears(user.value.sub as UserId);
+      },
+      { watch: [user], lazy: false },
+    );
+    watch(error, (value) => value && showError(value));
+    return computed(() => data.value!);
+  };
 
-  return { paidMemberships, wasMemberLastYear, isFirstTimeMember };
+  return { getMembershipInfo, getAllUsers };
 }

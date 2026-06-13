@@ -3,7 +3,7 @@ import type { Database } from '~/types/database.types';
 import type { GearItemId } from '~/types/gear';
 import { sumBy } from '~/utils/utils';
 import type { RentalId } from '~/types/rental';
-import { getFullName } from '~/utils/userService';
+import { getFullName } from '~/services/userService';
 import { parseContactInfo } from '~/model/rental';
 
 export class RentalDao {
