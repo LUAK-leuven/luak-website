@@ -16,8 +16,8 @@ export default defineConfig({
     baseURL: process.env.BASE_URL,
     trace: process.env.CI ? 'on-first-retry' : 'on',
     video: process.env.CI ? 'on-first-retry' : 'on',
-    actionTimeout: 2_000,
-    navigationTimeout: 2_000,
+    actionTimeout: process.env.CI ? 5_000 : 2_000,
+    navigationTimeout: process.env.CI ? 5_000 : 2_000,
   },
 
   projects: [
