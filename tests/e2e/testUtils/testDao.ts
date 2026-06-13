@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 export class TestDao {
   constructor(private readonly supabase: SupabaseClient<Database>) {}
 
-  async cleanInventoryEvents() {
+  readonly cleanInventoryEvents = async () => {
     const { error } = await this.supabase
       .from('InventoryItemEvents')
       .delete()
@@ -16,9 +16,9 @@ Failed to clear InventoryItemEvents:
   error: ${JSON.stringify(error)}
       `);
     }
-  }
+  };
 
-  async clearRentals() {
+  readonly clearRentals = async () => {
     const { error } = await this.supabase
       .from('Rentals')
       .delete()
@@ -29,5 +29,5 @@ Failed to clear rentals:
   error: ${JSON.stringify(error)}
       `);
     }
-  }
+  };
 }

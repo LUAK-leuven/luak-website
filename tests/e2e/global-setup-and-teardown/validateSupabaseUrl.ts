@@ -1,21 +1,3 @@
-import { createClient } from '@supabase/supabase-js';
-import type { Database } from '~/types/database.types';
-
-export function getSupabaseClientForTests() {
-  if (
-    !process.env.NUXT_PUBLIC_SUPABASE_URL ||
-    !process.env.NUXT_SUPABASE_SECRET_KEY
-  ) {
-    return null;
-  }
-  validateSupabaseUrl(process.env.NUXT_PUBLIC_SUPABASE_URL);
-  const supabase = createClient<Database>(
-    process.env.NUXT_PUBLIC_SUPABASE_URL,
-    process.env.NUXT_SUPABASE_SECRET_KEY, // IMPORTANT: secret key in order to bypass RLS
-  );
-  return supabase;
-}
-
 export function validateSupabaseUrl(supabaseUrl: string) {
   if (supabaseUrl.includes('supabase.co')) {
     console.error(
