@@ -14,13 +14,15 @@ import { computeRentalStatus } from '~/utils/rental/computeStatus';
 import dayjs from 'dayjs';
 import { parseContactInfo, type ContactInfo } from '~/model/rental';
 
-export const rentalService = (
-  supabaseClient: SupabaseClient<Database> = useSupabaseClient(),
-) => ({
-  async saveRental(
+export class RentalService {
+  constructor(
+    private readonly supabaseClient: SupabaseClient<Database> = useSupabaseClient(),
+  ) {}
+
+  readonly saveRental = async (
     rental: UnsavedRental,
-  ): Promise<{ id: RentalId | undefined; error: string | undefined }> {
-    const { error, data } = await supabaseClient.rpc('create_rental', {
+  ): Promise<{ id: RentalId | undefined; error: string | undefined }> => {
+    const { error, data } = await this.supabaseClient.rpc('create_rental', {
       p_board_member_id: rental.boardMemberId,
       p_member_id: rental.memberId ?? null,
       p_date_borrow: rental.dateBorrow,
@@ -49,9 +51,9 @@ export const rentalService = (
       id: (data as RentalId | null) ?? undefined,
       error: error?.message,
     };
-  },
+  };
 
-  async getRentals(): Promise<
+  readonly getRentals = async (): Promise<
     {
       id: RentalId;
       memberName: string;
@@ -59,8 +61,8 @@ export const rentalService = (
       dateReturn: string;
       status: RentalStatus;
     }[]
-  > {
-    const { data, error } = await supabaseClient.from('Rentals').select(
+  > => {
+    const { data, error } = await this.supabaseClient.from('Rentals').select(
       `
         id,
         member:Users!Rentals_member_id_fkey (
@@ -102,8 +104,8 @@ export const rentalService = (
         : undefined;
 
       const rentalStatus = computeRentalStatus({
-        gear: rentedGearFromDb(rental.RentedGear),
-        topos: rentedToposFromDb(rental.RentedTopos),
+        gear: this.rentedGearFromDb(rental.RentedGear),
+        topos: this.rentedToposFromDb(rental.RentedTopos),
         depositReturned: rental.deposit_returned,
       });
       const isReserved = dayjs(rental.date_borrow).isAfter(dayjs());
@@ -120,10 +122,12 @@ export const rentalService = (
         status: isReserved ? 'reserved' : rentalStatus,
       };
     });
-  },
+  };
 
-  async getRental(rentalId: RentalId): Promise<RentalDetails | null> {
-    const { data: rental, error } = await supabaseClient
+  readonly getRental = async (
+    rentalId: RentalId,
+  ): Promise<RentalDetails | null> => {
+    const { data: rental, error } = await this.supabaseClient
       .from('Rentals')
       .select(
         `
@@ -187,7 +191,7 @@ export const rentalService = (
             phoneNumber: undefined,
           };
 
-    const publicRentalDetails = rentalFromDb(rental);
+    const publicRentalDetails = this.rentalFromDb(rental);
     return {
       ...publicRentalDetails,
       member: contactInfo,
@@ -195,10 +199,13 @@ export const rentalService = (
       boardMember: getFullName(rental.board_member),
       comments: rental.comments ?? undefined,
     };
-  },
+  };
 
-  async updateRental(id: RentalId, rentalUpdate: Omit<RentalUpdate, 'id'>) {
-    const { error } = await supabaseClient.rpc('update_rental', {
+  readonly updateRental = async (
+    id: RentalId,
+    rentalUpdate: Omit<RentalUpdate, 'id'>,
+  ) => {
+    const { error } = await this.supabaseClient.rpc('update_rental', {
       p_rental_id: id,
       p_date_return: rentalUpdate.dateReturn,
       p_deposit_returned: rentalUpdate.depositReturned,
@@ -208,13 +215,13 @@ export const rentalService = (
     });
     if (error) console.warn('updateRental: ', error);
     return { error: error?.message };
-  },
+  };
 
-  async editRental(
+  readonly editRental = async (
     id: RentalId,
     rental: Omit<Omit<UnsavedRental, 'memberId'>, 'boardMemberId'>,
-  ) {
-    const { error } = await supabaseClient.rpc('edit_rental', {
+  ) => {
+    const { error } = await this.supabaseClient.rpc('edit_rental', {
       p_rental_id: id,
       p_contact_info: rental.contactInfo
         ? JSON.stringify(rental.contactInfo)
@@ -239,12 +246,12 @@ export const rentalService = (
     });
     if (error) console.warn('editRental: ', error);
     return { error: error?.message };
-  },
+  };
 
-  async getRentalsForUser(
+  readonly getRentalsForUser = async (
     userId: UserId,
-  ): Promise<PublicRentalDetails[] | null> {
-    const { data: rentals, error } = await supabaseClient
+  ): Promise<PublicRentalDetails[] | null> => {
+    const { data: rentals, error } = await this.supabaseClient
       .from('Rentals')
       .select(
         `
@@ -282,9 +289,61 @@ export const rentalService = (
       return null;
     }
 
-    return rentals.map(rentalFromDb);
-  },
-});
+    return rentals.map(this.rentalFromDb);
+  };
+
+  private readonly rentalFromDb = (rental: {
+    id: string;
+    date_borrow: string;
+    date_return: string;
+    deposit: number;
+    deposit_returned: boolean;
+    payment_method: 'cash' | 'transfer';
+    RentedGear: DBRentedGear[];
+    RentedTopos: DBRentedTopos[];
+  }): PublicRentalDetails => {
+    const gear = this.rentedGearFromDb(rental.RentedGear);
+    const topos = this.rentedToposFromDb(rental.RentedTopos);
+
+    const r = {
+      id: rental.id as RentalId,
+      dateBorrow: rental.date_borrow,
+      dateReturn: rental.date_return,
+      depositFee: rental.deposit,
+      depositReturned: rental.deposit_returned,
+      gear: sortBy(gear, 'name'),
+      topos: sortBy(topos, 'name'),
+      paymentMethod: rental.payment_method,
+    } satisfies Omit<PublicRentalDetails, 'status'>;
+
+    const rentalStatus = computeRentalStatus(r);
+    const isReserved = dayjs(r.dateBorrow).isAfter(dayjs());
+    const status = isReserved ? 'reserved' : rentalStatus;
+    return { ...r, status };
+  };
+
+  private readonly rentedGearFromDb = (
+    rentedGear: DBRentedGear[],
+  ): RentalDetails['gear'] =>
+    rentedGear.map((gearItem) => ({
+      id: gearItem.gear_item_id as GearItemId,
+      name: gearItem.GearItems.name,
+      rentedAmount: gearItem.rented_amount,
+      returnedAmount: gearItem.returned_amount,
+      lostAmount: gearItem.lost_amount,
+    }));
+
+  private readonly rentedToposFromDb = (
+    rentedTopos: DBRentedTopos[],
+  ): RentalDetails['topos'] =>
+    rentedTopos.map((topo) => ({
+      id: topo.topo_id as TopoId,
+      name: topo.Topos.title,
+      rentedAmount: topo.rented_amount,
+      returnedAmount: topo.returned_amount,
+      lostAmount: topo.lost_amount,
+    }));
+}
 
 type DBRentedGear = {
   gear_item_id: string;
@@ -308,56 +367,3 @@ type DBRentedTopos = {
   returned_amount: number;
   lost_amount: number;
 };
-
-const rentalFromDb = (rental: {
-  id: string;
-  date_borrow: string;
-  date_return: string;
-  deposit: number;
-  deposit_returned: boolean;
-  payment_method: 'cash' | 'transfer';
-  RentedGear: DBRentedGear[];
-  RentedTopos: DBRentedTopos[];
-}): PublicRentalDetails => {
-  const gear = rentedGearFromDb(rental.RentedGear);
-  const topos = rentedToposFromDb(rental.RentedTopos);
-
-  const r = {
-    id: rental.id as RentalId,
-    dateBorrow: rental.date_borrow,
-    dateReturn: rental.date_return,
-    depositFee: rental.deposit,
-    depositReturned: rental.deposit_returned,
-    gear: sortBy(gear, 'name'),
-    topos: sortBy(topos, 'name'),
-    paymentMethod: rental.payment_method,
-  } satisfies Omit<PublicRentalDetails, 'status'>;
-
-  const rentalStatus = computeRentalStatus(r);
-  const isReserved = dayjs(r.dateBorrow).isAfter(dayjs());
-  const status = isReserved ? 'reserved' : rentalStatus;
-  return { ...r, status };
-};
-
-const rentedGearFromDb = (
-  rentedGear: DBRentedGear[],
-): RentalDetails['gear'] => {
-  return rentedGear.map((gearItem) => ({
-    id: gearItem.gear_item_id as GearItemId,
-    name: gearItem.GearItems.name,
-    rentedAmount: gearItem.rented_amount,
-    returnedAmount: gearItem.returned_amount,
-    lostAmount: gearItem.lost_amount,
-  }));
-};
-
-const rentedToposFromDb = (
-  rentedTopos: DBRentedTopos[],
-): RentalDetails['topos'] =>
-  rentedTopos.map((topo) => ({
-    id: topo.topo_id as TopoId,
-    name: topo.Topos.title,
-    rentedAmount: topo.rented_amount,
-    returnedAmount: topo.returned_amount,
-    lostAmount: topo.lost_amount,
-  }));

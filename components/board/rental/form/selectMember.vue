@@ -18,7 +18,9 @@
   const email = defineModel<string | undefined>('email');
   const phone = defineModel<string | undefined>('phone');
 
-  const { data: users, pending } = await userService().getAllUsers();
+  const { getAllUsers } = useUserService();
+  const { data: users, pending } = await getAllUsers();
+
   type SelectableUser = {
     name: string;
     id: UserId | 'non-user';

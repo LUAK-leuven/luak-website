@@ -11,7 +11,9 @@
   const supabase = useSupabaseClient();
   const user = useSupabaseUser();
   const env = useRuntimeConfig().public;
-  const { isFirstTimeMember } = await useMemberService();
+
+  const { getMembershipInfo } = useUserService();
+  const membershipInfo = await getMembershipInfo();
 
   const buyMembership = handleSubmit(async (submitted) => {
     let membership;
@@ -52,7 +54,10 @@
   });
   const values = useFormValues();
   const price = computed(() => {
-    if (values.value.kbf_uiaa_member === 'kbf_luak' || isFirstTimeMember.value)
+    if (
+      values.value.kbf_uiaa_member === 'kbf_luak' ||
+      membershipInfo.value.isFirstTimeMember()
+    )
       return 15;
     else return 20;
   });
@@ -98,7 +103,7 @@
       </BoolField>
 
       <div class="flex w-full justify-end">
-        <div v-if="isFirstTimeMember" class="stat w-fit">
+        <div v-if="membershipInfo.isFirstTimeMember()" class="stat w-fit">
           <div class="stat-title">First time member discount</div>
           <div class="stat-value text-primary flex gap-2 justify-self-end">
             <div class="line-through text-red-500 text-2xl self-end">20 €</div>
