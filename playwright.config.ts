@@ -10,7 +10,9 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 1 : 1,
-  reporter: process.env.CI ? [['github'], ['dot'], ['html']] : 'html',
+  reporter: process.env.CI
+    ? [['github'], ['dot'], ['html', { open: 'never' }]]
+    : 'html',
 
   use: {
     baseURL: process.env.BASE_URL,

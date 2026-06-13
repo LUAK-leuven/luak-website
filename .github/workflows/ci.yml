@@ -35,7 +35,7 @@ jobs:
         with:
           name: playwright-report
           path: ./playwright-report/
-          retention-days: 30
+          retention-days: 5
       - name: Stop supabase server
         if: always()
         run: yarn supabase stop

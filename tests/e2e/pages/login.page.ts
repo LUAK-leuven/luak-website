@@ -30,9 +30,9 @@ export class LoginPage {
   }
 
   async login(email: string, password: string = '123456789') {
-    await this.email.fill(email);
-    await this.password.fill(password);
-    await this.submitButton.click();
+    await this.email.fill(email, { timeout: 2000 });
+    await this.password.fill(password, { timeout: 2000 });
+    await this.submitButton.click({ timeout: 2000 });
 
     try {
       await expect
@@ -59,44 +59,16 @@ export class LoginPage {
 
   async loginAsserted(email: string, password: string = '123456789') {
     await navigateTo(this.page, LoginPage.path);
-    let result: 'error' | 'loading' | 'timeout' = await this.login(
+    const result: 'error' | 'loading' | 'timeout' = await this.login(
       email,
       password,
     );
     switch (result) {
       case 'error': {
-        result = await this.login(email, password);
-        switch (result) {
-          case 'error': {
-            throw new Error(`Error - Failed to login user ${email}.`);
-          }
-          case 'timeout': {
-            throw new Error(`Timeout - Failed to login user ${email}.`);
-          }
-          case 'loading': {
-            await expect(this.submitButton.getByTestId('loading')).toBeHidden();
-            await this.page.waitForURL('/profile/overview', { timeout: 2_000 });
-            return;
-          }
-        }
-        break;
+        throw new Error(`Error - Failed to login user ${email}.`);
       }
       case 'timeout': {
-        result = await this.login(email, password);
-        switch (result) {
-          case 'error': {
-            throw new Error(`Error - Failed to login user ${email}.`);
-          }
-          case 'timeout': {
-            throw new Error(`Timeout - Failed to login user ${email}.`);
-          }
-          case 'loading': {
-            await expect(this.submitButton.getByTestId('loading')).toBeHidden();
-            await this.page.waitForURL('/profile/overview', { timeout: 2_000 });
-            return;
-          }
-        }
-        break;
+        throw new Error(`Timeout - Failed to login user ${email}.`);
       }
       case 'loading': {
         await expect(this.submitButton.getByTestId('loading')).toBeHidden();
@@ -109,6 +81,6 @@ export class LoginPage {
   async logout() {
     await navigateTo(this.page, '/profile/overview');
     await this.logoutButton.click();
-    await this.page.waitForURL(LoginPage.path);
+    await this.page.waitForURL(LoginPage.path, { timeout: 2_000 });
   }
 }

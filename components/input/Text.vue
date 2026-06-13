@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import type { InputTypeHTMLAttribute } from 'vue';
+  import Input from '../shared/Input.vue';
 
   const props = withDefaults(
     defineProps<{
@@ -49,7 +50,7 @@
         'input-error': error,
       }">
       <slot name="label1" />
-      <input
+      <Input
         v-model="model"
         class="w-full"
         :class="{ 'bg-gray-300': disabled }"

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import Button from '../shared/Button.vue';
+
   const supabase = useSupabaseClient();
   const logout = async () => {
     await supabase.auth.signOut();
@@ -14,12 +16,9 @@
       <strong>{{ user?.email }}</strong>
     </template>
     <template #actions>
-      <button
-        class="btn btn-error"
-        data-testId="profile.logout"
-        @click="logout">
+      <Button class="btn-error" data-testId="profile.logout" @click="logout">
         Log out
-      </button>
+      </Button>
     </template>
   </UserCard>
 </template>

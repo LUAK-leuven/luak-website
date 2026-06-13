@@ -87,13 +87,7 @@ export class RentalFormPage {
   async selectMember(memberName: string) {
     const { search, option } = this.selectMemberComponent();
     await search.click();
-    try {
-      await option(memberName).click({ timeout: 200 });
-    } catch {
-      await search.blur();
-      await search.click();
-      await option(memberName).click({ timeout: 200 });
-    }
+    await option(memberName).click({ timeout: 2000 });
   }
 
   async selectPaymentMethod(paymentMethod: 'cash' | 'transfer') {
@@ -135,13 +129,7 @@ export class RentalFormPage {
   async selectSearchBar(which: 'gear' | 'topos') {
     const { search, options } = this.selectComponent(which);
     await search.click();
-    try {
-      await expect(options).toBeVisible({ timeout: 200 });
-    } catch {
-      await search.blur();
-      await search.click();
-      await expect(options).toBeVisible({ timeout: 200 });
-    }
+    await expect(options).toBeVisible({ timeout: 2000 });
   }
 
   async addItem(which: 'gear' | 'topos', name: string, amount?: number) {

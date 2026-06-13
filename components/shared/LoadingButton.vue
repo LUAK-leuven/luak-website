@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import Button from './Button.vue';
+
   const props = withDefaults(
     defineProps<{
       text: string;
@@ -19,7 +21,7 @@
 </script>
 
 <template>
-  <button
+  <Button
     class="btn btn-primary w-fit"
     :class="{ 'btn-disabled': disabled }"
     :disabled="disabled"
@@ -30,5 +32,5 @@
       class="loading loading-spinner"
       data-testId="loading" />
     <span v-else data-testId="button-text">{{ text }}</span>
-  </button>
+  </Button>
 </template>

@@ -2,6 +2,7 @@
   import PaymentModal from '~/components/PaymentModal.vue';
   import type { RentalDetails } from '~/types/rental';
   import RentalItem from './rentalItem.vue';
+  import Button from '~/components/shared/Button.vue';
 
   const props = defineProps<{
     rental: RentalDetails;
@@ -99,7 +100,7 @@
   </div>
   <hr class="my-3" />
   <div class="flex justify-end gap-3">
-    <button
+    <Button
       class="btn btn-secondary"
       data-testId="editButton"
       @click="
@@ -110,10 +111,10 @@
           })
       ">
       Edit
-    </button>
-    <button class="btn btn-primary" data-testId="returnButton" @click="edit()">
+    </Button>
+    <Button class="btn btn-primary" data-testId="returnButton" @click="edit()">
       Return
-    </button>
+    </Button>
   </div>
 
   <PaymentModal

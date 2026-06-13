@@ -6,6 +6,7 @@
     shift,
     autoUpdate,
   } from '@floating-ui/vue';
+  import Input from '../shared/Input.vue';
 
   const props = withDefaults(
     defineProps<{
@@ -69,12 +70,12 @@
       <span v-if="hidden && selectedItem !== undefined" class="label w-max">
         <slot name="item" :data="selectedItem" />
       </span>
-      <input
+      <Input
         v-model="textValue"
         :class="{
           'w-0': hidden && selectedItem !== undefined,
         }"
-        tabindex="0"
+        :tabindex="0"
         type="text"
         :placeholder="placeholder"
         :disabled="disable"
