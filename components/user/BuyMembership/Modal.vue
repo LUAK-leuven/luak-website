@@ -12,8 +12,9 @@
   const user = useSupabaseUser();
   const env = useRuntimeConfig().public;
 
-  const { getMembershipInfo } = useUserService();
-  const membershipInfo = await getMembershipInfo();
+  const membershipInfo = await useUserService().getMembershipInfo({
+    authRequired: true,
+  });
 
   const buyMembership = handleSubmit(async (submitted) => {
     let membership;

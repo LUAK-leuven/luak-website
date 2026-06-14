@@ -6,6 +6,12 @@ export class Membership {
     }[],
   ) {}
 
+  private get paidMemberships() {
+    return this.memberships
+      .filter(({ paid }) => paid)
+      .map(({ membershipYear }) => membershipYear);
+  }
+
   readonly hasActiveMembership = (luakYear: number = getLuakYear()) => {
     return findBy(this.memberships, 'membershipYear', luakYear)?.paid ?? false;
   };
@@ -18,7 +24,7 @@ export class Membership {
     );
   };
 
-  readonly isFirstTimeMember = () => this.memberships.length === 0;
+  readonly isFirstTimeMember = () => this.paidMemberships.length === 0;
 
   readonly getMembershipStatus = (luakYear: number = getLuakYear()) => {
     const membership = findBy(this.memberships, 'membershipYear', luakYear);

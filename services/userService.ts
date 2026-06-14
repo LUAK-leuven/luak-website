@@ -1,7 +1,6 @@
 import type { Database } from '~/types/database.types';
 import type { UserId } from '~/types/user';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { Membership } from '~/model/Membership';
 
 export class UserService {
   constructor(
@@ -57,7 +56,7 @@ export class UserService {
       paid: x.Payments.some(({ approved }) => approved),
     }));
 
-    return new Membership(membershipYears);
+    return membershipYears;
   };
 }
 

@@ -13,6 +13,7 @@ import type { Database } from '~/types/database.types';
 import { computeRentalStatus } from '~/utils/rental/computeStatus';
 import dayjs from 'dayjs';
 import { parseContactInfo, type ContactInfo } from '~/model/rental';
+import { getFullName } from '~/services/userService';
 
 export class RentalService {
   constructor(

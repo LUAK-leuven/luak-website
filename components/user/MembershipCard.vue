@@ -7,8 +7,8 @@
       You have a valid membership for {{ luak_year - 2000 }}-{{
         luak_year - 2000 + 1
       }}
-      ✅</template
-    >
+      ✅
+    </template>
     <template #description>
       🎉 Congratulations! You're all set for the upcoming academic year.
     </template>
