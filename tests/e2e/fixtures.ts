@@ -1,21 +1,14 @@
 import type { Page } from '@playwright/test';
 import { LoginPage } from '~/tests/e2e/pages/login.page';
 import { testServiceBuilder } from './testUtils/testServices';
+import type { TestUser, TestUserKey } from './testUtils/TestUser';
 
-export const testUsers = {
-  nonMember: 'non_member@test.com',
-  unpaidMembership: 'unpaid_membership@test.com',
-  paidLastYear: 'paid_last_year@test.com',
-  paidMembership: 'paid_this_year@test.com',
-  boardMember: 'board_member@test.com',
-} as const;
-
-export async function login(page: Page, user: string) {
+export async function login(page: Page, user: TestUser) {
   const loginPage = new LoginPage(page);
-  await loginPage.loginAsserted(user);
+  await loginPage.loginAsserted(user.email, user.password);
 }
 
-export function authStateFile(user: keyof typeof testUsers) {
+export function authStateFile(user: TestUserKey) {
   return `./tests/e2e/.auth/${user}.json`;
 }
 

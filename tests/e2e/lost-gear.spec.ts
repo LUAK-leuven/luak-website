@@ -1,11 +1,12 @@
 import { expect, test } from '@playwright/test';
 import { LostGearPage } from './pages/lost-gear.page';
-import { authStateFile, cleanDatabase, testUsers } from './fixtures';
+import { authStateFile, cleanDatabase } from './fixtures';
 import { RentalFormPage } from './pages/rental/form.page';
 import { RentalDetailsPage } from './pages/rental/details.page';
 import { RentalReturnPage } from './pages/rental/return.page';
 import { TopoLibraryPage } from './pages/topos/library.page';
 import { GearInventoryPage } from './pages/gear/inventory.page';
+import { testUsers } from './testUtils/TestUser';
 
 test.use({ storageState: authStateFile('boardMember') });
 
@@ -19,7 +20,7 @@ test.describe('lost gear form', () => {
 
     // Create a rental
     await rentalFormPage.fillForm({
-      member: testUsers.paidMembership,
+      memberName: testUsers.paidMembership.fullName,
       paymentMethod: 'cash',
     });
     await rentalFormPage.addItem('topos', 'flone', 2);
@@ -46,7 +47,7 @@ test.describe('lost gear form', () => {
     await expect(lostGearPage.title).toHaveText('Lost Gear');
     await lostGearPage.expectToHave({
       rental: {
-        member: testUsers.paidMembership,
+        member: testUsers.paidMembership.fullName,
         depositFee: 20,
         paymentMethod: 'cash',
       },
@@ -90,7 +91,7 @@ test.describe('lost gear form', () => {
     await rentalFormPage.selectSearchBar('topos');
     const { option } = rentalFormPage.selectComponent('topos');
     await expect(
-      option('Topo Flone').getByTestId('search.availableAmount'),
+      (await option('Topo Flone')).getByTestId('search.availableAmount'),
     ).toHaveText('1');
   });
 
@@ -99,7 +100,7 @@ test.describe('lost gear form', () => {
 
     // Create a rental
     await rentalFormPage.fillForm({
-      member: testUsers.paidMembership,
+      memberName: testUsers.paidMembership.fullName,
       paymentMethod: 'cash',
     });
 
@@ -128,7 +129,7 @@ test.describe('lost gear form', () => {
     await expect(lostGearPage.title).toHaveText('Lost Gear');
     await lostGearPage.expectToHave({
       rental: {
-        member: testUsers.paidMembership,
+        member: testUsers.paidMembership.fullName,
         depositFee: 20,
         paymentMethod: 'cash',
       },
@@ -174,7 +175,7 @@ test.describe('lost gear form', () => {
     await rentalFormPage.selectSearchBar('gear');
     const { option } = rentalFormPage.selectComponent('gear');
     await expect(
-      option(gearItemName).getByTestId('search.availableAmount'),
+      (await option(gearItemName)).getByTestId('search.availableAmount'),
     ).toHaveText('1');
   });
 });

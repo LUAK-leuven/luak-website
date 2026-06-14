@@ -38,3 +38,11 @@ begin
   returning id into membership_id;
   return membership_id;
 end;$$;
+
+--
+
+alter table "public"."Payments" drop constraint "Payments_membership_id_fkey";
+
+alter table "public"."Payments" add constraint "Payments_membership_id_fkey" FOREIGN KEY (membership_id) REFERENCES public."Memberships"(id) ON UPDATE CASCADE ON DELETE CASCADE not valid;
+
+alter table "public"."Payments" validate constraint "Payments_membership_id_fkey";

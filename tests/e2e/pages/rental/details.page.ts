@@ -1,7 +1,7 @@
 import { expect, type Page } from '@playwright/test';
-import { testUsers } from '~/tests/e2e/fixtures';
 import type { Dayjs } from 'dayjs';
 import type { RentalId } from '~/types/rental';
+import { testUsers } from '../../testUtils/TestUser';
 
 export class RentalDetailsPage {
   private readonly page: Page;
@@ -91,7 +91,9 @@ export class RentalDetailsPage {
     if (args.memberPhone) {
       await expect(this.member.phone).toHaveText(args.memberPhone);
     }
-    await expect(this.boardMember).toContainText(testUsers.boardMember);
+    await expect(this.boardMember).toContainText(
+      testUsers.boardMember.fullName,
+    );
     if (args.dateBorrow)
       await expect(this.dateBorrow).toHaveText(
         args.dateBorrow.format('YYYY-MM-DD'),

@@ -29,7 +29,7 @@ export class LoginPage {
     return this.page.getByTestId('login.password').getByTestId('error-message');
   }
 
-  async login(email: string, password: string = '123456789') {
+  async login(email: string, password: string) {
     await this.email.fill(email);
     await this.password.fill(password);
     await this.submitButton.click();
@@ -57,7 +57,7 @@ export class LoginPage {
     return (await this.errorMessage.isVisible()) ? 'error' : 'loading';
   }
 
-  async loginAsserted(email: string, password: string = '123456789') {
+  async loginAsserted(email: string, password: string) {
     await navigateTo(this.page, LoginPage.path);
     const result: 'error' | 'loading' | 'timeout' = await this.login(
       email,

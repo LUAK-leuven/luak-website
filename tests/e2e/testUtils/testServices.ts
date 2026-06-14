@@ -2,7 +2,7 @@ import { validateSupabaseUrl } from '../global-setup-and-teardown/validateSupaba
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '~/types/database.types';
 import { TestDao } from './testDao';
-import { UserTestService } from './UserTestService';
+import { TestUserService } from './TestUserService';
 
 function getSupabaseClientForTests() {
   if (
@@ -33,6 +33,6 @@ export const testServiceBuilder = useSingleton(() => {
   const supabase = useSingleton(() => getSupabaseClientForTests());
 
   const testDao = useSingleton(() => new TestDao(supabase()));
-  const userTestService = useSingleton(() => new UserTestService(supabase()));
+  const userTestService = useSingleton(() => new TestUserService(supabase()));
   return { testDao, userTestService };
 });

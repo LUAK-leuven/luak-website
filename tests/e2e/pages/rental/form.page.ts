@@ -72,7 +72,11 @@ export class RentalFormPage {
     return {
       search: this.page.getByPlaceholder(placeholder),
       options,
-      option: (name: string) => options.getByRole('button', { name: name }),
+      option: async (name: string) => {
+        const loc = options.getByRole('button', { name: name });
+        if ((await loc.count()) === 1) return loc;
+        else return loc.getByText(new RegExp(`^(⚠️ )?${name}$`));
+      },
       listItem: (name: string) => {
         const item = this.page
           .getByTestId('rental.form.listItem')
@@ -94,7 +98,7 @@ export class RentalFormPage {
   async selectMember(memberName: string) {
     const { search, option } = this.selectMemberComponent();
     await search.click();
-    await option(memberName).click();
+    await (await option(memberName)).click();
   }
 
   async selectPaymentMethod(paymentMethod: 'cash' | 'transfer') {
@@ -106,14 +110,14 @@ export class RentalFormPage {
   }
 
   async fillForm(args: {
-    member: string;
+    memberName: string;
     dateBorrow?: Dayjs;
     dateReturn?: Dayjs;
     comments?: string;
     depositFee?: number;
     paymentMethod: 'cash' | 'transfer';
   }) {
-    await this.selectMember(args.member);
+    await this.selectMember(args.memberName);
     if (args.dateBorrow) {
       await this.dateBorrow.fill(args.dateBorrow.format('YYYY-MM-DD'));
     }
@@ -142,7 +146,7 @@ export class RentalFormPage {
   async addItem(which: 'gear' | 'topos', name: string, amount?: number) {
     const { search, option, listItem } = this.selectComponent(which);
     await search.fill(name);
-    await option(name).click();
+    await (await option(name)).click();
     await listItem(name).name.isVisible();
     if (amount !== undefined)
       await listItem(name).amount.fill(amount.toString());

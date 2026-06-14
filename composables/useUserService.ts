@@ -24,7 +24,9 @@ export function useUserService() {
       },
       { watch: [user], lazy: false },
     );
-    watch(error, (value) => value && showError(value));
+    watch(error, (value) => {
+      if (value) throw value;
+    });
     return computed(() => new Membership(data.value ?? []));
   };
 

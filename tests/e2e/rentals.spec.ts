@@ -1,16 +1,12 @@
 import { expect, test } from '@playwright/test';
 import { RentalFormPage } from './pages/rental/form.page';
-import {
-  authStateFile,
-  cleanDatabase,
-  navigateTo,
-  testUsers,
-} from './fixtures';
+import { authStateFile, cleanDatabase, navigateTo } from './fixtures';
 import dayjs from 'dayjs';
 import { RentalDetailsPage } from '~/tests/e2e/pages/rental/details.page';
 import { RentalsOverviewPage } from '~/tests/e2e/pages/rentals-overview.page';
 import { uuidRegex, sleep } from '~/utils/utils';
 import { RentalReturnPage } from './pages/rental/return.page';
+import { testUsers } from './testUtils/TestUser';
 
 test.use({ storageState: authStateFile('boardMember') });
 
@@ -28,7 +24,7 @@ test.describe('create a new rental', () => {
 
     await expect(rentalFormPage.boardMember).toBeDisabled();
     await expect(rentalFormPage.boardMember).toHaveValue(
-      testUsers.boardMember + ' ',
+      testUsers.boardMember.fullName,
     );
     await expect(rentalFormPage.dateBorrow).toHaveValue(
       dayjs().format('YYYY-MM-DD'),
@@ -43,7 +39,7 @@ test.describe('create a new rental', () => {
     const rentalFormPage = new RentalFormPage(page);
     const member = testUsers.paidMembership;
     await rentalFormPage.fillForm({
-      member: member,
+      memberName: member.fullName,
       paymentMethod: 'cash',
     });
     await rentalFormPage.submit();
@@ -52,7 +48,7 @@ test.describe('create a new rental', () => {
 
     const rentalDetailsPage = new RentalDetailsPage(page);
     const rentalId = await rentalDetailsPage.expectToHave({
-      memberEmail: member,
+      memberEmail: member.email,
       dateBorrow: dayjs(),
       dateReturn: dayjs().add(3, 'w'),
       depositFee: 20,
@@ -83,7 +79,7 @@ test.describe('create a new rental', () => {
     await rentalFormPage.submit();
     await expect(page).toHaveURL(`/board/rentals/${rentalId}`);
     await rentalDetailsPage.expectToHave({
-      memberEmail: member,
+      memberEmail: member.email,
       dateBorrow: dayjs(),
       dateReturn: dayjs().add(3, 'w'),
       depositFee: 20,
@@ -117,8 +113,9 @@ test.describe('create a new rental', () => {
   test('create & partial return - a full rental', async ({ page }) => {
     // --- create a new rental ---
     const rentalFormPage = new RentalFormPage(page);
+    const testUser = testUsers.paidMembership;
     const formValues = {
-      member: testUsers.paidMembership,
+      memberName: testUser.fullName,
       dateBorrow: dayjs().subtract(2, 'd'),
       dateReturn: dayjs().subtract(2, 'd').add(4, 'w'),
       comments: 'yeeehaah',
@@ -142,7 +139,7 @@ test.describe('create a new rental', () => {
     const rentalDetailsPage = new RentalDetailsPage(page);
     const rentalId = await rentalDetailsPage.expectToHave({
       ...formValues,
-      memberEmail: formValues.member,
+      memberEmail: testUser.email,
       status: 'Not returned',
       numberOfItems: 3,
     });
@@ -201,7 +198,7 @@ test.describe('create a new rental', () => {
     // --- create a new rental ---
     const rentalFormPage = new RentalFormPage(page);
     const formValues = {
-      member: 'non-member',
+      memberName: 'non-member',
       paymentMethod: 'cash' as const,
     };
     const contactInfo = {

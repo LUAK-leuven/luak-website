@@ -1,8 +1,9 @@
 import { expect, test } from '@playwright/test';
-import { authStateFile, testUsers } from '~/tests/e2e/fixtures';
+import { authStateFile } from '~/tests/e2e/fixtures';
 import { ProfileOverviewPage } from '~/tests/e2e/pages/profile-overview.page';
 import { testServiceBuilder } from './testUtils/testServices';
 import getLuakYear from '~/utils/getLuakYear';
+import { testUsers } from './testUtils/TestUser';
 
 (
   [
@@ -14,11 +15,15 @@ import getLuakYear from '~/utils/getLuakYear';
   test.describe(user, () => {
     test.use({ storageState: authStateFile(user) });
 
+    test.afterAll(async () => {
+      await testServiceBuilder().userTestService().resetTestMemberships();
+    });
+
     test(`can buy a membership`, async ({ page }) => {
       const profilePage = await ProfileOverviewPage.navigate(page);
 
       await expect(profilePage.hiUserName).toHaveText(
-        `Hi ${testUsers[user]} 👋`,
+        `Hi ${testUsers[user].firstName} 👋`,
       );
       await expect(profilePage.buyMembershipButton).toBeVisible();
 
@@ -30,7 +35,7 @@ import getLuakYear from '~/utils/getLuakYear';
 
       const memberships = await testServiceBuilder()
         .userTestService()
-        .getMemberships(testUsers[user]);
+        .getMemberships(testUsers[user].email);
 
       // testUser unpaidMembership has already a membership, so here we also test that the membership is updated and not a new one created. But it should be made more explicit.
       expect(memberships).toHaveLength(1);
@@ -48,7 +53,7 @@ test.describe('paidMembership', () => {
     const profilePage = await ProfileOverviewPage.navigate(page);
 
     await expect(profilePage.hiUserName).toHaveText(
-      `Hi ${testUsers.paidMembership} 👋`,
+      `Hi ${testUsers.paidMembership.firstName} 👋`,
     );
     await expect(profilePage.buyMembershipButton).toBeHidden();
   });

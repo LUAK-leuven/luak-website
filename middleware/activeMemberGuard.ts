@@ -24,7 +24,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
     data.length === 0
     // data.some((it) => it.Payments.length === 0)
   ) {
-    // TODO: redirect to 'become a member' + toast
+    console.log(data);
+    // TODO: Make custom error page wit link to 'become a member'
     return abortNavigation(
       createError({
         status: 403,

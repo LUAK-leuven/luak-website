@@ -1,10 +1,14 @@
 import { expect, test } from '@playwright/test';
 import { LoginPage } from './pages/login.page';
-import { navigateTo, testUsers } from './fixtures';
+import { navigateTo } from './fixtures';
+import { testUsers } from './testUtils/TestUser';
 
 test('Login & logout — happy path', async ({ page }) => {
   const loginPage = new LoginPage(page);
-  await loginPage.loginAsserted('unpaid_membership@test.com');
+  await loginPage.loginAsserted(
+    testUsers.unpaidMembership.email,
+    testUsers.unpaidMembership.password,
+  );
   await Promise.all([
     expect(page).toHaveURL('/profile/overview'),
     expect(page.getByTestId('nav.profile').first()).toBeVisible(),
@@ -19,7 +23,7 @@ test('Login — wrong email shows "invalid login credentials" on password field'
 }) => {
   await navigateTo(page, LoginPage.path);
   const loginPage = new LoginPage(page);
-  await loginPage.login('not_an_existing_account@test.com');
+  await loginPage.login('not_an_existing_account@test.com', 'some_password');
 
   await expect(loginPage.errorMessage).toHaveText('Invalid login credentials');
 });
@@ -29,14 +33,17 @@ test('Login — wrong password shows "invalid login credentials" on password fie
 }) => {
   await navigateTo(page, LoginPage.path);
   const loginPage = new LoginPage(page);
-  await loginPage.login('paid_this_year@test.com', 'wrong_password');
+  await loginPage.login(testUsers.paidLastYear.email, 'wrong_password');
 
   await expect(loginPage.errorMessage).toHaveText('Invalid login credentials');
 });
 
 test('Login — already logged in redirects to profile', async ({ page }) => {
   const loginPage = new LoginPage(page);
-  await loginPage.loginAsserted(testUsers.boardMember);
+  await loginPage.loginAsserted(
+    testUsers.boardMember.email,
+    testUsers.boardMember.password,
+  );
 
   await navigateTo(page, LoginPage.path);
 });
