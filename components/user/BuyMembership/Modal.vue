@@ -6,50 +6,31 @@
     validationSchema: toTypedSchema(createMembershipSchema),
     initialValues: { sportscard: false },
   });
-  const hasMembership = await getHasMembership();
   const luak_year = getLuakYear();
-  const supabase = useSupabaseClient();
   const user = useSupabaseUser();
   const env = useRuntimeConfig().public;
 
-  const membershipInfo = await useUserService().getMembershipInfo({
+  const userService = useUserService();
+
+  const membershipInfo = await userService.getMembershipInfo({
     authRequired: true,
   });
 
   const buyMembership = handleSubmit(async (submitted) => {
-    let membership;
-    if (hasMembership.value === 'no_membership') {
-      const { data, error } = await supabase
-        .from('Memberships')
-        .insert({
-          kbf_uiaa_member: submitted.kbf_uiaa_member,
-          sportscard: submitted.sportscard,
-          student: submitted.student,
-        })
-        .select()
-        .single();
-      if (error) throw error;
-      membership = data;
-    } else if (hasMembership.value === 'unpaid_membership') {
-      const { data, error } = await supabase
-        .from('Memberships')
-        .update({
-          kbf_uiaa_member: submitted.kbf_uiaa_member,
-          sportscard: submitted.sportscard,
-          student: submitted.student,
-        })
-        .match({ user_id: user.value?.sub, year: luak_year })
-        .select()
-        .single();
-      if (error) throw error;
-      membership = data;
-    } else throw Error('User already has a membership');
-    let payment_url;
-    if (price.value === 15) payment_url = env.paymentLinkMembershipDiscount;
-    else payment_url = env.paymentLinkMembership;
+    const membershipId = await userService.saveMembership({
+      luakYear: luak_year,
+      kbfUiaaMember: submitted.kbf_uiaa_member,
+      sportscard: submitted.sportscard,
+      student: submitted.student,
+    });
+
+    const payment_base_url =
+      price.value === 15
+        ? env.paymentLinkMembershipDiscount
+        : env.paymentLinkMembership;
 
     const email = user.value?.email?.replace('@', '%40');
-    payment_url = `${payment_url}?client_reference_id=${membership.id}&prefilled_email=${email}`;
+    const payment_url = `${payment_base_url}?client_reference_id=${membershipId}&prefilled_email=${email}`;
 
     return navigateTo(payment_url, { external: true });
   });

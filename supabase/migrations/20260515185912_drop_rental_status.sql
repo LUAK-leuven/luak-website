@@ -6,7 +6,18 @@ DROP column "status";
 -- Update the Create, Update and Edit rental functions
 
 DROP FUNCTION "public"."create_rental";
-CREATE FUNCTION public.create_rental(p_board_member_id uuid, p_member_id uuid, p_date_borrow date, p_date_return date, p_deposit numeric, p_payment_method payment_method, p_gear jsonb, p_topos jsonb, p_contact_info text, p_comments text)
+CREATE FUNCTION public.create_rental(
+  p_board_member_id uuid,
+  p_member_id uuid,
+  p_date_borrow date,
+  p_date_return date,
+  p_deposit numeric,
+  p_payment_method payment_method,
+  p_gear jsonb,
+  p_topos jsonb,
+  p_contact_info text,
+  p_comments text
+)
  RETURNS uuid
  LANGUAGE plpgsql
 AS $function$
@@ -46,7 +57,14 @@ END;$function$
 ;
 
 DROP FUNCTION "public"."update_rental";
-CREATE FUNCTION public.update_rental(p_rental_id uuid, p_date_return date, p_deposit_returned boolean, p_gear jsonb, p_topos jsonb, p_comments text)
+CREATE FUNCTION public.update_rental(
+  p_rental_id uuid,
+  p_date_return date,
+  p_deposit_returned boolean,
+  p_gear jsonb,
+  p_topos jsonb,
+  p_comments text
+)
  RETURNS void
  LANGUAGE plpgsql
 AS $$

@@ -208,7 +208,7 @@ export type Database = {
           sportscard: boolean;
           student: Database['public']['Enums']['student'];
           user_id?: string;
-          year?: number;
+          year: number;
         };
         Update: {
           created_at?: string;
@@ -514,8 +514,6 @@ export type Database = {
         };
         Returns: string;
       };
-      get_luak_year: { Args: never; Returns: number };
-      has_membership: { Args: never; Returns: string };
       mark_gear_as_lost: {
         Args: {
           p_gear_item_id: string;
@@ -528,6 +526,15 @@ export type Database = {
       mark_topo_as_lost: {
         Args: { p_lost_amount: number; p_rental_id: string; p_topo_id: string };
         Returns: undefined;
+      };
+      save_membership: {
+        Args: {
+          p_kbf_uiaa_member: Database['public']['Enums']['kbf_uiaa'];
+          p_sportscard: boolean;
+          p_student: Database['public']['Enums']['student'];
+          p_year: number;
+        };
+        Returns: string;
       };
       update_rental: {
         Args: {

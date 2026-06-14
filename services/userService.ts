@@ -1,4 +1,4 @@
-import type { Database } from '~/types/database.types';
+import type { Database, Enums } from '~/types/database.types';
 import type { UserId } from '~/types/user';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
@@ -57,6 +57,23 @@ export class UserService {
     }));
 
     return membershipYears;
+  };
+
+  readonly saveMembership = async (args: {
+    luakYear: number;
+    kbfUiaaMember: Enums<'kbf_uiaa'>;
+    sportscard: boolean;
+    student: Enums<'student'>;
+  }) => {
+    const { data: membershipId } = await this.supabaseClient
+      .rpc('save_membership', {
+        p_year: args.luakYear,
+        p_kbf_uiaa_member: args.kbfUiaaMember,
+        p_sportscard: args.sportscard,
+        p_student: args.student,
+      })
+      .throwOnError();
+    return membershipId;
   };
 }
 

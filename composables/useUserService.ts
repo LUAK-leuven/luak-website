@@ -25,8 +25,12 @@ export function useUserService() {
       { watch: [user], lazy: false },
     );
     watch(error, (value) => value && showError(value));
-    return computed(() => new Membership(data.value!));
+    return computed(() => new Membership(data.value ?? []));
   };
 
-  return { getMembershipInfo, getAllUsers };
+  return {
+    getMembershipInfo,
+    getAllUsers,
+    saveMembership: userService.saveMembership,
+  };
 }

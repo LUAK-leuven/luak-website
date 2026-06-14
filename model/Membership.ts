@@ -25,11 +25,4 @@ export class Membership {
   };
 
   readonly isFirstTimeMember = () => this.paidMemberships.length === 0;
-
-  readonly getMembershipStatus = (luakYear: number = getLuakYear()) => {
-    const membership = findBy(this.memberships, 'membershipYear', luakYear);
-    if (membership === undefined) return 'no_membership';
-    if (membership.paid) return 'paid_membership';
-    return 'unpaid_membership';
-  };
 }
