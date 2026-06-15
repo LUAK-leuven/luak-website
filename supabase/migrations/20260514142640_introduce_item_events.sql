@@ -106,7 +106,7 @@ begin
   );
 
   update "RentedGear"
-  set lost_amount = p_lost_amount
+  set lost_amount = lost_amount + p_lost_amount
   where gear_item_id = p_gear_item_id and rental_id = p_rental_id;
 end;$$;
 
@@ -131,6 +131,6 @@ begin
   );
 
   update "RentedTopos"
-  set lost_amount = p_lost_amount
+  set lost_amount = lost_amount + p_lost_amount
   where topo_id = p_topo_id and rental_id = p_rental_id;
 end;$$;

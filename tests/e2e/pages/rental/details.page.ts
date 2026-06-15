@@ -3,6 +3,7 @@ import type { Dayjs } from 'dayjs';
 import type { RentalId } from '~/types/rental';
 import { testUsers } from '../../testUtils/TestUser';
 import { uuidRegex } from '~/utils/utils';
+import { RentalReturnPage } from './return.page';
 
 export class RentalDetailsPage {
   private readonly page: Page;
@@ -75,6 +76,11 @@ export class RentalDetailsPage {
       returnedAmount: item.getByTestId('returnedAmount'),
       lostItems: item.getByTestId('lostItem'),
     };
+  }
+
+  async returnRental() {
+    await this.returnButton.click();
+    return new RentalReturnPage(this.page);
   }
 
   async expectToHave(args: {
