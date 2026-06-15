@@ -2,18 +2,25 @@ import { expect, type Page } from '@playwright/test';
 import type { Dayjs } from 'dayjs';
 import type { RentalId } from '~/types/rental';
 import { testUsers } from '../../testUtils/TestUser';
+import { uuidRegex } from '~/utils/utils';
 
 export class RentalDetailsPage {
   private readonly page: Page;
+
+  readonly urlRegex = new RegExp(`\\/board\\/rentals\\/${uuidRegex}`);
+  readonly path = (rentalId: RentalId) => `/board/rentals/${rentalId}/`;
 
   constructor(page: Page) {
     this.page = page;
   }
 
   async getRentalId() {
-    return (await this.page.getByTestId('detailsPage.id').innerText()) as
-      | RentalId
-      | '';
+    await expect(this.page.getByTestId('detailsPage.id')).toBeVisible();
+    const rentalId = (await this.page
+      .getByTestId('detailsPage.id')
+      .innerText()) as RentalId;
+    expect(rentalId).toBeTruthy();
+    return rentalId;
   }
 
   get member() {
@@ -116,7 +123,7 @@ export class RentalDetailsPage {
         args.numberOfItems,
       );
 
-    return this.getRentalId();
+    return await this.getRentalId();
   }
 
   async expectItem(args: {

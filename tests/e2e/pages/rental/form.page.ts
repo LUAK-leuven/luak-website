@@ -1,6 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import type { Dayjs } from 'dayjs';
 import { navigateTo } from '~/tests/e2e/fixtures';
+import { RentalDetailsPage } from './details.page';
 
 export class RentalFormPage {
   private readonly page: Page;
@@ -107,6 +108,7 @@ export class RentalFormPage {
 
   async submit() {
     await this.submitButton.click();
+    return new RentalDetailsPage(this.page);
   }
 
   async fillForm(args: {

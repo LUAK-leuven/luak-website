@@ -54,7 +54,7 @@ export class LostGearPage extends FullPageCard {
 
   async expectToHave(
     args: {
-      rental: {
+      rental?: {
         member?: string;
         depositFee?: number;
         paymentMethod?: 'cash' | 'transfer';
@@ -82,15 +82,19 @@ export class LostGearPage extends FullPageCard {
         }
     ),
   ) {
-    await Promise.all([
-      optionalExpect(this.member).toContainText(args.rental.member),
-      optionalExpect(this.depositFee).toContainText(
-        args.rental.depositFee?.toFixed(2),
-      ),
-      optionalExpect(this.paymentMethod).toHaveText(args.rental.paymentMethod),
-      optionalExpect(this.dateBorrow).toContainText(args.rental.dateBorrow),
-      optionalExpect(this.dateReturn).toContainText(args.rental.dateReturn),
-    ]);
+    if (args.rental) {
+      await Promise.all([
+        optionalExpect(this.member).toContainText(args.rental.member),
+        optionalExpect(this.depositFee).toContainText(
+          args.rental.depositFee?.toFixed(2),
+        ),
+        optionalExpect(this.paymentMethod).toHaveText(
+          args.rental.paymentMethod,
+        ),
+        optionalExpect(this.dateBorrow).toContainText(args.rental.dateBorrow),
+        optionalExpect(this.dateReturn).toContainText(args.rental.dateReturn),
+      ]);
+    }
     if ('topo' in args) {
       await Promise.all([
         optionalExpect(this.topoTitle).toContainText(args.topo.title),

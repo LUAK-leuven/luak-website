@@ -10,12 +10,14 @@ test('clean db', async () => {
   await userTestService().resetTestMemberships();
 });
 
-Object.entries(testUsers).forEach(([userKey, testUser]) => {
-  test(`login test users - ${userKey}`, async ({ page, context }) => {
-    await login(page, testUser);
+if (process.env.SKIP_LOGIN_SETUP !== 'true') {
+  Object.entries(testUsers).forEach(([userKey, testUser]) => {
+    test(`login test users - ${userKey}`, async ({ page, context }) => {
+      await login(page, testUser);
 
-    await context.storageState({
-      path: authStateFile(userKey as keyof typeof testUsers),
+      await context.storageState({
+        path: authStateFile(userKey as keyof typeof testUsers),
+      });
     });
   });
-});
+}

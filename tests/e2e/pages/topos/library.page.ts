@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { TopoDetailsPage } from './details.page';
+import { navigateTo } from '~/tests/e2e/fixtures';
 
 export class TopoLibraryPage {
   private readonly page: Page;
@@ -10,7 +11,12 @@ export class TopoLibraryPage {
   }
 
   async navigate() {
-    await this.page.goto(TopoLibraryPage.path);
+    await TopoLibraryPage.navigate(this.page);
+  }
+
+  static async navigate(page: Page) {
+    await navigateTo(page, TopoLibraryPage.path);
+    return new TopoLibraryPage(page);
   }
 
   getTopo(title: string) {

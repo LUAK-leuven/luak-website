@@ -11,12 +11,13 @@ import { testUsers } from './testUtils/TestUser';
 test.use({ storageState: authStateFile('boardMember') });
 
 test.describe('lost gear form', () => {
-  test.beforeAll(async () => {
+  test.beforeEach(async () => {
     await cleanDatabase();
   });
 
   test('can mark a topo as lost', async ({ page }) => {
     const rentalFormPage = await RentalFormPage.navigate(page);
+    const topoName = 'Topo Flone';
 
     // Create a rental
     await rentalFormPage.fillForm({
@@ -24,14 +25,15 @@ test.describe('lost gear form', () => {
       paymentMethod: 'cash',
     });
     await rentalFormPage.addItem('topos', 'flone', 2);
-    await rentalFormPage.submit();
-    await expect(page).toHaveURL(/\/board\/rentals\/[d-]*/);
+    const rentalDetailsPage = await rentalFormPage.submit();
+    await expect(page).toHaveURL(rentalDetailsPage.urlRegex);
 
-    const rentalDetailsPage = new RentalDetailsPage(page);
+    const rentalId = await rentalDetailsPage.getRentalId();
+
     await rentalDetailsPage.returnButton.click();
 
     const rentalReturnPage = new RentalReturnPage(page);
-    const topoFlone = rentalReturnPage.rentedItem('Topo Flone');
+    const topoFlone = rentalReturnPage.rentedItem(topoName);
 
     // Return 1 item
     await topoFlone.returnedAmountInput.fill('1');
@@ -40,10 +42,8 @@ test.describe('lost gear form', () => {
 
     // Mark as lost
     await rentalDetailsPage.returnButton.click();
-    await topoFlone.more.menuButton.click();
-    await topoFlone.more.markAsLost.click();
+    const lostGearPage = await rentalReturnPage.markItemAsLost(topoName);
 
-    const lostGearPage = new LostGearPage(page);
     await expect(lostGearPage.title).toHaveText('Lost Gear');
     await lostGearPage.expectToHave({
       rental: {
@@ -74,16 +74,14 @@ test.describe('lost gear form', () => {
     });
 
     await rentalDetailsPage.expectItem({
-      name: 'Topo Flone',
+      name: topoName,
       rentedAmount: 2,
       returnedAmount: 1,
       lostAmount: 1,
     });
 
-    const topoLibraryPage = new TopoLibraryPage(page);
-    await topoLibraryPage.navigate();
-    const topoDetailsPage =
-      await topoLibraryPage.navigateToDetails('Topo Flone');
+    const topoLibraryPage = await TopoLibraryPage.navigate(page);
+    const topoDetailsPage = await topoLibraryPage.navigateToDetails(topoName);
 
     await expect(topoDetailsPage.amount).toHaveText('1');
 
@@ -93,6 +91,21 @@ test.describe('lost gear form', () => {
     await expect(
       (await option('Topo Flone')).getByTestId('search.availableAmount'),
     ).toHaveText('1');
+
+    // --- Cannot mark it as lost again ---
+    await rentalReturnPage.navigate(rentalId);
+    await rentalReturnPage.markItemAsLost(topoName);
+
+    await lostGearPage.expectToHave({
+      topo: {
+        title: 'Topo Flone',
+        rentedAmount: 2,
+        unreturnedAmount: 0,
+        lostAmount: 1,
+      },
+    });
+
+    // await lostGearPage.saveButton.click();
   });
 
   test('can mark a gear item as lost', async ({ page }) => {

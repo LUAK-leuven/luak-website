@@ -20,6 +20,10 @@ export default defineConfig({
     navigationTimeout: process.env.CI ? 5_000 : 2_000,
   },
 
+  expect: {
+    timeout: process.env.CI ? 5_000 : 2_000,
+  },
+
   projects: [
     {
       name: 'setup db',
