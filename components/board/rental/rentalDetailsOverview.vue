@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import type { PublicRentalDetails, RentalDetails } from '~/types/rental';
+  import { formatToDMY } from '~/utils/rental/dateFormatter';
 
   const { rental } = defineProps<{
     rental: RentalDetails | PublicRentalDetails;
@@ -24,7 +25,7 @@
         </div>
         <div class="flex flex-row gap-x-1 items-center flex-wrap">
           <span>Date borrow:</span>
-          <span>{{ rental.dateBorrow }}</span>
+          <span>{{ formatToDMY(rental.dateBorrow) }}</span>
         </div>
         <div class="flex flex-row gap-x-1 items-center flex-wrap">
           <span class="w-max flex-shrink-0">Return date:</span>

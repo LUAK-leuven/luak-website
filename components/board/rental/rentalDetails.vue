@@ -7,6 +7,7 @@
   import PaymentModal from '~/components/PaymentModal.vue';
   import { useToast } from '~/composables/useToast';
   import type { RentalDetails, RentalUpdate } from '~/types/rental';
+  import { formatToDMY } from '~/utils/rental/dateFormatter';
 
   const props = defineProps<{
     rental: RentalDetails;
@@ -174,7 +175,7 @@
       </div>
       <div class="flex flex-row gap-x-1 items-center flex-wrap">
         <span>Date borrow:</span>
-        <span data-testId="dateBorrow">{{ rental.dateBorrow }}</span>
+        <span data-testId="dateBorrow">{{ formatToDMY(rental.dateBorrow) }}</span>
       </div>
       <div class="flex flex-row gap-x-1 items-center flex-wrap">
         <span class="w-max flex-shrink-0">Return date:</span>
