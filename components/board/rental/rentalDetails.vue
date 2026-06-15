@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import dayjs from 'dayjs';
   import * as yup from 'yup';
   import type { Enums } from '~/types/database.types';
   import type { GearItemId, TopoId } from '~/types/gear';
@@ -147,6 +148,10 @@
   const editMode = ref(false);
 
   const showPaymentModal = ref(false);
+
+  const formattedDateBorrow = computed(() =>
+    dayjs(props.rental.dateBorrow).format('DD-MM-YYYY'),
+  );
 </script>
 
 <template>
@@ -174,7 +179,7 @@
       </div>
       <div class="flex flex-row gap-x-1 items-center flex-wrap">
         <span>Date borrow:</span>
-        <span data-testId="dateBorrow">{{ rental.dateBorrow }}</span>
+        <span data-testId="dateBorrow">{{ formattedDateBorrow }}</span>
       </div>
       <div class="flex flex-row gap-x-1 items-center flex-wrap">
         <span class="w-max flex-shrink-0">Return date:</span>
