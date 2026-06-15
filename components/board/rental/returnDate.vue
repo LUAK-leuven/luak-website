@@ -16,14 +16,12 @@
     !props.ghost &&
     !isLate &&
     props.date < dayjs().add(7, 'd').add(1, 'd').format('YYYY-MM-DD');
-
-  const formattedDate = computed(() => dayjs(props.date).format('DD-MM-YYYY'));
 </script>
 
 <template>
   <span
     class="badge"
     :class="{ 'badge-error': isLate, 'badge-warning': isAlmostLate }">
-    {{ formattedDate }}
+    {{ date }}
   </span>
 </template>

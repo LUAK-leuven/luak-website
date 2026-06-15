@@ -1,14 +1,9 @@
 <script setup lang="ts">
-  import dayjs from 'dayjs';
   import type { PublicRentalDetails, RentalDetails } from '~/types/rental';
 
   const { rental } = defineProps<{
     rental: RentalDetails | PublicRentalDetails;
   }>();
-
-  const formattedDateBorrow = computed(() =>
-    dayjs(rental.dateBorrow).format('DD-MM-YYYY'),
-  );
 </script>
 
 <template>
@@ -29,7 +24,7 @@
         </div>
         <div class="flex flex-row gap-x-1 items-center flex-wrap">
           <span>Date borrow:</span>
-          <span>{{ formattedDateBorrow }}</span>
+          <span>{{ rental.dateBorrow }}</span>
         </div>
         <div class="flex flex-row gap-x-1 items-center flex-wrap">
           <span class="w-max flex-shrink-0">Return date:</span>
