@@ -10,7 +10,7 @@
       details: string;
       purchaseDate: string | undefined;
       productionDate: string | undefined;
-      amount: number;
+      totalAmount: number;
       status: 'available' | 'archived';
     }[];
     lifespan: number;
@@ -36,7 +36,7 @@
         return {
           id: x.id,
           details: x.details,
-          amount: x.amount,
+          amount: x.totalAmount,
           purchaseDate,
           productionDate,
           retirementDate: startDate?.add(props.lifespan, 'years'),
@@ -66,7 +66,8 @@
       } of _inventory"
       :key="id"
       class="contents"
-      :class="{ 'border-5 bg-blue-100': model === id }">
+      :class="{ 'border-5 bg-blue-100': model === id }"
+      data-testid="table-row">
       <InventoryTableItem status="available">
         <input
           v-model="model"
@@ -78,7 +79,7 @@
       <InventoryTableItem status="available">
         {{ details }}
       </InventoryTableItem>
-      <InventoryTableItem status="available">
+      <InventoryTableItem status="available" data-testid="amount">
         {{ amount }}
         <template v-if="id === model && lostAmount !== undefined">
           -> {{ amount - lostAmount }}

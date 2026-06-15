@@ -10,6 +10,12 @@ export class GearInventoryPage {
     await this.page.goto(this.path);
   }
 
+  static async navigate(page: Page) {
+    const gearInventoryPage = new GearInventoryPage(page);
+    await gearInventoryPage.navigate();
+    return gearInventoryPage;
+  }
+
   gearItem(itemName: string) {
     const row = this.page.getByTestId(`gearItem-${itemName}`);
     return {

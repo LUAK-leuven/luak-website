@@ -59,6 +59,7 @@ export type RentedItem<T extends EntityId<unknown>> = {
   rentedAmount: number;
   returnedAmount: number;
   lostAmount: number;
+  unreturnedAmount: number;
 };
 
 export type RentalItemId =

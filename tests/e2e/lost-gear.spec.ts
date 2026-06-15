@@ -52,7 +52,7 @@ test.describe('lost gear form', () => {
         paymentMethod: 'cash',
       },
       topo: {
-        title: 'Topo Flone',
+        title: topoName,
         year: 2019,
         rentedAmount: 2,
         unreturnedAmount: 1,
@@ -89,7 +89,7 @@ test.describe('lost gear form', () => {
     await rentalFormPage.selectSearchBar('topos');
     const { option } = rentalFormPage.selectComponent('topos');
     await expect(
-      (await option('Topo Flone')).getByTestId('search.availableAmount'),
+      (await option(topoName)).getByTestId('search.availableAmount'),
     ).toHaveText('1');
 
     // --- Cannot mark it as lost again ---
@@ -98,7 +98,7 @@ test.describe('lost gear form', () => {
 
     await lostGearPage.expectToHave({
       topo: {
-        title: 'Topo Flone',
+        title: topoName,
         rentedAmount: 2,
         unreturnedAmount: 0,
         lostAmount: 1,
@@ -119,13 +119,13 @@ test.describe('lost gear form', () => {
 
     const gearItemName = 'BD C4 .5';
     await rentalFormPage.addItem('gear', gearItemName, 2);
-    await rentalFormPage.submit();
-    await expect(page).toHaveURL(/\/board\/rentals\/[d-]*/);
+    const rentalDetailsPage = await rentalFormPage.submit();
+    await expect(page).toHaveURL(rentalDetailsPage.urlRegex);
 
-    const rentalDetailsPage = new RentalDetailsPage(page);
     await rentalDetailsPage.returnButton.click();
-
     const rentalReturnPage = new RentalReturnPage(page);
+    const rentalId = await rentalDetailsPage.getRentalId();
+
     const gearItem = rentalReturnPage.rentedItem(gearItemName);
 
     // Return 1 item
@@ -135,10 +135,8 @@ test.describe('lost gear form', () => {
 
     // Mark as lost
     await rentalDetailsPage.returnButton.click();
-    await gearItem.more.menuButton.click();
-    await gearItem.more.markAsLost.click();
+    const lostGearPage = await rentalReturnPage.markItemAsLost(gearItemName);
 
-    const lostGearPage = new LostGearPage(page);
     await expect(lostGearPage.title).toHaveText('Lost Gear');
     await lostGearPage.expectToHave({
       rental: {
@@ -157,10 +155,10 @@ test.describe('lost gear form', () => {
     await lostGearPage.lostAmount.fill('1');
     await expect(lostGearPage.lostAmountError).toBeHidden();
 
-    await lostGearPage.inventorySelection.getByRole('radio').first().click();
+    await lostGearPage.inventorySelection.first().click();
 
     await lostGearPage.saveButton.click();
-    await expect(page).toHaveURL(/\/board\/rentals\/[d-]*/);
+    await expect(page).toHaveURL(rentalDetailsPage.urlRegex);
 
     await rentalDetailsPage.expectToHave({
       status: 'Returned',
@@ -173,8 +171,7 @@ test.describe('lost gear form', () => {
       lostAmount: 1,
     });
 
-    const gearInventoryPage = new GearInventoryPage(page);
-    await gearInventoryPage.navigate();
+    const gearInventoryPage = await GearInventoryPage.navigate(page);
     const gearItemRow = gearInventoryPage.gearItem(gearItemName);
     await expect(gearItemRow.availableAmount).toHaveText('1');
     await expect(gearItemRow.totalAmount).toHaveText('1');
@@ -190,5 +187,27 @@ test.describe('lost gear form', () => {
     await expect(
       (await option(gearItemName)).getByTestId('search.availableAmount'),
     ).toHaveText('1');
+
+    // --- Cannot mark it as lost again ---
+    await rentalReturnPage.navigate(rentalId);
+    await rentalReturnPage.markItemAsLost(gearItemName);
+    // const itemMenu = rentalReturnPage.rentedItem(gearItemName).more;
+    // await itemMenu.menuButton.click();
+    // await expect(itemMenu.markAsLost).toBeDisabled();
+
+    await lostGearPage.expectToHave({
+      gear: {
+        name: gearItemName,
+        rentedAmount: 2,
+        unreturnedAmount: 0,
+        lostAmount: 1,
+      },
+    });
+    await expect(
+      lostGearPage.inventorySelection.first().getByTestId('amount'),
+    ).toHaveText('1');
+
+    await lostGearPage.saveButton.click();
+    await expect(lostGearPage.lostAmountError).toBeVisible();
   });
 });

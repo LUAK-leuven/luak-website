@@ -63,41 +63,39 @@ export class RentalService {
       status: RentalStatus;
     }[]
   > => {
-    const { data, error } = await this.supabaseClient.from('Rentals').select(
-      `
-        id,
-        member:Users!Rentals_member_id_fkey (
-          first_name,
-          last_name
-        ),
-        date_return,
-        date_borrow,
-        contact_info,
-        deposit_returned,
-        RentedGear(
-          gear_item_id,
-          rented_amount,
-          returned_amount,
-          lost_amount,
-          GearItems(
-            name,
-            GearInventory(id)
+    const { data } = await this.supabaseClient
+      .from('Rentals')
+      .select(
+        `
+          id,
+          member:Users!Rentals_member_id_fkey (
+            first_name,
+            last_name
+          ),
+          date_return,
+          date_borrow,
+          contact_info,
+          deposit_returned,
+          RentedGear(
+            gear_item_id,
+            rented_amount,
+            returned_amount,
+            lost_amount,
+            GearItems(
+              name,
+              GearInventory(id)
+            )
+          ),
+          RentedTopos(
+            topo_id,
+            Topos(title),
+            rented_amount,
+            returned_amount,
+            lost_amount
           )
-        ),
-        RentedTopos(
-          topo_id,
-          Topos(title),
-          rented_amount,
-          returned_amount,
-          lost_amount
-        )
-      `,
-    );
-
-    if (error) {
-      console.warn('failed to load rentals', error);
-      return [];
-    }
+        `,
+      )
+      .throwOnError();
 
     return data.map((rental) => {
       const contactInfo: ContactInfo | undefined = rental.contact_info
@@ -128,7 +126,7 @@ export class RentalService {
   readonly getRental = async (
     rentalId: RentalId,
   ): Promise<RentalDetails | null> => {
-    const { data: rental, error } = await this.supabaseClient
+    const { data: rental } = await this.supabaseClient
       .from('Rentals')
       .select(
         `
@@ -171,12 +169,8 @@ export class RentalService {
         `,
       )
       .eq('id', rentalId)
-      .single();
-
-    if (error) {
-      console.warn(`failed to load rental ${rentalId}`, error);
-      return null;
-    }
+      .single()
+      .throwOnError();
 
     const contactInfo: ContactInfo = rental.member
       ? {
@@ -252,7 +246,7 @@ export class RentalService {
   readonly getRentalsForUser = async (
     userId: UserId,
   ): Promise<PublicRentalDetails[] | null> => {
-    const { data: rentals, error } = await this.supabaseClient
+    const { data: rentals } = await this.supabaseClient
       .from('Rentals')
       .select(
         `
@@ -283,12 +277,8 @@ export class RentalService {
           )
         `,
       )
-      .eq('member_id', userId);
-
-    if (error) {
-      console.warn('failed to load rentals for user', error);
-      return null;
-    }
+      .eq('member_id', userId)
+      .throwOnError();
 
     return rentals.map(this.rentalFromDb);
   };
@@ -332,6 +322,10 @@ export class RentalService {
       rentedAmount: gearItem.rented_amount,
       returnedAmount: gearItem.returned_amount,
       lostAmount: gearItem.lost_amount,
+      unreturnedAmount:
+        gearItem.rented_amount -
+        gearItem.returned_amount -
+        gearItem.lost_amount,
     }));
 
   private readonly rentedToposFromDb = (
@@ -343,6 +337,8 @@ export class RentalService {
       rentedAmount: topo.rented_amount,
       returnedAmount: topo.returned_amount,
       lostAmount: topo.lost_amount,
+      unreturnedAmount:
+        topo.rented_amount - topo.returned_amount - topo.lost_amount,
     }));
 }
 

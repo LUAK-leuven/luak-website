@@ -18,42 +18,29 @@
 
   const { show } = useToast();
 
-  const { data, pending, error } = await useLazyAsyncData(async () => {
-    const { data } = await useSupabaseClient()
-      .from('GearItems')
-      .select('lifespan, GearInventory(*)')
-      .eq('id', props.gearItem.id)
-      .single()
-      .throwOnError();
-    return {
-      lifespan: data.lifespan,
-      inventory: data.GearInventory.map((item) => ({
-        id: item.id as GearInventoryId,
-        details: item.details,
-        purchaseDate: item.purchase_date ?? undefined,
-        productionDate: item.production_date ?? undefined,
-        amount: item.amount,
-        status: item.status,
-      })),
-    };
-  });
-
-  const unReturnedAmount = computed(
-    () => props.gearItem.rentedAmount - props.gearItem.returnedAmount,
+  const { data, pending, error } = await useLazyFetch(
+    `/api/gear/inventory/${props.gearItem.id}`,
+    {
+      method: 'get',
+    },
   );
 
   const formSchema = yupObject({
-    lostAmount: yupNumber().required().min(1).max(unReturnedAmount.value),
+    lostAmount: yupNumber()
+      .required()
+      .min(1)
+      .max(props.gearItem.unreturnedAmount),
     inventoryItem: yupString<GearInventoryId>()
       .uuid()
       .required('You must select an inventory item'),
   }).test('max on inventory', ({ lostAmount, inventoryItem }, ctx) => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (data.value === null || inventoryItem === undefined) return true;
     const amountInventory = getBy(
       data.value.inventory,
       'id',
       inventoryItem,
-    ).amount;
+    ).totalAmount;
     if (lostAmount > amountInventory)
       return ctx.createError({
         path: 'lostAmount',
@@ -104,7 +91,7 @@
         Rented amount: {{ gearItem.rentedAmount }}
       </div>
       <div data-testid="unreturnedAmount">
-        Unreturned amount: {{ unReturnedAmount }}
+        Unreturned amount: {{ gearItem.unreturnedAmount }}
       </div>
       <div>
         <div class="col-span-full flex flex-row gap-2 items-center">

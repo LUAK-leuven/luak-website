@@ -43,7 +43,9 @@ export class LostGearPage extends FullPageCard {
     this.lostAmountError = this.page.getByTestId('lostAmount.error');
 
     this.gearItemName = this.page.getByTestId('gear.name');
-    this.inventorySelection = this.page.getByTestId('inventory-selection');
+    this.inventorySelection = this.page
+      .getByTestId('inventory-selection')
+      .getByTestId('table-row');
 
     this.saveButton = this.page.getByTestId('saveButton');
   }

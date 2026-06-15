@@ -17,12 +17,8 @@
     props.topo.id,
   );
 
-  const unReturnedAmount = computed(
-    () => props.topo.rentedAmount - props.topo.returnedAmount,
-  );
-
   const formSchema = yupObject({
-    lostAmount: yupNumber().required().min(1).max(unReturnedAmount.value),
+    lostAmount: yupNumber().required().min(1).max(props.topo.unreturnedAmount),
   });
 
   const { defineField, errors, handleSubmit } = useForm({
@@ -68,7 +64,7 @@
           Rented amount: {{ topo.rentedAmount }}
         </div>
         <div data-testid="unreturnedAmount">
-          Unreturned amount: {{ unReturnedAmount }}
+          Unreturned amount: {{ props.topo.unreturnedAmount }}
         </div>
         <div>
           <div class="col-span-full flex flex-row gap-2 items-center">

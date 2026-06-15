@@ -58,7 +58,7 @@
       v-slot="{ data: rental }"
       :data="data"
       :is-loading="pending"
-      :error="error?.message">
+      :error="error && `Failed to load rental with id: ${rentalId}.`">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div data-testid="member">Member: {{ rental.member.fullName }}</div>
         <div class="flex flex-row gap-1 items-center">
