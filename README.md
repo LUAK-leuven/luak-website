@@ -15,17 +15,16 @@ The techstack used for this project is:
 ## Setup
 
 Install stuff
-1. install [Docker](https://docs.docker.com/desktop/setup/install/) (or podman)
-2. install Node 20.x.x (using asdf: `asdf install nodejs 20.20.2`)
-3. install yarn: `npm install --global yarn@1.22.22`
+1. install [Docker](https://docs.docker.com/desktop/setup/install/) (or [podman](https://podman-desktop.io))
+2. install Node 24.x.x (using [asdf](https://asdf-vm.com): `asdf install nodejs 24.20.2`)
+3. install [yarn](https://classic.yarnpkg.com/en/docs) using [corepack](https://corepack.org): `corepack enable && corepack prepare yarn@1.22.22 --activate`
 4. install packages: `yarn install`
-5. install browsers for the e2e tests: `yarn playwright install`
 
 next set the right env variables to connect with supabase. check `.env.example` and the [Supabase Docs](https://supabase.com/docs/guides/getting-started)
 
 ### e2e-tests
 
-Firs you need to install playwright: `yarn playwright install`
+Firs you need to install the [playwright](https://playwright.dev) browsers: `yarn playwright install chromium`
 
 ## Agentic development
 
