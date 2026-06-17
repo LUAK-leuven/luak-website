@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import PaymentModal from '~/components/PaymentModal.vue';
   import type { RentalDetails } from '~/types/rental';
-  import RentalItem from './RentalItem.vue';
+  import RentalItem from '~/components/board/rental/details/RentalItem.vue';
   import Button from '~/components/shared/Button.vue';
 
   const props = defineProps<{
