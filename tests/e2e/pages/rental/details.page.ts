@@ -4,6 +4,8 @@ import type { RentalId } from '~/types/rental';
 import { testUsers } from '../../testUtils/TestUser';
 import { uuidRegex } from '~/utils/utils';
 import { RentalReturnPage } from './return.page';
+import { LostGearPage } from '../lost-gear.page';
+import { navigateTo } from '~/tests/e2e/fixtures';
 
 export class RentalDetailsPage {
   private readonly page: Page;
@@ -14,6 +16,10 @@ export class RentalDetailsPage {
   constructor(page: Page) {
     this.page = page;
   }
+
+  readonly navigate = async (rentalId: RentalId) => {
+    await navigateTo(this.page, this.path(rentalId));
+  };
 
   async getRentalId() {
     await expect(this.page.getByTestId('detailsPage.id')).toBeVisible();
@@ -75,7 +81,18 @@ export class RentalDetailsPage {
       rentedAmount: item.getByTestId('rentedAmount'),
       returnedAmount: item.getByTestId('returnedAmount'),
       lostItems: item.getByTestId('lostItem'),
+      more: {
+        menuButton: item.getByTestId('rentalItemMenuButton'),
+        markAsLost: item.getByTestId('markAsLost'),
+      },
     };
+  }
+
+  async markItemAsLost(name: string) {
+    const item = this.rentedItem(name);
+    await item.more.menuButton.click();
+    await item.more.markAsLost.click();
+    return new LostGearPage(this.page);
   }
 
   async returnRental() {

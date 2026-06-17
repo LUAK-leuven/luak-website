@@ -162,12 +162,11 @@
     <hr class="my-3" />
     <div
       class="border rounded-sm grid"
-      :class="'grid-cols-[3fr_auto_1fr_auto]'"
+      :class="'grid-cols-[3fr_auto_1fr]'"
       data-testId="gear-and-topos-overview">
       <b class="border px-1">Gear</b>
       <b class="border px-1"></b>
       <b class="border px-1">Amount</b>
-      <b class="border px-1" />
       <RentalItem
         v-for="{ name, rentedAmount, id, lostAmount } of rental.gear"
         :key="id"

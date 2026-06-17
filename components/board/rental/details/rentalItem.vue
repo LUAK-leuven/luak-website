@@ -1,18 +1,26 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends GearItemId | TopoId">
+  import type { RentalId, RentedItem } from '~/types/rental';
   import { computeRentedItemStatus } from '~/utils/rental/computeStatus';
+  import ItemMenu from './ItemMenu.vue';
+  import type { GearItemId, TopoId } from '~/types/gear';
+
+  type GetItemType<T> = T extends TopoId
+    ? 'topo'
+    : T extends GearItemId
+      ? 'gear'
+      : never;
 
   const porps = defineProps<{
-    name: string;
-    rentedAmount: number;
-    returnedAmount: number;
-    lostAmount: number;
+    item: RentedItem<T>;
+    itemType: GetItemType<T>;
+    rentalId: RentalId;
   }>();
 
   const itemStatusColor = computed(() => {
     const itemStatus = computeRentedItemStatus({
-      rentedAmount: porps.rentedAmount,
-      returnedAmount: porps.returnedAmount,
-      lostAmount: porps.lostAmount,
+      rentedAmount: porps.item.rentedAmount,
+      returnedAmount: porps.item.returnedAmount,
+      lostAmount: porps.item.lostAmount,
     });
     switch (itemStatus) {
       case 'allReturned':
@@ -22,27 +30,31 @@
       case 'someReturned':
         return 'bg-yellow-100';
       default:
-        throw Error();
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        throw createError(`Invalid item status: ${itemStatus}`);
     }
   });
 </script>
 <template>
-  <div class="contents" :data-testId="`rental-item-${name}`">
+  <div class="contents" :data-testId="`rental-item-${item.name}`">
     <div
       class="border p-1 flex flex-col items-start justify-center"
       :class="itemStatusColor">
-      {{ name }}
-      <ul v-if="lostAmount > 0" class="ml-5">
-        <li data-testid="lostItem">{{ lostAmount }} item(s) Lost</li>
+      {{ item.name }}
+      <ul v-if="item.lostAmount > 0" class="ml-5">
+        <li data-testid="lostItem">{{ item.lostAmount }} item(s) Lost</li>
       </ul>
     </div>
-    <div
-      class="border p-1 flex flex-row justify-between items-center"
-      data-testId="rentedAmount">
-      <span>{{ rentedAmount }}</span>
+    <div class="border p-1 flex flex-row justify-between items-center">
+      <span>
+        <span data-testid="returnedAmount"> {{ item.returnedAmount }} </span> /
+        <span data-testId="rentedAmount"> {{ item.rentedAmount }} </span>
+      </span>
     </div>
-    <div class="border p-1 flex flex-row items-center">
-      <span data-testId="returnedAmount">{{ returnedAmount }}</span>
+    <div class="border p-1 flex items-center justify-center">
+      <ItemMenu
+        :item-id="{ id: item.id, type: itemType }"
+        :rental-id="rentalId" />
     </div>
   </div>
 </template>

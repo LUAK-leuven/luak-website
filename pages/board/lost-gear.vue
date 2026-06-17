@@ -3,7 +3,7 @@
   import type { RentalItemId, RentalId } from '~/types/rental';
   import { useRentalService } from '~/composables/useRentalService';
   import type { GearItemId, TopoId } from '~/types/gear';
-  import { string as yupString } from 'yup';
+  import { ValidationError, string as yupString } from 'yup';
   import WithLazyResource from '~/components/pages/WithLazyResource.vue';
   import PaymentBadge from '~/components/board/rental/PaymentBadge.vue';
   import TopoItem from '~/components/board/lost-gear/TopoItem.vue';
@@ -19,23 +19,39 @@
   );
 
   const itemId = computed<RentalItemId | undefined>(() => {
-    const itemId = yupUuid.label('itemId').validateSync(route.query['itemId']);
-    const itemType = yupString<'topo' | 'gear'>()
-      .required()
-      .oneOf(['topo', 'gear'])
-      .label('itemType')
-      .validateSync(route.query['itemType']);
+    try {
+      const itemId = yupUuid
+        .label('itemId')
+        .validateSync(route.query['itemId']);
+      const itemType = yupString<'topo' | 'gear'>()
+        .required()
+        .oneOf(['topo', 'gear'])
+        .label('itemType')
+        .validateSync(route.query['itemType'], {});
 
-    if (itemType === 'topo') {
-      return {
-        type: 'topo',
-        id: itemId as TopoId,
-      };
-    } else {
-      return {
-        type: 'gear',
-        id: itemId as GearItemId,
-      };
+      if (itemType === 'topo') {
+        return {
+          type: 'topo',
+          id: itemId as TopoId,
+        };
+      } else {
+        return {
+          type: 'gear',
+          id: itemId as GearItemId,
+        };
+      }
+    } catch (e) {
+      if (e instanceof ValidationError) {
+        throw createError({
+          statusCode: 400,
+          statusMessage: `Invalid query parameters: ${e.message}`,
+        });
+      } else {
+        console.error('Unexpected error while validating query parameters', e);
+        throw createError({
+          statusCode: 500,
+        });
+      }
     }
   });
 

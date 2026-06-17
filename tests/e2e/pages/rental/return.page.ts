@@ -1,5 +1,4 @@
 import type { Locator, Page } from '@playwright/test';
-import { LostGearPage } from '../lost-gear.page';
 import type { RentalId } from '~/types/rental';
 import { navigateTo } from '~/tests/e2e/fixtures';
 import { uuidRegex } from '~/utils/utils';
@@ -38,17 +37,6 @@ export class RentalReturnPage {
         .getByTestId('returnedAmountInput')
         .getByRole('spinbutton'),
       quickReturn: item.getByTestId('quickReturn'),
-      more: {
-        menuButton: item.getByTestId('rentalItemMenuButton'),
-        markAsLost: item.getByTestId('markAsLost'),
-      },
     };
-  }
-
-  async markItemAsLost(name: string) {
-    const item = this.rentedItem(name);
-    await item.more.menuButton.click();
-    await item.more.markAsLost.click();
-    return new LostGearPage(this.page);
   }
 }

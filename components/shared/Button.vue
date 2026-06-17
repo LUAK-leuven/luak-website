@@ -2,6 +2,7 @@
   defineProps<{
     disabled?: boolean;
     type?: HTMLButtonElement['type'];
+    tabindex?: number;
   }>();
 
   const emit = defineEmits<{
@@ -17,6 +18,7 @@
     class="btn"
     :disabled="disabled || _disabled"
     :type="type"
+    :tabindex="tabindex"
     @click="emit('click')">
     <slot />
   </button>

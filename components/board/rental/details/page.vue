@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import PaymentModal from '~/components/PaymentModal.vue';
   import type { RentalDetails } from '~/types/rental';
-  import RentalItem from './rentalItem.vue';
+  import RentalItem from './RentalItem.vue';
   import Button from '~/components/shared/Button.vue';
 
   const props = defineProps<{
@@ -74,29 +74,23 @@
   <hr class="my-3" />
   <div
     class="border rounded-sm grid"
-    :class="'grid-cols-[3fr_1fr_1fr]'"
+    :class="'grid-cols-[3fr_1fr_auto]'"
     data-testId="gear-and-topos-overview">
     <b class="border px-1">Gear</b>
-    <b class="border px-1">Amount</b>
-    <b class="border px-1">Returned amount</b>
+    <b class="border px-1">Returend / Rented</b>
+    <b class="border px-1"></b>
     <RentalItem
-      v-for="(
-        { name, rentedAmount, returnedAmount, lostAmount }, idx
-      ) of rental.gear"
-      :key="idx"
-      :name="name"
-      :rented-amount="rentedAmount"
-      :returned-amount="returnedAmount"
-      :lost-amount="lostAmount" />
+      v-for="gearItem of rental.gear"
+      :key="gearItem.id"
+      :item="gearItem"
+      item-type="gear"
+      :rental-id="rental.id" />
     <RentalItem
-      v-for="(
-        { name, rentedAmount, returnedAmount, lostAmount }, idx
-      ) of rental.topos"
-      :key="idx"
-      :name="name"
-      :rented-amount="rentedAmount"
-      :returned-amount="returnedAmount"
-      :lost-amount="lostAmount" />
+      v-for="topoItem of rental.topos"
+      :key="topoItem.id"
+      :item="topoItem"
+      item-type="topo"
+      :rental-id="rental.id" />
   </div>
   <hr class="my-3" />
   <div class="flex justify-end gap-3">

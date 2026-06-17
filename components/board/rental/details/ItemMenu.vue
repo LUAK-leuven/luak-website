@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import Button from '~/components/shared/Button.vue';
   import type { RentalId, RentalItemId } from '~/types/rental';
 
   defineProps<{
@@ -8,12 +9,12 @@
 </script>
 <template>
   <div class="dropdown dropdown-end">
-    <button
+    <Button
       class="btn btn-circle btn-xs btn-ghost"
-      tabindex="0"
+      :tabindex="0"
       data-testid="rentalItemMenuButton">
       <span class="material-symbols-outlined">more_vert</span>
-    </button>
+    </Button>
     <ul
       class="dropdown-content menu bg-base-100 rounded-box w-36 p-1 shadow-sm text-sm"
       tabindex="0">

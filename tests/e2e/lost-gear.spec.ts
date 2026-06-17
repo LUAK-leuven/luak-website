@@ -38,8 +38,7 @@ test.describe('lost gear form', () => {
     await rentalReturnPage.saveButton.click();
 
     // Mark as lost
-    await rentalDetailsPage.returnRental();
-    const lostGearPage = await rentalReturnPage.markItemAsLost(topoName);
+    const lostGearPage = await rentalDetailsPage.markItemAsLost(topoName);
 
     await expect(lostGearPage.title).toHaveText('Lost Gear');
     await lostGearPage.expectToHave({
@@ -90,8 +89,8 @@ test.describe('lost gear form', () => {
     ).toHaveText('1');
 
     // --- Cannot mark it as lost again ---
-    await rentalReturnPage.navigate(rentalId);
-    await rentalReturnPage.markItemAsLost(topoName);
+    await rentalDetailsPage.navigate(rentalId);
+    await rentalDetailsPage.markItemAsLost(topoName);
 
     await lostGearPage.expectToHave({
       topo: {
@@ -102,7 +101,8 @@ test.describe('lost gear form', () => {
       },
     });
 
-    // await lostGearPage.saveButton.click();
+    await lostGearPage.saveButton.click();
+    await expect(lostGearPage.lostAmountError).toBeVisible();
   });
 
   test('can mark a gear item as lost', async ({ page }) => {
@@ -123,10 +123,9 @@ test.describe('lost gear form', () => {
     const rentalReturnPage = await rentalDetailsPage.returnRental();
     await rentalReturnPage.depositReturned.check(); // return deposit so that we can make a 'returned' rental later on
     await rentalReturnPage.saveButton.click();
-    await rentalDetailsPage.returnRental();
 
     // Mark as lost
-    const lostGearPage = await rentalReturnPage.markItemAsLost(gearItemName);
+    const lostGearPage = await rentalDetailsPage.markItemAsLost(gearItemName);
 
     await expect(lostGearPage.title).toHaveText('Lost Gear');
     await lostGearPage.expectToHave({
@@ -167,8 +166,8 @@ test.describe('lost gear form', () => {
     });
 
     // --- Mark more as lost ---
-    await rentalReturnPage.navigate(rentalId);
-    await rentalReturnPage.markItemAsLost(gearItemName);
+    await rentalDetailsPage.navigate(rentalId);
+    await rentalDetailsPage.markItemAsLost(gearItemName);
 
     await lostGearPage.expectToHave({
       gear: {
