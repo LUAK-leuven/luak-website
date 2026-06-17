@@ -75,4 +75,10 @@ export default defineNuxtConfig({
     'nuxt-studio',
     'nuxt-typed-router',
   ],
+  vite: {
+    optimizeDeps: {
+      // TODO: See if we can remove this for a more structural solution. This is a workaround for the issue where the cookie package is not being bundled correctly by Vite.
+      include: ['cookie'],
+    },
+  },
 });
