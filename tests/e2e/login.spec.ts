@@ -1,6 +1,6 @@
-import { expect, test } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { LoginPage } from './pages/login.page';
-import { navigateTo } from './fixtures';
+import { navigateTo, test } from '~/tests/e2e/fixtures';
 import { testUsers } from './testUtils/TestUser';
 
 test('Login & logout — happy path', async ({ page }) => {

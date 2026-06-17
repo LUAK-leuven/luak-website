@@ -1,6 +1,11 @@
-import { expect, test } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { RentalFormPage } from './pages/rental/form.page';
-import { authStateFile, cleanDatabase, navigateTo } from './fixtures';
+import {
+  authStateFile,
+  cleanDatabase,
+  navigateTo,
+  test,
+} from '~/tests/e2e/fixtures';
 import dayjs from 'dayjs';
 import { RentalDetailsPage } from '~/tests/e2e/pages/rental/details.page';
 import { RentalsOverviewPage } from '~/tests/e2e/pages/rentals-overview.page';
@@ -98,6 +103,7 @@ test.describe('create a new rental', () => {
     await rentalReturnPage.depositReturned.check();
 
     await rentalReturnPage.saveButton.click();
+    await expect(page).toHaveURL(rentalDetailsPage.urlRegex);
 
     await rentalDetailsPage.expectToHave({
       status: 'Returned',

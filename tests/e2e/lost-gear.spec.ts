@@ -1,5 +1,5 @@
-import { expect, test, type Page } from '@playwright/test';
-import { authStateFile, cleanDatabase } from './fixtures';
+import { expect, type Page } from '@playwright/test';
+import { authStateFile, cleanDatabase, test } from '~/tests/e2e/fixtures';
 import { RentalFormPage } from './pages/rental/form.page';
 import { TopoLibraryPage } from './pages/topos/library.page';
 import { GearInventoryPage } from './pages/gear/inventory.page';

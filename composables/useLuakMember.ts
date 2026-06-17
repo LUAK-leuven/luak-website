@@ -21,7 +21,7 @@ export function useLuakMember(): AsyncData<
   const user = useSupabaseUser();
 
   return useAsyncData(
-    'useLuakMember',
+    `useLuakMember-${user.value?.sub ?? 'unauthenticated'}`,
     async () => {
       if (!user.value) {
         return {

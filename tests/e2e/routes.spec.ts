@@ -1,5 +1,5 @@
-import { expect, test, type Page } from '@playwright/test';
-import { authStateFile } from '~/tests/e2e/fixtures';
+import { expect, type Page } from '@playwright/test';
+import { authStateFile, test } from '~/tests/e2e/fixtures';
 
 type Access = 'allow' | 'abort' | 'redirect' | 'page not found';
 

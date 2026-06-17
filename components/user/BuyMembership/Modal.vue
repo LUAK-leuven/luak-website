@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import createMembershipSchema from '~/components/user/BuyMembership/createMembershipSchema';
   import BoolField from '~/components/input/BoolField.vue';
+  import Button from '~/components/shared/Button.vue';
 
   const { handleSubmit, isSubmitting } = useForm({
     validationSchema: toTypedSchema(createMembershipSchema),
@@ -46,21 +47,21 @@
 </script>
 
 <template>
-  <button
+  <Button
     class="btn"
     onclick="buy_membership_modal.showModal()"
     data-testId="buyMembershipButton">
     Buy a membership
-  </button>
+  </Button>
 
   <!-- --------------------------------------------- -->
 
   <dialog id="buy_membership_modal" class="modal modal-bottom md:modal-middle">
     <div class="modal-box bg-base-100 text-black">
       <form method="dialog">
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+        <Button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
           ✕
-        </button>
+        </Button>
       </form>
       <h2 class="mb-4">
         Buy a membership for {{ luak_year }}-{{ luak_year! + 1 }} <br />
@@ -102,9 +103,9 @@
 
       <div class="modal-action">
         <form method="dialog">
-          <button class="btn">Close</button>
+          <Button class="btn">Close</Button>
         </form>
-        <button
+        <Button
           class="btn btn-primary"
           data-testid="buy-membership-button"
           @click="buyMembership">
@@ -112,7 +113,7 @@
             loading
           </span>
           <span v-else>buy membership</span>
-        </button>
+        </Button>
       </div>
     </div>
   </dialog>
