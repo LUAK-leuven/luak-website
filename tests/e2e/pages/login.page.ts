@@ -33,49 +33,15 @@ export class LoginPage {
     await this.email.fill(email);
     await this.password.fill(password);
     await this.submitButton.click();
-
-    try {
-      await expect
-        .poll(
-          async () => {
-            return (
-              (await this.errorMessage.isVisible()) ||
-              (await this.submitButton.getByTestId('loading').isVisible()) ||
-              (await this.page.getByTestId('page.title').isVisible())
-            );
-          },
-          { timeout: 2_000 },
-        )
-        .toBe(true);
-    } catch {
-      console.log(
-        `error: ${await this.errorMessage.isVisible()}\nloading: ${await this.submitButton.getByTestId('loading').isVisible()}\nprofile:${await this.page.getByTestId('page.title').isVisible()}`,
-      );
-      return 'timeout';
-    }
-
-    return (await this.errorMessage.isVisible()) ? 'error' : 'loading';
   }
 
   async loginAsserted(email: string, password: string) {
     await navigateTo(this.page, LoginPage.path);
-    const result: 'error' | 'loading' | 'timeout' = await this.login(
-      email,
-      password,
-    );
-    switch (result) {
-      case 'error': {
-        throw new Error(`Error - Failed to login user ${email}.`);
-      }
-      case 'timeout': {
-        throw new Error(`Timeout - Failed to login user ${email}.`);
-      }
-      case 'loading': {
-        await expect(this.submitButton.getByTestId('loading')).toBeHidden();
-        await this.page.waitForURL('/profile/overview');
-        return;
-      }
-    }
+    await this.login(email, password);
+
+    await expect(this.errorMessage).toBeHidden();
+    await this.page.waitForURL('/profile/overview');
+    return;
   }
 
   async logout() {

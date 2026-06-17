@@ -1,5 +1,4 @@
-import { test } from '@playwright/test';
-import { authStateFile, login } from '../fixtures';
+import { authStateFile, login, test } from '../fixtures';
 import { testServiceBuilder } from '../testUtils/testServices';
 import { testUsers } from '../testUtils/TestUser';
 
