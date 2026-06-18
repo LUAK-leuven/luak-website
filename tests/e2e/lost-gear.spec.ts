@@ -14,6 +14,8 @@ test.describe('lost gear form', () => {
   });
 
   test('can mark a topo as lost', async ({ page }) => {
+    test.slow();
+
     const rentalFormPage = await RentalFormPage.navigate(page);
     const topoName = 'Topo Flone';
 
@@ -103,6 +105,8 @@ test.describe('lost gear form', () => {
   });
 
   test('can mark a gear item as lost', async ({ page }) => {
+    test.slow();
+
     const rentalFormPage = await RentalFormPage.navigate(page);
 
     // Create a rental

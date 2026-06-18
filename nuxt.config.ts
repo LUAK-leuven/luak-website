@@ -75,10 +75,12 @@ export default defineNuxtConfig({
     'nuxt-studio',
     'nuxt-typed-router',
   ],
+  // dev server configuration
   vite: {
     optimizeDeps: {
       // TODO: This is a workaround for the issue where the cookie package is not being bundled correctly by Vite, due to a bug in @supabase/ssr (comig with @supabase/supabase-js).
       include: ['@supabase/ssr', '@supabase/supabase-js', 'cookie'],
+      holdUntilCrawlEnd: true, // explicit — block requests until crawl done
     },
   },
 });
