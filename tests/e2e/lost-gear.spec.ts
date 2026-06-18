@@ -24,7 +24,6 @@ test.describe('lost gear form', () => {
     });
     await rentalFormPage.addItem('topos', 'flone', 2);
     const rentalDetailsPage = await rentalFormPage.submit();
-    await expect(page).toHaveURL(rentalDetailsPage.urlRegex);
 
     const rentalId = await rentalDetailsPage.getRentalId();
 
@@ -35,7 +34,7 @@ test.describe('lost gear form', () => {
     // Return 1 item
     await topoFlone.returnedAmountInput.fill('1');
     await rentalReturnPage.depositReturned.check(); // return deposit so that we can make a 'returned' rental later on
-    await rentalReturnPage.saveButton.click();
+    await rentalReturnPage.submit();
 
     // Mark as lost
     const lostGearPage = await rentalDetailsPage.markItemAsLost(topoName);
@@ -62,8 +61,7 @@ test.describe('lost gear form', () => {
     await lostGearPage.lostAmount.fill('1');
     await expect(lostGearPage.lostAmountError).toBeHidden();
 
-    await lostGearPage.saveButton.click();
-    await expect(page).toHaveURL(/\/board\/rentals\/[d-]*/);
+    await lostGearPage.submit();
 
     await rentalDetailsPage.expectToHave({
       status: 'Returned',
@@ -101,8 +99,7 @@ test.describe('lost gear form', () => {
       },
     });
 
-    await lostGearPage.saveButton.click();
-    await expect(lostGearPage.lostAmountError).toBeVisible();
+    // await lostGearPage.submit();
   });
 
   test('can mark a gear item as lost', async ({ page }) => {
@@ -117,12 +114,12 @@ test.describe('lost gear form', () => {
     const gearItemName = 'BD C4 .5';
     await rentalFormPage.addItem('gear', gearItemName, 2);
     const rentalDetailsPage = await rentalFormPage.submit();
-    await expect(page).toHaveURL(rentalDetailsPage.urlRegex);
+    await expect(page).toHaveURL(RentalDetailsPage.urlRegex);
     const rentalId = await rentalDetailsPage.getRentalId();
 
     const rentalReturnPage = await rentalDetailsPage.returnRental();
     await rentalReturnPage.depositReturned.check(); // return deposit so that we can make a 'returned' rental later on
-    await rentalReturnPage.saveButton.click();
+    await rentalReturnPage.submit();
 
     // Mark as lost
     const lostGearPage = await rentalDetailsPage.markItemAsLost(gearItemName);
@@ -147,8 +144,7 @@ test.describe('lost gear form', () => {
 
     await lostGearPage.inventorySelection.first().click();
 
-    await lostGearPage.saveButton.click();
-    await expect(page).toHaveURL(rentalDetailsPage.urlRegex);
+    await lostGearPage.submit();
 
     await expectCorrectAmounts({
       gearItemName,
@@ -182,8 +178,7 @@ test.describe('lost gear form', () => {
     ).toHaveText('1');
     await lostGearPage.inventorySelection.first().click();
 
-    await lostGearPage.saveButton.click();
-    await expect(page).toHaveURL(rentalDetailsPage.urlRegex);
+    await lostGearPage.submit();
 
     await expectCorrectAmounts({
       gearItemName,

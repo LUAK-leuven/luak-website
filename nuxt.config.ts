@@ -77,8 +77,8 @@ export default defineNuxtConfig({
   ],
   vite: {
     optimizeDeps: {
-      // TODO: See if we can remove this for a more structural solution. This is a workaround for the issue where the cookie package is not being bundled correctly by Vite.
-      include: ['cookie'],
+      // TODO: This is a workaround for the issue where the cookie package is not being bundled correctly by Vite, due to a bug in @supabase/ssr (comig with @supabase/supabase-js).
+      include: ['@supabase/ssr', '@supabase/supabase-js', 'cookie'],
     },
   },
 });

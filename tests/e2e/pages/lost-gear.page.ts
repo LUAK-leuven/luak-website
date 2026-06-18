@@ -1,6 +1,7 @@
 import { navigateTo } from '~/tests/e2e/fixtures';
 import { FullPageCard } from './FullPageCard';
 import { expect, type Locator, type Page } from '@playwright/test';
+import { RentalDetailsPage } from './rental/details.page';
 
 export class LostGearPage extends FullPageCard {
   static readonly path = '/board/lost-gear';
@@ -21,7 +22,7 @@ export class LostGearPage extends FullPageCard {
   readonly gearItemName: Locator;
   readonly inventorySelection: Locator;
 
-  readonly saveButton: Locator;
+  private readonly saveButton: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -50,11 +51,16 @@ export class LostGearPage extends FullPageCard {
     this.saveButton = this.page.getByTestId('saveButton');
   }
 
-  async navigate() {
+  readonly navigate = async () => {
     await navigateTo(this.page, LostGearPage.path);
-  }
+  };
 
-  async expectToHave(
+  readonly submit = async () => {
+    await this.saveButton.click();
+    await expect(this.page).toHaveURL(RentalDetailsPage.urlRegex);
+  };
+
+  readonly expectToHave = async (
     args: {
       rental?: {
         member?: string;
@@ -83,7 +89,7 @@ export class LostGearPage extends FullPageCard {
           };
         }
     ),
-  ) {
+  ) => {
     if (args.rental) {
       await Promise.all([
         optionalExpect(this.member).toContainText(args.rental.member),
@@ -125,7 +131,7 @@ export class LostGearPage extends FullPageCard {
         ),
       ]);
     }
-  }
+  };
 }
 
 const optionalExpect = (locator: Locator) => {

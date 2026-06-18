@@ -9,36 +9,6 @@ Make sure to read [ai-context](./ai-context/index.md) so that you can load the c
 
 ---
 
-## Commands
-
-```bash
-# Development server (uses .env.local by default)
-yarn dev
-
-# Development server against production DB
-yarn dev:prod
-
-# Production build
-yarn build
-
-# Lint (ESLint + Prettier check)
-yarn lint
-
-# Lint fix (ESLint --fix + Prettier --write)
-yarn lintfix
-
-# Run unit tests (vitest)
-yarn test:unit
-
-# Run e2e tests (playwright, slow)
-yarn test:e2e
-
-# Regenerate Supabase TypeScript types
-yarn supabase gen types --lang typescript --local > types/database.types.ts
-```
-
----
-
 ## Code Style
 
 ### TypeScript
@@ -51,20 +21,17 @@ yarn supabase gen types --lang typescript --local > types/database.types.ts
 - Prefer named exports; use `import * as yup from 'yup'` only for namespace-style libraries.
 - Use branded ID types (`EntityId<'user'>`, `UserId`, `RentalId`) for all primary keys.
 - Cast Supabase row IDs: `data.id as UserId`.
-- Do not duplicate database types, use `Database['public']['Tables']['X']['Row']` for table row types, `Enums<'x'>` for
-  DB enums.
+- Do not duplicate database types, use `Database['public']['Tables']['X']['Row']` for table row types, `Enums<'x'>` for DB enums.
 - Utility types live in `utils/typeUtils.ts`: `Defined<T>`, `GetReturn<T>`, `Unwrap<T>`.
 - Generic components use `<script setup lang="ts" generic="T">`.
 
 ### Vue SFCs
 
 - Always use Composition API with `<script setup lang="ts">`.
-- `<script setup>` and `<style>` contents are indented 2 spaces inside the tag (`vueIndentScriptAndStyle: true`).
 - Use `defineProps<{ ... }>()` (generic typed), `withDefaults()` when needed.
 - Use typed emits: `defineEmits<{ close: []; onSelect: [value: T] }>()`.
 - Use `defineModel<T>()` for two-way binding.
-- Nuxt auto-imports are available (`ref`, `computed`, `useAsyncData`, `useSupabaseClient`, `definePageMeta`, etc.) — no
-  explicit import needed.
+- Nuxt auto-imports are available (`ref`, `computed`, `useAsyncData`, `useSupabaseClient`, `definePageMeta`, etc.) — no explicit import needed.
 - Use `NuxtLink` instead of `<a>`, `NuxtImg` instead of `<img>`, `ContentRenderer` for Markdown.
 
 ### Imports & Aliases
@@ -87,30 +54,13 @@ yarn supabase gen types --lang typescript --local > types/database.types.ts
 | TypeScript types      | PascalCase                                   | `UnsavedRental`, `RentalId`            |
 | Component props/emits | camelCase in TS, kebab-case in template      | `isLoading` / `:is-loading`            |
 | DB columns            | snake_case (from Supabase)                   | `created_at`, `is_active`              |
-| Pages                 | kebab-case directories, camelCase file names | `pages/board/rentals/[id].vue`         |
-
-### Supabase Query Pattern
-
-```ts
-const { data, error } = await useSupabaseClient<Database>()
-  .from('TableName')
-  .select('col1, col2, Related(col)')
-  .eq('id', someId)
-  .single();
-
-if (error || !data) {
-  console.error(error);
-  return fallbackValue; // never throw; return safe default
-}
-```
+| Pages                 | kebab-case directories                       | `pages/board/rentals/[id].vue`         |
 
 ### Error Handling
 
-- Supabase errors: check `if (error || !data)`, log with `console.error`/`console.warn`, return a safe fallback — **do
-  not throw**.
+- To show an error/success to the user, use `useToast().show('error' | 'success', message)`.
+- If the error is an error that should be thrown (e.g., a 404 page), use `throw createError({ statusCode: 404, statusMessage: '...' })`.
 - Form errors: use `setFieldError('field', message)` via vee-validate.
-- Global toasts: `useToast().show('error' | 'success', message)`.
-- Route errors: `createError({ statusCode: 404, statusMessage: '...' })` or `navigateTo('/login')` in middleware.
 
 ### Form Validation (vee-validate + yup)
 
@@ -128,11 +78,12 @@ Shared yup validators (phone, password) live in `utils/yup.ts`.
 
 ### UI / Styling
 
+- Reuse existing components (such as the `Button` iso the native html `button`) and composables for UI.
 - Use **TailwindCSS + DaisyUI** classes for all UI. Active theme: `nord`.
 - DaisyUI patterns: `btn btn-primary`, `card card-compact`, `badge badge-info`, `modal`, `loading loading-spinner`,
   `alert alert-success`.
 - Global base styles and custom fonts in `assets/css/main.scss`.
-- Do not write raw CSS when a Tailwind or DaisyUI utility exists.
+- Do not write raw CSS.
 
 ---
 

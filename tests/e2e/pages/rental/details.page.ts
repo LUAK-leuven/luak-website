@@ -10,7 +10,7 @@ import { navigateTo } from '~/tests/e2e/fixtures';
 export class RentalDetailsPage {
   private readonly page: Page;
 
-  readonly urlRegex = new RegExp(`\\/board\\/rentals\\/${uuidRegex}`);
+  static readonly urlRegex = new RegExp(`.+\\/board\\/rentals\\/${uuidRegex}`);
   readonly path = (rentalId: RentalId) => `/board/rentals/${rentalId}/`;
 
   constructor(page: Page) {

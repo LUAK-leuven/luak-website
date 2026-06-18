@@ -16,7 +16,7 @@ export class RentalFormPage {
   readonly comments: Locator;
   readonly depositFee: Locator;
   readonly paymentMethod: Locator;
-  readonly submitButton: Locator;
+  private readonly submitButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -108,6 +108,8 @@ export class RentalFormPage {
 
   async submit() {
     await this.submitButton.click();
+    await expect(this.page).toHaveURL(RentalDetailsPage.urlRegex);
+    await this.page.getByTestId('toast-close-button').click();
     return new RentalDetailsPage(this.page);
   }
 

@@ -35,6 +35,8 @@ logs
 tests/e2e/.auth/
 
 # APM dependencies
+apm.lock.yaml
 apm_modules/
 .agents/
 .opencode/
+.claude/
