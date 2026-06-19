@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import { queryCollection } from '#imports'; // It seems that querryCollection is imported from the server side. This hould be fixed with Nuxt 4 upgrade.
+
   definePageMeta({
     layout: 'picture',
   });
@@ -6,8 +8,7 @@
   const { data } = await useAsyncData(() =>
     queryCollection('news').order('date', 'DESC').limit(NR_OF_ARTICLES).all(),
   );
-  const { data: user } = await useLuakMember();
-  const membershipInfo = await useUserService().getMembershipInfo({
+  const user = await useUserService().getMembershipInfo({
     authRequired: false,
   });
 </script>
@@ -32,18 +33,16 @@
             Check our activities
           </NuxtLink>
           <NuxtLink
-            v-if="
-              !user.hasActiveMembership && !membershipInfo.wasMemberLastYear()
-            "
-            class="btn btn-outline m-2 text-white"
-            :to="{ name: 'pages-slug', params: { slug: ['become-a-member'] } }">
-            Become a member
-          </NuxtLink>
-          <NuxtLink
-            v-if="membershipInfo.wasMemberLastYear()"
+            v-if="user.wasMemberLastYear()"
             class="btn m-2 text-white bg-orange-400 border-orange-400 hover:bg-orange-600 hover:border-orange-600"
             :to="{ name: 'profile-overview' }">
             Renew membership
+          </NuxtLink>
+          <NuxtLink
+            v-else-if="!user.hasActiveMembership()"
+            class="btn btn-outline m-2 text-white"
+            :to="{ name: 'pages-slug', params: { slug: ['become-a-member'] } }">
+            Become a member
           </NuxtLink>
         </div>
       </div>

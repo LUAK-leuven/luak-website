@@ -2,11 +2,10 @@
   import PublicRentalDetails from '~/components/board/rental/PublicRentalDetails.vue';
   import { useRentalService } from '~/composables/useRentalService';
 
-  const { data: user } = await useLuakMember();
+  const user = await useUserService().getUserInfo();
 
-  const { getForUser } = useRentalService();
-  const { rentals, pending: loading } = await getForUser(
-    user.value.userInfo!.id, // TODO fix usafe !
+  const { rentals, pending: loading } = await useRentalService().getForUser(
+    user.value.id,
   );
 
   const activeRentals = computed(() =>
@@ -26,7 +25,7 @@
   <FullPageCard>
     <template #title>my gear</template>
     <template #subtitle>
-      <h2>Overview of {{ user.userInfo?.first_name }}'s rentals</h2>
+      <h2>Overview of {{ user.firstName }}'s rentals</h2>
     </template>
     <div class="h-4"></div>
     <div v-if="loading" class="flex justify-center">

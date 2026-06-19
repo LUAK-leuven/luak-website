@@ -1,12 +1,15 @@
 <script setup lang="ts">
   import { toggleCloseFix } from '~/utils/toggleCloseFix';
+  import { queryCollectionNavigation } from '#imports'; // Remove in when we are in nuxt 4
 
   const props = defineProps<{ id?: string }>();
 
   const { data: info_navigation } = await useAsyncData('info_navigation', () =>
     queryCollectionNavigation('info_'),
   );
-  const { data: user } = await useLuakMember();
+  const user = await useUserService().getMembershipInfo({
+    authRequired: false,
+  });
 
   const closeDrawer = () => {
     const drawerToggle = document.getElementById(
@@ -60,13 +63,13 @@
         </ul>
       </details>
     </li>
-    <li v-if="!user.isMember">
+    <li v-if="!user.permissions.memberSection">
       <NuxtLink
         :to="{ name: 'pages-slug', params: { slug: ['become-a-member'] } }">
         Become a member
       </NuxtLink>
     </li>
-    <li v-if="user.isMember">
+    <li v-if="user.permissions.memberSection">
       <details id="member-toggle">
         <summary>Member section</summary>
         <ul class="p-2 bg-base-200 rounded-t-none w-52">
@@ -86,7 +89,7 @@
         </ul>
       </details>
     </li>
-    <li v-if="user.isBoard">
+    <li v-if="user.permissions.boardSection">
       <details id="board-toggle">
         <summary>Board</summary>
         <ul class="p-2 bg-base-200 rounded-t-none w-52">
@@ -118,7 +121,7 @@
       </NuxtLink>
     </li>
     <NuxtLink
-      v-if="user.userInfo === undefined"
+      v-if="!user.authenticated"
       class="btn btn-primary btn-outline"
       :to="{ name: 'profile-overview' }"
       data-testId="nav.login">

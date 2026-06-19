@@ -1,5 +1,7 @@
 <script setup lang="ts">
-  const { data: user } = await useLuakMember();
+  const { getUserInfo, getMembershipInfo } = useUserService();
+  const membership = await getMembershipInfo();
+  const user = await getUserInfo();
 </script>
 <template>
   <FullPageCard>
@@ -7,12 +9,12 @@
     <span v-if="!user">Not logged in yet</span>
     <template v-else>
       <h2 data-testId="userName">
-        Hi {{ user.userInfo?.first_name ?? 'LUAK member' }} 👋
+        Hi {{ user.firstName ?? 'LUAK member' }} 👋
       </h2>
       Welcome to your profile page. Here you can manage your membership! In the
       future more functionality will be added.
       <div class="my-5 mx-2 flex flex-wrap justify-evenly gap-x-4">
-        <UserMembershipCard v-if="user.hasActiveMembership" />
+        <UserMembershipCard v-if="membership.hasActiveMembership()" />
         <UserBuyMembershipCard v-else />
         <UserCard image="/IMG_20240410_125659.jpg">
           <template #title> Profile Settings 🔧 </template>

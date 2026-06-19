@@ -3,7 +3,7 @@
 
   definePageMeta({ middleware: 'active-member-guard' });
 
-  const { data: user } = await useLuakMember();
+  const user = await useUserService().getMembershipInfo();
   const { data: topos, pending, error } = await gearService().getTopoLibrary();
 
   const allTypesOfClimbing = computed(() =>
@@ -111,7 +111,7 @@
             <thead>
               <tr>
                 <th>Title</th>
-                <th v-if="user.isBoard">Place in library</th>
+                <th v-if="user.permissions.boardSection">Place in library</th>
                 <th>Year</th>
                 <th>Countries</th>
                 <th>Type(s) of climbing</th>
@@ -132,7 +132,9 @@
                     </div>
                   </NuxtLink>
                 </td>
-                <td v-if="user.isBoard">{{ topo.placeInLibrary }}</td>
+                <td v-if="user.permissions.boardSection">
+                  {{ topo.placeInLibrary }}
+                </td>
                 <td>{{ topo.yearPublished }}</td>
                 <td>{{ topo.countries.join(', ') }}</td>
                 <td>

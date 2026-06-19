@@ -12,12 +12,7 @@
   const depositFee = ref<number>();
   const rentalId = ref<RentalId>();
 
-  const { data: user } = await useLuakMember();
-  const boardMember = {
-    name:
-      user.value.userInfo!.first_name + ' ' + user.value.userInfo!.last_name,
-    id: user.value.userInfo!.id,
-  };
+  const user = await useUserService().getUserInfo();
 
   const { data: allGear, pending: gearPending } =
     await gearService().getAllGearItems();
@@ -36,7 +31,7 @@
   async function handleSubmit(state: Omit<UnsavedRental, 'boardMemberId'>) {
     const { error, id } = await saveRental({
       ...state,
-      boardMemberId: boardMember.id,
+      boardMemberId: user.value.id,
     });
 
     if (!error && id) {
@@ -80,7 +75,7 @@
 
     <BoardRentalForm
       v-else
-      :board-member-name="boardMember.name"
+      :board-member-name="user.fullName"
       :all-gear="allGear"
       :all-topos="allTopos"
       :handle-submit="handleSubmit"
