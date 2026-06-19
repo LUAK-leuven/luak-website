@@ -181,14 +181,23 @@ export class RentalService {
     return { error: error?.message };
   };
 
-  readonly getRentalsForUser = async (
-    userId: UserId,
-  ): Promise<PublicRentalDetails[] | null> => {
-    const { data: rentals } = await this.supabaseClient
+  readonly getRentalsForUser = async (userId: UserId) => {
+    const { data } = await this.supabaseClient
       .from('Rentals')
       .select(
         `
           id,
+          board_member:Users!Rentals_board_member_id_fkey(
+            first_name,
+            last_name
+          ),
+          member:Users!Rentals_member_id_fkey(
+            first_name,
+            last_name,
+            email,
+            phone_number,
+            id
+          ),
           date_borrow,
           date_return,
           deposit,
@@ -196,29 +205,26 @@ export class RentalService {
           payment_method,
           RentedGear(
             gear_item_id,
-            GearItems(
-              name,
-              GearInventory(id)
-            ),
+            GearItems(name),
             rented_amount,
             returned_amount,
             lost_amount
           ),
           RentedTopos(
             topo_id,
-            Topos(
-              title
-            ),
+            Topos(title),
             rented_amount,
             returned_amount,
             lost_amount
-          )
+          ),
+          contact_info,
+          comments
         `,
       )
       .eq('member_id', userId)
       .throwOnError();
 
-    return rentals.map(this.rentalFromDb);
+    return data;
   };
 }
 
@@ -254,7 +260,9 @@ export const rentalDetailsFromDb = (args: RentalDetailsVo): RentalDetails => {
     dateBorrow: args.date_borrow,
     depositReturned: args.deposit_returned,
     depositFee: args.deposit,
-    boardMember: getFullName(args.board_member),
+    // Due to RLS board_member is only available for board members.
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    boardMember: args.board_member ? getFullName(args.board_member) : '',
     paymentMethod: args.payment_method,
     comments: args.comments ?? '',
     memberId: args.member?.id as UserId | undefined,

@@ -4,39 +4,12 @@ import {
   rentalSummaryFromDb,
 } from '~/services/rentalService';
 import type { RentalId, RentalUpdate, UnsavedRental } from '~/types/rental';
-import type {
-  ExtractFunctionArguments,
-  ExtractFunctionReturn,
-  PickFunctionNames,
-} from '~/utils/typeUtils';
+import type { UserId } from '~/types/user';
 
 const RENTAL = 'rental';
 
-type RentalServiceNames = PickFunctionNames<RentalService>;
-
 export function useRentalService() {
   const rentalService = new RentalService();
-
-  const getRentalData = <T extends RentalServiceNames>(fName: T) => {
-    type Fn = RentalService[T];
-    return async function (...args: ExtractFunctionArguments<Fn>) {
-      const { data, pending, error, refresh } = await useLazyAsyncData(
-        `${RENTAL}-${fName}-${JSON.stringify(args)}`,
-        async () => {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-expect-error
-          return await rentalService[fName](...args);
-        },
-      );
-      if (error.value) console.error(fName, error.value);
-      return {
-        rentals: data as Ref<Unwrap<ExtractFunctionReturn<Fn>> | null>,
-        pending,
-        refresh,
-        error,
-      };
-    };
-  };
 
   const getAllRentals = async () => {
     const { data, pending, error } = await useLazyAsyncData(
@@ -93,13 +66,30 @@ export function useRentalService() {
     return { error };
   }
 
+  const getRentalsForUser = async (userId: UserId) => {
+    const { data, pending, error } = await useLazyAsyncData(
+      `${RENTAL}-getAllRentalsForUser-${userId}`,
+      async () => await rentalService.getRentalsForUser(userId),
+    );
+    if (error.value) console.error('getAllRentals', error.value);
+    const rentals = computed(() => {
+      if (!data.value) return undefined;
+      return data.value.map((rental) => rentalDetailsFromDb(rental));
+    });
+    return {
+      rentals,
+      pending,
+      error,
+    };
+  };
+
   return {
     save,
     edit,
     update,
     get: getRental,
     getAllRentals,
-    getForUser: getRentalData('getRentalsForUser'),
+    getRentalsForUser,
   };
 }
 
