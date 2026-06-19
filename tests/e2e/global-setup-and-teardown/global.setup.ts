@@ -9,11 +9,6 @@ test('clean db', async () => {
   await userTestService().resetTestMemberships();
 });
 
-test('wait for nuxt server to be ready', async () => {
-  const routes = ['/', '/login', '/profile'];
-  await Promise.all(routes.map((r) => fetch(new URL(r, process.env.BASE_URL))));
-});
-
 if (process.env.SKIP_LOGIN_SETUP !== 'true') {
   Object.entries(testUsers).forEach(([userKey, testUser]) => {
     test(`login test users - ${userKey}`, async ({ page, context }) => {

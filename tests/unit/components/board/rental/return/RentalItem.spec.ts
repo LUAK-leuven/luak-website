@@ -1,8 +1,9 @@
 import { describe, expect, test } from 'vitest';
 import { mountSuspended } from '@nuxt/test-utils/runtime';
-import RentalItem from '~/components/board/rental/return/rentalItem.vue';
+import RentalItem from '~/components/board/rental/return/RentalItem.vue';
 import type { GearItemId, TopoId } from '~/types/gear';
 import type { RentalId } from '~/types/rental';
+import { RentalItem as RentalItemModel } from '~/model/rental';
 
 describe('RentalItem', () => {
   test.each([
@@ -23,11 +24,13 @@ describe('RentalItem', () => {
       const wrapper = await mountSuspended(RentalItem, {
         props: {
           rentalId: crypto.randomUUID() as RentalId,
-          itemId: { type: 'topo', id: crypto.randomUUID() as TopoId },
-          name: 'quickdraw',
-          rentedAmount: rentedAmount,
-          returnedAmount: returnedAmount,
-          lostAmount: 0,
+          item: new RentalItemModel({
+            itemId: { type: 'topo', id: crypto.randomUUID() as TopoId },
+            name: 'quickdraw',
+            rentedAmount,
+            returnedAmount,
+            lostAmount: 0,
+          }),
           bouncing: false,
         },
       });
@@ -49,11 +52,13 @@ describe('RentalItem', () => {
     const wrapper = await mountSuspended(RentalItem, {
       props: {
         rentalId: crypto.randomUUID() as RentalId,
-        itemId: { type: 'gear', id: crypto.randomUUID() as GearItemId },
-        name: 'quickdraw',
-        rentedAmount: 1,
-        returnedAmount: 0,
-        lostAmount: 0,
+        item: new RentalItemModel({
+          itemId: { type: 'gear', id: crypto.randomUUID() as GearItemId },
+          name: 'quickdraw',
+          rentedAmount: 1,
+          returnedAmount: 0,
+          lostAmount: 0,
+        }),
         bouncing: false,
       },
     });

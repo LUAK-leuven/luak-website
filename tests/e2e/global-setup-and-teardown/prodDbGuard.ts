@@ -27,4 +27,8 @@ export default async function () {
   }
 
   validateSupabaseUrl(supabaseUrl);
+
+  // wait for nuxt server to be ready
+  const routes = ['/', '/login', '/profile', '/board/rentals/form'];
+  await Promise.all(routes.map((r) => fetch(new URL(r, process.env.BASE_URL))));
 }
