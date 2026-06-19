@@ -3,10 +3,8 @@
   import type { RentalId } from '~/types/rental';
   import { useRentalService } from '~/composables/useRentalService';
 
-  const { get } = useRentalService();
-
   const retnalId = useRoute('board-rentals-id').params.id as RentalId;
-  const { rentals: data, pending } = await get(retnalId);
+  const { rental: data, pending } = await useRentalService().get(retnalId);
 </script>
 
 <template>

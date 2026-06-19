@@ -1,19 +1,17 @@
-import type {
-  RentalId,
-  RentalUpdate,
-  UnsavedRental,
-  RentalDetails,
-  PublicRentalDetails,
-  RentalStatus,
-} from '~/types/rental';
+import type { RentalId, RentalUpdate, UnsavedRental } from '~/types/rental';
 import type { GearItemId, TopoId } from '~/types/gear';
 import type { UserId } from '~/types/user';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '~/types/database.types';
-import { computeRentalStatus } from '~/utils/rental/computeStatus';
-import dayjs from 'dayjs';
-import { parseContactInfo, type ContactInfo } from '~/model/rental';
+import {
+  ContactInfo,
+  RentalSummary,
+  RentalDetails,
+  RentalTopoItem,
+  RentalGearItem,
+} from '~/model/Rental';
 import { getFullName } from '~/services/userService';
+import { object as zodObject, string as zodString } from 'zod';
 
 export class RentalService {
   constructor(
@@ -54,15 +52,7 @@ export class RentalService {
     };
   };
 
-  readonly getRentals = async (): Promise<
-    {
-      id: RentalId;
-      memberName: string;
-      dateBorrow: string;
-      dateReturn: string;
-      status: RentalStatus;
-    }[]
-  > => {
+  readonly getRentals = async () => {
     const { data } = await this.supabaseClient
       .from('Rentals')
       .select(
@@ -81,10 +71,7 @@ export class RentalService {
             rented_amount,
             returned_amount,
             lost_amount,
-            GearItems(
-              name,
-              GearInventory(id)
-            )
+            GearItems(name)
           ),
           RentedTopos(
             topo_id,
@@ -97,36 +84,11 @@ export class RentalService {
       )
       .throwOnError();
 
-    return data.map((rental) => {
-      const contactInfo: ContactInfo | undefined = rental.contact_info
-        ? parseContactInfo(JSON.parse(rental.contact_info))
-        : undefined;
-
-      const rentalStatus = computeRentalStatus({
-        gear: this.rentedGearFromDb(rental.RentedGear),
-        topos: this.rentedToposFromDb(rental.RentedTopos),
-        depositReturned: rental.deposit_returned,
-      });
-      const isReserved = dayjs(rental.date_borrow).isAfter(dayjs());
-
-      return {
-        id: rental.id as RentalId,
-        memberName: rental.member
-          ? getFullName(rental.member)
-          : contactInfo
-            ? contactInfo.fullName
-            : 'Failed to load name',
-        dateReturn: rental.date_return,
-        dateBorrow: rental.date_borrow,
-        status: isReserved ? 'reserved' : rentalStatus,
-      };
-    });
+    return data;
   };
 
-  readonly getRental = async (
-    rentalId: RentalId,
-  ): Promise<RentalDetails | null> => {
-    const { data: rental } = await this.supabaseClient
+  readonly getRental = async (rentalId: RentalId) => {
+    const { data } = await this.supabaseClient
       .from('Rentals')
       .select(
         `
@@ -149,10 +111,7 @@ export class RentalService {
           payment_method,
           RentedGear(
             gear_item_id,
-            GearItems(
-              name,
-              GearInventory(id)
-            ),
+            GearItems(name),
             rented_amount,
             returned_amount,
             lost_amount
@@ -172,28 +131,7 @@ export class RentalService {
       .single()
       .throwOnError();
 
-    const contactInfo: ContactInfo = rental.member
-      ? {
-          fullName: getFullName(rental.member),
-          email: rental.member.email,
-          phoneNumber: rental.member.phone_number ?? undefined,
-        }
-      : rental.contact_info
-        ? (JSON.parse(rental.contact_info) as ContactInfo)
-        : {
-            fullName: 'Failed to load name',
-            email: undefined,
-            phoneNumber: undefined,
-          };
-
-    const publicRentalDetails = this.rentalFromDb(rental);
-    return {
-      ...publicRentalDetails,
-      member: contactInfo,
-      memberId: rental.member?.id as UserId | undefined,
-      boardMember: getFullName(rental.board_member),
-      comments: rental.comments ?? undefined,
-    };
+    return data;
   };
 
   readonly updateRental = async (
@@ -282,85 +220,111 @@ export class RentalService {
 
     return rentals.map(this.rentalFromDb);
   };
-
-  private readonly rentalFromDb = (rental: {
-    id: string;
-    date_borrow: string;
-    date_return: string;
-    deposit: number;
-    deposit_returned: boolean;
-    payment_method: 'cash' | 'transfer';
-    RentedGear: DBRentedGear[];
-    RentedTopos: DBRentedTopos[];
-  }): PublicRentalDetails => {
-    const gear = this.rentedGearFromDb(rental.RentedGear);
-    const topos = this.rentedToposFromDb(rental.RentedTopos);
-
-    const r = {
-      id: rental.id as RentalId,
-      dateBorrow: rental.date_borrow,
-      dateReturn: rental.date_return,
-      depositFee: rental.deposit,
-      depositReturned: rental.deposit_returned,
-      gear: sortBy(gear, 'name'),
-      topos: sortBy(topos, 'name'),
-      paymentMethod: rental.payment_method,
-    } satisfies Omit<PublicRentalDetails, 'status'>;
-
-    const rentalStatus = computeRentalStatus(r);
-    const isReserved = dayjs(r.dateBorrow).isAfter(dayjs());
-    const status = isReserved ? 'reserved' : rentalStatus;
-    return { ...r, status };
-  };
-
-  private readonly rentedGearFromDb = (
-    rentedGear: DBRentedGear[],
-  ): RentalDetails['gear'] =>
-    rentedGear.map((gearItem) => ({
-      id: gearItem.gear_item_id as GearItemId,
-      name: gearItem.GearItems.name,
-      rentedAmount: gearItem.rented_amount,
-      returnedAmount: gearItem.returned_amount,
-      lostAmount: gearItem.lost_amount,
-      unreturnedAmount:
-        gearItem.rented_amount -
-        gearItem.returned_amount -
-        gearItem.lost_amount,
-    }));
-
-  private readonly rentedToposFromDb = (
-    rentedTopos: DBRentedTopos[],
-  ): RentalDetails['topos'] =>
-    rentedTopos.map((topo) => ({
-      id: topo.topo_id as TopoId,
-      name: topo.Topos.title,
-      rentedAmount: topo.rented_amount,
-      returnedAmount: topo.returned_amount,
-      lostAmount: topo.lost_amount,
-      unreturnedAmount:
-        topo.rented_amount - topo.returned_amount - topo.lost_amount,
-    }));
 }
 
-type DBRentedGear = {
-  gear_item_id: string;
-  GearItems: {
-    name: string;
-    GearInventory: {
-      id: string;
-    }[];
-  };
-  rented_amount: number;
-  returned_amount: number;
-  lost_amount: number;
+// Mappers
+
+type RentalSummaryVo = Awaited<ReturnType<RentalService['getRentals']>>[number];
+
+export const rentalSummaryFromDb = (args: RentalSummaryVo): RentalSummary => {
+  const contactInfo: ContactInfo = contactInfoFromDb(args);
+
+  return new RentalSummary({
+    id: args.id as RentalId,
+    gear: args.RentedGear.map((gear) => gearItemFromDb(gear)),
+    topos: args.RentedTopos.map((topo) => topoItemFromDb(topo)),
+    memberName: contactInfo.fullName,
+    dateReturn: args.date_return,
+    dateBorrow: args.date_borrow,
+    depositReturned: args.deposit_returned,
+  });
 };
 
-type DBRentedTopos = {
+type RentalDetailsVo = Awaited<ReturnType<RentalService['getRental']>>;
+
+export const rentalDetailsFromDb = (args: RentalDetailsVo): RentalDetails => {
+  const contactInfo: ContactInfo = contactInfoFromDb(args);
+
+  return new RentalDetails({
+    id: args.id as RentalId,
+    gear: args.RentedGear.map((gear) => gearItemFromDb(gear)),
+    topos: args.RentedTopos.map((topo) => topoItemFromDb(topo)),
+    contactInfo,
+    dateReturn: args.date_return,
+    dateBorrow: args.date_borrow,
+    depositReturned: args.deposit_returned,
+    depositFee: args.deposit,
+    boardMember: getFullName(args.board_member),
+    paymentMethod: args.payment_method,
+    comments: args.comments ?? '',
+    memberId: args.member?.id as UserId | undefined,
+  });
+};
+
+export const contactInfoFromDb = (args: {
+  member: {
+    first_name: string;
+    last_name: string;
+    email?: string;
+    phone_number?: string | null;
+  } | null;
+  contact_info: string | null;
+}) => {
+  if (args.member) return contactInfoFromMember(args.member);
+  if (args.contact_info) return contactInfoFromJsonString(args.contact_info);
+  return new ContactInfo('Failed to get contact info', undefined, undefined);
+};
+
+const contactInfoFromMember = (member: {
+  first_name: string;
+  last_name: string;
+  email?: string;
+  phone_number?: string | null;
+}): ContactInfo => {
+  return new ContactInfo(
+    getFullName(member),
+    member.email,
+    member.phone_number ?? undefined,
+  );
+};
+
+const contactInfoFromJsonString = (jsonString: string): ContactInfo => {
+  const parsed = contactInfoSchema.parse(JSON.parse(jsonString));
+  return new ContactInfo(parsed.fullName, parsed.email, parsed.phoneNumber);
+};
+
+const contactInfoSchema = zodObject({
+  fullName: zodString().nonempty(),
+  email: zodString().nonempty().optional(),
+  phoneNumber: zodString().nonempty().optional(),
+});
+
+const topoItemFromDb = (topo: {
   topo_id: string;
-  Topos: {
-    title: string;
-  };
   rented_amount: number;
   returned_amount: number;
   lost_amount: number;
-};
+  Topos: { title: string };
+}) =>
+  new RentalTopoItem({
+    id: topo.topo_id as TopoId,
+    name: topo.Topos.title,
+    rentedAmount: topo.rented_amount,
+    returnedAmount: topo.returned_amount,
+    lostAmount: topo.lost_amount,
+  });
+
+const gearItemFromDb = (gear: {
+  gear_item_id: string;
+  rented_amount: number;
+  returned_amount: number;
+  lost_amount: number;
+  GearItems: { name: string };
+}) =>
+  new RentalGearItem({
+    id: gear.gear_item_id as GearItemId,
+    name: gear.GearItems.name,
+    rentedAmount: gear.rented_amount,
+    returnedAmount: gear.returned_amount,
+    lostAmount: gear.lost_amount,
+  });

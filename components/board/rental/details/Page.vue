@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import PaymentModal from '~/components/PaymentModal.vue';
-  import type { RentalDetails } from '~/types/rental';
   import RentalItem from '~/components/board/rental/details/RentalItem.vue';
   import Button from '~/components/shared/Button.vue';
+  import type { RentalDetails } from '~/model/Rental';
 
   const props = defineProps<{
     rental: RentalDetails;
@@ -22,16 +22,18 @@
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
     <div class="flex flex-col">
       <span data-testId="member.fullName">
-        Member: {{ rental.member.fullName }}
+        Member: {{ rental.contactInfo.fullName }}
       </span>
-      <span v-if="rental.member.email" class="ml-3">
+      <span v-if="rental.contactInfo.email" class="ml-3">
         ✉️:
-        <SharedMailTo :email="rental.member.email" data-testId="member.email" />
+        <SharedMailTo
+          :email="rental.contactInfo.email"
+          data-testId="member.email" />
       </span>
-      <span v-if="rental.member.phoneNumber" class="ml-3">
+      <span v-if="rental.contactInfo.phoneNumber" class="ml-3">
         ☎️:
         <SharedWhatsappLink
-          :phone-number="rental.member.phoneNumber"
+          :phone-number="rental.contactInfo.phoneNumber"
           data-testId="member.phone" />
       </span>
     </div>
@@ -80,16 +82,9 @@
     <b class="border px-1">Returend / Rented</b>
     <b class="border px-1"></b>
     <RentalItem
-      v-for="gearItem of rental.gear"
-      :key="gearItem.id"
-      :item="gearItem"
-      item-type="gear"
-      :rental-id="rental.id" />
-    <RentalItem
-      v-for="topoItem of rental.topos"
-      :key="topoItem.id"
-      :item="topoItem"
-      item-type="topo"
+      v-for="item of rental.items"
+      :key="`${item.itemId.type}-${item.itemId.id}`"
+      :item="item"
       :rental-id="rental.id" />
   </div>
   <hr class="my-3" />

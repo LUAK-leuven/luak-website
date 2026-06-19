@@ -1,25 +1,25 @@
-import type { RentalDetails } from '~/types/rental';
 import {
   object as yupObject,
   string as yupString,
   number as yupNumber,
   bool as yupBool,
 } from 'yup';
-import type { EntityId } from '~/types/ddd';
+import type { RentalDetails } from '~/model/Rental';
 import type { GearItemId, TopoId } from '~/types/gear';
+import type { RentalItemId } from '~/types/rental';
 
 type ItemId = { id: GearItemId; type: 'gear' } | { id: TopoId; type: 'topo' };
 
-function rentedItemSchema<T extends EntityId<unknown>>(
-  rentedItems: { id: T; rentedAmount: number }[],
+function rentedItemSchema<T extends RentalItemId>(
+  rentedItems: { itemId: T; rentedAmount: number }[],
 ) {
   const x = Object.fromEntries(
-    rentedItems.map(({ id, rentedAmount }) => [
-      id,
+    rentedItems.map(({ itemId, rentedAmount }) => [
+      itemId.id,
       yupNumber().required().min(0).max(rentedAmount),
     ]),
   );
-  return yupObject(x as Record<T, (typeof x)[string]>)
+  return yupObject(x as Record<T['id'], (typeof x)[string]>)
     .required()
     .default({});
 }
@@ -43,10 +43,13 @@ export function useRentalReturnForm(rental: RentalDetails) {
     initialValues: {
       dateReturn: rental.dateReturn,
       returnedGear: Object.fromEntries(
-        rental.gear.map((gearItem) => [gearItem.id, gearItem.returnedAmount]),
+        rental.gear.map((gearItem) => [
+          gearItem.itemId.id,
+          gearItem.returnedAmount,
+        ]),
       ),
       returnedTopos: Object.fromEntries(
-        rental.topos.map((topo) => [topo.id, topo.returnedAmount]),
+        rental.topos.map((topo) => [topo.itemId.id, topo.returnedAmount]),
       ),
       depositReturned: rental.depositReturned,
       comments: rental.comments,

@@ -1,4 +1,8 @@
-import { RentalService } from '~/services/rentalService';
+import {
+  rentalDetailsFromDb,
+  RentalService,
+  rentalSummaryFromDb,
+} from '~/services/rentalService';
 import type { RentalId, RentalUpdate, UnsavedRental } from '~/types/rental';
 import type {
   ExtractFunctionArguments,
@@ -34,6 +38,40 @@ export function useRentalService() {
     };
   };
 
+  const getAllRentals = async () => {
+    const { data, pending, error } = await useLazyAsyncData(
+      `${RENTAL}-getAllRentals`,
+      async () => await rentalService.getRentals(),
+    );
+    if (error.value) console.error('getAllRentals', error.value);
+    const rentals = computed(() => {
+      if (!data.value) return undefined;
+      return data.value.map((rental) => rentalSummaryFromDb(rental));
+    });
+    return {
+      rentals,
+      pending,
+      error,
+    };
+  };
+
+  const getRental = async (rentalId: RentalId) => {
+    const { data, pending, error } = await useLazyAsyncData(
+      `${RENTAL}-getRental-${rentalId}`,
+      async () => await rentalService.getRental(rentalId),
+    );
+    if (error.value) console.error(`getRental-${rentalId}`, error.value);
+    const rental = computed(() => {
+      if (!data.value) return undefined;
+      return rentalDetailsFromDb(data.value);
+    });
+    return {
+      rental,
+      pending,
+      error,
+    };
+  };
+
   async function save(rental: UnsavedRental) {
     const { id, error } = await rentalService.saveRental(rental);
     invalidateCaches();
@@ -59,8 +97,8 @@ export function useRentalService() {
     save,
     edit,
     update,
-    get: getRentalData('getRental'),
-    getAll: getRentalData('getRentals'),
+    get: getRental,
+    getAllRentals,
     getForUser: getRentalData('getRentalsForUser'),
   };
 }

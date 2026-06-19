@@ -1,4 +1,4 @@
-import type { RentalItem } from '~/model/rental';
+import type { RentalItem } from '~/model/Rental';
 
 export default function getItemColor(item: RentalItem): string {
   switch (item.getStatus()) {

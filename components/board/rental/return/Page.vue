@@ -1,12 +1,14 @@
 <script setup lang="ts">
-  import { computeRentalStatus } from '~/utils/rental/computeStatus';
   import TextField from '~/components/input/TextField.vue';
   import { useToast } from '~/composables/useToast';
-  import type { RentalDetails, RentalUpdate } from '~/types/rental';
+  import type { RentalUpdate } from '~/types/rental';
   import RentalItem from '~/components/board/rental/return/RentalItem.vue';
   import { useRentalReturnForm } from '~/composables/board/rental/useRentalReturnForm';
   import type { EntityId } from '~/types/ddd';
-  import { RentalItem as RentalItemModel } from '~/model/rental';
+  import type {
+    RentalDetails,
+    RentalItem as RentalItemModel,
+  } from '~/model/Rental';
 
   const props = defineProps<{
     rental: RentalDetails;
@@ -23,11 +25,11 @@
 
   function mapFormRentedItems<T extends EntityId<unknown>>(
     formReturnedItems: Record<T, number>,
-    rentalRentedItems: { id: T; returnedAmount: number }[],
+    rentalRentedItems: RentalItemModel[],
   ) {
     return Object.entries<number>(formReturnedItems).filter(
       ([id, returnedAmount]) =>
-        rentalRentedItems.find((it) => it.id === id)!.returnedAmount !==
+        rentalRentedItems.find((it) => it.itemId.id === id)!.returnedAmount !==
         returnedAmount,
     ) as [T, number][];
   }
@@ -73,23 +75,25 @@
     },
   );
 
-  const computedStatus = computed(() => {
-    return computeRentalStatus({
-      gear: props.rental.gear.map((g) => ({
-        ...g,
-        returnedAmount: values.returnedGear
-          ? (values.returnedGear[g.id] ?? g.returnedAmount)
-          : g.returnedAmount,
-      })),
-      topos: props.rental.topos.map((t) => ({
-        ...t,
-        returnedAmount: values.returnedTopos
-          ? (values.returnedTopos[t.id] ?? t.returnedAmount)
-          : t.returnedAmount,
-      })),
+  const updatedRental = computed(() =>
+    props.rental.copy({
+      dateReturn: values.dateReturn ?? props.rental.dateReturn,
       depositReturned: values.depositReturned ?? props.rental.depositReturned,
-    });
-  });
+      gear: props.rental.gear.map((g) =>
+        g.copy({
+          returnedAmount:
+            values.returnedGear?.[g.itemId.id] ?? g.returnedAmount,
+        }),
+      ),
+      topos: props.rental.topos.map((t) =>
+        t.copy({
+          returnedAmount:
+            values.returnedTopos?.[t.itemId.id] ?? t.returnedAmount,
+        }),
+      ),
+      comments: values.comments ?? props.rental.comments,
+    }),
+  );
 
   async function exitReturn() {
     await navigateTo({
@@ -102,20 +106,20 @@
 <template>
   <form @submit.prevent>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      <div v-if="rental.member" class="flex flex-col">
+      <div class="flex flex-col">
         <span data-testId="member.fullName">
-          Member: {{ rental.member.fullName }}
+          Member: {{ rental.contactInfo.fullName }}
         </span>
-        <span v-if="rental.member.email" class="ml-3">
+        <span v-if="rental.contactInfo.email" class="ml-3">
           ✉️:
           <SharedMailTo
-            :email="rental.member.email"
+            :email="rental.contactInfo.email"
             data-testId="member.email" />
         </span>
-        <span v-if="rental.member.phoneNumber" class="ml-3">
+        <span v-if="rental.contactInfo.phoneNumber" class="ml-3">
           ☎️:
           <SharedWhatsappLink
-            :phone-number="rental.member.phoneNumber"
+            :phone-number="rental.contactInfo.phoneNumber"
             data-testId="member.phone" />
         </span>
       </div>
@@ -148,7 +152,9 @@
       <div data-testId="paymentMethod">Payment: {{ rental.paymentMethod }}</div>
       <div class="flex flex-row gap-1 items-center">
         <span>Status:</span>
-        <BoardRentalStatusBadge :status="computedStatus" data-testId="status" />
+        <BoardRentalStatusBadge
+          :status="updatedRental.status"
+          data-testId="status" />
       </div>
       <div class="col-span-full flex flex-col">
         <span>Comments:</span>
@@ -169,38 +175,24 @@
       <b class="border px-1"></b>
       <b class="border px-1">Amount</b>
       <RentalItem
-        v-for="{ name, rentedAmount, id, lostAmount } of rental.gear"
-        :key="id"
+        v-for="gearItem of updatedRental.gear"
+        :key="gearItem.itemId.id"
         :rental-id="rental.id"
-        :bouncing="bouncing[`returnedGear.${id}`]"
-        :item="
-          new RentalItemModel({
-            itemId: { type: 'gear', id },
-            name,
-            rentedAmount,
-            returnedAmount: values.returnedGear![id] ?? 0,
-            lostAmount,
-          })
-        "
+        :bouncing="bouncing[`returnedGear.${gearItem.itemId.id}`]"
+        :item="gearItem"
         @update-returned-amount="
-          (amount) => updateReturnedItem({ type: 'gear', id, amount })
+          (amount) =>
+            updateReturnedItem({ type: 'gear', id: gearItem.itemId.id, amount })
         " />
       <RentalItem
-        v-for="{ name, rentedAmount, id, lostAmount } of rental.topos"
-        :key="id"
-        :bouncing="bouncing[`returnedTopos.${id}`]"
-        :item="
-          new RentalItemModel({
-            itemId: { type: 'topo', id },
-            name,
-            rentedAmount,
-            returnedAmount: values.returnedTopos![id] ?? 0,
-            lostAmount,
-          })
-        "
+        v-for="topoItem of updatedRental.topos"
+        :key="topoItem.itemId.id"
+        :bouncing="bouncing[`returnedTopos.${topoItem.itemId.id}`]"
+        :item="topoItem"
         :rental-id="rental.id"
         @update-returned-amount="
-          (amount) => updateReturnedItem({ type: 'topo', id, amount })
+          (amount) =>
+            updateReturnedItem({ type: 'topo', id: topoItem.itemId.id, amount })
         " />
     </div>
     <hr class="my-3" />

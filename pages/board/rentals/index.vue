@@ -7,12 +7,10 @@
     layout: false,
   });
 
-  const { getAll: getAllRentals } = useRentalService();
-
-  const { rentals: data, pending } = await getAllRentals();
+  const { rentals: data, pending } = await useRentalService().getAllRentals();
 
   const rentals = computed(() => {
-    if (data.value !== null) {
+    if (data.value !== undefined) {
       return data.value.toSorted((a, b) => {
         if (a.status !== 'returned' && b.status !== 'returned') {
           if (a.dateReturn === b.dateReturn) return 0;

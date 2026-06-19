@@ -3,8 +3,7 @@ import type { Database } from '~/types/database.types';
 import type { GearItemId } from '~/types/gear';
 import { sumBy } from '~/utils/utils';
 import type { RentalId } from '~/types/rental';
-import { getFullName } from '~/services/userService';
-import { parseContactInfo } from '~/model/rental';
+import { contactInfoFromDb } from '~/services/rentalService';
 
 export class RentalDao {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
@@ -41,7 +40,7 @@ export class RentalDao {
             returned_amount,
             lost_amount
           ),
-          Users!member_id(
+          member:Users!member_id(
             first_name,
             last_name
           ),
@@ -58,11 +57,7 @@ export class RentalDao {
           x.RentedGear,
           (x) => x.rented_amount - x.returned_amount - x.lost_amount,
         ),
-        memberName: x.Users
-          ? getFullName(x.Users)
-          : x.contact_info
-            ? parseContactInfo(JSON.parse(x.contact_info)).fullName
-            : 'Failed to get name',
+        memberName: contactInfoFromDb(x).fullName,
       }))
       .filter((x) => x.rentedAmount > 0);
   }

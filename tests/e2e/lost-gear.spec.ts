@@ -154,7 +154,7 @@ test.describe('lost gear form', () => {
       gearItemName,
       page,
       rental: {
-        status: 'Not returned',
+        status: 'Partially returned',
         rentedAmount: 2,
         returnedAmount: 0,
         lostAmount: 1,

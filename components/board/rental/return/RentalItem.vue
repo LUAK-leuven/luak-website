@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T extends EntityId<unknown>">
   import NumberInput from '~/components/input/Number.vue';
-  import type { RentalItem } from '~/model/rental';
+  import type { RentalItem } from '~/model/Rental';
   import type { EntityId } from '~/types/ddd';
   import type { RentalId } from '~/types/rental';
   import getItemColor from '../getItemColor';
@@ -32,7 +32,7 @@
       <Button
         class="btn btn-circle btn-xs btn-outline"
         data-testId="quickReturn"
-        @click="emit('updateReturnedAmount', item.rentedAmount)">
+        @click="emit('updateReturnedAmount', item.returnableAmount)">
         <span class="material-symbols-outlined text-sm">arrow_forward</span>
       </Button>
     </div>

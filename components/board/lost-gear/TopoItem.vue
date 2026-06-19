@@ -1,20 +1,21 @@
 <script setup lang="ts">
   import Number from '~/components/input/Number.vue';
   import WithLazyResource from '~/components/pages/WithLazyResource.vue';
-  import type { RentalDetails, RentalId } from '~/types/rental';
+  import type { RentalId } from '~/types/rental';
   import { object as yupObject, number as yupNumber } from 'yup';
   import { ErrorMessage } from 'vee-validate';
   import LoadingButton from '~/components/shared/LoadingButton.vue';
+  import type { RentalTopoItem } from '~/model/Rental';
 
   const props = defineProps<{
     rentalId: RentalId;
-    topo: RentalDetails['topos'][number];
+    topo: RentalTopoItem;
   }>();
 
   const { show } = useToast();
 
   const { data, pending, error } = await gearService().getTopoDetails(
-    props.topo.id,
+    props.topo.itemId.id,
   );
 
   const formSchema = yupObject({
@@ -32,7 +33,7 @@
     const { error } = await useSupabaseClient().rpc('mark_topo_as_lost', {
       p_lost_amount: formState.lostAmount,
       p_rental_id: props.rentalId,
-      p_topo_id: props.topo.id,
+      p_topo_id: props.topo.itemId.id,
     });
 
     if (error) {

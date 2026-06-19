@@ -56,7 +56,7 @@
   });
 
   const { get } = useRentalService();
-  const { rentals: data, pending, error } = await get(rentalId.value);
+  const { rental: data, pending, error } = await get(rentalId.value);
 </script>
 
 <template>
@@ -66,7 +66,7 @@
     <h2 class="mt-0 text-center">Rental</h2>
     <BackButton
       :to="{
-        name: 'board-rentals-id-return',
+        name: 'board-rentals-id',
         params: { id: rentalId },
       }" />
 
@@ -76,7 +76,9 @@
       :is-loading="pending"
       :error="error && `Failed to load rental with id: ${rentalId}.`">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div data-testid="member">Member: {{ rental.member.fullName }}</div>
+        <div data-testid="member">
+          Member: {{ rental.contactInfo.fullName }}
+        </div>
         <div class="flex flex-row gap-1 items-center">
           <span>Deposit:</span>
           <span data-testid="depositFee">
@@ -111,11 +113,11 @@
       <TopoItem
         v-if="itemId?.type === 'topo'"
         :rental-id="rentalId"
-        :topo="getBy(rental.topos, 'id', itemId.id)" />
+        :topo="rental.getTopo(itemId.id)" />
       <GearItem
         v-else-if="itemId?.type === 'gear'"
         :rental-id="rental.id"
-        :gear-item="getBy(rental.gear, 'id', itemId.id)" />
+        :gear-item="rental.getGearItem(itemId.id)" />
       <div v-else>KAPOT!</div>
     </WithLazyResource>
   </FullPageCard>

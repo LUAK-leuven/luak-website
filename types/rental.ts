@@ -2,7 +2,7 @@ import type { EntityId } from './ddd';
 import type { Enums } from './database.types';
 import type { GearItemId, TopoId } from './gear';
 import type { UserId } from './user';
-import type { ContactInfo } from '~/model/rental';
+import type { ContactInfo, RentalItem } from '~/model/Rental';
 
 export type RentalId = EntityId<'rental'>;
 
@@ -47,19 +47,10 @@ export type PublicRentalDetails = {
   dateReturn: string;
   depositFee: number;
   depositReturned: boolean;
-  gear: RentedItem<GearItemId>[];
-  topos: RentedItem<TopoId>[];
+  gear: RentalItem[];
+  topos: RentalItem[];
   paymentMethod: Enums<'payment_method'>;
   status: RentalStatus;
-};
-
-export type RentedItem<T extends EntityId<unknown>> = {
-  id: T;
-  name: string;
-  rentedAmount: number;
-  returnedAmount: number;
-  lostAmount: number;
-  unreturnedAmount: number;
 };
 
 export type RentalItemId =

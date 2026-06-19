@@ -5,12 +5,11 @@
 
   const { update, get } = useRentalService();
 
-  const retnalId = useRoute().params.id as RentalId;
-  const { rentals: data, pending, refresh } = await get(retnalId);
+  const retnalId = useRoute('board-rentals-id-return').params.id as RentalId;
+  const { rental: data, pending } = await get(retnalId);
 
   async function updateRental(rental: RentalUpdate) {
     const { error } = await update(rental.id, rental);
-    if (!error) await refresh();
     return !error;
   }
 </script>

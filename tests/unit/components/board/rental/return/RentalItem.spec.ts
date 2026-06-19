@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'vitest';
 import { mountSuspended } from '@nuxt/test-utils/runtime';
 import RentalItem from '~/components/board/rental/return/RentalItem.vue';
-import type { GearItemId, TopoId } from '~/types/gear';
+import type { TopoId } from '~/types/gear';
 import type { RentalId } from '~/types/rental';
-import { RentalItem as RentalItemModel } from '~/model/rental';
+import { RentalTopoItem } from '~/model/Rental';
 
 describe('RentalItem', () => {
   test.each([
@@ -24,8 +24,8 @@ describe('RentalItem', () => {
       const wrapper = await mountSuspended(RentalItem, {
         props: {
           rentalId: crypto.randomUUID() as RentalId,
-          item: new RentalItemModel({
-            itemId: { type: 'topo', id: crypto.randomUUID() as TopoId },
+          item: new RentalTopoItem({
+            id: crypto.randomUUID() as TopoId,
             name: 'quickdraw',
             rentedAmount,
             returnedAmount,
@@ -52,8 +52,8 @@ describe('RentalItem', () => {
     const wrapper = await mountSuspended(RentalItem, {
       props: {
         rentalId: crypto.randomUUID() as RentalId,
-        item: new RentalItemModel({
-          itemId: { type: 'gear', id: crypto.randomUUID() as GearItemId },
+        item: new RentalTopoItem({
+          id: crypto.randomUUID() as TopoId,
           name: 'quickdraw',
           rentedAmount: 1,
           returnedAmount: 0,

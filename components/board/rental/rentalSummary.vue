@@ -1,13 +1,8 @@
 <script setup lang="ts">
-  import type { RentalStatus } from '~/types/rental';
+  import type { RentalSummary } from '~/model/Rental';
 
   defineProps<{
-    rental: {
-      memberName: string;
-      dateReturn: string;
-      dateBorrow: string;
-      status: RentalStatus;
-    };
+    rental: RentalSummary;
   }>();
 </script>
 
