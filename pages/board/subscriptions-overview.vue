@@ -30,7 +30,7 @@
   const filterType = ref('all');
   const sortField = ref('created_at');
   const sortDirection = ref('desc');
-  const currentYear = getLuakYear();
+  const currentYear = getMembershipYear();
   const selectedYear = ref(0);
 
   // Fetch all active subscriptions
@@ -52,7 +52,6 @@
           sportscard,
           kbf_uiaa_member,
           created_at,
-          year,
           Payments (
             approved
           )
@@ -77,7 +76,7 @@
             sportscard: membership.sportscard,
             kbf_uiaa_member: membership.kbf_uiaa_member,
             created_at: membership.created_at,
-            year: membership.year,
+            year: getMembershipYear(new Date(membership.created_at)),
             has_paid: membership.Payments.some((payment) => payment.approved),
           })),
         )

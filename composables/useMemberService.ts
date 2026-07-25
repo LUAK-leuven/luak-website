@@ -7,7 +7,9 @@ export async function useMemberService() {
       if (user.value === null) return null;
       const { data, error } = await useSupabaseClient()
         .from('Users')
-        .select('first_name, last_name, Memberships(year, Payments(approved))')
+        .select(
+          'first_name, last_name, Memberships(created_at, Payments(approved))',
+        )
         .eq('id', user.value.sub)
         .eq('Memberships.Payments.approved', true)
         .single();
@@ -17,7 +19,7 @@ export async function useMemberService() {
       }
       return data.Memberships.filter(({ Payments }) =>
         Payments.some(({ approved }) => approved),
-      ).map(({ year }) => year);
+      ).map(({ created_at }) => getMembershipYear(new Date(created_at)));
     },
     { watch: [user], lazy: false },
   );

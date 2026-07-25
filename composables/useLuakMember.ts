@@ -35,10 +35,13 @@ export function useLuakMember(): AsyncData<
       const { data, error } = await useSupabaseClient()
         .from('Users')
         .select(
-          'id, first_name, last_name, email, BoardMembers (user_id), Memberships (year, Payments( approved )) ',
+          'id, first_name, last_name, email, BoardMembers (user_id), Memberships (created_at, Payments( approved )) ',
         )
         .eq('id', user.value.sub)
-        .eq('Memberships.year', getLuakYear())
+        .gte(
+          'Memberships.created_at',
+          getActiveMembershipValidFromDate().toISOString(),
+        )
         .single();
 
       if (error) {
@@ -58,18 +61,23 @@ export function useLuakMember(): AsyncData<
       };
 
       const isBoard = data.BoardMembers !== null;
-      const membership = single(data.Memberships);
+      const hasMembershipInValidWindow = data.Memberships.some((membership) =>
+        isActiveMembership(membership.created_at),
+      );
+      const hasApprovedMembership = data.Memberships.some(
+        (membership) =>
+          isActiveMembership(membership.created_at) &&
+          membership.Payments.some((payment) => payment.approved),
+      );
 
-      if (membership === undefined)
+      if (!hasMembershipInValidWindow)
         return {
           userInfo,
           isBoard,
           isMember: isBoard,
           hasActiveMembership: false,
         };
-      if (
-        membership.Payments.filter((payment) => payment.approved).length === 0
-      )
+      if (!hasApprovedMembership)
         return {
           userInfo,
           isBoard,
