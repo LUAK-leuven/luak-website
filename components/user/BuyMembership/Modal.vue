@@ -7,11 +7,13 @@
     initialValues: { sportscard: false },
   });
   const hasMembership = await getHasMembership();
-  const luak_year = getLuakYear();
+  const membershipYear = getMembershipYear();
   const supabase = useSupabaseClient();
   const user = useSupabaseUser();
   const env = useRuntimeConfig().public;
   const { isFirstTimeMember } = await useMemberService();
+  const activeMembershipValidFromDate =
+    getActiveMembershipValidFromDate().toISOString();
 
   const buyMembership = handleSubmit(async (submitted) => {
     let membership;
@@ -28,6 +30,17 @@
       if (error) throw error;
       membership = data;
     } else if (hasMembership.value === 'unpaid_membership') {
+      const { data: existingMembership, error: findMembershipError } =
+        await supabase
+          .from('Memberships')
+          .select('id')
+          .eq('user_id', user.value?.sub)
+          .gte('created_at', activeMembershipValidFromDate)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .single();
+      if (findMembershipError) throw findMembershipError;
+
       const { data, error } = await supabase
         .from('Memberships')
         .update({
@@ -35,7 +48,7 @@
           sportscard: submitted.sportscard,
           student: submitted.student,
         })
-        .match({ user_id: user.value?.sub, year: luak_year })
+        .eq('id', existingMembership.id)
         .select()
         .single();
       if (error) throw error;
@@ -45,7 +58,7 @@
     if (price.value === 15) payment_url = env.paymentLinkMembershipDiscount;
     else payment_url = env.paymentLinkMembership;
 
-    const email = user.value?.email?.replace('@', '%40');
+    const email = user.value?.email ? encodeURIComponent(user.value.email) : '';
     payment_url = `${payment_url}?client_reference_id=${membership.id}&prefilled_email=${email}`;
 
     return navigateTo(payment_url, { external: true });
@@ -76,7 +89,8 @@
         </button>
       </form>
       <h2 class="mb-4">
-        Buy a membership for {{ luak_year }}-{{ luak_year! + 1 }} <br />
+        Buy a membership for {{ membershipYear }}-{{ membershipYear + 1 }}
+        <br />
       </h2>
       <InputKbfSelect />
       <InputStudentSelect />

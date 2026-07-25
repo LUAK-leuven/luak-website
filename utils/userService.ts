@@ -15,7 +15,7 @@ class UserService {
         last_name,
         phone_number,
         Memberships (
-          year,
+          created_at,
           Payments (
             approved
           )
@@ -36,9 +36,8 @@ class UserService {
           paid_membership:
             user.Memberships.filter(
               (membership) =>
-                membership.year === getLuakYear() &&
-                membership.Payments.filter((payment) => payment.approved)
-                  .length > 0,
+                isActiveMembership(membership.created_at) &&
+                membership.Payments.some((payment) => payment.approved),
             ).length > 0,
         }));
       },

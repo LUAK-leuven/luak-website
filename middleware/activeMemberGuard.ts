@@ -11,12 +11,11 @@ export default defineNuxtRouteMiddleware(async (to) => {
     });
   }
 
-  const currentLuakYear = getLuakYear();
   const { data } = await supabase
     .from('Memberships')
-    .select('year,Payments(id)')
+    .select('created_at,Payments(id)')
     .eq('user_id', user.value.sub)
-    .in('year', [currentLuakYear, currentLuakYear - 1])
+    .gte('created_at', getActiveMembershipValidFromDate().toISOString())
     .eq('Payments.approved', true);
 
   if (
