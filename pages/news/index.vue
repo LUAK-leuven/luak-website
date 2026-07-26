@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  // import { queryCollection } from '#imports'; // It seems that querryCollection is imported from the server side. This hould be fixed with Nuxt 4 upgrade.
+  import { queryCollection } from '#imports'; // It seems that querryCollection is imported from the server side. This hould be fixed with Nuxt 4 upgrade.
 
   const NR_OF_ARTICLES = 20;
   const { data } = await useAsyncData(() =>
