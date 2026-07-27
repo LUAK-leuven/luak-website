@@ -34,15 +34,20 @@ export function useUserService() {
     });
   };
 
-  // TODO fix usafe !
-  const getUserInfo = async (userId: UserId = user.value!.sub as UserId) => {
+  const getUserInfo = async () => {
     const { data, error } = await useAsyncData(
-      `getUserInfo-${userId}`,
-      async () => await userService.getUserInfo(userId),
+      `getUserInfo-${user.value?.sub ?? 'null'}`,
+      async () => {
+        if (user.value === null) throw new Error('User not logged in');
+        return await userService.getUserInfo(user.value.sub as UserId);
+      },
+      { watch: [user] },
     );
+    watch(error, (err) => {
+      if (err) console.warn(err);
+    });
     return computed(() => {
-      if (error.value) throw showError(error.value);
-      return data.value!;
+      return data.value;
     });
   };
 
