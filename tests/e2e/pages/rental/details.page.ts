@@ -126,11 +126,11 @@ export class RentalDetailsPage {
     );
     if (args.dateBorrow)
       await expect(this.dateBorrow).toHaveText(
-        args.dateBorrow.format('YYYY-MM-DD'),
+        args.dateBorrow.format('DD-MM-YYYY'),
       );
     if (args.dateReturn)
       await expect(this.dateReturn).toHaveText(
-        args.dateReturn.format('YYYY-MM-DD'),
+        args.dateReturn.format('DD-MM-YYYY'),
       );
     if (args.depositFee)
       await expect(this.depositFee).toHaveText(args.depositFee.toFixed(2));

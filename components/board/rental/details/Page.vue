@@ -3,6 +3,7 @@
   import RentalItem from '~/components/board/rental/details/RentalItem.vue';
   import Button from '~/components/shared/Button.vue';
   import type { RentalDetails } from '~/model/Rental';
+  import { formatToDMY } from '~/utils/rental/dateFormatter';
 
   const props = defineProps<{
     rental: RentalDetails;
@@ -40,7 +41,7 @@
     <div data-testId="boardMember">Board member: {{ rental.boardMember }}</div>
     <div class="flex flex-row gap-x-1 items-center flex-wrap">
       <span>Date borrow:</span>
-      <span data-testId="dateBorrow">{{ rental.dateBorrow }}</span>
+      <span data-testId="dateBorrow">{{ formatToDMY(rental.dateBorrow) }}</span>
     </div>
     <div class="flex flex-row gap-x-1 items-center flex-wrap">
       <span class="w-max flex-shrink-0">Return date:</span>

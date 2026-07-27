@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import type { PublicRentalDetails } from '~/types/rental';
+  import { formatToDMY } from '~/utils/rental/dateFormatter';
 
   const { rental } = defineProps<{
     rental: PublicRentalDetails;
@@ -12,7 +13,7 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div class="flex flex-row gap-x-1 items-center flex-wrap">
           <span>Date borrow:</span>
-          <span>{{ rental.dateBorrow }}</span>
+          <span>{{ formatToDMY(rental.dateBorrow) }}</span>
         </div>
         <div class="flex flex-row gap-x-1 items-center flex-wrap">
           <span class="w-max flex-shrink-0">Return date:</span>
@@ -40,8 +41,8 @@
         <b class="border px-1">Amount</b>
         <b class="border px-1">Returned amount</b>
         <template
-          v-for="{ id, name, rentedAmount, returnedAmount } of rental.gear"
-          :key="id">
+          v-for="{ itemId, name, rentedAmount, returnedAmount } of rental.gear"
+          :key="itemId.id">
           <div class="border p-1">{{ name }}</div>
           <div class="border p-1">{{ rentedAmount }}</div>
           <div class="border p-1">
@@ -49,8 +50,8 @@
           </div>
         </template>
         <template
-          v-for="{ id, name, rentedAmount, returnedAmount } of rental.topos"
-          :key="id">
+          v-for="{ itemId, name, rentedAmount, returnedAmount } of rental.topos"
+          :key="itemId.id">
           <div class="border p-1">{{ name }}</div>
           <div class="border p-1">{{ rentedAmount }}</div>
           <div class="border p-1">
