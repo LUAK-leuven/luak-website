@@ -1,10 +1,11 @@
 <script setup lang="ts">
-  const { data: user } = await useLuakMember();
+  import PublicRentalDetails from '~/components/board/rental/PublicRentalDetails.vue';
+  import { useRentalService } from '~/composables/useRentalService';
 
-  const { getForUser } = useRentalService();
-  const { rentals, pending: loading } = await getForUser(
-    user.value.userInfo!.id, // TODO fix usafe !
-  );
+  const user = await useUserService().getUserInfo();
+
+  const { rentals, pending: loading } =
+    await useRentalService().getRentalsForUser(user.value.id);
 
   const activeRentals = computed(() =>
     rentals.value?.filter((it) => it.status !== 'returned'),
@@ -21,9 +22,9 @@
 </script>
 <template>
   <FullPageCard>
-    <template #title>my gear</template>
+    <template #title>my rentals</template>
     <template #subtitle>
-      <h2>Overview of {{ user.userInfo?.first_name }}'s rentals</h2>
+      <h2>Overview of {{ user.firstName }}'s rentals</h2>
     </template>
     <div class="h-4"></div>
     <div v-if="loading" class="flex justify-center">
@@ -34,7 +35,7 @@
       <div v-if="activeRentals.length === 0">
         <span>You have currently no active rentals</span>
       </div>
-      <BoardRentalDetailsOverview
+      <PublicRentalDetails
         v-for="rental of activeRentals"
         :key="rental.id"
         :rental="rental" />
@@ -66,7 +67,7 @@
             <span>You have no past rentals</span>
           </div>
           <template v-for="rental of returnedRentals" :key="rental.id">
-            <BoardRentalDetailsOverview :rental="rental" />
+            <PublicRentalDetails :rental="rental" />
           </template>
         </div>
       </template>

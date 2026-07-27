@@ -1,40 +1,49 @@
-import { rentalService } from '~/services/rentalService';
+import {
+  rentalDetailsFromDb,
+  RentalService,
+  rentalSummaryFromDb,
+} from '~/services/rentalService';
 import type { RentalId, RentalUpdate, UnsavedRental } from '~/types/rental';
-import type {
-  ExtractFunctionArguments,
-  ExtractFunctionReturn,
-  PickFunctionNames,
-} from '~/utils/typeUtils';
+import type { UserId } from '~/types/user';
 
 const RENTAL = 'rental';
 
-type RentalServiceNames = PickFunctionNames<typeof rentalService>;
-
-function invalidateCaches() {
-  clearNuxtData((key) => key.startsWith(RENTAL));
-}
-
 export function useRentalService() {
-  function getRentalData<T extends RentalServiceNames>(fName: T) {
-    type Fn = (typeof rentalService)[T];
-    return async function (...args: ExtractFunctionArguments<Fn>) {
-      const { data, pending, error, refresh } = await useAsyncData(
-        `${RENTAL}-${fName}`,
-        async () => {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-expect-error
-          return await rentalService[fName](...args);
-        },
-        { lazy: true },
-      );
-      if (error.value) console.error(fName, error.value);
-      return {
-        rentals: data as Ref<Unwrap<ExtractFunctionReturn<Fn>> | null>,
-        pending,
-        refresh,
-      };
+  const rentalService = new RentalService();
+
+  const getAllRentals = async () => {
+    const { data, pending, error } = await useLazyAsyncData(
+      `${RENTAL}-getAllRentals`,
+      async () => await rentalService.getRentals(),
+    );
+    if (error.value) console.error('getAllRentals', error.value);
+    const rentals = computed(() => {
+      if (!data.value) return undefined;
+      return data.value.map((rental) => rentalSummaryFromDb(rental));
+    });
+    return {
+      rentals,
+      pending,
+      error,
     };
-  }
+  };
+
+  const getRental = async (rentalId: RentalId) => {
+    const { data, pending, error } = await useLazyAsyncData(
+      `${RENTAL}-getRental-${rentalId}`,
+      async () => await rentalService.getRental(rentalId),
+    );
+    if (error.value) console.error(`getRental-${rentalId}`, error.value);
+    const rental = computed(() => {
+      if (!data.value) return undefined;
+      return rentalDetailsFromDb(data.value);
+    });
+    return {
+      rental,
+      pending,
+      error,
+    };
+  };
 
   async function save(rental: UnsavedRental) {
     const { id, error } = await rentalService.saveRental(rental);
@@ -57,12 +66,33 @@ export function useRentalService() {
     return { error };
   }
 
+  const getRentalsForUser = async (userId: UserId) => {
+    const { data, pending, error } = await useLazyAsyncData(
+      `${RENTAL}-getAllRentalsForUser-${userId}`,
+      async () => await rentalService.getRentalsForUser(userId),
+    );
+    if (error.value) console.error('getAllRentals', error.value);
+    const rentals = computed(() => {
+      if (!data.value) return undefined;
+      return data.value.map((rental) => rentalDetailsFromDb(rental));
+    });
+    return {
+      rentals,
+      pending,
+      error,
+    };
+  };
+
   return {
     save,
     edit,
     update,
-    get: getRentalData('getRental'),
-    getAll: getRentalData('getRentals'),
-    getForUser: getRentalData('getRentalsForUser'),
+    get: getRental,
+    getAllRentals,
+    getRentalsForUser,
   };
+}
+
+function invalidateCaches() {
+  clearNuxtData((key) => key.startsWith(RENTAL));
 }

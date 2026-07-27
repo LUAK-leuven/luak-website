@@ -4,6 +4,6 @@ export default defineVitestConfig({
   test: {
     environment: 'nuxt',
     dir: 'tests/unit',
-    exclude: ['node_modules/**', '.nuxt/**']
+    exclude: ['node_modules/**', '.nuxt/**'],
   },
 });

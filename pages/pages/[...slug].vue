@@ -3,6 +3,9 @@
   const { data: doc } = await useAsyncData(route.path, () => {
     return queryCollection('pages').path(route.path).first();
   });
+  if (doc.value == null) {
+    throw createError({ statusCode: 404, statusMessage: 'Page Not Found' });
+  }
 </script>
 <template>
   <FullPageCard v-if="doc">

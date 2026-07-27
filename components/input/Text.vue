@@ -1,16 +1,17 @@
 <script setup lang="ts">
   import type { InputTypeHTMLAttribute } from 'vue';
+  import Input from '../shared/Input.vue';
 
   const props = withDefaults(
     defineProps<{
       label?: string | undefined;
       type?: InputTypeHTMLAttribute;
-      error?: string;
+      error?: string | undefined;
       placeholder?: string;
       disabled?: boolean;
       autoFillWithPlaceholder?: boolean;
       round?: boolean;
-      autocomplete?: AutoFillField;
+      autocomplete?: AutoFillField | undefined;
     }>(),
     {
       type: 'text',
@@ -49,7 +50,7 @@
         'input-error': error,
       }">
       <slot name="label1" />
-      <input
+      <Input
         v-model="model"
         class="w-full"
         :class="{ 'bg-gray-300': disabled }"
@@ -60,6 +61,8 @@
         @focus="autoFillPlaceholder" />
       <slot name="label-end" />
     </label>
-    <span v-if="error" class="text-error" data-testId="error-message">{{ error }}</span>
+    <span v-if="error" class="text-error" data-testId="error-message">
+      {{ error }}
+    </span>
   </div>
 </template>

@@ -37,7 +37,7 @@
         last_name: submitted.lastName,
         has_newsletter: submitted.newsletter,
         has_whatsapp: submitted.whatsapp,
-        phone_number: submitted.phoneNumber,
+        phone_number: submitted.phoneNumber ?? null,
         email: submitted.email,
       });
       if (error) {

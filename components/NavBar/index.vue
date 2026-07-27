@@ -1,5 +1,7 @@
 <script setup lang="ts">
-  const { data: user } = await useLuakMember();
+  const user = await useUserService().getMembershipInfo({
+    authRequired: false,
+  });
 </script>
 
 <template>
@@ -36,7 +38,7 @@
     </div>
 
     <NuxtLink
-      v-if="user.isBoard"
+      v-if="user.permissions.boardSection"
       class="btn btn-lg btn-circle bg-blue-400 m-1 fixed bottom-4 end-4 z-50 hover:bg-blue-300"
       :to="{ name: 'board-rentals-form' }">
       🧗‍♀️

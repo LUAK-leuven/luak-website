@@ -6,14 +6,15 @@
     shift,
     autoUpdate,
   } from '@floating-ui/vue';
+  import Input from '../shared/Input.vue';
 
   const props = withDefaults(
     defineProps<{
-      label?: string;
+      label?: string | undefined;
       optionsProvider: (searchTerm: string | undefined) => T[] | undefined;
       placeholder: string;
-      selectedItem?: T;
-      errorMessage?: string;
+      selectedItem?: T | undefined;
+      errorMessage?: string | undefined;
       loadingMessage?: string;
       disable?: boolean;
     }>(),
@@ -69,12 +70,12 @@
       <span v-if="hidden && selectedItem !== undefined" class="label w-max">
         <slot name="item" :data="selectedItem" />
       </span>
-      <input
+      <Input
         v-model="textValue"
         :class="{
           'w-0': hidden && selectedItem !== undefined,
         }"
-        tabindex="0"
+        :tabindex="0"
         type="text"
         :placeholder="placeholder"
         :disabled="disable"
@@ -88,7 +89,7 @@
           :class="hidden ? 'hidden' : ''"
           :style="floatingStyles"
           tabindex="0"
-          data-testId="searchable-select-options"
+          :data-testId="`searchable-select-options-${placeholder}`"
           @mouseenter="mouseOnSelection = true"
           @mouseleave="mouseOnSelection = false">
           <li v-if="options === undefined">

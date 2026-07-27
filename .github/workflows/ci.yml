@@ -1,0 +1,41 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: LUAK-web CI
+
+on:
+  push:
+  pull_request:
+    branches: [$default-branch]
+
+env:
+  CI: true
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22.x'
+          cache: 'yarn'
+      - name: Install
+        run: yarn install --frozen-lockfile
+      - name: Start supabase server
+        run: yarn supabase start --log-level error -x edge-runtime,imgproxy,logflare,mailpit,postgres-meta,realtime,storage-api,studio,supavisor,vector
+      - name: Install Playwright Browsers
+        run: yarn playwright install --with-deps chromium
+      - name: Run tests
+        run: yarn test
+      - uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: ./playwright-report/
+          retention-days: 5
+      - name: Stop supabase server
+        if: always()
+        run: yarn supabase stop

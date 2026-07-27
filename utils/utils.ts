@@ -26,7 +26,7 @@ export function single<T>(array: T[]): T | undefined {
 export function groupBy<T, K extends keyof any>(
   arr: T[],
   getKey: (i: T) => K,
-): Record<K, T[]> {
+): Record<K, T[] | undefined> {
   return arr.reduce(
     (groups, item) => {
       const key = getKey(item);
@@ -34,7 +34,7 @@ export function groupBy<T, K extends keyof any>(
       groups[key].push(item);
       return groups;
     },
-    {} as Record<K, T[]>,
+    {} as Record<K, T[] | undefined>,
   );
 }
 
@@ -78,7 +78,10 @@ export function sortBy<T extends Record<K, string>, K extends keyof T>(
   );
 }
 
-export function min<T>(arr: T[], predicate: (a: T, b: T) => boolean): T | null {
+export function min<T>(
+  arr: T[],
+  predicate: (a: T, b: T) => boolean = (a, b) => a < b,
+): T | null {
   return arr.reduce<T | null>((minVal, it) => {
     if (minVal === null) return it;
     return predicate(minVal, it) ? minVal : it;

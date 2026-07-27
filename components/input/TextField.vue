@@ -12,7 +12,7 @@
       disabled?: boolean;
       autoFillWithPlaceholder?: boolean;
       round?: boolean;
-      autocomplete?: AutoFillField;
+      autocomplete?: AutoFillField | undefined;
     }>(),
     {
       type: 'text',

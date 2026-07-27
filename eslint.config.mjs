@@ -12,6 +12,9 @@ const strictRules = Object.assign(
 
 export default withNuxt(
   {
+    ignores: ['supabase/functions/**'],
+  },
+  {
     files: ['**/*.ts', '**/*.tsx', '**/*.vue'],
     languageOptions: {
       parserOptions: {
@@ -21,6 +24,7 @@ export default withNuxt(
     },
   },
   {
+    files: ['**/*.ts', '**/*.tsx', '**/*.vue'],
     rules: {
       ...strictRules,
       'vue/html-self-closing': 'off',

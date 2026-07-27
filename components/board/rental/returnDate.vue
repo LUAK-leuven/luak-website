@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import dayjs from 'dayjs';
-  import {formatToDMY} from '~/utils/rental/dateFormatter'
+  import { formatToDMY } from '~/utils/rental/dateFormatter';
+
   const props = withDefaults(
     defineProps<{
       date: string;
@@ -23,6 +24,6 @@
   <span
     class="badge"
     :class="{ 'badge-error': isLate, 'badge-warning': isAlmostLate }">
-    {{formatToDMY(date)}}
+    {{ formatToDMY(date) }}
   </span>
 </template>

@@ -1,0 +1,23 @@
+- `assets/`: All the website's assets that the build tool will process.
+- `components/`: Contains all the Vue components.
+- `composables/`: Vue composables, prefixed with 'use'.
+- `content/`: File-based CMS (markdown content files).
+- `layout/`: Reusable site-wide layouts.
+- `middleware/`: Route guards.
+- `pages/`: Contains all the pages. Nuxt provides file-based routing.
+- `public/`: The website's static assets.
+- `server/`: API and server handlers.
+  - `api/`: Nuxt server API routes.
+- `utils/`: Pure utility functions.
+- `model/`: Domain models.
+- `planning/`: Contains document about specific stories/features/tasks for AI agents.
+- `services/`: Contains all domain services.
+- `supabase/`: The supabase backend (Deno runtime).
+  - `migrations/`: Contains all migrations.
+  - `functions/`: Supabase edge functions.
+  - `config.toml`: Supabase config.
+  - `seed.sql`: seed file.
+- `tests/`:
+  - `e2e/`: Contains playwright e2e tests.
+  - `unit/components/`: Contains component tests. Uses Vitest with Nuxt. Has the same structure as the components folder.
+- `types/`: Contains all shared types.

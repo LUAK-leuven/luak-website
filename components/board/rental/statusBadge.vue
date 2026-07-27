@@ -1,9 +1,9 @@
 <script setup lang="ts">
-  import type { Enums } from '~/types/database.types';
+  import type { RentalStatus } from '~/types/rental';
 
-  const props = defineProps<{ status: Enums<'rental_status'> }>();
+  const props = defineProps<{ status: RentalStatus }>();
 
-  const labels: Record<Enums<'rental_status'>, [string, string]> = {
+  const labels: Record<RentalStatus, [string, string]> = {
     not_returned: ['Not returned', 'bg-red-200'],
     partially_returned: ['Partially returned', 'bg-yellow-200'],
     returned: ['Returned', 'bg-green-200'],

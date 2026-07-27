@@ -7,3 +7,5 @@ export type RentalItem<T extends EntityId<unknown>> = {
   availableAmount: number;
   depositFee: number;
 };
+
+export type ItemStatus = 'returned' | 'partially-returned' | 'not-returned';

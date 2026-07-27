@@ -1,17 +1,27 @@
-import { expect, test } from '@playwright/test';
-import { RentalFormPage } from './pages/rental-form.page';
-import { LoginPage } from './pages/login.page';
-import { navigateTo, testUsers } from './fixtures';
+import { expect } from '@playwright/test';
+import { RentalFormPage } from './pages/rental/form.page';
+import {
+  authStateFile,
+  cleanDatabase,
+  navigateTo,
+  test,
+} from '~/tests/e2e/fixtures';
 import dayjs from 'dayjs';
-import { RentalDetailsPage } from '~/tests/e2e/pages/rental-details.page';
+import { RentalDetailsPage } from '~/tests/e2e/pages/rental/details.page';
 import { RentalsOverviewPage } from '~/tests/e2e/pages/rentals-overview.page';
-import { uuidRegex } from '~/utils/utils';
+import { uuidRegex, sleep } from '~/utils/utils';
+import { RentalReturnPage } from './pages/rental/return.page';
+import { testUsers } from './testUtils/TestUser';
+
+test.use({ storageState: authStateFile('boardMember') });
 
 test.describe('create a new rental', () => {
   test.beforeEach(async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    await loginPage.loginAsserted(testUsers.boardMember);
     await navigateTo(page, '/board/rentals/form');
+  });
+
+  test.beforeAll(async () => {
+    await cleanDatabase();
   });
 
   test('create - defaults should be filled in', async ({ page }) => {
@@ -19,7 +29,7 @@ test.describe('create a new rental', () => {
 
     await expect(rentalFormPage.boardMember).toBeDisabled();
     await expect(rentalFormPage.boardMember).toHaveValue(
-      testUsers.boardMember + ' ',
+      testUsers.boardMember.fullName,
     );
     await expect(rentalFormPage.dateBorrow).toHaveValue(
       dayjs().format('YYYY-MM-DD'),
@@ -34,16 +44,14 @@ test.describe('create a new rental', () => {
     const rentalFormPage = new RentalFormPage(page);
     const member = testUsers.paidMembership;
     await rentalFormPage.fillForm({
-      member: member,
+      memberName: member.fullName,
       paymentMethod: 'cash',
     });
     await rentalFormPage.submit();
 
-    await expect(page).toHaveURL(/\/board\/rentals\/[d-]*/);
-
     const rentalDetailsPage = new RentalDetailsPage(page);
     const rentalId = await rentalDetailsPage.expectToHave({
-      memberEmail: member,
+      memberEmail: member.email,
       dateBorrow: dayjs(),
       dateReturn: dayjs().add(3, 'w'),
       depositFee: 20,
@@ -52,14 +60,14 @@ test.describe('create a new rental', () => {
       comments: '',
     });
 
-    const rentalsOverviewPage = new RentalsOverviewPage(page);
-    await navigateTo(page, rentalsOverviewPage.path);
+    const rentalsOverviewPage = await RentalsOverviewPage.navigate(page);
 
     await expect(rentalsOverviewPage.rentalSummary(rentalId)).toBeVisible();
 
     // --- Edit the rental ---
     await rentalsOverviewPage.rentalSummary(rentalId).click();
     await expect(page).toHaveURL(`/board/rentals/${rentalId}`);
+    await sleep(200);
     await rentalDetailsPage.editButton.click();
     await expect(page).toHaveURL(`/board/rentals/${rentalId}/edit`);
 
@@ -71,9 +79,8 @@ test.describe('create a new rental', () => {
       .remove.click();
 
     await rentalFormPage.submit();
-    await expect(page).toHaveURL(`/board/rentals/${rentalId}`);
     await rentalDetailsPage.expectToHave({
-      memberEmail: member,
+      memberEmail: member.email,
       dateBorrow: dayjs(),
       dateReturn: dayjs().add(3, 'w'),
       depositFee: 20,
@@ -82,28 +89,33 @@ test.describe('create a new rental', () => {
       comments: '',
       numberOfItems: 1,
     });
-    await rentalDetailsPage.expectItem('BD C4 .4', 1);
+    await rentalDetailsPage.expectItem({ name: 'BD C4 .4', rentedAmount: 1 });
 
     // --- return the rental ---
-    await rentalDetailsPage.returnButton.click();
-    await rentalDetailsPage.rentedItem('BD C4 .4').quickReturn.click();
-    await rentalDetailsPage.depositReturned.check();
+    const rentalReturnPage = await rentalDetailsPage.returnRental();
 
-    await rentalDetailsPage.saveButton.click();
-    await expect(rentalDetailsPage.editComments).toBeHidden();
+    await rentalReturnPage.rentedItem('BD C4 .4').quickReturn.click();
+    await rentalReturnPage.depositReturned.check();
+
+    await rentalReturnPage.submit();
 
     await rentalDetailsPage.expectToHave({
       status: 'Returned',
       numberOfItems: 1,
     });
-    await rentalDetailsPage.expectItem('BD C4 .4', 1, 1);
+    await rentalDetailsPage.expectItem({
+      name: 'BD C4 .4',
+      rentedAmount: 1,
+      returnedAmount: 1,
+    });
   });
 
   test('create & partial return - a full rental', async ({ page }) => {
     // --- create a new rental ---
     const rentalFormPage = new RentalFormPage(page);
+    const testUser = testUsers.paidMembership;
     const formValues = {
-      member: testUsers.paidMembership,
+      memberName: testUser.fullName,
       dateBorrow: dayjs().subtract(2, 'd'),
       dateReturn: dayjs().subtract(2, 'd').add(4, 'w'),
       comments: 'yeeehaah',
@@ -127,16 +139,18 @@ test.describe('create a new rental', () => {
     const rentalDetailsPage = new RentalDetailsPage(page);
     const rentalId = await rentalDetailsPage.expectToHave({
       ...formValues,
-      memberEmail: formValues.member,
+      memberEmail: testUser.email,
       status: 'Not returned',
       numberOfItems: 3,
     });
-    await rentalDetailsPage.expectItem('quickdraw', 14);
-    await rentalDetailsPage.expectItem('single rope 000', 1);
-    await rentalDetailsPage.expectItem('Ailefriode', 1);
+    await rentalDetailsPage.expectItem({ name: 'quickdraw', rentedAmount: 14 });
+    await rentalDetailsPage.expectItem({
+      name: 'single rope 000',
+      rentedAmount: 1,
+    });
+    await rentalDetailsPage.expectItem({ name: 'Ailefriode', rentedAmount: 1 });
 
-    const rentalsOverviewPage = new RentalsOverviewPage(page);
-    await navigateTo(page, rentalsOverviewPage.path);
+    const rentalsOverviewPage = await RentalsOverviewPage.navigate(page);
 
     await expect(rentalsOverviewPage.rentalSummary(rentalId)).toBeVisible();
 
@@ -145,33 +159,45 @@ test.describe('create a new rental', () => {
     await expect(page).toHaveURL(`/board/rentals/${rentalId}`);
 
     await rentalDetailsPage.returnButton.click();
-    await rentalDetailsPage.editComments.fill('a test comment');
-    await rentalDetailsPage
+    const rentalReturnPage = new RentalReturnPage(page);
+    await rentalReturnPage.comments.fill('a test comment');
+    await rentalReturnPage
       .rentedItem('quickdraw')
       .returnedAmountInput.fill('10');
-    await rentalDetailsPage.rentedItem('single rope 000').quickReturn.click();
+    await rentalReturnPage.rentedItem('single rope 000').quickReturn.click();
     await expect(
-      rentalDetailsPage.rentedItem('single rope 000').returnedAmountInput,
+      rentalReturnPage.rentedItem('single rope 000').returnedAmountInput,
     ).toHaveValue('1');
 
-    await rentalDetailsPage.saveButton.click();
-    await expect(rentalDetailsPage.editComments).toBeHidden();
+    await rentalReturnPage.submit();
 
     await rentalDetailsPage.expectToHave({
       comments: 'a test comment',
       status: 'Partially returned',
       numberOfItems: 3,
     });
-    await rentalDetailsPage.expectItem('quickdraw', 14, 10);
-    await rentalDetailsPage.expectItem('single rope 000', 1, 1);
-    await rentalDetailsPage.expectItem('Ailefriode', 1, 0);
+    await rentalDetailsPage.expectItem({
+      name: 'quickdraw',
+      rentedAmount: 14,
+      returnedAmount: 10,
+    });
+    await rentalDetailsPage.expectItem({
+      name: 'single rope 000',
+      rentedAmount: 1,
+      returnedAmount: 1,
+    });
+    await rentalDetailsPage.expectItem({
+      name: 'Ailefriode',
+      rentedAmount: 1,
+      returnedAmount: 0,
+    });
   });
 
   test('create & edit - a rental for non-member', async ({ page }) => {
     // --- create a new rental ---
     const rentalFormPage = new RentalFormPage(page);
     const formValues = {
-      member: 'non-member',
+      memberName: 'non-member',
       paymentMethod: 'cash' as const,
     };
     const contactInfo = {
@@ -183,11 +209,8 @@ test.describe('create a new rental', () => {
     await rentalFormPage.contactFullName.fill(contactInfo.name);
     await rentalFormPage.contactEmail.fill(contactInfo.email);
     await rentalFormPage.contactPhoneNumber.fill(contactInfo.phone);
-    await rentalFormPage.submit();
+    const rentalDetailsPage = await rentalFormPage.submit();
 
-    await expect(page).toHaveURL(new RegExp(`board\\/rentals\\/${uuidRegex}`));
-
-    const rentalDetailsPage = new RentalDetailsPage(page);
     const rentalId = await rentalDetailsPage.expectToHave({
       ...formValues,
       memberName: contactInfo.name,
@@ -197,14 +220,14 @@ test.describe('create a new rental', () => {
       numberOfItems: 0,
     });
 
-    const rentalsOverviewPage = new RentalsOverviewPage(page);
-    await navigateTo(page, rentalsOverviewPage.path);
+    const rentalsOverviewPage = await RentalsOverviewPage.navigate(page);
 
     await expect(rentalsOverviewPage.rentalSummary(rentalId)).toBeVisible();
 
     // --- Edit the rental ---
     await rentalsOverviewPage.rentalSummary(rentalId).click();
     await expect(page).toHaveURL(`/board/rentals/${rentalId}`);
+    await sleep(200);
     await rentalDetailsPage.editButton.click();
     await expect(page).toHaveURL(`/board/rentals/${rentalId}/edit`);
 

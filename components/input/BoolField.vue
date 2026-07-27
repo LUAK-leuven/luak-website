@@ -5,8 +5,9 @@
     defineProps<{
       name: string;
       type?: 'checkbox';
+      dataTestid?: string | undefined;
     }>(),
-    { type: 'checkbox' },
+    { type: 'checkbox', dataTestid: undefined },
   );
 
   const { checked, handleChange, errorMessage } = useField(
@@ -30,6 +31,7 @@
       :class="type"
       type="checkbox"
       :checked="checked"
+      :data-testid="dataTestid"
       @change="handleChange" />
   </div>
   <span class="text-error">{{ errorMessage }}</span>

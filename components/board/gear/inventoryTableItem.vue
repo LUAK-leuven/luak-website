@@ -8,7 +8,10 @@
 <template>
   <div
     class="border p-1"
-    :class="{ 'bg-gray-100 italic': status === 'archived' }">
+    :class="{
+      'bg-gray-100 italic': status === 'archived',
+      'bg-inherit': status !== 'archived',
+    }">
     <slot />
   </div>
 </template>

@@ -1,0 +1,124 @@
+<script setup lang="ts">
+  import FullPageCard from '~/components/FullPageCard.vue';
+  import type { RentalItemId, RentalId } from '~/types/rental';
+  import { useRentalService } from '~/composables/useRentalService';
+  import type { GearItemId, TopoId } from '~/types/gear';
+  import { ValidationError, string as yupString } from 'yup';
+  import WithLazyResource from '~/components/pages/WithLazyResource.vue';
+  import PaymentBadge from '~/components/board/rental/PaymentBadge.vue';
+  import TopoItem from '~/components/board/lost-gear/TopoItem.vue';
+  import GearItem from '~/components/board/lost-gear/GearItem.vue';
+  import BackButton from '~/components/shared/BackButton.vue';
+
+  const route = useRoute('board-lost-gear');
+  const rentalId = computed(
+    () =>
+      yupUuid
+        .label('rentalId')
+        .validateSync(route.query['rentalId']) as RentalId,
+  );
+
+  const itemId = computed<RentalItemId | undefined>(() => {
+    try {
+      const itemId = yupUuid
+        .label('itemId')
+        .validateSync(route.query['itemId']);
+      const itemType = yupString<'topo' | 'gear'>()
+        .required()
+        .oneOf(['topo', 'gear'])
+        .label('itemType')
+        .validateSync(route.query['itemType'], {});
+
+      if (itemType === 'topo') {
+        return {
+          type: 'topo',
+          id: itemId as TopoId,
+        };
+      } else {
+        return {
+          type: 'gear',
+          id: itemId as GearItemId,
+        };
+      }
+    } catch (e) {
+      if (e instanceof ValidationError) {
+        throw createError({
+          statusCode: 400,
+          statusMessage: `Invalid query parameters: ${e.message}`,
+        });
+      } else {
+        console.error('Unexpected error while validating query parameters', e);
+        throw createError({
+          statusCode: 500,
+        });
+      }
+    }
+  });
+
+  const { get } = useRentalService();
+  const { rental: data, pending, error } = await get(rentalId.value);
+</script>
+
+<template>
+  <FullPageCard>
+    <template #title> Lost Gear </template>
+
+    <h2 class="mt-0 text-center">Rental</h2>
+    <BackButton
+      :to="{
+        name: 'board-rentals-id',
+        params: { id: rentalId },
+      }" />
+
+    <WithLazyResource
+      v-slot="{ data: rental }"
+      :data="data"
+      :is-loading="pending"
+      :error="error && `Failed to load rental with id: ${rentalId}.`">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div data-testid="member">
+          Member: {{ rental.contactInfo.fullName }}
+        </div>
+        <div class="flex flex-row gap-1 items-center">
+          <span>Deposit:</span>
+          <span data-testid="depositFee">
+            {{ rental.depositFee.toFixed(2) }} €
+          </span>
+          <PaymentBadge
+            class="ml-2"
+            :payment-method="rental.paymentMethod"
+            data-testid="paymentMethod" />
+          <span v-if="rental.depositReturned" class="badge badge-success">
+            returned
+          </span>
+        </div>
+
+        <div class="flex flex-row gap-x-1 items-center flex-wrap">
+          <span>Date borrow:</span>
+          <span data-testid="dateBorrow">{{ rental.dateBorrow }}</span>
+        </div>
+        <div class="flex flex-row gap-x-1 items-center flex-wrap">
+          <span class="w-max flex-shrink-0">Return date:</span>
+          <span class="flex-[44] flex-shrink">
+            <BoardRentalReturnDate
+              :date="rental.dateReturn"
+              :ghost="rental.status === 'returned'"
+              data-testid="dateReturn" />
+          </span>
+        </div>
+      </div>
+
+      <hr class="my-2" />
+
+      <TopoItem
+        v-if="itemId?.type === 'topo'"
+        :rental-id="rentalId"
+        :topo="rental.getTopo(itemId.id)" />
+      <GearItem
+        v-else-if="itemId?.type === 'gear'"
+        :rental-id="rental.id"
+        :gear-item="rental.getGearItem(itemId.id)" />
+      <div v-else>KAPOT!</div>
+    </WithLazyResource>
+  </FullPageCard>
+</template>

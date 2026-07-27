@@ -1,13 +1,8 @@
 <script setup lang="ts">
-  import type { Enums } from '~/types/database.types';
+  import type { RentalSummary } from '~/model/Rental';
 
   defineProps<{
-    rental: {
-      memberName: string;
-      dateReturn: string;
-      dateBorrow: string;
-      status: Enums<'rental_status'>;
-    };
+    rental: RentalSummary;
   }>();
 </script>
 

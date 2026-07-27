@@ -7,25 +7,28 @@
     "dev": "nuxt dev --dotenv .env.local",
     "dev:prod": "nuxt dev --dotenv .env.production",
     "generate": "nuxt generate",
-    "preview": "NODE_OPTIONS='--import ./public/instrument.server.mjs' nuxt preview",
+    "preview": "NODE_OPTIONS='--import ./public/instrument.server.mjs' nuxt preview --dotenv .env.local",
+    "sb:gentypes": "yarn --silent supabase gen types --lang typescript --local > types/database.types.ts",
     "postinstall": "nuxt prepare",
-    "lint": "yarn lint:eslint && yarn lint:prettier",
+    "lint": "lint:eslint && lint:prettier",
     "lint:eslint": "eslint .",
     "lint:prettier": "prettier . --check",
     "lintfix": "eslint . --fix && prettier --write --list-different .",
-    "test:e2e": "playwright test",
+    "test": "yarn test:unit && yarn test:e2e",
+    "test:e2e": "playwright test --config tests/e2e/playwright.config.ts",
     "test:unit": "vitest run --config tests/unit/vitest.config.ts"
   },
   "devDependencies": {
     "@nuxt/devtools": "^3.2.4",
     "@nuxt/eslint": "^1.15.2",
     "@nuxt/test-utils": "^4.0.3",
-    "@nuxtjs/supabase": "^2.0.6",
+    "@nuxtjs/supabase": "^2.0.9",
     "@nuxtjs/tailwindcss": "^6.8.0",
     "@playwright/test": "^1.60.0",
     "@types/qrcode": "^1.5.6",
     "@vue/test-utils": "^2.4.6",
     "daisyui": "^3.9.4",
+    "dotenv": "^17.4.2",
     "eslint": "^10.2.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-node": "^0.3.10",
@@ -41,8 +44,7 @@
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.3",
     "vitest": "^4.1.7",
-    "vue": "^3.5.34",
-    "vue-router": "^4.6.4"
+    "vue": "^3.5.34"
   },
   "dependencies": {
     "@floating-ui/vue": "^1.1.11",
@@ -51,9 +53,8 @@
     "@vee-validate/nuxt": "^4.12.8",
     "@vee-validate/yup": "^4.12.8",
     "@vueuse/core": "^14.3.0",
-    "better-sqlite3": "^12.6.2",
+    "better-sqlite3": "^12.10.0",
     "dayjs": "^1.11.20",
-    "dotenv": "^17.4.2",
     "nuxt-typed-router": "^4.0.7",
     "qrcode": "^1.5.4",
     "yup": "^1.7.1"
@@ -61,5 +62,8 @@
   "resolutions": {
     "typescript-eslint": "^8.58.1"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
+  "engines": {
+    "node": "22.x"
+  }
 }

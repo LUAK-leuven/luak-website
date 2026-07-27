@@ -1,25 +1,32 @@
-import type {
-  ContactInfo,
-  RentalId,
-  RentalUpdate,
-  UnsavedRental,
-  RentalDetails,
-  PublicRentalDetails,
-} from '~/types/rental';
+import type { RentalId, RentalUpdate, UnsavedRental } from '~/types/rental';
 import type { GearItemId, TopoId } from '~/types/gear';
 import type { UserId } from '~/types/user';
+import type { SupabaseClient } from '@supabase/supabase-js';
+import type { Database } from '~/types/database.types';
+import {
+  ContactInfo,
+  RentalSummary,
+  RentalDetails,
+  RentalTopoItem,
+  RentalGearItem,
+} from '~/model/Rental';
+import { getFullName } from '~/services/userService';
+import { object as zodObject, string as zodString } from 'zod';
 
-export const rentalService = {
-  async saveRental(
+export class RentalService {
+  constructor(
+    private readonly supabaseClient: SupabaseClient<Database> = useSupabaseClient(),
+  ) {}
+
+  readonly saveRental = async (
     rental: UnsavedRental,
-  ): Promise<{ id: RentalId | undefined; error: string | undefined }> {
-    const { error, data } = await useSupabaseClient().rpc('create_rental', {
+  ): Promise<{ id: RentalId | undefined; error: string | undefined }> => {
+    const { error, data } = await this.supabaseClient.rpc('create_rental', {
       p_board_member_id: rental.boardMemberId,
       p_member_id: rental.memberId ?? null,
       p_date_borrow: rental.dateBorrow,
       p_date_return: rental.dateReturn,
       p_deposit: rental.depositFee,
-      p_status: rental.status,
       p_gear: Object.entries(rental.gear)
         .filter(([_, amount]) => amount !== undefined)
         .map(([id, amount]) => ({
@@ -43,10 +50,10 @@ export const rentalService = {
       id: (data as RentalId | null) ?? undefined,
       error: error?.message,
     };
-  },
+  };
 
-  async getRentals() {
-    const { data, error } = await useSupabaseClient()
+  readonly getRentals = async () => {
+    const { data } = await this.supabaseClient
       .from('Rentals')
       .select(
         `
@@ -57,36 +64,31 @@ export const rentalService = {
           ),
           date_return,
           date_borrow,
-          status,
-          contact_info
-          `,
-      );
+          contact_info,
+          deposit_returned,
+          RentedGear(
+            gear_item_id,
+            rented_amount,
+            returned_amount,
+            lost_amount,
+            GearItems(name)
+          ),
+          RentedTopos(
+            topo_id,
+            Topos(title),
+            rented_amount,
+            returned_amount,
+            lost_amount
+          )
+        `,
+      )
+      .throwOnError();
 
-    if (error) {
-      console.warn('failed to load rentals', error);
-      return [];
-    }
+    return data;
+  };
 
-    return data.map((rental) => {
-      const contactInfo: ContactInfo | undefined = rental.contact_info
-        ? (JSON.parse(rental.contact_info) as ContactInfo)
-        : undefined;
-      return {
-        id: rental.id as RentalId,
-        memberName: rental.member
-          ? getFullName(rental.member)
-          : contactInfo
-            ? contactInfo.fullName
-            : 'Failed to load name',
-        dateReturn: rental.date_return,
-        dateBorrow: rental.date_borrow,
-        status: rental.status,
-      };
-    });
-  },
-
-  async getRental(rentalId: RentalId): Promise<RentalDetails | null> {
-    const { data: rental, error } = await useSupabaseClient()
+  readonly getRental = async (rentalId: RentalId) => {
+    const { data } = await this.supabaseClient
       .from('Rentals')
       .select(
         `
@@ -107,102 +109,52 @@ export const rentalService = {
           deposit,
           deposit_returned,
           payment_method,
-          status,
           RentedGear(
-            GearItems(
-              id,
-              name
-            ),
+            gear_item_id,
+            GearItems(name),
             rented_amount,
-            returned_amount
+            returned_amount,
+            lost_amount
           ),
           RentedTopos(
-            Topos(
-              id,
-              title
-            ),
+            topo_id,
+            Topos(title),
             rented_amount,
-            returned_amount
+            returned_amount,
+            lost_amount
           ),
           contact_info,
           comments
-          `,
+        `,
       )
       .eq('id', rentalId)
-      .single();
+      .single()
+      .throwOnError();
 
-    if (error) {
-      console.warn(`failed to load rental ${rentalId}`, error);
-      console.info('rental:', rental);
-      return null;
-    }
+    return data;
+  };
 
-    const contactInfo: ContactInfo = rental.member
-      ? {
-          fullName: getFullName(rental.member),
-          email: rental.member.email,
-          phoneNumber: rental.member.phone_number ?? undefined,
-        }
-      : rental.contact_info
-        ? (JSON.parse(rental.contact_info) as ContactInfo)
-        : {
-            fullName: 'Failed to load name',
-            email: undefined,
-            phoneNumber: undefined,
-          };
-
-    return {
-      id: rental.id as RentalId,
-      member: contactInfo,
-      memberId: rental.member?.id as UserId | undefined,
-      boardMember: getFullName(rental.board_member),
-      dateBorrow: rental.date_borrow,
-      dateReturn: rental.date_return,
-      depositFee: rental.deposit,
-      depositReturned: rental.deposit_returned,
-      gear: sortBy(
-        rental.RentedGear.map((gearItem) => ({
-          id: gearItem.GearItems.id as GearItemId,
-          name: gearItem.GearItems.name,
-          rentedAmount: gearItem.rented_amount,
-          returnedAmount: gearItem.returned_amount,
-        })),
-        'name',
-      ),
-      topos: sortBy(
-        rental.RentedTopos.map((topo) => ({
-          id: topo.Topos.id as TopoId,
-          title: topo.Topos.title,
-          rentedAmount: topo.rented_amount,
-          returnedAmount: topo.returned_amount,
-        })),
-        'title',
-      ),
-      paymentMethod: rental.payment_method,
-      status: rental.status,
-      comments: rental.comments ?? undefined,
-    } satisfies RentalDetails;
-  },
-
-  async updateRental(id: RentalId, rentalUpdate: Omit<RentalUpdate, 'id'>) {
-    const { error } = await useSupabaseClient().rpc('update_rental', {
+  readonly updateRental = async (
+    id: RentalId,
+    rentalUpdate: Omit<RentalUpdate, 'id'>,
+  ) => {
+    const { error } = await this.supabaseClient.rpc('update_rental', {
       p_rental_id: id,
       p_date_return: rentalUpdate.dateReturn,
       p_deposit_returned: rentalUpdate.depositReturned,
-      p_status: rentalUpdate.status,
       p_gear: rentalUpdate.gear,
       p_topos: rentalUpdate.topos,
       p_comments: rentalUpdate.comments ?? null,
     });
     if (error) console.warn('updateRental: ', error);
     return { error: error?.message };
-  },
+  };
 
-  async editRental(
+  readonly editRental = async (
     id: RentalId,
     rental: Omit<Omit<UnsavedRental, 'memberId'>, 'boardMemberId'>,
-  ) {
-    const { error } = await useSupabaseClient().rpc('edit_rental', {
+  ) => {
+    const { error } = await this.supabaseClient.rpc('edit_rental', {
       p_rental_id: id,
       p_contact_info: rental.contactInfo
         ? JSON.stringify(rental.contactInfo)
@@ -223,81 +175,164 @@ export const rentalService = {
           rented_amount: amount,
         })),
       p_payment_method: rental.paymentMethod,
-      p_status: rental.status,
       p_comments: rental.comments ?? null,
     });
     if (error) console.warn('editRental: ', error);
     return { error: error?.message };
-  },
+  };
 
-  async getRentalsForUser(
-    userId: UserId,
-  ): Promise<PublicRentalDetails[] | null> {
-    const { data: rentals, error } = await useSupabaseClient()
+  readonly getRentalsForUser = async (userId: UserId) => {
+    const { data } = await this.supabaseClient
       .from('Rentals')
       .select(
         `
           id,
+          board_member:Users!Rentals_board_member_id_fkey(
+            first_name,
+            last_name
+          ),
+          member:Users!Rentals_member_id_fkey(
+            first_name,
+            last_name,
+            email,
+            phone_number,
+            id
+          ),
           date_borrow,
           date_return,
           deposit,
           deposit_returned,
           payment_method,
-          status,
           RentedGear(
-            GearItems(
-              id,
-              name
-            ),
+            gear_item_id,
+            GearItems(name),
             rented_amount,
-            returned_amount
+            returned_amount,
+            lost_amount
           ),
           RentedTopos(
-            Topos(
-              id,
-              title
-            ),
+            topo_id,
+            Topos(title),
             rented_amount,
-            returned_amount
-          )
-          `,
+            returned_amount,
+            lost_amount
+          ),
+          contact_info,
+          comments
+        `,
       )
-      .eq('member_id', userId);
+      .eq('member_id', userId)
+      .throwOnError();
 
-    if (error) {
-      console.warn('failed to load rentals for user', error);
-      return null;
-    }
+    return data;
+  };
+}
 
-    return rentals.map(
-      (rental) =>
-        ({
-          id: rental.id as RentalId,
-          dateBorrow: rental.date_borrow,
-          dateReturn: rental.date_return,
-          depositFee: rental.deposit,
-          depositReturned: rental.deposit_returned,
-          status: rental.status,
-          gear: sortBy(
-            rental.RentedGear.map((gearItem) => ({
-              id: gearItem.GearItems.id as GearItemId,
-              name: gearItem.GearItems.name,
-              rentedAmount: gearItem.rented_amount,
-              returnedAmount: gearItem.returned_amount,
-            })),
-            'name',
-          ),
-          topos: sortBy(
-            rental.RentedTopos.map((topo) => ({
-              id: topo.Topos.id as TopoId,
-              title: topo.Topos.title,
-              rentedAmount: topo.rented_amount,
-              returnedAmount: topo.returned_amount,
-            })),
-            'title',
-          ),
-          paymentMethod: rental.payment_method,
-        }) satisfies PublicRentalDetails,
-    );
-  },
+// Mappers
+
+type RentalSummaryVo = Awaited<ReturnType<RentalService['getRentals']>>[number];
+
+export const rentalSummaryFromDb = (args: RentalSummaryVo): RentalSummary => {
+  const contactInfo: ContactInfo = contactInfoFromDb(args);
+
+  return new RentalSummary({
+    id: args.id as RentalId,
+    gear: args.RentedGear.map((gear) => gearItemFromDb(gear)),
+    topos: args.RentedTopos.map((topo) => topoItemFromDb(topo)),
+    memberName: contactInfo.fullName,
+    dateReturn: args.date_return,
+    dateBorrow: args.date_borrow,
+    depositReturned: args.deposit_returned,
+  });
 };
+
+type RentalDetailsVo = Awaited<ReturnType<RentalService['getRental']>>;
+
+export const rentalDetailsFromDb = (args: RentalDetailsVo): RentalDetails => {
+  const contactInfo: ContactInfo = contactInfoFromDb(args);
+
+  return new RentalDetails({
+    id: args.id as RentalId,
+    gear: args.RentedGear.map((gear) => gearItemFromDb(gear)),
+    topos: args.RentedTopos.map((topo) => topoItemFromDb(topo)),
+    contactInfo,
+    dateReturn: args.date_return,
+    dateBorrow: args.date_borrow,
+    depositReturned: args.deposit_returned,
+    depositFee: args.deposit,
+    // Due to RLS board_member is only available for board members.
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    boardMember: args.board_member ? getFullName(args.board_member) : '',
+    paymentMethod: args.payment_method,
+    comments: args.comments ?? '',
+    memberId: args.member?.id as UserId | undefined,
+  });
+};
+
+export const contactInfoFromDb = (args: {
+  member: {
+    first_name: string;
+    last_name: string;
+    email?: string;
+    phone_number?: string | null;
+  } | null;
+  contact_info: string | null;
+}) => {
+  if (args.member) return contactInfoFromMember(args.member);
+  if (args.contact_info) return contactInfoFromJsonString(args.contact_info);
+  return new ContactInfo('Failed to get contact info', undefined, undefined);
+};
+
+const contactInfoFromMember = (member: {
+  first_name: string;
+  last_name: string;
+  email?: string;
+  phone_number?: string | null;
+}): ContactInfo => {
+  return new ContactInfo(
+    getFullName(member),
+    member.email,
+    member.phone_number ?? undefined,
+  );
+};
+
+const contactInfoFromJsonString = (jsonString: string): ContactInfo => {
+  const parsed = contactInfoSchema.parse(JSON.parse(jsonString));
+  return new ContactInfo(parsed.fullName, parsed.email, parsed.phoneNumber);
+};
+
+const contactInfoSchema = zodObject({
+  fullName: zodString().nonempty(),
+  email: zodString().nonempty().optional(),
+  phoneNumber: zodString().nonempty().optional(),
+});
+
+const topoItemFromDb = (topo: {
+  topo_id: string;
+  rented_amount: number;
+  returned_amount: number;
+  lost_amount: number;
+  Topos: { title: string };
+}) =>
+  new RentalTopoItem({
+    id: topo.topo_id as TopoId,
+    name: topo.Topos.title,
+    rentedAmount: topo.rented_amount,
+    returnedAmount: topo.returned_amount,
+    lostAmount: topo.lost_amount,
+  });
+
+const gearItemFromDb = (gear: {
+  gear_item_id: string;
+  rented_amount: number;
+  returned_amount: number;
+  lost_amount: number;
+  GearItems: { name: string };
+}) =>
+  new RentalGearItem({
+    id: gear.gear_item_id as GearItemId,
+    name: gear.GearItems.name,
+    rentedAmount: gear.rented_amount,
+    returnedAmount: gear.returned_amount,
+    lostAmount: gear.lost_amount,
+  });

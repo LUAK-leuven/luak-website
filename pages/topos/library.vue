@@ -3,11 +3,11 @@
 
   definePageMeta({ middleware: 'active-member-guard' });
 
-  const { data: user } = await useLuakMember();
+  const user = await useUserService().getMembershipInfo();
   const { data: topos, pending, error } = await gearService().getTopoLibrary();
 
   const allTypesOfClimbing = computed(() =>
-    [...new Set(topos.value?.flatMap((it) => it.types_of_climbing))].toSorted(),
+    [...new Set(topos.value?.flatMap((it) => it.typesOfClimbing))].toSorted(),
   );
   const allCountries = computed(() =>
     [...new Set(topos.value?.flatMap((it) => it.countries))].toSorted(),
@@ -31,7 +31,7 @@
         const matchesTags = matchAny(topo.tags, matchedTags.value);
         const matchesTypesOfClimbing =
           selectedTypesOfClimbing.value.length == 0 ||
-          matchAny(topo.types_of_climbing, selectedTypesOfClimbing.value);
+          matchAny(topo.typesOfClimbing, selectedTypesOfClimbing.value);
         const matchesCountries =
           selectedCountries.value.length == 0 ||
           matchAny(topo.countries, selectedCountries.value);
@@ -111,14 +111,17 @@
             <thead>
               <tr>
                 <th>Title</th>
-                <th v-if="user.isBoard">Place in library</th>
+                <th v-if="user.permissions.boardSection">Place in library</th>
                 <th>Year</th>
                 <th>Countries</th>
                 <th>Type(s) of climbing</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="topo in filteredTopos" :key="topo.id">
+              <tr
+                v-for="topo in filteredTopos"
+                :key="topo.id"
+                :data-testid="`topo-${topo.title}`">
                 <td>
                   <NuxtLink :to="{ name: 'topos-id', params: { id: topo.id } }">
                     <div class="flex flex-row gap-1 items-center">
@@ -129,11 +132,13 @@
                     </div>
                   </NuxtLink>
                 </td>
-                <td v-if="user.isBoard">{{ topo.place_in_library }}</td>
-                <td>{{ topo.year_published }}</td>
+                <td v-if="user.permissions.boardSection">
+                  {{ topo.placeInLibrary }}
+                </td>
+                <td>{{ topo.yearPublished }}</td>
                 <td>{{ topo.countries.join(', ') }}</td>
                 <td>
-                  {{ topo.types_of_climbing.join(', ') }}
+                  {{ topo.typesOfClimbing.join(', ') }}
                 </td>
               </tr>
             </tbody>

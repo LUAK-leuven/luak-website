@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   compatibilityDate: '2026-01-25',
   app: {
     head: {
@@ -38,14 +38,6 @@ export default defineNuxtConfig({
         'https://buy.stripe.com/4gwbKnfctdokdgYcMM',
     },
   },
-  // sentry: {
-  //   sourceMapsUploadOptions: {
-  //     org: 'luak',
-  //     project: 'luak-nuxt',
-  //     authToken:
-  //       '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',
-  //   },
-  // },
   content: {
     renderer: {
       anchorLinks: false,
@@ -71,8 +63,14 @@ export default defineNuxtConfig({
     '@nuxtjs/supabase',
     '@vee-validate/nuxt',
     '@nuxt/eslint',
-    // '@sentry/nuxt/module',
     'nuxt-studio',
     'nuxt-typed-router',
   ],
+  // vite: {
+  //   optimizeDeps: {
+  //     // TODO: This is a workaround for the issue where the cookie package is not being bundled correctly by Vite, due to a bug in @supabase/ssr (comig with @supabase/supabase-js).
+  //     include: ['@supabase/ssr', '@supabase/supabase-js', 'cookie'],
+  //     holdUntilCrawlEnd: true, // explicit — block requests until crawl done
+  //   },
+  // },
 });

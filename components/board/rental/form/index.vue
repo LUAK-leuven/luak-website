@@ -6,6 +6,7 @@
   import type { UserId } from '~/types/user';
   import Text from '~/components/input/Text.vue';
   import { useToast } from '~/composables/useToast';
+  import { useRentalForm } from '~/composables/board/rental/useRentalForm';
 
   const props = defineProps<{
     boardMemberName: string;
@@ -24,7 +25,6 @@
       topos: Record<TopoId, number>;
       depositFee: number;
       paymentMethod: Enums<'payment_method'>;
-      markAsReserved: boolean;
       comments: string;
     }>;
     handleSubmit: (
@@ -59,7 +59,6 @@
     depositFee,
     depositFeeAttr,
     paymentMethod,
-    markAsReserved,
     comments,
     validateField,
     updateGear,
@@ -85,7 +84,6 @@
               phoneNumber: formState.contactInfo.phone,
             }
           : undefined,
-        status: formState.markAsReserved ? 'reserved' : 'not_returned',
         comments: formState.comments,
       });
     },
@@ -143,18 +141,8 @@
         data-testId="rental.form.dateReturn"
         v-bind="dateReturnAttr" />
 
-      <div class="flex flex-col w-fit">
-        <label class="my-2" for="markAsReserved">Mark as reserved</label>
-        <input
-          id="markAsReserved"
-          v-model="markAsReserved"
-          class="toggle toggle-primary"
-          type="checkbox"
-          data-testId="rental.form.markAsReserved" />
-      </div>
-
       <div class="flex flex-col w-full col-span-full">
-        <span>Comments:</span>
+        <span class="label label-text">Comments:</span>
         <textarea
           v-model="comments"
           class="textarea textarea-bordered"
@@ -215,9 +203,4 @@
         data-testId="rental.form.submit" />
     </div>
   </form>
-
-  <!-- <p>SelectedGear: {{ selectedGear }}</p> -->
-  <!-- <p>Values: {{ values }}</p>
-  <p>Errors: {{ errors }}</p>
-  <p>Meta: {{ meta }}</p> -->
 </template>

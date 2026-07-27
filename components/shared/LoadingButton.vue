@@ -1,9 +1,11 @@
 <script setup lang="ts">
+  import Button from './Button.vue';
+
   const props = withDefaults(
     defineProps<{
       text: string;
       disabled?: boolean;
-      clickHandler: () => Promise<unknown>;
+      clickHandler: () => Promise<void>;
       type?: HTMLButtonElement['type'];
     }>(),
     { disabled: false, type: 'submit' },
@@ -17,14 +19,18 @@
     isSubmitting.value = false;
   };
 </script>
+
 <template>
-  <button
+  <Button
     class="btn btn-primary w-fit"
     :class="{ 'btn-disabled': disabled }"
     :disabled="disabled"
     :type="type"
     @click="onClick">
-    <span v-if="isSubmitting" class="loading loading-spinner" data-testId="loading">loading</span>
+    <span
+      v-if="isSubmitting"
+      class="loading loading-spinner"
+      data-testId="loading" />
     <span v-else data-testId="button-text">{{ text }}</span>
-  </button>
+  </Button>
 </template>

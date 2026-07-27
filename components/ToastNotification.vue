@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import Button from './shared/Button.vue';
+
   defineProps<{
     type: 'success' | 'warning' | 'error' | 'info';
   }>();
@@ -18,10 +20,11 @@
     }"
     role="alert">
     <slot />
-    <button
+    <Button
       class="btn btn-sm btn-circle btn-ghost text-xl self-center items-end"
+      data-testid="toast-close-button"
       @click="emit('close')">
       ✕
-    </button>
+    </Button>
   </div>
 </template>

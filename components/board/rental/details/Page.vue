@@ -1,0 +1,115 @@
+<script setup lang="ts">
+  import PaymentModal from '~/components/PaymentModal.vue';
+  import RentalItem from '~/components/board/rental/details/RentalItem.vue';
+  import Button from '~/components/shared/Button.vue';
+  import type { RentalDetails } from '~/model/Rental';
+  import { formatToDMY } from '~/utils/rental/dateFormatter';
+
+  const props = defineProps<{
+    rental: RentalDetails;
+  }>();
+
+  async function edit() {
+    await navigateTo({
+      name: 'board-rentals-id-return',
+      params: { id: props.rental.id },
+    });
+  }
+
+  const showPaymentModal = ref(false);
+</script>
+
+<template>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <div class="flex flex-col">
+      <span data-testId="member.fullName">
+        Member: {{ rental.contactInfo.fullName }}
+      </span>
+      <span v-if="rental.contactInfo.email" class="ml-3">
+        ✉️:
+        <SharedMailTo
+          :email="rental.contactInfo.email"
+          data-testId="member.email" />
+      </span>
+      <span v-if="rental.contactInfo.phoneNumber" class="ml-3">
+        ☎️:
+        <SharedWhatsappLink
+          :phone-number="rental.contactInfo.phoneNumber"
+          data-testId="member.phone" />
+      </span>
+    </div>
+    <div data-testId="boardMember">Board member: {{ rental.boardMember }}</div>
+    <div class="flex flex-row gap-x-1 items-center flex-wrap">
+      <span>Date borrow:</span>
+      <span data-testId="dateBorrow">{{ formatToDMY(rental.dateBorrow) }}</span>
+    </div>
+    <div class="flex flex-row gap-x-1 items-center flex-wrap">
+      <span class="w-max flex-shrink-0">Return date:</span>
+      <span class="flex-[44] flex-shrink">
+        <BoardRentalReturnDate
+          :date="rental.dateReturn"
+          :ghost="rental.status === 'returned'"
+          data-testId="dateReturn" />
+      </span>
+    </div>
+    <div class="flex flex-row gap-1 items-center">
+      <span>Deposit:</span>
+      <span data-testId="depositFee">{{ rental.depositFee.toFixed(2) }}</span>
+      <span v-if="rental.depositReturned" class="badge badge-success">
+        returned
+      </span>
+      <button @click="showPaymentModal = true">
+        <span class="material-symbols-outlined"> qr_code_scanner </span>
+      </button>
+    </div>
+    <div data-testId="paymentMethod">Payment: {{ rental.paymentMethod }}</div>
+    <div class="flex flex-row gap-1 items-center">
+      <span>Status:</span>
+      <BoardRentalStatusBadge :status="rental.status" data-testId="status" />
+    </div>
+    <div v-if="rental.comments" class="col-span-full flex flex-col">
+      <span>Comments:</span>
+      <p class="italic" data-testId="comments">
+        {{ rental.comments }}
+      </p>
+    </div>
+  </div>
+  <hr class="my-3" />
+  <div
+    class="border rounded-sm grid"
+    :class="'grid-cols-[3fr_1fr_auto]'"
+    data-testId="gear-and-topos-overview">
+    <b class="border px-1">Gear</b>
+    <b class="border px-1">Returend / Rented</b>
+    <b class="border px-1"></b>
+    <RentalItem
+      v-for="item of rental.items"
+      :key="`${item.itemId.type}-${item.itemId.id}`"
+      :item="item"
+      :rental-id="rental.id" />
+  </div>
+  <hr class="my-3" />
+  <div class="flex justify-end gap-3">
+    <Button
+      class="btn btn-secondary"
+      data-testId="editButton"
+      @click="
+        async () =>
+          navigateTo({
+            name: 'board-rentals-id-edit',
+            params: { id: rental.id },
+          })
+      ">
+      Edit
+    </Button>
+    <Button class="btn btn-primary" data-testId="returnButton" @click="edit()">
+      Return
+    </Button>
+  </div>
+
+  <PaymentModal
+    :is-open="showPaymentModal"
+    :amount="rental.depositFee"
+    message="Deposit fee"
+    @close="showPaymentModal = false" />
+</template>

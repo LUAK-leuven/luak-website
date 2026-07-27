@@ -36,7 +36,7 @@ export class EpcQrCode {
     amount: number;
     purpose?: string;
     structuredReference?: string;
-    unstructuredReference?: string;
+    unstructuredReference?: string | undefined;
     information?: string;
   }) {
     this.version = props.version ?? '002';

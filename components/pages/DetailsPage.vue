@@ -1,15 +1,18 @@
-<script setup lang="ts" generic="T extends { id: EntityId<unknown> } | null">
+<script
+  setup
+  lang="ts"
+  generic="T extends { id: EntityId<unknown> } | null | undefined">
   import type { RoutesNamedLocations } from '@typed-router';
   import type { EntityId } from '~/types/ddd';
 
   withDefaults(
     defineProps<{
-      title?: string;
-      subTitle?: string;
+      title?: string | undefined;
+      subTitle?: string | undefined;
       data: T;
       isLoading: boolean;
-      error?: string;
-      backTo?: RoutesNamedLocations;
+      error?: string | undefined;
+      backTo?: RoutesNamedLocations | undefined;
       defaultError?: string | undefined;
     }>(),
     {
