@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import type { GearInventoryDetails, GearItemId } from '~/types/gear';
-  import dayjs from 'dayjs';
+  import dayjs, { type Dayjs } from 'dayjs';
   import { useBreakpoints, breakpointsTailwind } from '@vueuse/core';
   import InventoryTableItem from '~/components/board/gear/inventoryTableItem.vue';
   import RetirementDate from '~/components/board/gear/retirementDate.vue';
@@ -56,6 +56,16 @@
   const bp = useBreakpoints(breakpointsTailwind);
   const lg = computed(() => bp.lg.value);
   const sm = computed(() => bp.sm.value);
+
+  const displayPurchaseDate = (args: {
+    purchaseDate: Dayjs | undefined;
+    productionDate: Dayjs | undefined;
+  }) => {
+    if (args.purchaseDate) return args.purchaseDate.format('DD-MM-YYYY');
+    if (args.productionDate)
+      return `> ${args.productionDate.format('DD-MM-YYYY')}`;
+    return '??';
+  };
 </script>
 <template>
   <PagesDetailsPage
@@ -102,25 +112,6 @@
           data-testid="inventory-row">
           <InventoryTableItem :status="status">
             {{ details }}
-            <template v-if="events.length">
-              <b>history</b>
-              <ul class="ml-5">
-                <li
-                  v-for="(event, idx) of events"
-                  :key="idx"
-                  data-testid="lostItem">
-                  <div class="flex flex-row flex-wrap gap-x-1">
-                    {{ dayjs(event.occuredOn).format('DD-MM-YYYY') }}:
-                    <SharedLinkTo
-                      :text="`${event.lostAmount} item(s) lost`"
-                      :to="{
-                        name: 'board-rentals-id',
-                        params: { id: event.rentalId },
-                      }" />
-                  </div>
-                </li>
-              </ul>
-            </template>
           </InventoryTableItem>
           <InventoryTableItem :status="status" data-testid="amount">
             {{ totalAmount }}
@@ -136,6 +127,30 @@
           </InventoryTableItem>
           <InventoryTableItem :status="status">
             <RetirementDate :retirement-date="retirementDate" />
+          </InventoryTableItem>
+
+          <InventoryTableItem class="col-span-full border-t-0" :status="status">
+            <ul class="ml-5">
+              <li>
+                {{ displayPurchaseDate({ purchaseDate, productionDate }) }}
+                : Bought
+                {{ totalAmount + sumBy(events, (e) => e.lostAmount) }} item(s)
+              </li>
+              <li
+                v-for="(event, idx) of events"
+                :key="idx"
+                data-testid="lostItem">
+                <div class="flex flex-row flex-wrap gap-x-1">
+                  {{ dayjs(event.occuredOn).format('DD-MM-YYYY') }}:
+                  <SharedLinkTo
+                    :text="`${event.lostAmount} item(s) lost`"
+                    :to="{
+                      name: 'board-rentals-id',
+                      params: { id: event.rentalId },
+                    }" />
+                </div>
+              </li>
+            </ul>
           </InventoryTableItem>
         </div>
       </div>
