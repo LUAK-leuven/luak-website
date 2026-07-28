@@ -20,13 +20,16 @@ export class GearService {
     const gearItems = await this.gearRepository.getAllGearItems();
     const rentedGearAmounts =
       await this.rentalRepository.getRentedGearAmounts();
+    const groupedRentedAmounts = groupBy(
+      rentedGearAmounts,
+      (x) => x.gearItemId,
+    );
 
     return gearItems.map((gearItem) => {
       const inventoryItems = groupedInventory[gearItem.id] ?? [];
       const totalAmount = sumOf(inventoryItems, 'totalAmount');
-      const rentedAmount =
-        rentedGearAmounts.find((x) => x.gearItemId === gearItem.id)
-          ?.rentedAmount ?? 0;
+      const rentedItems = groupedRentedAmounts[gearItem.id] ?? [];
+      const rentedAmount = sumOf(rentedItems, 'rentedAmount');
       return {
         id: gearItem.id,
         name: gearItem.name,
