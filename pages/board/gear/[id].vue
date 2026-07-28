@@ -95,12 +95,32 @@
             productionDate,
             purchaseDate,
             retirementDate,
+            events,
           } of gearItems.inventory"
           :key="id"
           class="contents"
           data-testid="inventory-row">
           <InventoryTableItem :status="status">
             {{ details }}
+            <template v-if="events.length">
+              <b>history</b>
+              <ul class="ml-5">
+                <li
+                  v-for="(event, idx) of events"
+                  :key="idx"
+                  data-testid="lostItem">
+                  <div class="flex flex-row flex-wrap gap-x-1">
+                    {{ dayjs(event.occuredOn).format('DD-MM-YYYY') }}:
+                    <SharedLinkTo
+                      :text="`${event.lostAmount} item(s) lost`"
+                      :to="{
+                        name: 'board-rentals-id',
+                        params: { id: event.rentalId },
+                      }" />
+                  </div>
+                </li>
+              </ul>
+            </template>
           </InventoryTableItem>
           <InventoryTableItem :status="status" data-testid="amount">
             {{ totalAmount }}
