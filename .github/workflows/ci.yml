@@ -5,8 +5,9 @@ name: LUAK-web CI
 
 on:
   push:
-  pull_request:
-    branches: [$default-branch]
+    branches:
+      - '**'
+      - '!master'
 
 env:
   CI: true
