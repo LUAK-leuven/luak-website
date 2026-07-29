@@ -14,10 +14,12 @@
 
   const user = await useUserService().getUserInfo();
 
+  const gearService = useGearService();
+
   const { data: allGear, pending: gearPending } =
-    await gearService().getAllGearItems();
+    await gearService.getAllGearItems();
   const { data: allTopos_, pending: toposPending } =
-    await gearService().getAllTopos();
+    await gearService.getAllTopos();
   const allTopos = computed(() =>
     allTopos_.value?.map((topo) => ({
       id: topo.id,
@@ -29,6 +31,10 @@
   );
 
   async function handleSubmit(state: Omit<UnsavedRental, 'boardMemberId'>) {
+    if (user.value === null) {
+      showPopup('error', 'Failed to read user id.');
+      return { error: 'Failed to read user id.' };
+    }
     const { error, id } = await saveRental({
       ...state,
       boardMemberId: user.value.id,
@@ -75,7 +81,7 @@
 
     <BoardRentalForm
       v-else
-      :board-member-name="user.fullName"
+      :board-member-name="user?.fullName ?? 'ERROR'"
       :all-gear="allGear"
       :all-topos="allTopos"
       :handle-submit="handleSubmit"

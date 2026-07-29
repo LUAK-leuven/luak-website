@@ -34,7 +34,7 @@
 
   const { show: showPopup } = useToast();
 
-  const { data } = await gearService().getCompositeGearItems();
+  const { data } = await useGearService().getCompositeGearItems();
   const compositeGearItems = computed(() =>
     Object.fromEntries(
       data.value?.map((it) => [

@@ -14,7 +14,7 @@
 
   const { show } = useToast();
 
-  const { data, pending, error } = await gearService().getTopoDetails(
+  const { data, pending, error } = await useGearService().getTopoDetails(
     props.topo.itemId.id,
   );
 
