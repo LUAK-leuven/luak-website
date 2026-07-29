@@ -4,7 +4,11 @@
   definePageMeta({ middleware: 'active-member-guard' });
 
   const user = await useUserService().getMembershipInfo();
-  const { data: topos, pending, error } = await gearService().getTopoLibrary();
+  const {
+    data: topos,
+    pending,
+    error,
+  } = await useGearService().getTopoLibrary();
 
   const allTypesOfClimbing = computed(() =>
     [...new Set(topos.value?.flatMap((it) => it.typesOfClimbing))].toSorted(),

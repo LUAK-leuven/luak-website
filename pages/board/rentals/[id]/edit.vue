@@ -7,12 +7,11 @@
   const rentalId = useRoute('board-rentals-id-edit').params.id as RentalId;
 
   const { get, edit } = useRentalService();
+  const { getAllGearItems, getAllTopos } = useGearService();
 
   const { rental, pending: rentalPending } = await get(rentalId);
-  const { data: _allGear, pending: gearPending } =
-    await gearService().getAllGearItems();
-  const { data: _allTopos, pending: toposPending } =
-    await gearService().getAllTopos();
+  const { data: _allGear, pending: gearPending } = await getAllGearItems();
+  const { data: _allTopos, pending: toposPending } = await getAllTopos();
 
   const allGear = computed(() =>
     _allGear.value?.map((gearItem) => ({

@@ -2,7 +2,7 @@ import type { Database } from '~/types/database.types';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { parseEvent } from '~/model/gear';
 import type { InventoryItemId, ItemEvent } from '~/model/gear';
-import type { GearInventoryId, GearItemId } from '~/types/gear';
+import type { GearInventoryId, GearItemId, TopoId } from '~/types/gear';
 import { groupBy } from '~/utils/utils';
 
 export class GearDao {
