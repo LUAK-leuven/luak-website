@@ -1,6 +1,8 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '~/types/database.types';
 import dayjs from 'dayjs';
+import type { InventoryItemId } from '~/model/inventory/InventoryItem';
+import type { ItemEvent } from '~/model/inventory/ItemEvent';
 
 export class TestDao {
   constructor(private readonly supabase: SupabaseClient<Database>) {}
@@ -29,5 +31,16 @@ Failed to clear rentals:
   error: ${JSON.stringify(error)}
       `);
     }
+  };
+
+  readonly addInventoryItemEvent = async (args: {
+    itemId: InventoryItemId;
+    event: ItemEvent;
+  }) => {
+    await this.supabase.from('InventoryItemEvents').insert({
+      item_id: args.itemId.itemId,
+      item_type: args.itemId.itemType,
+      event: args.event,
+    });
   };
 }
