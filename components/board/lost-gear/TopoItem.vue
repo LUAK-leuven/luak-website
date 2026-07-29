@@ -14,8 +14,9 @@
 
   const { show } = useToast();
 
-  const { data, pending, error } = await useGearService().getTopoDetails(
-    props.topo.itemId.id,
+  const { data, pending, error } = await useLazyFetch(
+    `/api/topos/${props.topo.itemId.id}`,
+    { method: 'get' },
   );
 
   const formSchema = yupObject({

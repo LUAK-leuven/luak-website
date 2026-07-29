@@ -11,7 +11,6 @@
       purchaseDate: string | undefined;
       productionDate: string | undefined;
       totalAmount: number;
-      status: 'available' | 'archived';
     }[];
     lifespan: number;
     lostAmount: number | undefined;
@@ -21,7 +20,7 @@
 
   const _inventory = computed(() =>
     props.inventory
-      .filter((x) => x.status === 'available')
+      .filter((x) => x.totalAmount > 0)
       .map((x) => {
         const productionDate = x.productionDate
           ? dayjs(x.productionDate)
@@ -68,7 +67,7 @@
       class="contents"
       :class="{ 'border-5 bg-blue-100': model === id }"
       data-testid="table-row">
-      <InventoryTableItem status="available">
+      <InventoryTableItem :is-archived="false">
         <input
           v-model="model"
           class="radio radio-primary"
@@ -76,22 +75,22 @@
           name="inventoryItem"
           :value="id" />
       </InventoryTableItem>
-      <InventoryTableItem status="available">
+      <InventoryTableItem :is-archived="false">
         {{ details }}
       </InventoryTableItem>
-      <InventoryTableItem status="available" data-testid="amount">
+      <InventoryTableItem :is-archived="false" data-testid="amount">
         {{ amount }}
         <template v-if="id === model && lostAmount !== undefined">
           -> {{ amount - lostAmount }}
         </template>
       </InventoryTableItem>
-      <InventoryTableItem status="available">
+      <InventoryTableItem :is-archived="false">
         {{ dayjs(productionDate)?.format('MMM YYYY') }}
       </InventoryTableItem>
-      <InventoryTableItem status="available">
+      <InventoryTableItem :is-archived="false">
         {{ purchaseDate?.format('MMM YYYY') }}
       </InventoryTableItem>
-      <InventoryTableItem status="available">
+      <InventoryTableItem :is-archived="false">
         <RetirementDate :retirement-date="retirementDate" />
       </InventoryTableItem>
     </label>

@@ -8,7 +8,7 @@
     data: topos,
     pending,
     error,
-  } = await useGearService().getTopoLibrary();
+  } = await useLazyFetch(`/api/topos/library`, { method: 'get' });
 
   const allTypesOfClimbing = computed(() =>
     [...new Set(topos.value?.flatMap((it) => it.typesOfClimbing))].toSorted(),

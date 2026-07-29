@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '~/types/database.types';
-import type { GearItemId } from '~/types/gear';
+import type { GearItemId, TopoId } from '~/types/gear';
 import { sumBy } from '~/utils/utils';
 import type { RentalId } from '~/types/rental';
 import { contactInfoFromDb } from '~/services/rentalService';
@@ -17,6 +17,20 @@ export class RentalDao {
     return data.map((x) => {
       return {
         gearItemId: x.gear_item_id as GearItemId,
+        rentedAmount: x.rented_amount - x.returned_amount - x.lost_amount,
+      };
+    });
+  }
+
+  async getRentedTopoAmounts() {
+    const { data } = await this.supabaseClient
+      .from('RentedTopos')
+      .select('topo_id, rented_amount, returned_amount, lost_amount')
+      .throwOnError();
+
+    return data.map((x) => {
+      return {
+        topoId: x.topo_id as TopoId,
         rentedAmount: x.rented_amount - x.returned_amount - x.lost_amount,
       };
     });

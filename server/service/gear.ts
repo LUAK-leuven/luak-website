@@ -39,6 +39,7 @@ export class GearService {
           inventoryItems,
           gearItem.lifespan,
         )?.format('YYYY-MM-DD'),
+        depositFee: gearItem.depositFee,
       };
     });
   }
@@ -69,8 +70,8 @@ export class GearService {
             lifespan: gearItem.lifespan,
           })?.format('YYYY-MM-DD'),
           details: item.details,
+          initialAmount: item.initialAmount,
           totalAmount: item.totalAmount,
-          status: item.status,
           events: item.events,
         };
       }),

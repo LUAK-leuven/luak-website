@@ -1,7 +1,11 @@
 import type { Locator, Page } from '@playwright/test';
+import type { TopoId } from '~/types/gear';
+import { navigateTo } from '~/tests/e2e/fixtures';
 
 export class TopoDetailsPage {
   private readonly page: Page;
+
+  static readonly path = (topoId: TopoId) => `/topos/${topoId}/`;
 
   readonly amount: Locator;
 
@@ -10,4 +14,14 @@ export class TopoDetailsPage {
 
     this.amount = page.getByTestId('amount');
   }
+
+  static readonly navigate = async (page: Page, topoId: TopoId) => {
+    const topoDetailsPage = new TopoDetailsPage(page);
+    await topoDetailsPage.navigate(topoId);
+    return topoDetailsPage;
+  };
+
+  readonly navigate = async (topoId: TopoId) => {
+    await navigateTo(this.page, TopoDetailsPage.path(topoId));
+  };
 }

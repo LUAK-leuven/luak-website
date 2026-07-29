@@ -1,4 +1,4 @@
-import type { ItemEvent } from '~/model/gear';
+import type { ItemEvent } from '~/model/inventory/ItemEvent';
 import type { EntityId } from './ddd';
 import type { RentalId } from './rental';
 
@@ -12,6 +12,7 @@ export type GearInventorySummary = {
   totalAmount: number;
   availableAmount: number;
   earliestRetirementDate: string | undefined;
+  depositFee: number;
 };
 
 export type GearInventoryDetails = {
@@ -27,8 +28,8 @@ export type GearInventoryDetails = {
     purchaseDate: string | undefined;
     retirementDate: string | undefined;
     details: string;
+    initialAmount: number;
     totalAmount: number;
-    status: 'available' | 'archived';
     events: (ItemEvent & { occuredOn: string })[];
   }[];
   rentals: {
