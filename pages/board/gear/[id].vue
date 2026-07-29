@@ -55,7 +55,6 @@
 
   const bp = useBreakpoints(breakpointsTailwind);
   const lg = computed(() => bp.lg.value);
-  const sm = computed(() => bp.sm.value);
 
   const displayPurchaseDate = (args: {
     purchaseDate: Dayjs | undefined;
@@ -89,10 +88,9 @@
     <b>Inventory</b>
     <ClientOnly>
       <div
-        class="grid grid-cols-[3fr_1fr_2fr] sm:grid-cols-[3fr_1fr_1fr_2fr] lg:grid-cols-[4fr_1fr_1fr_2fr_2fr_2fr] border rounded-sm overflow-x-scroll">
+        class="grid grid-cols-[3fr_1fr_2fr] lg:grid-cols-[4fr_1fr_2fr_2fr_2fr] border rounded-sm overflow-x-scroll">
         <b class="border px-1">Details</b>
         <b class="border px-1">Amount</b>
-        <b v-if="sm" class="border px-1">Status</b>
         <b v-if="lg" class="border px-1">Production date</b>
         <b v-if="lg" class="border px-1">Purchase date</b>
         <b class="border px-1">Retirement date</b>
@@ -102,7 +100,6 @@
             details,
             initialAmount,
             totalAmount,
-            status,
             productionDate,
             purchaseDate,
             retirementDate,
@@ -111,26 +108,27 @@
           :key="id"
           class="contents"
           data-testid="inventory-row">
-          <InventoryTableItem :status="status">
+          <InventoryTableItem :is-archived="totalAmount <= 0">
             {{ details }}
           </InventoryTableItem>
-          <InventoryTableItem :status="status" data-testid="amount">
+          <InventoryTableItem
+            :is-archived="totalAmount <= 0"
+            data-testid="amount">
             {{ totalAmount }}
           </InventoryTableItem>
-          <InventoryTableItem v-if="sm" :status="status">
-            {{ status }}
-          </InventoryTableItem>
-          <InventoryTableItem v-if="lg" :status="status">
+          <InventoryTableItem v-if="lg" :is-archived="totalAmount <= 0">
             {{ productionDate?.format('MMM YYYY') }}
           </InventoryTableItem>
-          <InventoryTableItem v-if="lg" :status="status">
+          <InventoryTableItem v-if="lg" :is-archived="totalAmount <= 0">
             {{ purchaseDate?.format('MMM YYYY') }}
           </InventoryTableItem>
-          <InventoryTableItem :status="status">
+          <InventoryTableItem :is-archived="totalAmount <= 0">
             <RetirementDate :retirement-date="retirementDate" />
           </InventoryTableItem>
 
-          <InventoryTableItem class="col-span-full border-t-0" :status="status">
+          <InventoryTableItem
+            class="col-span-full border-t-0"
+            :is-archived="totalAmount <= 0">
             <ul class="ml-5">
               <li>
                 {{ displayPurchaseDate({ purchaseDate, productionDate }) }}

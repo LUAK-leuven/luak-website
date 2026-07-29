@@ -71,7 +71,6 @@ export class GearService {
           details: item.details,
           initialAmount: item.initialAmount,
           totalAmount: item.totalAmount,
-          status: item.status,
           events: item.events,
         };
       }),

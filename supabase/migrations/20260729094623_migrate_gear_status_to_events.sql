@@ -19,3 +19,4 @@ where i.status = 'archived'
 
 -- Drop the status column on GearInventory
 alter table "public"."GearInventory" drop column "status";
+drop type "gear_status";

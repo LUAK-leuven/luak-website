@@ -114,7 +114,6 @@ export type Database = {
           id: string;
           production_date: string | null;
           purchase_date: string | null;
-          status: Database['public']['Enums']['gear_status'];
         };
         Insert: {
           amount: number;
@@ -124,7 +123,6 @@ export type Database = {
           id?: string;
           production_date?: string | null;
           purchase_date?: string | null;
-          status: Database['public']['Enums']['gear_status'];
         };
         Update: {
           amount?: number;
@@ -134,7 +132,6 @@ export type Database = {
           id?: string;
           production_date?: string | null;
           purchase_date?: string | null;
-          status?: Database['public']['Enums']['gear_status'];
         };
         Relationships: [
           {
@@ -549,7 +546,6 @@ export type Database = {
       };
     };
     Enums: {
-      gear_status: 'available' | 'archived';
       item_type: 'topo' | 'gear';
       kbf_uiaa: 'not' | 'kbf_luak' | 'kbf_other' | 'uiaa';
       payment_method: 'cash' | 'transfer';
@@ -1238,7 +1234,6 @@ export const Constants = {
   },
   public: {
     Enums: {
-      gear_status: ['available', 'archived'],
       item_type: ['topo', 'gear'],
       kbf_uiaa: ['not', 'kbf_luak', 'kbf_other', 'uiaa'],
       payment_method: ['cash', 'transfer'],

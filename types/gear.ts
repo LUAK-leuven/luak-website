@@ -29,7 +29,6 @@ export type GearInventoryDetails = {
     details: string;
     initialAmount: number;
     totalAmount: number;
-    status: 'available' | 'archived';
     events: (ItemEvent & { occuredOn: string })[];
   }[];
   rentals: {

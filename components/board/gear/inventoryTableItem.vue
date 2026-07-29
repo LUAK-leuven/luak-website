@@ -1,16 +1,14 @@
 <script setup lang="ts">
-  import type { Enums } from '~/types/database.types';
-
   defineProps<{
-    status: Enums<'gear_status'>;
+    isArchived: boolean;
   }>();
 </script>
 <template>
   <div
     class="border p-1"
     :class="{
-      'bg-gray-100 italic': status === 'archived',
-      'bg-inherit': status !== 'archived',
+      'bg-gray-100 italic': isArchived,
+      'bg-inherit': !isArchived,
     }">
     <slot />
   </div>

@@ -8,7 +8,7 @@ export class GearService {
   ) {}
 
   readonly getAllGearItems = async () => {
-    const { data: gear, error } = await this.supabase
+    const { data } = await this.supabase
       .from('GearItems')
       .select(
         `
@@ -24,16 +24,15 @@ export class GearService {
           )
         `,
       )
-      .eq('GearInventory.status', 'available')
-      .order('name');
+      .order('name')
+      .throwOnError();
 
-    if (error) {
-      throw new Error('getAllGearItems:', { cause: error });
-    }
+    // TODO: filter out unavailable items
 
-    return gear.map((gearItem) => {
+    return data.map((gearItem) => {
       const totalAmount = sumOf(gearItem.GearInventory, 'amount');
       const rentedAmount = sumBy(
+        // TODO: do a correct computation based on itemEvents
         gearItem.RentedGear,
         ({ rented_amount, returned_amount }) => rented_amount - returned_amount,
       );
@@ -48,7 +47,7 @@ export class GearService {
   };
 
   readonly getAllTopos = async () => {
-    const { data: topos, error } = await this.supabase
+    const { data } = await this.supabase
       .from('Topos')
       .select(
         `
@@ -61,13 +60,10 @@ export class GearService {
           )
         `,
       )
-      .order('title');
+      .order('title')
+      .throwOnError();
 
-    if (topos === null) {
-      throw new Error('getAllTopos', { cause: error });
-    }
-
-    return topos.map((topo) => ({
+    return data.map((topo) => ({
       id: topo.id as TopoId,
       title: topo.title,
       totalAmount: topo.amount,
@@ -82,7 +78,7 @@ export class GearService {
   };
 
   readonly getCompositeGearItems = async () => {
-    const { data, error } = await this.supabase
+    const { data } = await this.supabase
       .from('CompositeGearItems')
       .select(
         `
@@ -92,10 +88,8 @@ export class GearService {
             amount
           )
         `,
-      );
-    if (error) {
-      throw new Error('getCompositeGearItems', { cause: error });
-    }
+      )
+      .throwOnError();
 
     return data.map((it) => ({
       name: it.name,

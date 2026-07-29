@@ -43,7 +43,6 @@ export class GearDao {
         initialAmount: item.amount,
         totalAmount: foldInventoryItemEvents(item.amount, itemEvents),
         details: item.details,
-        status: item.status,
         events: itemEvents,
       };
     });
@@ -61,7 +60,6 @@ export class GearDao {
           amount
         `,
       )
-      .eq('status', 'available')
       .not('gear_item_id', 'is', null)
       .throwOnError();
 
@@ -79,7 +77,7 @@ export class GearDao {
   private async _getInventoryItemDetails(id: GearItemId) {
     const { data } = await this.supabaseClient
       .from('GearInventory')
-      .select('*')
+      .select('id, production_date, purchase_date, amount, details')
       .eq('gear_item_id', id)
       .throwOnError();
 
@@ -90,7 +88,6 @@ export class GearDao {
         purchaseDate: x.purchase_date ?? undefined,
         amount: x.amount,
         details: x.details,
-        status: x.status,
       };
     });
   }
