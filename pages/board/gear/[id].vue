@@ -100,6 +100,7 @@
           v-for="{
             id,
             details,
+            initialAmount,
             totalAmount,
             status,
             productionDate,
@@ -134,7 +135,8 @@
               <li>
                 {{ displayPurchaseDate({ purchaseDate, productionDate }) }}
                 : Bought
-                {{ totalAmount + sumBy(events, (e) => e.lostAmount) }} item(s)
+                {{ initialAmount }}
+                item(s)
               </li>
               <li
                 v-for="(event, idx) of events"
@@ -143,11 +145,15 @@
                 <div class="flex flex-row flex-wrap gap-x-1">
                   {{ dayjs(event.occuredOn).format('DD-MM-YYYY') }}:
                   <SharedLinkTo
+                    v-if="event.eventName === 'ItemLostEvent'"
                     :text="`${event.lostAmount} item(s) lost`"
                     :to="{
                       name: 'board-rentals-id',
                       params: { id: event.rentalId },
                     }" />
+                  <span v-else-if="event.eventName === 'ItemArchivedEvent'">
+                    {{ event.amount }} item(s) archived
+                  </span>
                 </div>
               </li>
             </ul>

@@ -1,7 +1,8 @@
 import type { TopoId } from '~/types/gear';
-import { groupBy, sumOf } from '~/utils/utils';
+import { groupBy } from '~/utils/utils';
 import type { TopoDao } from '../repository/topos';
 import type { GearDao } from '../repository/gear';
+import { foldInventoryItemEvents } from '~/model/inventory/InventoryItem';
 
 export class TopoService {
   constructor(
@@ -16,9 +17,6 @@ export class TopoService {
       itemId: topoId,
     });
 
-    const totalAmount =
-      topoDetails.totalAmount - sumOf(topoEvents, 'lostAmount');
-
     return {
       id: topoDetails.id,
       title: topoDetails.title,
@@ -31,7 +29,7 @@ export class TopoService {
       placeInLibrary: topoDetails.place_in_library,
       tags: topoDetails.tags,
       yearPublished: topoDetails.year_published,
-      amount: totalAmount,
+      amount: foldInventoryItemEvents(topoDetails.totalAmount, topoEvents),
     };
   }
 
@@ -53,9 +51,10 @@ export class TopoService {
         title: topo.title,
         typesOfClimbing: topo.typesOfClimbing,
         yearPublished: topo.yearPublished,
-        amount:
-          topo.initialAmount -
-          sumOf(groupedTopoEvents[topo.id] ?? [], 'lostAmount'),
+        amount: foldInventoryItemEvents(
+          topo.initialAmount,
+          groupedTopoEvents[topo.id] ?? [],
+        ),
       }))
       .filter((topo) => topo.amount > 0);
   }

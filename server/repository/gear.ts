@@ -1,9 +1,12 @@
 import type { Database } from '~/types/database.types';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { parseEvent } from '~/model/gear';
-import type { InventoryItemId, ItemEvent } from '~/model/gear';
-import type { GearInventoryId, GearItemId, TopoId } from '~/types/gear';
+import type { GearInventoryId, GearItemId } from '~/types/gear';
 import { groupBy } from '~/utils/utils';
+import {
+  foldInventoryItemEvents,
+  type InventoryItemId,
+} from '~/model/inventory/InventoryItem';
+import { parseEvent, type ItemEvent } from '~/model/inventory/ItemEvent';
 
 export class GearDao {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
@@ -15,18 +18,15 @@ export class GearDao {
     const events = await this.getAllGearInventoryItemEvents();
     const groupedEvents = groupBy(events, (event) => event.gearInventoryId);
 
-    return inventory.map((item) => {
-      const { totalAmount } = this.foldEvents(
-        item,
+    return inventory.map((item) => ({
+      gearItemId: item.gearItemId,
+      productionDate: item.productionDate,
+      purchaseDate: item.purchaseDate,
+      totalAmount: foldInventoryItemEvents(
+        item.amount,
         groupedEvents[item.id] ?? [],
-      );
-      return {
-        gearItemId: item.gearItemId,
-        productionDate: item.productionDate,
-        purchaseDate: item.purchaseDate,
-        totalAmount,
-      };
-    });
+      ),
+    }));
   }
 
   public async getInventoryDetails(id: GearItemId) {
@@ -35,18 +35,16 @@ export class GearDao {
     const groupedEvents = groupBy(events, (event) => event.gearInventoryId);
 
     return inventory.map((item) => {
-      const { totalAmount } = this.foldEvents(
-        item,
-        groupedEvents[item.id] ?? [],
-      );
+      const itemEvents = groupedEvents[item.id] ?? [];
       return {
         id: item.id,
         productionDate: item.productionDate,
         purchaseDate: item.purchaseDate,
-        totalAmount,
+        initialAmount: item.amount,
+        totalAmount: foldInventoryItemEvents(item.amount, itemEvents),
         details: item.details,
         status: item.status,
-        events: groupedEvents[item.id] ?? [],
+        events: itemEvents,
       };
     });
   }
@@ -126,26 +124,6 @@ export class GearDao {
       lifespan: data.lifespan,
       name: data.name,
     };
-  }
-
-  private foldEvents(
-    invenotryItem: {
-      amount: number;
-    },
-    events: ItemEvent[],
-  ) {
-    const foldedItem = {
-      totalAmount: invenotryItem.amount,
-    };
-    for (const event of events) {
-      switch (event.eventName) {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        case 'ItemLostEvent':
-          foldedItem.totalAmount -= event.lostAmount;
-          break;
-      }
-    }
-    return foldedItem;
   }
 
   // --- Item Events ---
