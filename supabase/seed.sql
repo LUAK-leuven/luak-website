@@ -13,16 +13,16 @@ values
     ('645702cc-5d7a-4c16-9a2a-027e5bcb40c3', 'BD C4 .4', 10, 1000),
     ('3e98f1d3-106e-4a93-9038-2f07019b5eda', 'snapper', 500, 20);
 
-insert into "GearInventory" (gear_item_id, amount, status)
+insert into "GearInventory" (id, gear_item_id, amount)
 values
-    ('c927a2f9-a477-451b-970a-bd548ad0278c', 24, 'available'),
-    ('c927a2f9-a477-451b-970a-bd548ad0278c', 12, 'available'),
-    ('c927a2f9-a477-451b-970a-bd548ad0278c', 2, 'archived'),
-    ('6db74c8e-4f30-4da9-b119-442e536cae1f', 1, 'available'),
-    ('6db74c8e-4f30-4da9-b119-442e536cae1a', 1, 'available'),
-    ('3825a13b-0002-4d44-b7f8-e8d0d8730cd2', 2, 'available'),
-    ('6777b0e7-1b72-4572-821c-f0d7e7ed898c', 2, 'available'),
-    ('645702cc-5d7a-4c16-9a2a-027e5bcb40c3', 2, 'available');
+    ('90c84d80-04f4-4c55-8f6a-3faf7ccbc2fb', 'c927a2f9-a477-451b-970a-bd548ad0278c', 24),
+    ('3d7a2a9a-8a8a-456c-997e-8533427f6ed1', 'c927a2f9-a477-451b-970a-bd548ad0278c', 12),
+    ('49f1b67b-5289-4056-a43a-c9ad248ad883', 'c927a2f9-a477-451b-970a-bd548ad0278c', 2),
+    ('d60e75c2-8cb6-44fb-bc60-e2053cc9b53f', '6db74c8e-4f30-4da9-b119-442e536cae1f', 1),
+    ('ba9a2e3d-82e2-4d67-92d2-a60534e8ae56', '6db74c8e-4f30-4da9-b119-442e536cae1a', 1),
+    ('a8e3d6e7-c6f7-4b17-ad8d-a406f768dc89', '3825a13b-0002-4d44-b7f8-e8d0d8730cd2', 2),
+    ('e7ae75a1-6002-4294-a49f-d78f19c845b1', '6777b0e7-1b72-4572-821c-f0d7e7ed898c', 2),
+    ('b6594018-1d38-4477-b52e-8991ff6191ce', '645702cc-5d7a-4c16-9a2a-027e5bcb40c3', 2);
 
 insert into "Topos" (id, title, authors, countries, year_published, amount, condition, types_of_climbing, tags, place_in_library, details, languages)
 values
