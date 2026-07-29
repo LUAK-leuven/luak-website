@@ -1,5 +1,5 @@
 import type { TopoId } from '~/types/gear';
-import { sumOf } from '~/utils/utils';
+import { groupBy, sumOf } from '~/utils/utils';
 import type { TopoDao } from '../repository/topos';
 import type { GearDao } from '../repository/gear';
 
@@ -33,5 +33,30 @@ export class TopoService {
       yearPublished: topoDetails.year_published,
       amount: totalAmount,
     };
+  }
+
+  async getTopoLibrary() {
+    const topos = await this.topoRepository.getTopoLibrary();
+    const topoEvents =
+      await this.topoRepository.getAllTopoInventoryItemEvents();
+
+    const groupedTopoEvents = groupBy(topoEvents, (e) => e.topoId);
+
+    return topos
+      .map((topo) => ({
+        id: topo.id,
+        authors: topo.authors,
+        condition: topo.condition,
+        countries: topo.countries,
+        placeInLibrary: topo.placeInLibrary,
+        tags: topo.tags,
+        title: topo.title,
+        typesOfClimbing: topo.typesOfClimbing,
+        yearPublished: topo.yearPublished,
+        amount:
+          topo.initialAmount -
+          sumOf(groupedTopoEvents[topo.id] ?? [], 'lostAmount'),
+      }))
+      .filter((topo) => topo.amount > 0);
   }
 }

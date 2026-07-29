@@ -105,27 +105,4 @@ export class GearService {
       })),
     }));
   };
-
-  readonly getTopoLibrary = async () => {
-    const { data: topos, error } = await this.supabase
-      .from('Topos')
-      .select(
-        'id, authors, condition, countries, place_in_library, tags, title, types_of_climbing, year_published',
-      );
-
-    if (topos === null) {
-      throw new Error('getTopoLibrary', { cause: error });
-    }
-
-    return topos.map((topo) => ({
-      authors: topo.authors,
-      countries: topo.countries,
-      id: topo.id as TopoId,
-      placeInLibrary: topo.place_in_library,
-      tags: topo.tags.map((it) => it.trimStart()),
-      title: topo.title,
-      typesOfClimbing: topo.types_of_climbing,
-      yearPublished: topo.year_published,
-    }));
-  };
 }

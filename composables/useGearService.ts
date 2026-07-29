@@ -32,11 +32,15 @@ export function useGearService() {
     return await useLazyFetch(`/api/topos/${topoId}`, { method: 'get' });
   };
 
+  const getTopoLibrary = async () => {
+    return await useLazyFetch(`/api/topos/library`, { method: 'get' });
+  };
+
   return {
     getAllGearItems: getData('getAllGearItems'),
     getAllTopos: getData('getAllTopos'),
     getCompositeGearItems: getData('getCompositeGearItems'),
-    getTopoLibrary: getData('getTopoLibrary'),
+    getTopoLibrary,
     getTopoDetails,
   };
 }
