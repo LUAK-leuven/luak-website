@@ -104,6 +104,7 @@ export class GearDao {
         id: x.id as GearItemId,
         name: x.name,
         lifespan: x.lifespan,
+        depositFee: x.deposit_fee,
       };
     });
   }

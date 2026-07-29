@@ -14,12 +14,15 @@
 
   const user = await useUserService().getUserInfo();
 
-  const gearService = useGearService();
+  const { data: allGear, pending: gearPending } = await useLazyFetch(
+    '/api/gear/inventory',
+    { method: 'get' },
+  );
+  const { data: allTopos_, pending: toposPending } = await useLazyFetch(
+    '/api/topos',
+    { method: 'get' },
+  );
 
-  const { data: allGear, pending: gearPending } =
-    await gearService.getAllGearItems();
-  const { data: allTopos_, pending: toposPending } =
-    await gearService.getAllTopos();
   const allTopos = computed(() =>
     allTopos_.value?.map((topo) => ({
       id: topo.id,

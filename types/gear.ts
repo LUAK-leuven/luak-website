@@ -12,6 +12,7 @@ export type GearInventorySummary = {
   totalAmount: number;
   availableAmount: number;
   earliestRetirementDate: string | undefined;
+  depositFee: number;
 };
 
 export type GearInventoryDetails = {

@@ -6,7 +6,7 @@ import { parseEvent } from '~/model/inventory/ItemEvent';
 export class TopoDao {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
 
-  async getDetails(topoId: TopoId) {
+  readonly getDetails = async (topoId: TopoId) => {
     const { data: topo } = await this.supabaseClient
       .from('Topos')
       .select('*')
@@ -28,9 +28,9 @@ export class TopoDao {
       types_of_climbing: topo.types_of_climbing,
       year_published: topo.year_published,
     };
-  }
+  };
 
-  async getTopoLibrary() {
+  readonly getTopoLibrary = async () => {
     const { data } = await this.supabaseClient
       .from('Topos')
       .select(
@@ -50,9 +50,22 @@ export class TopoDao {
       yearPublished: topo.year_published,
       initialAmount: topo.amount,
     }));
-  }
+  };
 
-  async getAllTopoInventoryItemEvents() {
+  readonly getTopos = async () => {
+    const { data } = await this.supabaseClient
+      .from('Topos')
+      .select('id, title, amount')
+      .throwOnError();
+
+    return data.map((topo) => ({
+      id: topo.id as TopoId,
+      title: topo.title,
+      initialAmount: topo.amount,
+    }));
+  };
+
+  readonly getAllTopoInventoryItemEvents = async () => {
     const { data } = await this.supabaseClient
       .from('InventoryItemEvents')
       .select('*')
@@ -67,5 +80,5 @@ export class TopoDao {
         ...parsedEvent,
       };
     });
-  }
+  };
 }

@@ -37,8 +37,6 @@ export function useGearService() {
   };
 
   return {
-    getAllGearItems: getData('getAllGearItems'),
-    getAllTopos: getData('getAllTopos'),
     getCompositeGearItems: getData('getCompositeGearItems'),
     getTopoLibrary,
     getTopoDetails,
