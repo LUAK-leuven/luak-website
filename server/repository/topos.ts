@@ -55,13 +55,14 @@ export class TopoDao {
   readonly getTopos = async () => {
     const { data } = await this.supabaseClient
       .from('Topos')
-      .select('id, title, amount')
+      .select('id, title, amount, year_published')
       .throwOnError();
 
     return data.map((topo) => ({
       id: topo.id as TopoId,
       title: topo.title,
       initialAmount: topo.amount,
+      yearPublished: topo.year_published,
     }));
   };
 

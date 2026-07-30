@@ -52,7 +52,7 @@
           <span>{{ topo.tags.join(', ') }}</span>
         </TopoLibraryTopoDetailItem>
         <TopoLibraryTopoDetailItem name="Year published">
-          <span class="badge badge-info">{{ topo.yearPublished }}</span>
+          <span class="badge badge-info">{{ topo.yearPublished ?? 'NA' }}</span>
         </TopoLibraryTopoDetailItem>
       </div>
       <hr class="my-3" />

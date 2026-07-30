@@ -170,17 +170,20 @@ export abstract class RentalItem {
   readonly rentedAmount: number;
   readonly returnedAmount: number;
   readonly lostAmount: number;
+  readonly displayName: string;
 
   protected constructor(args: {
     name: string;
     rentedAmount: number;
     returnedAmount: number;
     lostAmount: number;
+    displayName: string;
   }) {
     this.name = args.name;
     this.rentedAmount = args.rentedAmount;
     this.returnedAmount = args.returnedAmount;
     this.lostAmount = args.lostAmount;
+    this.displayName = args.displayName;
   }
 
   readonly isValid = () => {
@@ -223,7 +226,7 @@ export class RentalGearItem extends RentalItem {
     returnedAmount: number;
     lostAmount: number;
   }) {
-    super(args);
+    super({ ...args, displayName: args.name });
     this.itemId = { id: args.id, type: 'gear' as const };
   }
 
@@ -246,8 +249,14 @@ export class RentalTopoItem extends RentalItem {
     rentedAmount: number;
     returnedAmount: number;
     lostAmount: number;
+    yearPublished?: number | null | undefined;
   }) {
-    super(args);
+    super({
+      ...args,
+      displayName: args.yearPublished
+        ? `${args.name} (${args.yearPublished.toFixed()})`
+        : args.name,
+    });
     this.itemId = { id: args.id, type: 'topo' as const };
   }
 

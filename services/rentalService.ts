@@ -118,7 +118,7 @@ export class RentalService {
           ),
           RentedTopos(
             topo_id,
-            Topos(title),
+            Topos(title, year_published),
             rented_amount,
             returned_amount,
             lost_amount
@@ -212,7 +212,7 @@ export class RentalService {
           ),
           RentedTopos(
             topo_id,
-            Topos(title),
+            Topos(title, year_published),
             rented_amount,
             returned_amount,
             lost_amount
@@ -312,7 +312,7 @@ const topoItemFromDb = (topo: {
   rented_amount: number;
   returned_amount: number;
   lost_amount: number;
-  Topos: { title: string };
+  Topos: { title: string; year_published?: number | null };
 }) =>
   new RentalTopoItem({
     id: topo.topo_id as TopoId,
@@ -320,6 +320,7 @@ const topoItemFromDb = (topo: {
     rentedAmount: topo.rented_amount,
     returnedAmount: topo.returned_amount,
     lostAmount: topo.lost_amount,
+    yearPublished: topo.Topos.year_published,
   });
 
 const gearItemFromDb = (gear: {

@@ -84,6 +84,7 @@ export class TopoService {
           title: topo.title,
           totalAmount,
           availableAmount: totalAmount - rentedAmount,
+          yearPublished: topo.yearPublished,
         };
       })
       .filter((topo) => topo.totalAmount > 0);

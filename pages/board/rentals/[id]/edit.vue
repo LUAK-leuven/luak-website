@@ -2,6 +2,7 @@
   import type { RentalId, UnsavedRental } from '~/types/rental';
   import { useToast } from '~/composables/useToast';
   import { useRentalService } from '~/composables/useRentalService';
+  import fetchGearAndTopos from '~/components/board/rental/form/fetchGearAndTopos';
 
   const { show: showPopup } = useToast();
   const rentalId = useRoute('board-rentals-id-edit').params.id as RentalId;
@@ -10,38 +11,29 @@
 
   const { rental, pending: rentalPending } = await get(rentalId);
 
-  const { data: _allGear, pending: gearPending } = await useLazyFetch(
-    '/api/gear/inventory',
-    { method: 'get' },
-  );
-  const { data: _allTopos, pending: toposPending } = await useLazyFetch(
-    '/api/topos',
-    { method: 'get' },
-  );
+  const {
+    allGear: _allGear,
+    allTopos: _allTopos,
+    pending,
+  } = await fetchGearAndTopos();
 
   const allGear = computed(() =>
     _allGear.value?.map((gearItem) => ({
-      id: gearItem.id,
-      name: gearItem.name,
-      totalAmount: gearItem.totalAmount,
+      ...gearItem,
       availableAmount:
         gearItem.availableAmount +
         (rental.value?.gear.find((g) => g.itemId.id === gearItem.id)
           ?.rentedAmount ?? 0),
-      depositFee: gearItem.depositFee,
     })),
   );
 
   const allTopos = computed(() =>
     _allTopos.value?.map((topo) => ({
-      id: topo.id,
-      name: topo.title,
-      totalAmount: topo.totalAmount,
+      ...topo,
       availableAmount:
         topo.availableAmount +
         (rental.value?.topos.find((t) => t.itemId.id === topo.id)
           ?.rentedAmount ?? 0),
-      depositFee: 500,
     })),
   );
 
@@ -92,9 +84,7 @@
     <SharedBackButton
       :to="{ name: 'board-rentals-id', params: { id: rentalId } }" />
 
-    <div
-      v-if="rentalPending || gearPending || toposPending"
-      class="flex justify-center">
+    <div v-if="rentalPending || pending" class="flex justify-center">
       <span class="loading loading-spinner loading-lg" />
     </div>
 
