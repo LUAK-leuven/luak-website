@@ -243,6 +243,8 @@ export class RentalGearItem extends RentalItem {
 export class RentalTopoItem extends RentalItem {
   override readonly itemId;
 
+  private readonly yearPublished: number | undefined | null;
+
   constructor(args: {
     id: TopoId;
     name: string;
@@ -258,6 +260,7 @@ export class RentalTopoItem extends RentalItem {
         : args.name,
     });
     this.itemId = { id: args.id, type: 'topo' as const };
+    this.yearPublished = args.yearPublished;
   }
 
   override readonly copy = (args: { returnedAmount?: number }) =>
@@ -270,6 +273,7 @@ export class RentalTopoItem extends RentalItem {
           ? this.returnedAmount
           : args.returnedAmount,
       lostAmount: this.lostAmount,
+      yearPublished: this.yearPublished,
     });
 }
 
