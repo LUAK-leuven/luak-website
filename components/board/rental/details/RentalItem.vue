@@ -17,7 +17,7 @@
     <div
       class="border p-1 flex flex-col items-start justify-center"
       :class="itemStatusColor">
-      {{ item.name }}
+      {{ item.displayName }}
       <ul v-if="item.lostAmount > 0" class="ml-5">
         <li data-testid="lostItem">{{ item.lostAmount }} item(s) Lost</li>
       </ul>

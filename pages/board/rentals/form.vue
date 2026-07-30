@@ -4,6 +4,7 @@
   import type { RentalId, UnsavedRental } from '~/types/rental';
   import { useToast } from '~/composables/useToast';
   import { useRentalService } from '~/composables/useRentalService';
+  import { useFetchGearAndTopos } from '~/composables/board/rental/useFetchGearAndTopos';
 
   const { show: showPopup } = useToast();
   const { save: saveRental } = useRentalService();
@@ -14,24 +15,7 @@
 
   const user = await useUserService().getUserInfo();
 
-  const { data: allGear, pending: gearPending } = await useLazyFetch(
-    '/api/gear/inventory',
-    { method: 'get' },
-  );
-  const { data: allTopos_, pending: toposPending } = await useLazyFetch(
-    '/api/topos',
-    { method: 'get' },
-  );
-
-  const allTopos = computed(() =>
-    allTopos_.value?.map((topo) => ({
-      id: topo.id,
-      name: topo.title,
-      totalAmount: topo.totalAmount,
-      availableAmount: topo.availableAmount,
-      depositFee: 500,
-    })),
-  );
+  const { allGear, allTopos, pending } = useFetchGearAndTopos();
 
   async function handleSubmit(state: Omit<UnsavedRental, 'boardMemberId'>) {
     if (user.value === null) {
@@ -76,7 +60,7 @@
   <FullPageCard>
     <template #title>Rental form 🧗</template>
 
-    <div v-if="gearPending || toposPending" class="flex justify-center">
+    <div v-if="pending" class="flex justify-center">
       <span class="loading loading-spinner loading-lg" />
     </div>
 
