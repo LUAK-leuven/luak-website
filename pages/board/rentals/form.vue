@@ -4,7 +4,7 @@
   import type { RentalId, UnsavedRental } from '~/types/rental';
   import { useToast } from '~/composables/useToast';
   import { useRentalService } from '~/composables/useRentalService';
-  import fetchGearAndTopos from '~/components/board/rental/form/fetchGearAndTopos';
+  import { useFetchGearAndTopos } from '~/composables/board/rental/useFetchGearAndTopos';
 
   const { show: showPopup } = useToast();
   const { save: saveRental } = useRentalService();
@@ -15,7 +15,7 @@
 
   const user = await useUserService().getUserInfo();
 
-  const { allGear, allTopos, pending } = await fetchGearAndTopos();
+  const { allGear, allTopos, pending } = useFetchGearAndTopos();
 
   async function handleSubmit(state: Omit<UnsavedRental, 'boardMemberId'>) {
     if (user.value === null) {

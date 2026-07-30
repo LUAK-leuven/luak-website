@@ -2,7 +2,7 @@
   import type { RentalId, UnsavedRental } from '~/types/rental';
   import { useToast } from '~/composables/useToast';
   import { useRentalService } from '~/composables/useRentalService';
-  import fetchGearAndTopos from '~/components/board/rental/form/fetchGearAndTopos';
+  import { useFetchGearAndTopos } from '~/composables/board/rental/useFetchGearAndTopos';
 
   const { show: showPopup } = useToast();
   const rentalId = useRoute('board-rentals-id-edit').params.id as RentalId;
@@ -15,7 +15,7 @@
     allGear: _allGear,
     allTopos: _allTopos,
     pending,
-  } = await fetchGearAndTopos();
+  } = useFetchGearAndTopos();
 
   const allGear = computed(() =>
     _allGear.value?.map((gearItem) => ({

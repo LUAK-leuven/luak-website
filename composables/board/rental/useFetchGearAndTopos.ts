@@ -1,9 +1,9 @@
-export default async () => {
-  const { data: allGear, pending: gearPending } = await useLazyFetch(
+export const useFetchGearAndTopos = () => {
+  const { data: allGear, pending: gearPending } = useLazyFetch(
     '/api/gear/inventory',
     { method: 'get' },
   );
-  const { data: allTopos_, pending: toposPending } = await useLazyFetch(
+  const { data: allTopos_, pending: toposPending } = useLazyFetch(
     '/api/topos',
     { method: 'get' },
   );
