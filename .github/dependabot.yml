@@ -16,6 +16,8 @@ updates:
     groups:
       security-patch-updates:
         applies-to: security-updates
+        patterns:
+          - '*'
         update-types:
           - 'patch'
       nuxt:
@@ -36,5 +38,7 @@ updates:
           - 'minor'
       patch-updates:
         applies-to: version-updates
+        patterns:
+          - '*'
         update-types:
           - 'patch'
