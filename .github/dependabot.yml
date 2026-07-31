@@ -12,3 +12,29 @@ updates:
       interval: weekly
     ignore:
       - dependency-name: 'daisyui'
+        update-types: ['version-update:semver-major']
+    groups:
+      security-patch-updates:
+        applies-to: security-updates
+        update-types:
+          - 'patch'
+      nuxt:
+        applies-to: version-updates
+        patterns:
+          - '@nuxt/*'
+          - 'nuxt*'
+        update-types:
+          - 'patch'
+          - 'minor'
+      eslint-prettier:
+        applies-to: version-updates
+        patterns:
+          - '*prettier*'
+          - '*eslint*'
+        update-types:
+          - 'patch'
+          - 'minor'
+      patch-updates:
+        applies-to: version-updates
+        update-types:
+          - 'patch'
