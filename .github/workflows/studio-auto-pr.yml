@@ -1,0 +1,35 @@
+name: Auto merge studio content
+
+on:
+  push:
+    branches:
+      - studio
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.LUAK_PR_GITHUB_TOKEN }}
+          base: master
+          branch: studio
+          title: 'Content updates'
+          body: 'Automatically created from Nuxt Studio.'
+          labels: studio
+          author: 'studio-auto-pr <web@luak.be>'
+
+      - name: Enable Pull Request Automerge
+        if: steps.cpr.outputs.pull-request-operation == 'created'
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          token: ${{ secrets.LUAK_PR_GITHUB_TOKEN }}
+          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+          merge-method: merge
