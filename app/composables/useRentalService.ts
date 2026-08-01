@@ -2,7 +2,7 @@ import {
   rentalDetailsFromDb,
   RentalService,
   rentalSummaryFromDb,
-} from '~/services/rentalService';
+} from '~~/services/rentalService';
 import type { RentalId, RentalUpdate, UnsavedRental } from '~/types/rental';
 import type { UserId } from '~/types/user';
 

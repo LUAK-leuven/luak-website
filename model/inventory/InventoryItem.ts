@@ -1,5 +1,5 @@
 import type { GearInventoryId, TopoId } from '~/types/gear';
-import type { ItemEvent } from '~/model/inventory/ItemEvent';
+import type { ItemEvent } from '~~/model/inventory/ItemEvent';
 
 export type InventoryItemId =
   | {

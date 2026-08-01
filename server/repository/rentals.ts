@@ -1,9 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Database } from '~/types/database.types';
-import type { GearItemId, TopoId } from '~/types/gear';
-import { sumBy } from '~/utils/utils';
-import type { RentalId } from '~/types/rental';
-import { contactInfoFromDb } from '~/services/rentalService';
+import { contactInfoFromDb } from '~~/services/rentalService';
 
 export class RentalDao {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}

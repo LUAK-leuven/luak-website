@@ -1,16 +1,12 @@
-import type { RentalId, RentalUpdate, UnsavedRental } from '~/types/rental';
-import type { GearItemId, TopoId } from '~/types/gear';
-import type { UserId } from '~/types/user';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Database } from '~/types/database.types';
 import {
   ContactInfo,
   RentalSummary,
   RentalDetails,
   RentalTopoItem,
   RentalGearItem,
-} from '~/model/Rental';
-import { getFullName } from '~/services/userService';
+} from '~~/model/Rental';
+import { getFullName } from '~~/services/userService';
 import { object as zodObject, string as zodString } from 'zod';
 
 export class RentalService {

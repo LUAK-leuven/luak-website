@@ -1,11 +1,10 @@
 import type { H3Event } from '#build/types/nitro-imports';
 import { serverSupabaseClient } from '#supabase/server';
-import type { Database } from '~/types/database.types';
-import { GearDao } from './repository/gear';
-import { TopoDao } from './repository/topos';
-import { TopoService } from './service/topo';
-import { RentalDao } from './repository/rentals';
-import { GearService } from './service/gear';
+import { GearDao } from '#server/repository/gear';
+import { TopoDao } from '#server/repository/topos';
+import { TopoService } from '#server/service/topo';
+import { RentalDao } from '#server/repository/rentals';
+import { GearService } from '#server/service/gear';
 
 export const serviceBuilder = async (h3Event: H3Event) => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-arguments

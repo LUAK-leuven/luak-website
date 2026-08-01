@@ -4,7 +4,7 @@ import {
   number as yupNumber,
   bool as yupBool,
 } from 'yup';
-import type { RentalDetails } from '~/model/Rental';
+import type { RentalDetails } from '~~/model/Rental';
 import type { GearItemId, TopoId } from '~/types/gear';
 import type { RentalItemId } from '~/types/rental';
 

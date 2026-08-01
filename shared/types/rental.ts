@@ -2,7 +2,7 @@ import type { EntityId } from './ddd';
 import type { Enums } from './database.types';
 import type { GearItemId, TopoId } from './gear';
 import type { UserId } from './user';
-import type { ContactInfo, RentalItem } from '~/model/Rental';
+import type { ContactInfo, RentalItem } from '~~/model/Rental';
 
 export type RentalId = EntityId<'rental'>;
 
@@ -64,7 +64,5 @@ export type RentalItemId =
     };
 
 export type ComputedRentalStatus =
-  | 'returned'
-  | 'partially_returned'
-  | 'not_returned';
+  'returned' | 'partially_returned' | 'not_returned';
 export type RentalStatus = ComputedRentalStatus | 'reserved';

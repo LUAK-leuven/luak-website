@@ -8,7 +8,7 @@
   import type {
     RentalDetails,
     RentalItem as RentalItemModel,
-  } from '~/model/Rental';
+  } from '~~/model/Rental';
 
   const props = defineProps<{
     rental: RentalDetails;

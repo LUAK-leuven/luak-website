@@ -1,7 +1,5 @@
-import type { Database, Enums } from '~/types/database.types';
-import type { UserId } from '~/types/user';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { LuakUser } from '~/model/LuakUser';
+import { LuakUser } from '~~/model/LuakUser';
 
 export class UserService {
   constructor(

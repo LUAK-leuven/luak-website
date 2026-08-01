@@ -2,7 +2,7 @@
   import type { RentalId } from '~/types/rental';
   import ItemMenu from './ItemMenu.vue';
   import type { GearItemId, TopoId } from '~/types/gear';
-  import type { RentalItem } from '~/model/Rental.js';
+  import type { RentalItem } from '~~/model/Rental.js';
   import getItemColor from '../getItemColor.js';
 
   const porps = defineProps<{

@@ -1,4 +1,4 @@
-import { GearService } from '~/services/gearService';
+import { GearService } from '~~/services/gearService';
 
 const GEAR = 'gear';
 

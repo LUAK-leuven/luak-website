@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T extends EntityId<unknown>">
   import NumberInput from '~/components/input/Number.vue';
-  import type { RentalItem } from '~/model/Rental';
+  import type { RentalItem } from '~~/model/Rental';
   import type { EntityId } from '~/types/ddd';
   import type { RentalId } from '~/types/rental';
   import getItemColor from '../getItemColor';

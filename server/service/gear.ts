@@ -1,4 +1,4 @@
-import { groupBy, min, sumOf } from '~/utils/utils';
+import { groupBy, min, sumOf } from '~~/shared/utils/utils';
 import type { GearDao } from '../repository/gear';
 import type {
   GearInventoryDetails,

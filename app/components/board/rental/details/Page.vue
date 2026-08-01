@@ -2,7 +2,7 @@
   import PaymentModal from '~/components/PaymentModal.vue';
   import RentalItem from '~/components/board/rental/details/RentalItem.vue';
   import Button from '~/components/shared/Button.vue';
-  import type { RentalDetails } from '~/model/Rental';
+  import type { RentalDetails } from '~~/model/Rental';
   import { formatToDMY } from '~/utils/rental/dateFormatter';
 
   const props = defineProps<{

@@ -1,4 +1,4 @@
-import type { ItemEvent } from '~/model/inventory/ItemEvent';
+import type { ItemEvent } from '~~/model/inventory/ItemEvent'; // TODO: invalid dependency?
 import type { EntityId } from './ddd';
 import type { RentalId } from './rental';
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import type { RentalSummary } from '~/model/Rental';
+  import type { RentalSummary } from '~~/model/Rental';
 
   defineProps<{
     rental: RentalSummary;

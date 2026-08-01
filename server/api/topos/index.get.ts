@@ -1,4 +1,4 @@
-import luakEventHandler from '~/server/luakEventHandler';
+import luakEventHandler from '#server/luakEventHandler';
 
 export default luakEventHandler(async ({ topoService }) => {
   return await topoService().getTopos();
