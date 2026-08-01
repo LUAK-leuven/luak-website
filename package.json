@@ -19,9 +19,9 @@
     "test:unit": "vitest run --config tests/unit/vitest.config.ts"
   },
   "devDependencies": {
-    "@nuxt/devtools": "^3.2.4",
+    "@nuxt/devtools": "^3.4.0",
     "@nuxt/eslint": "^1.16.0",
-    "@nuxt/test-utils": "^4.0.3",
+    "@nuxt/test-utils": "^4.1.0",
     "@nuxtjs/supabase": "^2.0.9",
     "@nuxtjs/tailwindcss": "^6.8.0",
     "@playwright/test": "^1.62.0",
@@ -35,7 +35,7 @@
     "eslint-plugin-nuxt": "^4.0.0",
     "eslint-plugin-prettier": "^5.5.6",
     "happy-dom": "^20.11.1",
-    "nuxt": "^3.21.10",
+    "nuxt": "^4.5.1",
     "nuxt-studio": "^1.7.0",
     "prettier": "^3.9.6",
     "prettier-plugin-organize-attributes": "^1.0.0",
@@ -48,14 +48,14 @@
   },
   "dependencies": {
     "@floating-ui/vue": "^1.1.11",
-    "@nuxt/content": "^3.13.0",
-    "@nuxt/image": "^2.0.0",
+    "@nuxt/content": "^3.15.2",
+    "@nuxt/image": "^2.1.0",
     "@vee-validate/nuxt": "^4.12.8",
     "@vee-validate/yup": "^4.12.8",
     "@vueuse/core": "^14.3.0",
     "better-sqlite3": "^13.0.1",
     "dayjs": "^1.11.20",
-    "nuxt-typed-router": "^4.0.7",
+    "nuxt-typed-router": "^4.0.10",
     "qrcode": "^1.5.4",
     "yup": "^1.7.1"
   },
