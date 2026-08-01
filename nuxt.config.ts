@@ -46,6 +46,15 @@ export default defineNuxtConfig({
   studio: {
     // Studio admin route (default: '/_studio')
     route: '/_studio',
+
+    // Git repository configuration
+    repository: {
+      provider: 'github',
+      owner: 'LUAK-leuven',
+      repo: 'luak-website',
+      branch: 'studio',
+      private: true,
+    },
   },
   modules: [
     '@nuxtjs/tailwindcss',
