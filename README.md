@@ -2,14 +2,14 @@
 
 The techstack used for this project is:
 
-- nuxt 3
-- nuxt content v3 + nuxt studio (visual content editing)
-- tailwindcss + daisyui
+- Nuxt
+- Nuxt Content + Nuxt Studio (visual content editing)
+- Tailwindcss + Daisyui
 
-- supabase for the backend
-- vercel for deployment
+- Supabase for the backend: https://supabase.com/dashboard/project/cpjapefpqxrptkzeehyd
+- Vercel for deployment: https://vercel.com/luak-leuvens-projects/luak-website/
 
-- Sentry for observability
+- ~~Sentry for observability~~
 - Stripe for payments
 
 ## Setup
