@@ -2,7 +2,6 @@
   import InventoryTableItem from '../gear/inventoryTableItem.vue';
   import RetirementDate from '../gear/retirementDate.vue';
   import dayjs from 'dayjs';
-  import type { GearInventoryId } from '~/types/gear';
 
   const props = defineProps<{
     inventory: {

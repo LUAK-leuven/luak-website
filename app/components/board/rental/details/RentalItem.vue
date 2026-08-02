@@ -1,7 +1,5 @@
-<script setup lang="ts" generic="T extends GearItemId | TopoId">
-  import type { RentalId } from '~/types/rental';
+<script setup lang="ts">
   import ItemMenu from './ItemMenu.vue';
-  import type { GearItemId, TopoId } from '~/types/gear';
   import type { RentalItem } from '~~/model/Rental.js';
   import getItemColor from '../getItemColor.js';
 

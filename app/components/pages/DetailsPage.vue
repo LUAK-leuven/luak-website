@@ -3,7 +3,6 @@
   lang="ts"
   generic="T extends { id: EntityId<unknown> } | null | undefined">
   import type { RoutesNamedLocations } from '@typed-router';
-  import type { EntityId } from '~/types/ddd';
 
   withDefaults(
     defineProps<{

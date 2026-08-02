@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import dayjs from 'dayjs';
   import PaymentModal from '~/components/PaymentModal.vue';
-  import type { RentalId, UnsavedRental } from '~/types/rental';
   import { useToast } from '~/composables/useToast';
   import { useRentalService } from '~/composables/useRentalService';
   import { useFetchGearAndTopos } from '~/composables/board/rental/useFetchGearAndTopos';
@@ -24,7 +23,8 @@
     }
     const { error, id } = await saveRental({
       ...state,
-      boardMemberId: user.value.id,
+      // TODO: using ! should give a warning
+      boardMemberId: user.value!.id,
     });
 
     if (!error && id) {

@@ -18,21 +18,23 @@
     validationSchema: toTypedSchema(formSchema),
   });
 
-  const onSubmit = handleSubmit(async (submitted) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email: submitted.email,
-      password: submitted.password,
-    });
-    if (error) {
-      setFieldError('password', error.message);
-    } else {
-      if (redirect) {
-        await navigateTo(redirect);
+  const onSubmit = async () => {
+    await handleSubmit(async (submitted) => {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: submitted.email,
+        password: submitted.password,
+      });
+      if (error) {
+        setFieldError('password', error.message);
       } else {
-        await navigateTo({ name: 'profile-overview' });
+        if (redirect) {
+          await navigateTo(redirect);
+        } else {
+          await navigateTo({ name: 'profile-overview' });
+        }
       }
-    }
-  });
+    })();
+  };
 </script>
 <template>
   <div class="relative flex flex-wrap justify-center z-2 bg-base-300">

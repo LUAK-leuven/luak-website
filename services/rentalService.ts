@@ -10,15 +10,14 @@ import { getFullName } from '~~/services/userService';
 import { object as zodObject, string as zodString } from 'zod';
 
 export class RentalService {
-  constructor(
-    private readonly supabaseClient: SupabaseClient<Database> = useSupabaseClient(),
-  ) {}
+  constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
 
   readonly saveRental = async (
     rental: UnsavedRental,
   ): Promise<{ id: RentalId | undefined; error: string | undefined }> => {
     const { error, data } = await this.supabaseClient.rpc('create_rental', {
       p_board_member_id: rental.boardMemberId,
+      // @ts-expect-error: type generation doesn't work for nullable function types
       p_member_id: rental.memberId ?? null,
       p_date_borrow: rental.dateBorrow,
       p_date_return: rental.dateReturn,
@@ -36,9 +35,11 @@ export class RentalService {
           rented_amount: amount,
         })),
       p_payment_method: rental.paymentMethod,
+      // @ts-expect-error: type generation doesn't work for nullable function types
       p_contact_info: rental.contactInfo
         ? JSON.stringify(rental.contactInfo)
         : null,
+      // @ts-expect-error: type generation doesn't work for nullable function types
       p_comments: rental.comments ?? null,
     });
 
@@ -140,6 +141,7 @@ export class RentalService {
       p_deposit_returned: rentalUpdate.depositReturned,
       p_gear: rentalUpdate.gear,
       p_topos: rentalUpdate.topos,
+      // @ts-expect-error: type generation doesn't work for nullable function types
       p_comments: rentalUpdate.comments ?? null,
     });
     if (error) console.warn('updateRental: ', error);
@@ -152,6 +154,7 @@ export class RentalService {
   ) => {
     const { error } = await this.supabaseClient.rpc('edit_rental', {
       p_rental_id: id,
+      // @ts-expect-error: type generation doesn't work for nullable function types
       p_contact_info: rental.contactInfo
         ? JSON.stringify(rental.contactInfo)
         : null,
@@ -171,6 +174,7 @@ export class RentalService {
           rented_amount: amount,
         })),
       p_payment_method: rental.paymentMethod,
+      // @ts-expect-error: type generation doesn't work for nullable function types
       p_comments: rental.comments ?? null,
     });
     if (error) console.warn('editRental: ', error);

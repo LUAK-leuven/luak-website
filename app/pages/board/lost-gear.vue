@@ -1,8 +1,5 @@
 <script setup lang="ts">
   import FullPageCard from '~/components/FullPageCard.vue';
-  import type { RentalItemId, RentalId } from '~/types/rental';
-  import { useRentalService } from '~/composables/useRentalService';
-  import type { GearItemId, TopoId } from '~/types/gear';
   import { ValidationError, string as yupString } from 'yup';
   import WithLazyResource from '~/components/pages/WithLazyResource.vue';
   import PaymentBadge from '~/components/board/rental/PaymentBadge.vue';

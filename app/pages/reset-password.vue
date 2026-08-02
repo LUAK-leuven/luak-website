@@ -28,21 +28,23 @@
     initialValues: { pwd1: '', pwd2: '' },
   });
 
-  const onSubmit = handleSubmit(async (submitted) => {
-    const { data, error } = await supabase.auth.updateUser({
-      password: submitted.pwd1,
-    });
-    if (data.user) {
-      showPopup('success', 'Password updated successfully.');
-      return navigateTo({
-        path: '/profile/overview',
+  const onSubmit = async () => {
+    await handleSubmit(async (submitted) => {
+      const { data, error } = await supabase.auth.updateUser({
+        password: submitted.pwd1,
       });
-    }
-    if (error) {
-      showPopup('error', `There was an error updating your password!`);
-      console.error(error.message);
-    }
-  });
+      if (data.user) {
+        showPopup('success', 'Password updated successfully.');
+        return navigateTo({
+          path: '/profile/overview',
+        });
+      }
+      if (error) {
+        showPopup('error', `There was an error updating your password!`);
+        console.error(error.message);
+      }
+    })();
+  };
 
   watch(authError, (value) => {
     if (value) {

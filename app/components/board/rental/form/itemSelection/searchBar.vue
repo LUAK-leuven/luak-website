@@ -1,6 +1,4 @@
 <script setup lang="ts" generic="T extends EntityId<unknown>">
-  import type { EntityId } from '~/types/ddd';
-
   const props = defineProps<{
     availableItems: {
       id: T;

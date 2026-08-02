@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import Number from '~/components/input/Number.vue';
   import WithLazyResource from '~/components/pages/WithLazyResource.vue';
-  import type { RentalId } from '~/types/rental';
   import { object as yupObject, number as yupNumber } from 'yup';
   import { ErrorMessage } from 'vee-validate';
   import LoadingButton from '~/components/shared/LoadingButton.vue';
@@ -30,23 +29,27 @@
 
   const [lostAmount] = defineField('lostAmount');
 
-  const onSubmit = handleSubmit(async (formState) => {
-    const { error } = await useSupabaseClient().rpc('mark_topo_as_lost', {
-      p_lost_amount: formState.lostAmount,
-      p_rental_id: props.rentalId,
-      p_topo_id: props.topo.itemId.id,
-    });
+  const onSubmit = async () =>
+    await handleSubmit(async (formState) => {
+      const { error } = await useSupabaseClient<Database>().rpc(
+        'mark_topo_as_lost',
+        {
+          p_lost_amount: formState.lostAmount,
+          p_rental_id: props.rentalId,
+          p_topo_id: props.topo.itemId.id,
+        },
+      );
 
-    if (error) {
-      console.error(error.message);
-      show('error', 'Failed to save changes');
-    } else {
-      await navigateTo({
-        name: 'board-rentals-id',
-        params: { id: props.rentalId },
-      });
-    }
-  });
+      if (error) {
+        console.error(error.message);
+        show('error', 'Failed to save changes');
+      } else {
+        await navigateTo({
+          name: 'board-rentals-id',
+          params: { id: props.rentalId },
+        });
+      }
+    })();
 </script>
 <template>
   <h2 class="text-center">Topo</h2>

@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '~/shared/types/database.types';
-import getLuakYear from '~/app/utils/getLuakYear';
+import getLuakYear from '~/shared/utils/getLuakYear';
 import { testUsers, type TestUserKey } from './TestUser';
 
 export class TestUserService {

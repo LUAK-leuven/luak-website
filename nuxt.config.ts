@@ -28,7 +28,7 @@ export default defineNuxtConfig({
     cookieOptions: {
       secure: process.env.NODE_ENV === 'production',
     },
-    // types: './shared/types/database.types.ts',
+    types: '~~/shared/types/database.types.ts',
   },
   runtimeConfig: {
     public: {
@@ -77,7 +77,6 @@ export default defineNuxtConfig({
     strict: true,
     nodeTsConfig: {
       compilerOptions: {
-        baseUrl: './',
         paths: {
           '~/*': ['../*'],
           '#test/*': ['../test/*'],

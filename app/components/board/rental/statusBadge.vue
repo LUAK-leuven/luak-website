@@ -1,6 +1,4 @@
 <script setup lang="ts">
-  import type { RentalStatus } from '~/types/rental';
-
   const props = defineProps<{ status: RentalStatus }>();
 
   const labels: Record<RentalStatus, [string, string]> = {

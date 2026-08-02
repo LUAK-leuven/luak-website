@@ -1,7 +1,4 @@
 <script setup lang="ts">
-  import type { RentalId, UnsavedRental } from '~/types/rental';
-  import { useToast } from '~/composables/useToast';
-  import { useRentalService } from '~/composables/useRentalService';
   import { useFetchGearAndTopos } from '~/composables/board/rental/useFetchGearAndTopos';
 
   const { show: showPopup } = useToast();

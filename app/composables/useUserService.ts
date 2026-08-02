@@ -27,7 +27,7 @@ export function useUserService() {
       if (value) throw showError(value);
     });
     return computed(() => {
-      if (data.value === null || data.value === 'unauthenticated')
+      if (data.value === undefined || data.value === 'unauthenticated')
         return LuakUser.UnauthenticatedUser();
       return luakUserFromDb(data.value);
     });

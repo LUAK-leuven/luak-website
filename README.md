@@ -41,15 +41,7 @@ To run against the production database: `yarn dev --dotenv .env.production`
 
 ## Test users
 
-Some test users are created when setting up the database (when running `yarn supabase db reset` the db is populated with [seed.sql](supabase/seed.sql)):
-
-- non_member@test.com
-- unpaid_membership@test.com
-- paid_last_year@test.com
-- paid_this_year@test.com
-- board_member@test.com
-
-All the users have the same password: 123456789
+Some test users are created when running the e2e tests. If you need them for manual testing after a frech DB reset run `yarn test:e2e --project="setup db"`
 
 ## Supabase
 
@@ -73,7 +65,7 @@ To generate a migration file for the diff between you local db and what is defin
 
 Export DB types
 
- > yarn supabase gen types --lang typescript --local > types/database.types.ts
+ > yarn sb:gentypes
 
 To push db changes to prod
 

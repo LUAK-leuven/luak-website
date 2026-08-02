@@ -1,6 +1,4 @@
 <script setup lang="ts">
-  import type { Database } from '~/types/database.types';
-
   defineProps<{
     paymentMethod: Database['public']['Enums']['payment_method'];
   }>();

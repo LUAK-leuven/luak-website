@@ -2,8 +2,6 @@
   import WithLazyResource from '~/components/pages/WithLazyResource.vue';
   import LoadingButton from '~/components/shared/LoadingButton.vue';
   import Number from '~/components/input/Number.vue';
-  import type { GearInventoryId } from '~/types/gear';
-  import type { RentalId } from '~/types/rental';
   import {
     object as yupObject,
     number as yupNumber,
@@ -36,7 +34,7 @@
       .required('You must select an inventory item'),
   }).test('max on inventory', ({ lostAmount, inventoryItem }, ctx) => {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (data.value === null || inventoryItem === undefined) return true;
+    if (data.value === undefined || inventoryItem === undefined) return true;
     const amountInventory = getBy(
       data.value.inventory,
       'id',
@@ -55,28 +53,32 @@
     initialValues: { lostAmount: 1 },
   });
 
-  const onSubmit = handleSubmit(
-    async (formState) => {
-      const { error } = await useSupabaseClient().rpc('mark_gear_as_lost', {
-        p_gear_item_id: props.gearItem.itemId.id,
-        p_rental_id: props.rentalId,
-        p_inventory_item_id: formState.inventoryItem,
-        p_lost_amount: formState.lostAmount,
-      });
-      if (error) {
-        console.error(error.message);
-        show('error', 'Server error: Failed to submit response.');
-      } else {
-        await navigateTo({
-          name: 'board-rentals-id',
-          params: { id: props.rentalId },
-        });
-      }
-    },
-    ({ errors }) => {
-      show('error', errors.inventoryItem ?? errors.lostAmount ?? '');
-    },
-  );
+  const onSubmit = async () =>
+    handleSubmit(
+      async (formState) => {
+        const { error } = await useSupabaseClient<Database>().rpc(
+          'mark_gear_as_lost',
+          {
+            p_gear_item_id: props.gearItem.itemId.id,
+            p_rental_id: props.rentalId,
+            p_inventory_item_id: formState.inventoryItem,
+            p_lost_amount: formState.lostAmount,
+          },
+        );
+        if (error) {
+          console.error(error.message);
+          show('error', 'Server error: Failed to submit response.');
+        } else {
+          await navigateTo({
+            name: 'board-rentals-id',
+            params: { id: props.rentalId },
+          });
+        }
+      },
+      ({ errors }) => {
+        show('error', errors.inventoryItem ?? errors.lostAmount ?? '');
+      },
+    )();
 
   const [lostAmount] = defineField('lostAmount');
   const [inventoryItem] = defineField('inventoryItem');

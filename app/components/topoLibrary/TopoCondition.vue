@@ -1,6 +1,4 @@
 <script setup lang="ts">
-  import type { Database } from '~/types/database.types';
-
   type TopoCondition =
     Database['public']['Tables']['Topos']['Row']['condition'];
 

@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import TopoCondition from '~/components/topoLibrary/TopoCondition.vue';
-  import type { TopoId } from '~/types/gear';
 
   definePageMeta({ middleware: 'active-member-guard' });
 

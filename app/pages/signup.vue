@@ -9,7 +9,7 @@
     middleware: 'unauthenticated',
   });
 
-  const supabase = useSupabaseClient();
+  const supabase = useSupabaseClient<Database>();
 
   const formSchema = yup.object({
     firstName: yup.string().required().label('First name'),
@@ -24,27 +24,29 @@
     validationSchema: toTypedSchema(formSchema),
   });
 
-  const onSubmit = handleSubmit(async (submitted) => {
-    const { error } = await supabase.auth.signUp({
-      email: submitted.email,
-      password: submitted.password,
-    });
-    if (error) {
-      setFieldError('password', error.message);
-    } else {
-      const { error } = await supabase.from('Users').insert({
-        first_name: submitted.firstName,
-        last_name: submitted.lastName,
-        has_newsletter: submitted.newsletter,
-        has_whatsapp: submitted.whatsapp,
-        phone_number: submitted.phoneNumber ?? null,
+  const onSubmit = async () => {
+    await handleSubmit(async (submitted) => {
+      const { error } = await supabase.auth.signUp({
         email: submitted.email,
+        password: submitted.password,
       });
       if (error) {
         setFieldError('password', error.message);
-      } else await navigateTo({ name: 'confirmLogin' });
-    }
-  });
+      } else {
+        const { error } = await supabase.from('Users').insert({
+          first_name: submitted.firstName,
+          last_name: submitted.lastName,
+          has_newsletter: submitted.newsletter,
+          has_whatsapp: submitted.whatsapp,
+          phone_number: submitted.phoneNumber ?? null,
+          email: submitted.email,
+        });
+        if (error) {
+          setFieldError('password', error.message);
+        } else await navigateTo({ name: 'confirmLogin' });
+      }
+    })();
+  };
 </script>
 
 <template>
@@ -91,6 +93,7 @@
         </BoolField>
 
         <div class="flex justify-center">
+          <!-- @ts-expect-error: type generation doesn't work for nullable function types -->
           <LoadingButton
             class="w-full"
             text="Sign up"

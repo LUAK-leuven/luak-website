@@ -2,9 +2,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { LuakUser } from '~~/model/LuakUser';
 
 export class UserService {
-  constructor(
-    private readonly supabaseClient: SupabaseClient<Database> = useSupabaseClient(),
-  ) {}
+  constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
 
   readonly getAllUsers = async () => {
     const { data } = await this.supabaseClient

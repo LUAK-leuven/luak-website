@@ -5,8 +5,6 @@ import {
   bool as yupBool,
 } from 'yup';
 import type { RentalDetails } from '~~/model/Rental';
-import type { GearItemId, TopoId } from '~/types/gear';
-import type { RentalItemId } from '~/types/rental';
 
 type ItemId = { id: GearItemId; type: 'gear' } | { id: TopoId; type: 'topo' };
 

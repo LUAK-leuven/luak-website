@@ -1,7 +1,6 @@
 <script lang="ts" setup generic="T extends EntityId<unknown>">
   import { objectEntries } from '@vueuse/core';
-  import type { RentalItem } from '~/types/board/form/RentalItem';
-  import type { EntityId } from '~/types/ddd';
+  import type { RentalItem } from '~~/shared/types/board/form/RentalItem';
 
   const props = withDefaults(
     defineProps<{

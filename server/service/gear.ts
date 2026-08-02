@@ -1,11 +1,6 @@
 import { groupBy, min, sumOf } from '~~/shared/utils/utils';
-import type { GearDao } from '../repository/gear';
-import type {
-  GearInventoryDetails,
-  GearInventorySummary,
-  GearItemId,
-} from '~/types/gear';
-import type { RentalDao } from '../repository/rentals';
+import type { GearDao } from '#server/repository/gear';
+import type { RentalDao } from '#server/repository/rentals';
 import dayjs from 'dayjs';
 
 export class GearService {

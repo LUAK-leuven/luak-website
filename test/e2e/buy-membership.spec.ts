@@ -2,7 +2,7 @@ import { expect } from '@playwright/test';
 import { authStateFile, test } from '#test/e2e/fixtures';
 import { ProfileOverviewPage } from '#test/e2e/pages/profile-overview.page';
 import { testServiceBuilder } from '#test/e2e/testUtils/testServices';
-import getLuakYear from '~/app/utils/getLuakYear';
+import getLuakYear from '~/shared/utils/getLuakYear';
 import { testUsers } from './testUtils/TestUser';
 
 (

@@ -5,7 +5,7 @@
   const user = await useUserService().getUserInfo();
 
   const { rentals, pending: loading } =
-    await useRentalService().getRentalsForUser(user.value.id);
+    await useRentalService().getRentalsForUser(user.value!.id);
 
   const activeRentals = computed(() =>
     rentals.value?.filter((it) => it.status !== 'returned'),
@@ -24,7 +24,7 @@
   <FullPageCard>
     <template #title>my rentals</template>
     <template #subtitle>
-      <h2>Overview of {{ user.firstName }}'s rentals</h2>
+      <h2>Overview of {{ user!.firstName }}'s rentals</h2>
     </template>
     <div class="h-4"></div>
     <div v-if="loading" class="flex justify-center">

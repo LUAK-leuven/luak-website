@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-  import type { Database } from '~/types/database.types';
   import { csvHeaders } from './helpers';
 
   const props = defineProps<{

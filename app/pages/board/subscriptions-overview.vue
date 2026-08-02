@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-  import type { Database } from '~/types/database.types';
   import {
     formatKbfUiaaStatus,
     formatStudentStatus,
@@ -7,7 +6,7 @@
   import dayjs from 'dayjs';
   import Text from '~/components/input/Text.vue';
 
-  const supabase = useSupabaseClient();
+  const supabase = useSupabaseClient<Database>();
   const isLoading = ref(true);
   const error = ref<string | null>(null);
   const subscriptions = ref<
@@ -40,24 +39,24 @@
         .from('Users')
         .select(
           `
-        id,
-        first_name,
-        last_name,
-        phone_number,
-        email,
-        has_whatsapp,
-        Memberships (
-          id,
-          student,
-          sportscard,
-          kbf_uiaa_member,
-          created_at,
-          year,
-          Payments (
-            approved
-          )
-        )
-      `,
+            id,
+            first_name,
+            last_name,
+            phone_number,
+            email,
+            has_whatsapp,
+            Memberships (
+              id,
+              student,
+              sportscard,
+              kbf_uiaa_member,
+              created_at,
+              year,
+              Payments (
+                approved
+              )
+            )
+          `,
         )
         .eq('Memberships.Payments.approved', true);
 
@@ -157,7 +156,7 @@
 
   // Load data on component mount
   onMounted(async () => {
-    await initData();
+    await initData(); // TODO: use useAsyncData instead
   });
 </script>
 

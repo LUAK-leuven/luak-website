@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import type { GearInventoryDetails, GearItemId } from '~/types/gear';
   import dayjs, { type Dayjs } from 'dayjs';
   import { useBreakpoints, breakpointsTailwind } from '@vueuse/core';
   import InventoryTableItem from '~/components/board/gear/inventoryTableItem.vue';

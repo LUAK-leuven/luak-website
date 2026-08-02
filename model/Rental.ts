@@ -1,7 +1,4 @@
 import dayjs from 'dayjs';
-import type { GearItemId, TopoId } from '~/types/gear';
-import type { RentalId, RentalItemId, RentalStatus } from '~/types/rental';
-import type { UserId } from '~/types/user';
 
 abstract class RentalBase {
   readonly id: RentalId;
@@ -68,7 +65,7 @@ abstract class RentalBase {
   readonly getGearItem = (gearItemId: GearItemId): RentalGearItem => {
     const item = this.gear.find(({ itemId }) => itemId.id === gearItemId);
     if (!item)
-      throw showError(
+      throw new Error(
         `Gear item with id ${gearItemId} not found in rental ${this.id}`,
       );
     return item;
@@ -77,7 +74,7 @@ abstract class RentalBase {
   readonly getTopo = (topoId: TopoId): RentalTopoItem => {
     const item = this.topos.find(({ itemId }) => itemId.id === topoId);
     if (!item)
-      throw showError(`Topo with id ${topoId} not found in rental ${this.id}`);
+      throw new Error(`Topo with id ${topoId} not found in rental ${this.id}`);
     return item;
   };
 }

@@ -4,7 +4,7 @@
   import TextField from '~/components/input/TextField.vue';
   import BoolField from '~/components/input/BoolField.vue';
 
-  const supabase = useSupabaseClient();
+  const supabase = useSupabaseClient<Database>();
   const user = useSupabaseUser();
 
   const { data: userData } = await useAsyncData('userData', async () => {

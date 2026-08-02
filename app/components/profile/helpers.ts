@@ -1,5 +1,3 @@
-import type { Database } from '~/types/database.types';
-
 // Helper function to format student status enum values for display
 export const formatStudentStatus = (
   status: Database['public']['Enums']['student'],

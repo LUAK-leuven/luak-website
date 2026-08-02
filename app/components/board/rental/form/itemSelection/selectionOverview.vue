@@ -1,5 +1,4 @@
 <script lang="ts" setup generic="T extends EntityId<unknown>">
-  import type { EntityId } from '~/types/ddd';
   import InputNumber from '~/components/input/Number.vue';
 
   defineProps<{

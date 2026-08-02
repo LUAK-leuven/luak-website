@@ -3,13 +3,11 @@ import {
   RentalService,
   rentalSummaryFromDb,
 } from '~~/services/rentalService';
-import type { RentalId, RentalUpdate, UnsavedRental } from '~/types/rental';
-import type { UserId } from '~/types/user';
 
 const RENTAL = 'rental';
 
 export function useRentalService() {
-  const rentalService = new RentalService();
+  const rentalService = new RentalService(useSupabaseClient());
 
   const getAllRentals = async () => {
     const { data, pending, error } = await useLazyAsyncData(

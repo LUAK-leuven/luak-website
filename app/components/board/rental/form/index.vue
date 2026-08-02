@@ -1,9 +1,5 @@
 <script setup lang="ts">
-  import type { RentalItem } from '~/types/board/form/RentalItem';
-  import type { Enums } from '~/types/database.types';
-  import type { GearItemId, TopoId } from '~/types/gear';
-  import type { UnsavedRental } from '~/types/rental';
-  import type { UserId } from '~/types/user';
+  import type { RentalItem } from '~~/shared/types/board/form/RentalItem';
   import Text from '~/components/input/Text.vue';
   import { useToast } from '~/composables/useToast';
   import { useRentalForm } from '~/composables/board/rental/useRentalForm';
@@ -66,31 +62,32 @@
     contactInfo,
   } = useRentalForm(props.initialValues, props.allGear, props.allTopos);
 
-  const onSubmit = handleSubmit(
-    async (formState) => {
-      await props.handleSubmit({
-        memberId:
-          formState.memberId === 'non-user' ? undefined : formState.memberId,
-        dateBorrow: formState.dateBorrow,
-        dateReturn: formState.dateReturn,
-        gear: formState.gear,
-        topos: formState.topos,
-        depositFee: formState.depositFee,
-        paymentMethod: formState.paymentMethod,
-        contactInfo: formState.contactInfo
-          ? {
-              fullName: formState.contactInfo.fullName,
-              email: formState.contactInfo.email,
-              phoneNumber: formState.contactInfo.phone,
-            }
-          : undefined,
-        comments: formState.comments,
-      });
-    },
-    (ctx) => {
-      showPopup('error', Object.values(ctx.errors)[0] ?? '');
-    },
-  );
+  const onSubmit = async () =>
+    await handleSubmit(
+      async (formState) => {
+        await props.handleSubmit({
+          memberId:
+            formState.memberId === 'non-user' ? undefined : formState.memberId,
+          dateBorrow: formState.dateBorrow,
+          dateReturn: formState.dateReturn,
+          gear: formState.gear,
+          topos: formState.topos,
+          depositFee: formState.depositFee,
+          paymentMethod: formState.paymentMethod,
+          contactInfo: formState.contactInfo
+            ? {
+                fullName: formState.contactInfo.fullName,
+                email: formState.contactInfo.email,
+                phoneNumber: formState.contactInfo.phone,
+              }
+            : undefined,
+          comments: formState.comments,
+        });
+      },
+      (ctx) => {
+        showPopup('error', Object.values(ctx.errors)[0] ?? '');
+      },
+    )();
 
   const computedGearDeposit = ref<number>();
   const computedTopoDeposit = ref<number>();

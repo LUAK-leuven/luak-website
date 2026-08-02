@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import type { UserId } from '~/types/user';
   import Text from '~/components/input/Text.vue';
 
   withDefaults(

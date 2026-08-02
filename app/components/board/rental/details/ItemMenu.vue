@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import Button from '~/components/shared/Button.vue';
-  import type { RentalId, RentalItemId } from '~/types/rental';
 
   defineProps<{
     rentalId: RentalId;

@@ -1,4 +1,3 @@
-import type { Database } from '~/types/database.types';
 import * as yup from 'yup';
 
 type MembershipTable = Database['public']['Tables']['Memberships']['Row'];

@@ -3,7 +3,7 @@
     options: string[];
     placeholder: string;
   }>();
-  const selected = defineModel<string[]>({ default: [] as string[] });
+  const selected = defineModel<string[]>({ default: () => [] as string[] });
 
   const filteredOptions = (searchTerm: string | undefined) =>
     props.options

@@ -1,5 +1,3 @@
-import type { Database } from '~/types/database.types';
-import type { GearItemId } from '~/types/gear';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 export class GearService {

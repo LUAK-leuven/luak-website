@@ -1,9 +1,5 @@
 import * as yup from 'yup';
-import type { RentalItem } from '~/types/board/form/RentalItem';
-import type { EntityId } from '~/types/ddd';
-import type { Enums } from '~/types/database.types';
-import type { GearItemId, TopoId } from '~/types/gear';
-import type { UserId } from '~/types/user';
+import type { RentalItem } from '~~/shared/types/board/form/RentalItem';
 
 type RentalFormState = {
   memberId: UserId | 'non-user';
@@ -26,37 +22,40 @@ type RentalFormState = {
 function selectionFrom<T extends EntityId<unknown>>(
   selection: { id: T; name: string; totalAmount: number }[],
 ) {
-  return yup
-    .object<Record<T, number>, Record<T, yup.NumberSchema<number>>>()
-    .default(() => ({}) as Record<T, number>)
-    .required()
-    .test(function (items: Record<T, number>) {
-      for (const [id, amount] of Object.entries(items) as [T, number][]) {
-        const item = selection.find((x) => x.id === id);
-        if (item === undefined) {
-          console.warn(
-            `Could not find item ${id} in ${selection.map((x) => x.id).toString()}!`,
-          );
-          return this.createError({
-            path: `${this.path}.${id}`,
-            message: `Error: item with id ${id} cannot be found in the inventory.`,
-          });
+  return (
+    yup
+      .object<Record<T, number>, Record<T, yup.NumberSchema<number>>>()
+      .default(() => ({}) as Record<T, number>)
+      .required()
+      // @ts-expect-error: I can't get the types to match, but it works
+      .test(function (items: Record<T, number>) {
+        for (const [id, amount] of Object.entries(items) as [T, number][]) {
+          const item = selection.find((x) => x.id === id);
+          if (item === undefined) {
+            console.warn(
+              `Could not find item ${id} in ${selection.map((x) => x.id).toString()}!`,
+            );
+            return this.createError({
+              path: `${this.path}.${id}`,
+              message: `Error: item with id ${id} cannot be found in the inventory.`,
+            });
+          }
+          if (amount <= 0) {
+            return this.createError({
+              path: `${this.path}.${id}`,
+              message: `Value for ${item.name} must be a positive number.`,
+            });
+          }
+          if (amount > item.totalAmount) {
+            return this.createError({
+              path: `${this.path}.${id}`,
+              message: `Value for ${item.name} cannot exceed ${item.totalAmount.toFixed()}`,
+            });
+          }
         }
-        if (amount <= 0) {
-          return this.createError({
-            path: `${this.path}.${id}`,
-            message: `Value for ${item.name} must be a positive number.`,
-          });
-        }
-        if (amount > item.totalAmount) {
-          return this.createError({
-            path: `${this.path}.${id}`,
-            message: `Value for ${item.name} cannot exceed ${item.totalAmount.toFixed()}`,
-          });
-        }
-      }
-      return true;
-    });
+        return true;
+      })
+  );
 }
 
 export function useRentalForm(

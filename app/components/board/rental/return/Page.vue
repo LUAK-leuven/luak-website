@@ -1,10 +1,7 @@
 <script setup lang="ts">
   import TextField from '~/components/input/TextField.vue';
-  import { useToast } from '~/composables/useToast';
-  import type { RentalUpdate } from '~/types/rental';
   import RentalItem from '~/components/board/rental/return/RentalItem.vue';
   import { useRentalReturnForm } from '~/composables/board/rental/useRentalReturnForm';
-  import type { EntityId } from '~/types/ddd';
   import type {
     RentalDetails,
     RentalItem as RentalItemModel,
@@ -34,46 +31,48 @@
     ) as [T, number][];
   }
 
-  const save = handleSubmit(
-    async (formState) => {
-      const updatedReturnedGear = mapFormRentedItems(
-        formState.returnedGear,
-        props.rental.gear,
-      ).map(([gear_item_id, returned_amount]) => ({
-        gear_item_id,
-        returned_amount,
-      }));
+  const save = async () => {
+    await handleSubmit(
+      async (formState) => {
+        const updatedReturnedGear = mapFormRentedItems(
+          formState.returnedGear,
+          props.rental.gear,
+        ).map(([gear_item_id, returned_amount]) => ({
+          gear_item_id,
+          returned_amount,
+        }));
 
-      const updatedReturnedTopos = mapFormRentedItems(
-        formState.returnedTopos,
-        props.rental.topos,
-      ).map(([topo_id, returned_amount]) => ({
-        topo_id,
-        returned_amount,
-      }));
+        const updatedReturnedTopos = mapFormRentedItems(
+          formState.returnedTopos,
+          props.rental.topos,
+        ).map(([topo_id, returned_amount]) => ({
+          topo_id,
+          returned_amount,
+        }));
 
-      const success = await props.update({
-        id: props.rental.id,
-        dateReturn: formState.dateReturn,
-        depositReturned: formState.depositReturned,
-        gear: updatedReturnedGear,
-        topos: updatedReturnedTopos,
-        comments: formState.comments,
-      });
+        const success = await props.update({
+          id: props.rental.id,
+          dateReturn: formState.dateReturn,
+          depositReturned: formState.depositReturned,
+          gear: updatedReturnedGear,
+          topos: updatedReturnedTopos,
+          comments: formState.comments,
+        });
 
-      if (success) {
-        showPopup('success', 'Your changes have been saved.');
-        await exitReturn();
-      } else {
-        showPopup('error', 'Failed to save changes');
-      }
-    },
-    (result) => {
-      for (const field in result.errors) {
-        triggerBounce(field);
-      }
-    },
-  );
+        if (success) {
+          showPopup('success', 'Your changes have been saved.');
+          await exitReturn();
+        } else {
+          showPopup('error', 'Failed to save changes');
+        }
+      },
+      (result) => {
+        for (const field in result.errors) {
+          triggerBounce(field);
+        }
+      },
+    )();
+  };
 
   const updatedRental = computed(() =>
     props.rental.copy({
