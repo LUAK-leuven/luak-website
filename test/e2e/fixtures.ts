@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { LoginPage } from '~/tests/e2e/pages/login.page';
+import { LoginPage } from 'test/e2e/pages/login.page';
 import { testServiceBuilder } from './testUtils/testServices';
 import type { TestUser, TestUserKey } from './testUtils/TestUser';
 import { test as base } from '@playwright/test';

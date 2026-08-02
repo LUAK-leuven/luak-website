@@ -4,7 +4,8 @@ import dotenv from 'dotenv';
 dotenv.config({ path: ['.env', '.env.local'], quiet: true });
 
 export default defineConfig({
-  globalSetup: './global-setup-and-teardown/prodDbGuard.ts',
+  testDir: './test/e2e',
+  globalSetup: './test/e2e/global-setup-and-teardown/prodDbGuard.ts',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,

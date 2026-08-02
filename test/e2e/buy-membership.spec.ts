@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
-import { authStateFile, test } from '~/tests/e2e/fixtures';
-import { ProfileOverviewPage } from '~/tests/e2e/pages/profile-overview.page';
+import { authStateFile, test } from '~/test/e2e/fixtures';
+import { ProfileOverviewPage } from '~/test/e2e/pages/profile-overview.page';
 import { testServiceBuilder } from './testUtils/testServices';
 import getLuakYear from '~/utils/getLuakYear';
 import { testUsers } from './testUtils/TestUser';
