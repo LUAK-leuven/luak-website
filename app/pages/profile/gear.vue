@@ -4,8 +4,9 @@
 
   const user = await useUserService().getUserInfo();
 
-  const { rentals, pending: loading } =
-    await useRentalService().getRentalsForUser(user.value!.id);
+  const { rentals, status } = await useRentalService().getRentalsForUser(
+    user.value!.id,
+  );
 
   const activeRentals = computed(() =>
     rentals.value?.filter((it) => it.status !== 'returned'),
@@ -27,7 +28,7 @@
       <h2>Overview of {{ user!.firstName }}'s rentals</h2>
     </template>
     <div class="h-4"></div>
-    <div v-if="loading" class="flex justify-center">
+    <div v-if="status === 'pending'" class="flex justify-center">
       <span class="loading loading-spinner loading-lg" />
     </div>
     <div v-else-if="activeRentals === undefined">ERROR!</div>
@@ -56,20 +57,17 @@
       </div>
       <template v-if="showReturned">
         <!-- TODO: fix spinner position not in center (for some reason styles fail to apply or I'm missing something here ...) -->
-        <div v-if="loading" class="felx flex-row justify-center">
-          <span class="loading loading-spinner loading-lg" />
-        </div>
-        <div v-else-if="returnedRentals === undefined">
+        <div v-if="returnedRentals === undefined">
           <span>Error</span>
         </div>
-        <div v-else>
+        <template v-else>
           <div v-if="returnedRentals.length === 0">
             <span>You have no past rentals</span>
           </div>
           <template v-for="rental of returnedRentals" :key="rental.id">
             <PublicRentalDetails :rental="rental" />
           </template>
-        </div>
+        </template>
       </template>
     </div>
   </FullPageCard>

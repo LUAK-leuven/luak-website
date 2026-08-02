@@ -2,7 +2,7 @@ import { request } from '@playwright/test';
 import { validateSupabaseUrl } from '#test/e2e/global-setup-and-teardown/validateSupabaseUrl';
 
 export default async function () {
-  const ctx = await request.newContext({ baseURL: process.env.BASE_URL });
+  const ctx = await request.newContext({ baseURL: process.env.BASE_URL! });
 
   let supabaseUrl: string;
   try {
@@ -18,7 +18,7 @@ export default async function () {
     ({ supabaseUrl } = await res.json());
   } catch (err) {
     console.error(
-      `\n❌  Safety check failed — could not reach ${process.env.BASE_URL}/api/_test-guard.\n` +
+      `\n❌  Safety check failed — could not reach ${process.env.BASE_URL!}/api/_test-guard.\n` +
         `    ${err}\n`,
     );
     process.exit(1);

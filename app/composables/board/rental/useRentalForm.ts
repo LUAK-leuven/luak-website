@@ -75,6 +75,7 @@ export function useRentalForm(
         'isAfter',
         'Return date must be after borrow date',
         (date, context) => {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           return context.parent.dateBorrow < date;
         },
       )
@@ -116,6 +117,7 @@ export function useRentalForm(
     isSubmitting,
   } = useForm({
     validationSchema: toTypedSchema(formSchema),
+    // @ts-expect-error again exact optionals being annoying
     initialValues: {
       memberId: initialState.memberId,
       contactInfo: initialState.contactInfo,

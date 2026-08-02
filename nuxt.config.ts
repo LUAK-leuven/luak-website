@@ -80,6 +80,7 @@ export default defineNuxtConfig({
     types: '~~/shared/types/database.types.ts',
   },
   typescript: {
+    // typeCheck: true, // Would be nice if we could enable this, but right now there are too many import errors and I don't know how to fix them yet.
     strict: true,
     tsConfig: {
       compilerOptions: tsCompilerOptions,
@@ -95,7 +96,12 @@ export default defineNuxtConfig({
         },
         ...tsCompilerOptions,
       },
-      include: ['../test/**/*'],
+      include: [
+        '../test/**/*',
+        '../content.config.ts',
+        '../playwright.config.ts',
+        '../vitest.config.ts',
+      ],
     },
   },
 });

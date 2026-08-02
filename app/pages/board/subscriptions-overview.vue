@@ -6,7 +6,7 @@
   import dayjs from 'dayjs';
   import Text from '~/components/input/Text.vue';
 
-  const supabase = useSupabaseClient<Database>();
+  const supabase = useSupabaseClient();
   const isLoading = ref(true);
   const error = ref<string | null>(null);
   const subscriptions = ref<

@@ -9,7 +9,7 @@
     middleware: 'unauthenticated',
   });
 
-  const supabase = useSupabaseClient<Database>();
+  const supabase = useSupabaseClient();
 
   const formSchema = yup.object({
     firstName: yup.string().required().label('First name'),

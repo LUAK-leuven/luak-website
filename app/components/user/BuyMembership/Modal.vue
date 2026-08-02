@@ -31,7 +31,7 @@
         : env.paymentLinkMembership;
 
     const email = user.value?.email?.replace('@', '%40');
-    const payment_url = `${payment_base_url}?client_reference_id=${membershipId}&prefilled_email=${email}`;
+    const payment_url = `${payment_base_url}?client_reference_id=${membershipId}&prefilled_email=${email!}`;
 
     return navigateTo(payment_url, { external: true });
   });

@@ -31,7 +31,7 @@
 
   const onSubmit = async () =>
     await handleSubmit(async (formState) => {
-      const { error } = await useSupabaseClient<Database>().rpc(
+      const { error } = await useSupabaseClient().rpc(
         'mark_topo_as_lost',
         {
           p_lost_amount: formState.lostAmount,

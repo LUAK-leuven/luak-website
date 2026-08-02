@@ -1,6 +1,8 @@
 <script setup lang="ts" generic="T">
   withDefaults(
     defineProps<{
+      // There is something weird with generic types in Vue.
+      // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
       data: T | undefined | null;
       isLoading: boolean;
       error?: string | undefined | null;

@@ -56,7 +56,7 @@
   const onSubmit = async () =>
     handleSubmit(
       async (formState) => {
-        const { error } = await useSupabaseClient<Database>().rpc(
+        const { error } = await useSupabaseClient().rpc(
           'mark_gear_as_lost',
           {
             p_gear_item_id: props.gearItem.itemId.id,

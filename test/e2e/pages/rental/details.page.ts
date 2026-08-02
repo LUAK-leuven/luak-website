@@ -11,6 +11,7 @@ export class RentalDetailsPage {
   private readonly page: Page;
 
   static readonly urlRegex = new RegExp(`.+\\/board\\/rentals\\/${uuidRegex}`);
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   readonly path = (rentalId: RentalId) => `/board/rentals/${rentalId}/`;
 
   constructor(page: Page) {
@@ -21,11 +22,9 @@ export class RentalDetailsPage {
     await navigateTo(this.page, this.path(rentalId));
   };
 
-  async getRentalId() {
+  async getRentalId(): RentalId {
     await expect(this.page.getByTestId('detailsPage.id')).toBeVisible();
-    const rentalId = (await this.page
-      .getByTestId('detailsPage.id')
-      .innerText()) as RentalId;
+    const rentalId = await this.page.getByTestId('detailsPage.id').innerText();
     expect(rentalId).toBeTruthy();
     return rentalId;
   }

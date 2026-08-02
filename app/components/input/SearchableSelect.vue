@@ -13,6 +13,7 @@
       label?: string | undefined;
       optionsProvider: (searchTerm: string | undefined) => T[] | undefined;
       placeholder: string;
+      // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
       selectedItem?: T | undefined;
       errorMessage?: string | undefined;
       loadingMessage?: string;
