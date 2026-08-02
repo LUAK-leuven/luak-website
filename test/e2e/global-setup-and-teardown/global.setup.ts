@@ -1,6 +1,6 @@
-import { authStateFile, login, test } from '../fixtures';
-import { testServiceBuilder } from '../testUtils/testServices';
-import { testUsers } from '../testUtils/TestUser';
+import { authStateFile, login, test } from '#test/e2e/fixtures';
+import { testServiceBuilder } from '#test/e2e/testUtils/testServices';
+import { testUsers } from '#test/e2e/testUtils/TestUser';
 
 test('clean db', async () => {
   const { testDao, userTestService } = testServiceBuilder();

@@ -1,7 +1,7 @@
-import { authStateFile, cleanDatabase, test } from 'fixtures';
-import { testServiceBuilder } from './testUtils/testServices';
-import { itemArchivedEvent } from '~~/model/inventory/ItemEvent';
-// import type { GearInventoryId, TopoId } from '~/types/gear';
+import { authStateFile, cleanDatabase, test } from '#test/e2e/fixtures';
+import { testServiceBuilder } from '#test/e2e/testUtils/testServices';
+import { itemArchivedEvent } from '~/model/inventory/ItemEvent';
+import type { GearInventoryId, TopoId } from '~/shared/types/gear';
 import { GearInventoryPage } from './pages/gear/inventory.page';
 import { expect } from '@playwright/test';
 import { RentalFormPage } from './pages/rental/form.page';

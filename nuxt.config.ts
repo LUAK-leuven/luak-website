@@ -73,4 +73,17 @@ export default defineNuxtConfig({
   //     holdUntilCrawlEnd: true, // explicit — block requests until crawl done
   //   },
   // },
+  typescript: {
+    strict: true,
+    nodeTsConfig: {
+      compilerOptions: {
+        baseUrl: './',
+        paths: {
+          '~/*': ['../*'],
+          '#test/*': ['../test/*'],
+        },
+      },
+      include: ['../test/**/*'],
+    },
+  },
 });

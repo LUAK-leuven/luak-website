@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
-import { LoginPage } from 'test/e2e/pages/login.page';
-import { testServiceBuilder } from './testUtils/testServices';
-import type { TestUser, TestUserKey } from './testUtils/TestUser';
+import { LoginPage } from '#test/e2e/pages/login.page';
+import { testServiceBuilder } from '#test/e2e/testUtils/testServices';
+import type { TestUser, TestUserKey } from '#test/e2e/testUtils/TestUser';
 import { test as base } from '@playwright/test';
 
 export const test = base.extend({
@@ -22,7 +22,7 @@ export async function login(page: Page, user: TestUser) {
 }
 
 export function authStateFile(user: TestUserKey) {
-  return `./tests/e2e/.auth/${user}.json`;
+  return `./test/e2e/.auth/${user}.json`;
 }
 
 export async function navigateTo(page: Page, url: string) {

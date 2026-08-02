@@ -1,6 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
-import type { TopoId } from '~/types/gear';
-import { navigateTo } from '~/tests/e2e/fixtures';
+import type { TopoId } from '~/shared/types/gear';
+import { navigateTo } from '#test/e2e/fixtures';
 
 export class TopoDetailsPage {
   private readonly page: Page;

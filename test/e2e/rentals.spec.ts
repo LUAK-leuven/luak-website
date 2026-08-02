@@ -5,13 +5,13 @@ import {
   cleanDatabase,
   navigateTo,
   test,
-} from '~/tests/e2e/fixtures';
+} from '#test/e2e/fixtures';
 import dayjs from 'dayjs';
-import { RentalDetailsPage } from '~/tests/e2e/pages/rental/details.page';
-import { RentalsOverviewPage } from '~/tests/e2e/pages/rentals-overview.page';
-import { uuidRegex, sleep } from '~/utils/utils';
-import { RentalReturnPage } from './pages/rental/return.page';
-import { testUsers } from './testUtils/TestUser';
+import { RentalDetailsPage } from '#test/e2e/pages/rental/details.page';
+import { RentalsOverviewPage } from '#test/e2e/pages/rentals-overview.page';
+import { uuidRegex, sleep } from '~/shared/utils/utils';
+import { RentalReturnPage } from '#test/e2e/pages/rental/return.page';
+import { testUsers } from '#test/e2e/testUtils/TestUser';
 
 test.use({ storageState: authStateFile('boardMember') });
 

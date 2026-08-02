@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { navigateTo, test } from '~/tests/e2e/fixtures';
+import { navigateTo, test } from '#test/e2e/fixtures';
 
 test('homepage is visible', async ({ page }) => {
   await navigateTo(page, '/');

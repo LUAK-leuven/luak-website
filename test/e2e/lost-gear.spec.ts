@@ -1,10 +1,10 @@
 import { expect, type Page } from '@playwright/test';
-import { authStateFile, cleanDatabase, test } from '~/tests/e2e/fixtures';
-import { RentalFormPage } from './pages/rental/form.page';
-import { TopoLibraryPage } from './pages/topos/library.page';
-import { GearInventoryPage } from './pages/gear/inventory.page';
-import { testUsers } from './testUtils/TestUser';
-import { RentalDetailsPage } from './pages/rental/details.page';
+import { authStateFile, cleanDatabase, test } from '#test/e2e/fixtures';
+import { RentalFormPage } from '#test/e2e/pages/rental/form.page';
+import { TopoLibraryPage } from '#test/e2e/pages/topos/library.page';
+import { GearInventoryPage } from '#test/e2e/pages/gear/inventory.page';
+import { testUsers } from '#test/e2e/testUtils/TestUser';
+import { RentalDetailsPage } from '#test/e2e/pages/rental/details.page';
 
 test.use({ storageState: authStateFile('boardMember') });
 

@@ -1,4 +1,4 @@
-import { navigateTo } from '~/tests/e2e/fixtures';
+import { navigateTo } from '#test/e2e/fixtures';
 import { FullPageCard } from './FullPageCard';
 import { expect, type Locator, type Page } from '@playwright/test';
 import { RentalDetailsPage } from './rental/details.page';
