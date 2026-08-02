@@ -113,6 +113,7 @@ async function testAccess(path: string, access: Access, page: Page) {
       await assertPageNotFound(path, page);
       break;
     default:
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       throw new Error(`Access type ${access} not implemented yet`);
   }
 }

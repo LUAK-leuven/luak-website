@@ -13,13 +13,5 @@
     {
       "path": "./.nuxt/tsconfig.node.json"
     }
-  ],
-  // TODO: this doesn't work, use nuxt.config instead
-  "compilerOptions": {
-    "strict": true,
-    "exactOptionalPropertyTypes": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitOverride": true,
-    "noUncheckedIndexedAccess": true
-  }
+  ]
 }

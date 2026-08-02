@@ -1,7 +1,11 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+import type { CompilerOptions } from 'typescript';
+
+const tsCompilerOptions: CompilerOptions = {
+  noFallthroughCasesInSwitch: true,
+  exactOptionalPropertyTypes: true,
+};
+
 export default defineNuxtConfig({
-  devtools: { enabled: false },
-  compatibilityDate: '2026-01-25',
   app: {
     head: {
       htmlAttrs: {
@@ -16,19 +20,30 @@ export default defineNuxtConfig({
       ],
     },
   },
+  compatibilityDate: '2026-01-25',
+  content: {
+    renderer: {
+      anchorLinks: false,
+    },
+  },
   css: ['~/assets/css/main.scss'],
-  supabase: {
-    redirect: true,
-    redirectOptions: {
-      login: '/login',
-      callback: '/confirmLogin',
-      include: ['/profile(/*)?'],
-      saveRedirectToCookie: true,
+  devtools: { enabled: true },
+  modules: [
+    '@nuxtjs/tailwindcss',
+    '@nuxt/content',
+    '@nuxt/image',
+    '@nuxtjs/supabase',
+    '@vee-validate/nuxt',
+    '@nuxt/eslint',
+    'nuxt-studio',
+    'nuxt-typed-router',
+  ],
+  nitro: {
+    typescript: {
+      tsConfig: {
+        compilerOptions: tsCompilerOptions,
+      },
     },
-    cookieOptions: {
-      secure: process.env.NODE_ENV === 'production',
-    },
-    types: '~~/shared/types/database.types.ts',
   },
   runtimeConfig: {
     public: {
@@ -36,11 +51,6 @@ export default defineNuxtConfig({
       paymentLinkMembership: 'https://buy.stripe.com/9AQaGj7K1eso4KsfYZ',
       paymentLinkMembershipDiscount:
         'https://buy.stripe.com/4gwbKnfctdokdgYcMM',
-    },
-  },
-  content: {
-    renderer: {
-      anchorLinks: false,
     },
   },
   studio: {
@@ -56,31 +66,34 @@ export default defineNuxtConfig({
       private: true,
     },
   },
-  modules: [
-    '@nuxtjs/tailwindcss',
-    '@nuxt/content',
-    '@nuxt/image',
-    '@nuxtjs/supabase',
-    '@vee-validate/nuxt',
-    '@nuxt/eslint',
-    'nuxt-studio',
-    'nuxt-typed-router',
-  ],
-  // vite: {
-  //   optimizeDeps: {
-  //     // TODO: This is a workaround for the issue where the cookie package is not being bundled correctly by Vite, due to a bug in @supabase/ssr (comig with @supabase/supabase-js).
-  //     include: ['@supabase/ssr', '@supabase/supabase-js', 'cookie'],
-  //     holdUntilCrawlEnd: true, // explicit — block requests until crawl done
-  //   },
-  // },
+  supabase: {
+    redirect: true,
+    redirectOptions: {
+      login: '/login',
+      callback: '/confirmLogin',
+      include: ['/profile(/*)?'],
+      saveRedirectToCookie: true,
+    },
+    cookieOptions: {
+      secure: process.env.NODE_ENV === 'production',
+    },
+    types: '~~/shared/types/database.types.ts',
+  },
   typescript: {
     strict: true,
+    tsConfig: {
+      compilerOptions: tsCompilerOptions,
+    },
+    sharedTsConfig: {
+      compilerOptions: tsCompilerOptions,
+    },
     nodeTsConfig: {
       compilerOptions: {
         paths: {
           '~/*': ['../*'],
           '#test/*': ['../test/*'],
         },
+        ...tsCompilerOptions,
       },
       include: ['../test/**/*'],
     },

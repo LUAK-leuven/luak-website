@@ -1,4 +1,4 @@
-import withNuxt from '.nuxt/eslint.config.mjs';
+import withNuxt from './.nuxt/eslint.config.mjs';
 import tseslint from 'typescript-eslint';
 
 // Extract only the rules from the strict-type-checked-only preset,

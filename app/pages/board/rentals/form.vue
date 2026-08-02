@@ -17,14 +17,13 @@
   const { allGear, allTopos, pending } = useFetchGearAndTopos();
 
   async function handleSubmit(state: Omit<UnsavedRental, 'boardMemberId'>) {
-    if (user.value === null) {
+    if (user.value === undefined) {
       showPopup('error', 'Failed to read user id.');
       return { error: 'Failed to read user id.' };
     }
     const { error, id } = await saveRental({
       ...state,
-      // TODO: using ! should give a warning
-      boardMemberId: user.value!.id,
+      boardMemberId: user.value.id,
     });
 
     if (!error && id) {
