@@ -11,7 +11,7 @@ export function useRentalService() {
   const rentalService = new RentalService(useSupabaseClient());
 
   const getAllRentals = async () => {
-    const { data, pending, error } = await useLazyAsyncData(
+    const { data, status, error } = await useLazyAsyncData(
       `${RENTAL}-getAllRentals`,
       async () => await rentalService.getRentals(),
     );
@@ -22,13 +22,13 @@ export function useRentalService() {
     });
     return {
       rentals,
-      pending,
+      status,
       error,
     };
   };
 
   const getRental = async (rentalId: RentalId) => {
-    const { data, pending, error } = await useLazyAsyncData(
+    const { data, status, error } = await useLazyAsyncData(
       `${RENTAL}-getRental-${rentalId}`,
       async () => await rentalService.getRental(rentalId),
     );
@@ -39,7 +39,7 @@ export function useRentalService() {
     });
     return {
       rental,
-      pending,
+      status,
       error,
     };
   };
@@ -66,7 +66,7 @@ export function useRentalService() {
   }
 
   const getRentalsForUser = async (userId: UserId) => {
-    const { data, pending, error } = await useLazyAsyncData(
+    const { data, status, error } = await useLazyAsyncData(
       `${RENTAL}-getAllRentalsForUser-${userId}`,
       async () => await rentalService.getRentalsForUser(userId),
     );
@@ -77,7 +77,7 @@ export function useRentalService() {
     });
     return {
       rentals,
-      pending,
+      status,
       error,
     };
   };

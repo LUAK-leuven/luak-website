@@ -6,14 +6,14 @@ export function useGearService() {
   const gearService = new GearService();
 
   const getCompositeGearItems = async () => {
-    const { data, pending, error } = await useLazyAsyncData(
+    const { data, error, status } = await useLazyAsyncData(
       `${GEAR}-getCompositeGearItems`,
       async () => await gearService.getCompositeGearItems(),
     );
     if (error.value) console.error('getCompositeGearItems', error.value);
     return {
       data,
-      pending,
+      status,
       error,
     };
   };

@@ -7,13 +7,15 @@
   const supabase = useSupabaseClient<Database>();
   const user = useSupabaseUser();
 
+  // TODO: error handling
   const { data: userData } = await useAsyncData('userData', async () => {
     if (!user.value) throw createError({ statusCode: 401 });
     const { data } = await supabase
       .from('Users')
       .select('*')
       .eq('id', user.value.sub)
-      .single();
+      .single()
+      .throwOnError();
     return data;
   });
   const initialValues = {

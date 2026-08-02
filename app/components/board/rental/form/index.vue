@@ -30,6 +30,7 @@
 
   const { show: showPopup } = useToast();
 
+  // TODO: handle lazy loading and errors.
   const { data } = await useGearService().getCompositeGearItems();
   const compositeGearItems = computed(() =>
     Object.fromEntries(

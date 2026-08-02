@@ -6,7 +6,7 @@
 
   const { get, edit } = useRentalService();
 
-  const { rental, pending: rentalPending } = await get(rentalId);
+  const { rental, status: rentalStatus } = await get(rentalId);
 
   const {
     allGear: _allGear,
@@ -81,7 +81,9 @@
     <SharedBackButton
       :to="{ name: 'board-rentals-id', params: { id: rentalId } }" />
 
-    <div v-if="rentalPending || pending" class="flex justify-center">
+    <div
+      v-if="rentalStatus === 'pending' || pending"
+      class="flex justify-center">
       <span class="loading loading-spinner loading-lg" />
     </div>
 

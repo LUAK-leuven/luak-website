@@ -53,7 +53,7 @@
   });
 
   const { get } = useRentalService();
-  const { rental: data, pending, error } = await get(rentalId.value);
+  const { rental: data, status, error } = await get(rentalId.value);
 </script>
 
 <template>
@@ -70,7 +70,7 @@
     <WithLazyResource
       v-slot="{ data: rental }"
       :data="data"
-      :is-loading="pending"
+      :is-loading="status === 'pending'"
       :error="error && `Failed to load rental with id: ${rentalId}.`">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div data-testid="member">

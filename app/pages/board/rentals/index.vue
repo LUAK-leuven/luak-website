@@ -7,7 +7,7 @@
     layout: false,
   });
 
-  const { rentals: data, pending } = await useRentalService().getAllRentals();
+  const { rentals: data, status } = await useRentalService().getAllRentals();
 
   const rentals = computed(() => {
     if (data.value !== undefined) {
@@ -86,7 +86,9 @@
           type="checkbox" />
       </div>
     </div>
-    <span v-if="pending" class="loading loading-dots loading-lg"></span>
+    <span
+      v-if="status === 'pending'"
+      class="loading loading-dots loading-lg"></span>
     <NuxtLink
       v-for="rental in filteredRentals"
       v-else
