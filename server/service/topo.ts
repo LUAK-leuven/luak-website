@@ -1,6 +1,6 @@
 import type { TopoDao } from '#server/repository/topos';
 import type { GearDao } from '#server/repository/gear';
-import { foldInventoryItemEvents } from '~~/model/inventory/InventoryItem';
+import { foldInventoryItemEvents } from '~~/server/domain/inventory/InventoryItem';
 import type { RentalDao } from '#server/repository/rentals';
 
 export class TopoService {

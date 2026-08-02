@@ -4,7 +4,7 @@
   import { object as yupObject, number as yupNumber } from 'yup';
   import { ErrorMessage } from 'vee-validate';
   import LoadingButton from '~/components/shared/LoadingButton.vue';
-  import type { RentalTopoItem } from '~~/model/Rental';
+  import type { RentalTopoItem } from '~/model/Rental';
 
   const props = defineProps<{
     rentalId: RentalId;

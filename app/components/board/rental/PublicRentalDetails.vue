@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import type { PublicRentalDetails } from '~/model/Rental';
   import { formatToDMY } from '~/utils/rental/dateFormatter';
 
   const { rental } = defineProps<{

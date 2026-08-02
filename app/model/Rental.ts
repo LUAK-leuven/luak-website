@@ -96,6 +96,27 @@ export class RentalSummary extends RentalBase {
   }
 }
 
+export class PublicRentalDetails extends RentalBase {
+  readonly depositFee: number;
+  readonly paymentMethod: PaymentMethod;
+
+  constructor(args: {
+    id: RentalId;
+    gear: RentalGearItem[];
+    topos: RentalTopoItem[];
+    dateBorrow: string;
+    dateReturn: string;
+    depositFee: number;
+    depositReturned: boolean;
+    paymentMethod: PaymentMethod;
+  }) {
+    super(args);
+
+    this.depositFee = args.depositFee;
+    this.paymentMethod = args.paymentMethod;
+  }
+}
+
 export class RentalDetails extends RentalBase {
   readonly contactInfo: ContactInfo;
   readonly boardMember: string;
@@ -272,14 +293,6 @@ export class RentalTopoItem extends RentalItem {
       lostAmount: this.lostAmount,
       yearPublished: this.yearPublished,
     });
-}
-
-export class ContactInfo {
-  constructor(
-    readonly fullName: string,
-    readonly email: string | undefined,
-    readonly phoneNumber: string | undefined,
-  ) {}
 }
 
 type PaymentMethod = 'cash' | 'transfer';

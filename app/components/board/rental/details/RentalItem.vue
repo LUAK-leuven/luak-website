@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import ItemMenu from './ItemMenu.vue';
-  import type { RentalItem } from '~~/model/Rental.js';
+  import type { RentalItem } from '~/model/Rental.js';
   import getItemColor from '../getItemColor.js';
 
   const porps = defineProps<{

@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { LuakUser } from '~~/model/LuakUser';
+import { LuakUser } from '~/model/LuakUser';
 
 export class UserService {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}

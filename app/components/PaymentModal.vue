@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { LUAK_PAYMENT } from '~/utils/constants';
-  import { EpcQrCode } from '~~/model/EpcQrCode';
+  import { EpcQrCode } from '~/model/EpcQrCode';
 
   type PaymentModalProps = {
     isOpen: boolean;

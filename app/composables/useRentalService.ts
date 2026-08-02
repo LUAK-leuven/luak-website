@@ -1,8 +1,9 @@
 import {
+  publicRentalDetailsFromDb,
   rentalDetailsFromDb,
   RentalService,
   rentalSummaryFromDb,
-} from '~~/services/rentalService';
+} from '~/services/rentalService';
 
 const RENTAL = 'rental';
 
@@ -72,7 +73,7 @@ export function useRentalService() {
     if (error.value) console.error('getAllRentals', error.value);
     const rentals = computed(() => {
       if (!data.value) return undefined;
-      return data.value.map((rental) => rentalDetailsFromDb(rental));
+      return data.value.map((rental) => publicRentalDetailsFromDb(rental));
     });
     return {
       rentals,

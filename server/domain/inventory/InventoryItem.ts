@@ -1,4 +1,4 @@
-import type { ItemEvent } from '~~/model/inventory/ItemEvent';
+import type { ItemEvent } from '~~/server/domain/inventory/ItemEvent';
 
 export type InventoryItemId =
   | {

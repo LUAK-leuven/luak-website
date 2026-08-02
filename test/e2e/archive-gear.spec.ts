@@ -1,6 +1,6 @@
 import { authStateFile, cleanDatabase, test } from '#test/e2e/fixtures';
 import { testServiceBuilder } from '#test/e2e/testUtils/testServices';
-import { itemArchivedEvent } from '~/model/inventory/ItemEvent';
+import { itemArchivedEvent } from '~/server/domain/inventory/ItemEvent';
 import type { GearInventoryId, TopoId } from '~/shared/types/gear';
 import { GearInventoryPage } from './pages/gear/inventory.page';
 import { expect } from '@playwright/test';

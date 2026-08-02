@@ -1,5 +1,5 @@
-import { LuakUser } from '~~/model/LuakUser';
-import { luakUserFromDb, UserService } from '~~/services/userService';
+import { LuakUser } from '~/model/LuakUser';
+import { luakUserFromDb, UserService } from '~/services/userService';
 
 export function useUserService() {
   const user = useSupabaseUser();

@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { parseEvent } from '~~/model/inventory/ItemEvent';
+import { parseEvent } from '~~/server/domain/inventory/ItemEvent';
 
 export class TopoDao {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}

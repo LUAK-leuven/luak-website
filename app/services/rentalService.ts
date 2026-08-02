@@ -1,12 +1,12 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import {
-  ContactInfo,
   RentalSummary,
   RentalDetails,
+  PublicRentalDetails,
   RentalTopoItem,
   RentalGearItem,
-} from '~~/model/Rental';
-import { getFullName } from '~~/services/userService';
+} from '~/model/Rental';
+import { getFullName } from './userService';
 import { object as zodObject, string as zodString } from 'zod';
 
 export class RentalService {
@@ -187,17 +187,6 @@ export class RentalService {
       .select(
         `
           id,
-          board_member:Users!Rentals_board_member_id_fkey(
-            first_name,
-            last_name
-          ),
-          member:Users!Rentals_member_id_fkey(
-            first_name,
-            last_name,
-            email,
-            phone_number,
-            id
-          ),
           date_borrow,
           date_return,
           deposit,
@@ -216,9 +205,7 @@ export class RentalService {
             rented_amount,
             returned_amount,
             lost_amount
-          ),
-          contact_info,
-          comments
+          )
         `,
       )
       .eq('member_id', userId)
@@ -269,6 +256,25 @@ export const rentalDetailsFromDb = (args: RentalDetailsVo): RentalDetails => {
   });
 };
 
+type PublicRentalDetailsVo = Awaited<
+  ReturnType<RentalService['getRentalsForUser']>
+>[number];
+
+export const publicRentalDetailsFromDb = (
+  args: PublicRentalDetailsVo,
+): PublicRentalDetails => {
+  return new PublicRentalDetails({
+    id: args.id as RentalId,
+    gear: args.RentedGear.map((gear) => gearItemFromDb(gear)),
+    topos: args.RentedTopos.map((topo) => topoItemFromDb(topo)),
+    dateReturn: args.date_return,
+    dateBorrow: args.date_borrow,
+    depositReturned: args.deposit_returned,
+    depositFee: args.deposit,
+    paymentMethod: args.payment_method,
+  });
+};
+
 export const contactInfoFromDb = (args: {
   member: {
     first_name: string;
@@ -277,10 +283,14 @@ export const contactInfoFromDb = (args: {
     phone_number?: string | null;
   } | null;
   contact_info: string | null;
-}) => {
+}): ContactInfo => {
   if (args.member) return contactInfoFromMember(args.member);
   if (args.contact_info) return contactInfoFromJsonString(args.contact_info);
-  return new ContactInfo('Failed to get contact info', undefined, undefined);
+  return {
+    fullName: 'Failed to get contact info',
+    email: undefined,
+    phoneNumber: undefined,
+  };
 };
 
 const contactInfoFromMember = (member: {
@@ -289,16 +299,20 @@ const contactInfoFromMember = (member: {
   email?: string;
   phone_number?: string | null;
 }): ContactInfo => {
-  return new ContactInfo(
-    getFullName(member),
-    member.email,
-    member.phone_number ?? undefined,
-  );
+  return {
+    fullName: getFullName(member),
+    email: member.email,
+    phoneNumber: member.phone_number ?? undefined,
+  };
 };
 
 const contactInfoFromJsonString = (jsonString: string): ContactInfo => {
   const parsed = contactInfoSchema.parse(JSON.parse(jsonString));
-  return new ContactInfo(parsed.fullName, parsed.email, parsed.phoneNumber);
+  return {
+    fullName: parsed.fullName,
+    email: parsed.email,
+    phoneNumber: parsed.phoneNumber,
+  };
 };
 
 const contactInfoSchema = zodObject({
