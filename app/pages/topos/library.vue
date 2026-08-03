@@ -1,5 +1,7 @@
 <script setup lang="ts">
   import Text from '~/components/input/Text.vue';
+  import { string as yupString, array as yupArray } from 'yup';
+  import SelectCountry from '~/components/topoLibrary/SelectCountry.vue';
 
   definePageMeta({ middleware: 'active-member-guard' });
 
@@ -20,9 +22,19 @@
     ...new Set(topos.value?.flatMap((it) => it.tags)),
   ]);
 
-  const searchTerm = ref<string>();
-  const selectedTypesOfClimbing = ref<string[]>([]);
-  const selectedCountries = ref<string[]>([]);
+  const searchTerm = useUrlState<string | undefined>('search', (x) =>
+    yupString().optional().validateSync(x),
+  );
+  const selectedTypesOfClimbing = useUrlState<string[]>('type', (x) => {
+    if (x === undefined) return [];
+    if (typeof x === 'string') return [yupString().required().validateSync(x)];
+    return yupArray().of(yupString().required()).required().validateSync(x);
+  });
+  const selectedCountries = useUrlState<string[]>('country', (x) => {
+    if (x === undefined) return [];
+    if (typeof x === 'string') return [yupString().required().validateSync(x)];
+    return yupArray().of(yupString().required()).required().validateSync(x);
+  });
 
   const matchedTags = computed(() =>
     searchInArray(allTags.value, searchTerm.value),
@@ -74,7 +86,8 @@
               <Text
                 v-model="searchTerm"
                 type="text"
-                placeholder="Search by title">
+                placeholder="Search by title"
+                data-testid="search-input">
               </Text>
               <span class="font-bold mt-3">Type(s) of climbing:</span>
               <div class="flex flex-row flex-wrap gap-x-1 gap-y-1">
@@ -82,24 +95,31 @@
                   v-for="typeOfClimbing of allTypesOfClimbing"
                   :key="typeOfClimbing"
                   :text="typeOfClimbing"
+                  :model-value="
+                    selectedTypesOfClimbing.some((x) => x === typeOfClimbing)
+                  "
+                  :data-testid="`toc.${typeOfClimbing}`"
                   @update:model-value="
                     (value) => {
-                      if (value) selectedTypesOfClimbing.push(typeOfClimbing);
+                      if (value)
+                        selectedTypesOfClimbing = [
+                          ...selectedTypesOfClimbing,
+                          typeOfClimbing,
+                        ];
                       else
                         selectedTypesOfClimbing =
                           selectedTypesOfClimbing.filter(
                             (it) => it !== typeOfClimbing,
                           );
                     }
-                  ">
-                </InputSelectableBadge>
+                  " />
               </div>
               <span class="font-bold mt-3">Countries:</span>
-              <TopoLibrarySearchableSelect
+              <SelectCountry
                 v-model="selectedCountries"
                 :options="allCountries"
                 placeholder="Select country">
-              </TopoLibrarySearchableSelect>
+              </SelectCountry>
             </div>
           </template>
         </Collapsable>

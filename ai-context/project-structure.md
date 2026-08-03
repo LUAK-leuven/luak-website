@@ -4,16 +4,17 @@
   - `composables/`: Vue composables, prefixed with 'use'
   - `layouts/`: Reusable site-wide layouts
   - `middleware/`: Route guards
+  - `model/`: Domain models
   - `pages/`: All the pages; Nuxt provides file-based routing
+  - `services/`: Domain services
   - `utils/`: Utility functions for the client-side
 - `content/`: File-based CMS (markdown content files)
 - `docs/`: Captains log and ADRs
-- `model/`: Domain models
+- `planning/`: Documents about specific stories/features/tasks for AI agents
 - `public/`: The website's static assets
 - `server/`: API and server handlers
   - `api/`: Nuxt server API routes
-- `planning/`: Documents about specific stories/features/tasks for AI agents
-- `services/`: Domain services
+  - `domain/`: Domain logic for the server
 - `shared/`: Shared between server and client
   - `types/`: Shared types
   - `utils/`: Shared utils

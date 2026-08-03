@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 import { TopoDetailsPage } from './details.page';
 import { navigateTo } from '#test/e2e/fixtures';
 
@@ -6,8 +6,14 @@ export class TopoLibraryPage {
   private readonly page: Page;
   static readonly path = '/topos/library/';
 
+  readonly searchInput: Locator;
+
   constructor(page: Page) {
     this.page = page;
+
+    this.searchInput = this.page
+      .getByTestId('search-input')
+      .getByRole('textbox');
   }
 
   async navigate() {
@@ -27,5 +33,13 @@ export class TopoLibraryPage {
   async navigateToDetails(title: string) {
     await this.getTopo(title).linkToDetails.click();
     return new TopoDetailsPage(this.page);
+  }
+
+  typeOfClimbing(type: string) {
+    return this.page.getByTestId(`toc.${type}`);
+  }
+
+  country(country: string) {
+    return this.page.getByTestId(`country.${country}`);
   }
 }
