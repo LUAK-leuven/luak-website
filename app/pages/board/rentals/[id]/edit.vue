@@ -78,8 +78,7 @@
       Rental-id: <i>{{ rental?.id }}</i>
     </template>
 
-    <SharedBackButton
-      :to="{ name: 'board-rentals-id', params: { id: rentalId } }" />
+    <SharedBackButton />
 
     <div
       v-if="rentalStatus === 'pending' || pending"

@@ -2,8 +2,6 @@
   setup
   lang="ts"
   generic="T extends { id: EntityId<unknown> } | null | undefined">
-  import type { RoutesNamedLocations } from '@typed-router';
-
   withDefaults(
     defineProps<{
       title?: string | undefined;
@@ -11,7 +9,6 @@
       data: T;
       isLoading: boolean;
       error?: string | undefined;
-      backTo?: RoutesNamedLocations | undefined;
       defaultError?: string | undefined;
     }>(),
     {
@@ -19,7 +16,6 @@
       title: undefined,
       subTitle: undefined,
       error: undefined,
-      backTo: undefined,
     },
   );
 </script>
@@ -34,7 +30,7 @@
       <i class="text-sm" data-testId="detailsPage.id">{{ data?.id }}</i>
     </template>
 
-    <SharedBackButton v-if="backTo" :to="backTo" />
+    <SharedBackButton />
 
     <PagesWithLazyResource
       v-slot="{ data: data_ }"
