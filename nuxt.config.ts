@@ -3,6 +3,7 @@ import type { CompilerOptions } from 'typescript';
 const tsCompilerOptions: CompilerOptions = {
   noFallthroughCasesInSwitch: true,
   exactOptionalPropertyTypes: true,
+  noUncheckedSideEffectImports: true,
 };
 
 export default defineNuxtConfig({

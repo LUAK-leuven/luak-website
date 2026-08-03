@@ -141,13 +141,18 @@
                 data-testid="lostItem">
                 <div class="flex flex-row flex-wrap gap-x-1">
                   {{ dayjs(event.occuredOn).format('DD-MM-YYYY') }}:
-                  <SharedLinkTo
-                    v-if="event.eventName === 'ItemLostEvent'"
-                    :text="`${event.lostAmount} item(s) lost`"
-                    :to="{
-                      name: 'board-rentals-id',
-                      params: { id: event.rentalId },
-                    }" />
+                  <template v-if="event.eventName === 'ItemLostEvent'">
+                    <span v-if="event.rentalId === undefined">
+                      {{ event.lostAmount }} item(s) lost
+                    </span>
+                    <SharedLinkTo
+                      v-else
+                      :text="`${event.lostAmount} item(s) lost`"
+                      :to="{
+                        name: 'board-rentals-id',
+                        params: { id: event.rentalId },
+                      }" />
+                  </template>
                   <span v-else-if="event.eventName === 'ItemArchivedEvent'">
                     {{ event.amount }} item(s) archived
                   </span>
