@@ -143,7 +143,7 @@
                   {{ dayjs(event.occuredOn).format('DD-MM-YYYY') }}:
                   <template v-if="event.eventName === 'ItemLostEvent'">
                     <span v-if="event.rentalId === undefined">
-                      {{ event.lostAmount }} item(s) lost
+                      {{ event.lostAmount }} item(s) lost without rental
                     </span>
                     <SharedLinkTo
                       v-else
