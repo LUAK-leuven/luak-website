@@ -43,6 +43,7 @@
     if (!user.value) throw createError({ statusCode: 401 });
     const { error } = await supabase
       .from('Users')
+      // @ts-expect-error again typescript's exact optional check being to strict for external libraries
       .update({
         first_name: submitted.firstName,
         last_name: submitted.lastName,

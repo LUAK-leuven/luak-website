@@ -3,7 +3,7 @@ import type { infer as Infer, ZodType } from 'zod';
 
 const itemLostEventSchema = object({
   eventName: literal('ItemLostEvent'),
-  rentalId: uuid() as unknown as ZodType<RentalId>,
+  rentalId: (uuid() as unknown as ZodType<RentalId>).optional(),
   lostAmount: number().min(1),
 });
 export const itemLostEvent = (
