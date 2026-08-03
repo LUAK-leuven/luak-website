@@ -10,7 +10,6 @@
       name: string;
       placeholder?: string;
       disabled?: boolean;
-      autoFillWithPlaceholder?: boolean;
       round?: boolean;
       autocomplete?: AutoFillField | undefined;
     }>(),
@@ -18,7 +17,6 @@
       type: 'text',
       placeholder: 'text',
       disabled: false,
-      autoFillWithPlaceholder: false,
       label: undefined,
       round: false,
       autocomplete: undefined,
@@ -38,7 +36,6 @@
     :error="errorMessage"
     :placeholder="placeholder"
     :disabled="disabled"
-    :auto-fill-with-placeholder="autoFillWithPlaceholder"
     :round="round"
     :autocomplete="autocomplete">
     <template #label1>

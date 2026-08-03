@@ -3,6 +3,7 @@
   import Text from '~/components/input/Text.vue';
   import { useToast } from '~/composables/useToast';
   import { useRentalForm } from '~/composables/board/rental/useRentalForm';
+  import DepositFeeField from './DepositFeeField.vue';
 
   const props = defineProps<{
     boardMemberName: string;
@@ -171,16 +172,11 @@
 
     <h2>Payment</h2>
     <div class="flex flex-row items-end gap-5">
-      <Text
+      <DepositFeeField
         v-model="depositFee"
-        label="Deposit fee *"
-        type="number"
-        :placeholder="computedDeposit?.toString()"
-        :auto-fill-with-placeholder="true"
+        :computed-deposit="computedDeposit"
         data-testId="rental.form.depositFee"
-        v-bind="depositFeeAttr">
-        <template #label1><span class="mr-1">€</span></template>
-      </Text>
+        v-bind="depositFeeAttr" />
       <select
         v-model="paymentMethod"
         class="select select-bordered w-min"
