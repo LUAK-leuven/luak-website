@@ -1,12 +1,9 @@
-import type { Database } from '~/types/database.types';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { GearInventoryId, GearItemId } from '~/types/gear';
-import { groupBy } from '~/utils/utils';
 import {
   foldInventoryItemEvents,
   type InventoryItemId,
-} from '~/model/inventory/InventoryItem';
-import { parseEvent, type ItemEvent } from '~/model/inventory/ItemEvent';
+} from '#server/domain/inventory/InventoryItem';
+import { parseEvent, type ItemEvent } from '#server/domain/inventory/ItemEvent';
 
 export class GearDao {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}

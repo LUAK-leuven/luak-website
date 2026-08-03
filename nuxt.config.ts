@@ -1,7 +1,11 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+import type { CompilerOptions } from 'typescript';
+
+const tsCompilerOptions: CompilerOptions = {
+  noFallthroughCasesInSwitch: true,
+  exactOptionalPropertyTypes: true,
+};
+
 export default defineNuxtConfig({
-  devtools: { enabled: false },
-  compatibilityDate: '2026-01-25',
   app: {
     head: {
       htmlAttrs: {
@@ -16,7 +20,52 @@ export default defineNuxtConfig({
       ],
     },
   },
+  compatibilityDate: '2026-01-25',
+  content: {
+    renderer: {
+      anchorLinks: false,
+    },
+  },
   css: ['~/assets/css/main.scss'],
+  devtools: { enabled: true },
+  modules: [
+    '@nuxtjs/tailwindcss',
+    '@nuxt/content',
+    '@nuxt/image',
+    '@nuxtjs/supabase',
+    '@vee-validate/nuxt',
+    '@nuxt/eslint',
+    'nuxt-studio',
+    'nuxt-typed-router',
+  ],
+  nitro: {
+    typescript: {
+      tsConfig: {
+        compilerOptions: tsCompilerOptions,
+      },
+    },
+  },
+  runtimeConfig: {
+    public: {
+      baseUrl: '',
+      paymentLinkMembership: 'https://buy.stripe.com/9AQaGj7K1eso4KsfYZ',
+      paymentLinkMembershipDiscount:
+        'https://buy.stripe.com/4gwbKnfctdokdgYcMM',
+    },
+  },
+  studio: {
+    // Studio admin route (default: '/_studio')
+    route: '/_studio',
+
+    // Git repository configuration
+    repository: {
+      provider: 'github',
+      owner: 'LUAK-leuven',
+      repo: 'luak-website',
+      branch: 'studio',
+      private: true,
+    },
+  },
   supabase: {
     redirect: true,
     redirectOptions: {
@@ -28,40 +77,31 @@ export default defineNuxtConfig({
     cookieOptions: {
       secure: process.env.NODE_ENV === 'production',
     },
-    types: '~/types/database.types.ts',
+    types: '~~/shared/types/database.types.ts',
   },
-  runtimeConfig: {
-    public: {
-      baseUrl: '',
-      paymentLinkMembership: 'https://buy.stripe.com/9AQaGj7K1eso4KsfYZ',
-      paymentLinkMembershipDiscount:
-        'https://buy.stripe.com/4gwbKnfctdokdgYcMM',
+  typescript: {
+    // typeCheck: true, // Would be nice if we could enable this, but right now there are too many import errors and I don't know how to fix them yet.
+    strict: true,
+    tsConfig: {
+      compilerOptions: tsCompilerOptions,
+    },
+    sharedTsConfig: {
+      compilerOptions: tsCompilerOptions,
+    },
+    nodeTsConfig: {
+      compilerOptions: {
+        paths: {
+          '~/*': ['../*'],
+          '#test/*': ['../test/*'],
+        },
+        ...tsCompilerOptions,
+      },
+      include: [
+        '../test/**/*',
+        '../content.config.ts',
+        '../playwright.config.ts',
+        '../vitest.config.ts',
+      ],
     },
   },
-  content: {
-    renderer: {
-      anchorLinks: false,
-    },
-  },
-  studio: {
-    // Studio admin route (default: '/_studio')
-    route: '/_studio',
-  },
-  modules: [
-    '@nuxtjs/tailwindcss',
-    '@nuxt/content',
-    '@nuxt/image',
-    '@nuxtjs/supabase',
-    '@vee-validate/nuxt',
-    '@nuxt/eslint',
-    'nuxt-studio',
-    'nuxt-typed-router',
-  ],
-  // vite: {
-  //   optimizeDeps: {
-  //     // TODO: This is a workaround for the issue where the cookie package is not being bundled correctly by Vite, due to a bug in @supabase/ssr (comig with @supabase/supabase-js).
-  //     include: ['@supabase/ssr', '@supabase/supabase-js', 'cookie'],
-  //     holdUntilCrawlEnd: true, // explicit — block requests until crawl done
-  //   },
-  // },
 });

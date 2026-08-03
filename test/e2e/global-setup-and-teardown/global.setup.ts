@@ -1,0 +1,22 @@
+import { authStateFile, login, test } from '#test/e2e/fixtures';
+import { testServiceBuilder } from '#test/e2e/testUtils/testServices';
+import { testUsers } from '#test/e2e/testUtils/TestUser';
+
+test('clean db', async () => {
+  const { testDao, userTestService } = testServiceBuilder();
+  await testDao().cleanInventoryEvents();
+  await testDao().clearRentals();
+  await userTestService().resetTestMemberships();
+});
+
+if (process.env.SKIP_LOGIN_SETUP !== 'true') {
+  Object.entries(testUsers).forEach(([userKey, testUser]) => {
+    test(`login test users - ${userKey}`, async ({ page, context }) => {
+      await login(page, testUser);
+
+      await context.storageState({
+        path: authStateFile(userKey as keyof typeof testUsers),
+      });
+    });
+  });
+}

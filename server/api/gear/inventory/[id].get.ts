@@ -1,7 +1,6 @@
 import { object as zodObject, uuid as zodUuid } from 'zod';
 import type { ZodType } from 'zod';
-import luakEventHandler from '~/server/luakEventHandler';
-import type { GearItemId } from '~/types/gear';
+import luakEventHandler from '#server/luakEventHandler';
 
 const gearItemId = zodObject({
   id: zodUuid() as unknown as ZodType<GearItemId>,

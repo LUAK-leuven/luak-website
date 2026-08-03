@@ -1,5 +1,5 @@
 import type { H3Event } from '#build/types/nitro-imports';
-import { serviceBuilder } from './serviceBuilder';
+import { serviceBuilder } from '#server/serviceBuilder';
 
 export default <T>(
   block: (

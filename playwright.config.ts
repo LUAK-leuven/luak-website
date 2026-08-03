@@ -1,0 +1,52 @@
+import { defineConfig, devices } from '@playwright/test';
+import dotenv from 'dotenv';
+
+dotenv.config({ path: ['.env', '.env.local'], quiet: true });
+
+export default defineConfig({
+  testDir: './test/e2e',
+  globalSetup: './test/e2e/global-setup-and-teardown/prodDbGuard.ts',
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 1 : 0,
+  workers: process.env.CI ? 1 : 1,
+  reporter: process.env.CI ? [['dot'], ['html', { open: 'never' }]] : 'html',
+
+  use: {
+    baseURL: process.env.BASE_URL,
+    trace: process.env.CI ? 'on-first-retry' : 'on',
+    video: process.env.CI ? 'on-first-retry' : 'on',
+    actionTimeout: process.env.CI ? 5_000 : 2_000,
+    navigationTimeout: process.env.CI ? 8_000 : 2_000,
+  },
+
+  expect: {
+    timeout: process.env.CI ? 5_000 : 2_000,
+  },
+
+  projects: [
+    {
+      name: 'setup db',
+      testMatch: /global-setup-and-teardown\/global\.setup\.ts/,
+      teardown: 'cleanup db',
+    },
+    {
+      name: 'cleanup db',
+      testMatch: /global-setup-and-teardown\/global\.teardown\.ts/,
+    },
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+      dependencies: ['setup db'],
+    },
+  ],
+
+  webServer: {
+    command: 'yarn dev',
+    url: process.env.BASE_URL!,
+    reuseExistingServer: !process.env.CI,
+    timeout: 120_000,
+    stdout: 'ignore',
+    stderr: 'pipe',
+  },
+});
