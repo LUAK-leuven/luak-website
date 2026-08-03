@@ -16,3 +16,12 @@ test('Filter initializes from query params', async ({ page }) => {
   await expect(topoLibraryPage.country('France')).toBeVisible();
   await expect(topoLibraryPage.country('Belgium')).toBeVisible();
 });
+
+test('Changing filter sets query params', async ({ page }) => {
+  const topoLibraryPage = await TopoLibraryPage.navigate(page);
+
+  await topoLibraryPage.searchInput.fill('flone');
+  await topoLibraryPage.typeOfClimbing('Sport climbing').check();
+
+  await page.waitForURL('/topos/library?search=flone&type=Sport+climbing');
+});
