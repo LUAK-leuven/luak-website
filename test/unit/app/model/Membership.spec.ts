@@ -9,7 +9,7 @@ test.each([
   [1980, dayjs('1981-08-31'), true], // Valid 01-07-1980 to 31-08-1981
   [2013, dayjs('2014-09-01'), false], // Valid 01-07-2013 to 31-08-2014
 ])(
-  'isValidForMembershipYear',
+  'isValidForMembershipYear(%i, %s) -> %s',
   (membershipYear: number, now: Dayjs, isValid: boolean) => {
     expect(isValidForMembershipYear({ date: now, membershipYear })).toBe(
       isValid,
@@ -17,22 +17,28 @@ test.each([
   },
 );
 
-test('isActive - A membership is only active from the moment it is created', () => {
-  const membership = new Membership({
-    membershipYear: dayjs().year(),
-    createdOn: dayjs().add(1, 'day'),
-  });
+test.each([
+  [1, false], // Created tomorrow, not active yet
+  [0, true], // Created today, active
+  [-1, true], // Created yesterday, active
+])(
+  'isActive - A membership is only active after it is created (%i -> %s)',
+  (deltaCreatedOn: number, isActive: boolean) => {
+    const membership = new Membership({
+      membershipYear: dayjs().year(),
+      createdOn: dayjs().add(deltaCreatedOn, 'day'),
+    });
 
-  expect(membership.isActive()).toBe(false);
-  expect(membership.isActive()).toBe(true);
-});
+    expect(membership.isActive()).toBe(isActive);
+  },
+);
 
 test.each([
   [2024, '2024-06-30'], // Valid 01-07-2024 to 31-08-2025
   [2024, '2025-09-01'], // Valid 01-07-2024 to 31-08-2025
   [2024, '2025-07-01'], // But created on 01-07-2025 should correspond to membership year 2025
 ])(
-  'A membership creation date must be valid for the membership year',
+  'A membership creation date must be valid for the membership year (%i, %s)',
   (membershipYear: number, createdOn: string) => {
     expect(() => {
       new Membership({
