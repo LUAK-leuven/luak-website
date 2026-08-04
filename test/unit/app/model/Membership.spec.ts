@@ -1,19 +1,23 @@
-import dayjs, { type Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { expect, test } from 'vitest';
-import { Membership, isValidForMembershipYear } from '~/app/model/Membership';
+import {
+  Membership,
+  _getMembershipYearForDate,
+  _isValidForMembershipYear,
+} from '~/app/model/Membership';
 import { DomainValidationException } from '~/app/model/DomainValidationException';
 
 test.each([
-  [2023, dayjs('2023-06-30'), false], // Valid 01-07-2023 to 31-08-2024
-  [2025, dayjs('2025-07-01'), true], // Valid 01-07-2025 to 31-08-2026
-  [1980, dayjs('1981-08-31'), true], // Valid 01-07-1980 to 31-08-1981
-  [2013, dayjs('2014-09-01'), false], // Valid 01-07-2013 to 31-08-2014
+  [2023, '2023-06-30', false], // Valid 01-07-2023 to 31-08-2024
+  [2025, '2025-07-01', true], // Valid 01-07-2025 to 31-08-2026
+  [1980, '1981-08-31', true], // Valid 01-07-1980 to 31-08-1981
+  [2013, '2014-09-01', false], // Valid 01-07-2013 to 31-08-2014
 ])(
   'isValidForMembershipYear(%i, %s) -> %s',
-  (membershipYear: number, now: Dayjs, isValid: boolean) => {
-    expect(isValidForMembershipYear({ date: now, membershipYear })).toBe(
-      isValid,
-    );
+  (membershipYear: number, now: string, isValid: boolean) => {
+    expect(
+      _isValidForMembershipYear({ date: dayjs(now), membershipYear }),
+    ).toBe(isValid);
   },
 );
 
@@ -61,5 +65,17 @@ test.each([
         createdOn: dayjs(createdOn),
       });
     }).not.toThrow();
+  },
+);
+
+test.each([
+  ['2023-06-30', 2022],
+  ['2023-07-01', 2023],
+  ['2024-06-30', 2023],
+  ['2024-07-01', 2024],
+])(
+  '_getMembershipYearForDate(%s) -> %i',
+  (date: string, expectedMembershipYear: number) => {
+    expect(_getMembershipYearForDate(dayjs(date))).toBe(expectedMembershipYear);
   },
 );

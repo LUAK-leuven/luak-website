@@ -13,36 +13,39 @@ export class Membership {
     this.validate();
   }
 
-  private validate() {
-    if (
-      !isValidForMembershipYear({
-        membershipYear: this.membershipYear,
-        date: this.createdOn,
-      })
-    ) {
-      throw new DomainValidationException(
-        `Invalid Membership(${this.membershipYear.toFixed()}, ${this.createdOn.format('YYYY-MM-DD')})`,
-      );
-    }
+  static createNewMembership(date: Dayjs = dayjs()): Membership {
+    const membershipYear = date.year();
+    return new Membership({ membershipYear, createdOn: date });
   }
 
   isActive() {
     const now = dayjs();
     if (now.isBefore(this.createdOn, 'day')) return false;
-    return isValidForMembershipYear({
+    return _isValidForMembershipYear({
       date: this.createdOn,
       membershipYear: this.membershipYear,
     });
   }
+
+  private validate() {
+    if (_getMembershipYearForDate(this.createdOn) !== this.membershipYear) {
+      throw new DomainValidationException(
+        `Invalid Membership(${this.membershipYear.toFixed()}, ${this.createdOn.format('YYYY-MM-DD')})`,
+      );
+    }
+  }
 }
 
+const MEMBERSHIP_START_DATE = '07-01'; // July 1st
+const MEMBERSHIP_END_DATE = '08-31'; // August 31st
+
 const membershipStartDate = (membershipYear: number) =>
-  dayjs(`${membershipYear.toFixed()}-07-01`);
+  dayjs(`${membershipYear.toFixed()}-${MEMBERSHIP_START_DATE}`);
 
 const membershipEndDate = (membershipYear: number) =>
-  dayjs(`${(membershipYear + 1).toFixed()}-08-31`);
+  dayjs(`${(membershipYear + 1).toFixed()}-${MEMBERSHIP_END_DATE}`);
 
-export const isValidForMembershipYear = (args: {
+export const _isValidForMembershipYear = (args: {
   date: Dayjs;
   membershipYear: number;
 }): boolean => {
@@ -50,4 +53,16 @@ export const isValidForMembershipYear = (args: {
     !args.date.isBefore(membershipStartDate(args.membershipYear), 'day') &&
     !args.date.isAfter(membershipEndDate(args.membershipYear), 'day')
   );
+};
+
+export const _getMembershipYearForDate = (date: Dayjs): number => {
+  const currentYear = date.year();
+  if (
+    date.isBefore(
+      dayjs(`${currentYear.toFixed()}-${MEMBERSHIP_START_DATE}`),
+      'day',
+    )
+  )
+    return currentYear - 1;
+  else return currentYear;
 };
