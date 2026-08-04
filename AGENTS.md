@@ -22,7 +22,7 @@ Make sure to read [ai-context](./ai-context/index.md) so that you can load the c
 - Use branded ID types (`EntityId<'user'>`, `UserId`, `RentalId`) for all primary keys.
 - Cast Supabase row IDs: `data.id as UserId`.
 - Do not duplicate database types, use `Database['public']['Tables']['X']['Row']` for table row types, `Enums<'x'>` for DB enums.
-- Utility types live in `utils/typeUtils.ts`: `Defined<T>`, `GetReturn<T>`, `Unwrap<T>`.
+- Utility types live in `app/utils/typeUtils.ts`: `Defined<T>`, `GetReturn<T>`, `Unwrap<T>`.
 - Generic components use `<script setup lang="ts" generic="T">`.
 
 ### Vue SFCs
@@ -36,7 +36,9 @@ Make sure to read [ai-context](./ai-context/index.md) so that you can load the c
 
 ### Imports & Aliases
 
-- Use `~/` alias for all project-root imports (e.g., `~/types/database.types`, `~/utils/yup`).
+- Prefer named aliases over absolute paths (e.g., `#server/gearService` instead of `~~/server/gearService`).
+- Prefer absolute imports over relative imports for project files (e.g., `~/utils/yup` instead of `../../utils/yup`).
+- Nuxt aliases: `~/` refers to `app/`, and `~~/` refers to the project root.
 - Type-only imports must use `import type`.
 - Nuxt auto-imported APIs do not need explicit imports.
 
@@ -74,7 +76,7 @@ const onSubmit = handleSubmit(async (values) => {
 });
 ```
 
-Shared yup validators (phone, password) live in `utils/yup.ts`.
+Shared yup validators (phone, password) live in `app/utils/yup.ts`.
 
 ### UI / Styling
 
@@ -82,14 +84,14 @@ Shared yup validators (phone, password) live in `utils/yup.ts`.
 - Use **TailwindCSS + DaisyUI** classes for all UI. Active theme: `nord`.
 - DaisyUI patterns: `btn btn-primary`, `card card-compact`, `badge badge-info`, `modal`, `loading loading-spinner`,
   `alert alert-success`.
-- Global base styles and custom fonts in `assets/css/main.scss`.
+- Global base styles and custom fonts in `app/assets/css/main.scss`.
 - Do not write raw CSS.
 
 ---
 
 ## Integration Points
 
-- **Supabase**: Auth, DB, Storage via `@nuxtjs/supabase`. Types in `types/database.types.ts` — **regenerate after any
+- **Supabase**: Auth, DB, Storage via `@nuxtjs/supabase`. Types in `shared/types/database.types.ts` — **regenerate after any
   schema change**.
 - **Stripe**: Payment links in Nuxt runtime config; webhook handler in `supabase/functions/stripe-webhook/`.
 - **Nuxt Content**: Markdown-driven pages; schemas defined in `content.config.ts`.

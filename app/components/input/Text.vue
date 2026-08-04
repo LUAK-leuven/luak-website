@@ -2,14 +2,13 @@
   import type { InputTypeHTMLAttribute } from 'vue';
   import Input from '../shared/Input.vue';
 
-  const props = withDefaults(
+  withDefaults(
     defineProps<{
       label?: string | undefined;
       type?: InputTypeHTMLAttribute;
       error?: string | undefined;
       placeholder?: string;
       disabled?: boolean;
-      autoFillWithPlaceholder?: boolean;
       round?: boolean;
       autocomplete?: AutoFillField | undefined;
     }>(),
@@ -17,7 +16,6 @@
       type: 'text',
       placeholder: '',
       disabled: false,
-      autoFillWithPlaceholder: false,
       label: undefined,
       round: false,
       error: undefined,
@@ -27,14 +25,13 @@
 
   const model = defineModel<string | number | undefined>();
 
+  const emit = defineEmits<{
+    focus: [];
+  }>();
+
   watch(model, (value) => {
     if (value === '') model.value = undefined;
   });
-
-  const autoFillPlaceholder = () => {
-    if (props.autoFillWithPlaceholder && !model.value)
-      model.value = props.placeholder;
-  };
 </script>
 
 <template>
@@ -58,7 +55,7 @@
         :placeholder="placeholder"
         :disabled="disabled"
         :autocomplete="autocomplete"
-        @focus="autoFillPlaceholder" />
+        @focus="() => emit('focus')" />
       <slot name="label-end" />
     </label>
     <span v-if="error" class="text-error" data-testId="error-message">
