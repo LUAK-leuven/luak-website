@@ -34,7 +34,7 @@
             Check our activities
           </NuxtLink>
           <NuxtLink
-            v-if="user.wasMemberLastYear()"
+            v-if="!user.hasActiveMembership() && user.wasMemberLastYear()"
             class="btn m-2 text-white bg-orange-400 border-orange-400 hover:bg-orange-600 hover:border-orange-600"
             :to="{ name: 'profile-overview' }">
             Renew membership

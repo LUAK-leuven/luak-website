@@ -5,6 +5,7 @@ export default defineConfig({
   test: {
     projects: [
       {
+        resolve: { tsconfigPaths: true },
         test: {
           name: 'unit',
           include: ['test/unit/**/*.spec.ts'],
@@ -12,6 +13,7 @@ export default defineConfig({
         },
       },
       await defineVitestProject({
+        resolve: { tsconfigPaths: true },
         test: {
           name: 'nuxt',
           include: ['test/nuxt/**/*.spec.ts'],

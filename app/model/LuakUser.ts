@@ -1,17 +1,13 @@
+import type { Membership } from './Membership';
+
 export class LuakUser {
-  private readonly memberships: {
-    membershipYear: number;
-    paid: boolean;
-  }[];
+  private readonly memberships: Membership[];
   private readonly isBoard: boolean;
 
   readonly authenticated: boolean;
 
   constructor(args: {
-    memberships: {
-      membershipYear: number;
-      paid: boolean;
-    }[];
+    memberships: Membership[];
     isBoard: boolean;
     authenticated: boolean;
   }) {
@@ -23,25 +19,18 @@ export class LuakUser {
   static UnauthenticatedUser = () =>
     new LuakUser({ memberships: [], isBoard: false, authenticated: false });
 
-  private get paidMemberships() {
-    return this.memberships
-      .filter(({ paid }) => paid)
-      .map(({ membershipYear }) => membershipYear);
-  }
-
-  readonly hasActiveMembership = (luakYear: number = getLuakYear()) => {
-    return findBy(this.memberships, 'membershipYear', luakYear)?.paid ?? false;
+  readonly hasActiveMembership = () => {
+    return this.memberships.some((membership) => membership.isActive);
   };
 
   readonly wasMemberLastYear = () => {
     const currentYear = getLuakYear();
-    return (
-      !this.hasActiveMembership(currentYear) &&
-      this.hasActiveMembership(currentYear - 1)
+    return this.memberships.some(
+      (membership) => membership.membershipYear === currentYear - 1,
     );
   };
 
-  readonly isFirstTimeMember = () => this.paidMemberships.length === 0;
+  readonly isFirstTimeMember = () => this.memberships.length === 0;
 
   get permissions() {
     return {
