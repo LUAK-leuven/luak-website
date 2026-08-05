@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import { toggleCloseFix } from '~/utils/toggleCloseFix';
-  import { queryCollectionNavigation } from '#imports'; // Remove in when we are in nuxt 4
 
   const props = defineProps<{ id?: string }>();
 
