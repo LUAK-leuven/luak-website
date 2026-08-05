@@ -14,7 +14,7 @@ export class Membership {
   }
 
   static createNewMembership(date: Dayjs = dayjs()): Membership {
-    const membershipYear = date.year();
+    const membershipYear = _getMembershipYearForDate(date);
     return new Membership({ membershipYear, createdOn: date });
   }
 

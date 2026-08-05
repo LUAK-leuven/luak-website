@@ -7,14 +7,14 @@ import {
 } from '~/app/model/Membership';
 import { DomainValidationException } from '~/app/model/DomainValidationException';
 
-test.each([
+test.for([
   [2023, '2023-06-30', false], // Valid 01-07-2023 to 31-08-2024
   [2025, '2025-07-01', true], // Valid 01-07-2025 to 31-08-2026
   [1980, '1981-08-31', true], // Valid 01-07-1980 to 31-08-1981
   [2013, '2014-09-01', false], // Valid 01-07-2013 to 31-08-2014
-])(
+] satisfies [number, string, boolean][])(
   'isValidForMembershipYear(%i, %s) -> %s',
-  (membershipYear: number, now: string, isValid: boolean) => {
+  ([membershipYear, now, isValid]) => {
     expect(
       _isValidForMembershipYear({ date: dayjs(now), membershipYear }),
     ).toBe(isValid);
@@ -73,13 +73,13 @@ test.for([
   },
 );
 
-test.each([
+test.for([
   [2024, '2024-06-30'], // Valid 01-07-2024 to 31-08-2025
   [2024, '2025-09-01'], // Valid 01-07-2024 to 31-08-2025
   [2024, '2025-07-01'], // But created on 01-07-2025 should correspond to membership year 2025
-])(
+] satisfies [number, string][])(
   'A membership creation date must be valid for the membership year (%i, %s)',
-  (membershipYear: number, createdOn: string) => {
+  ([membershipYear, createdOn]) => {
     expect(() => {
       new Membership({
         membershipYear,
@@ -89,12 +89,12 @@ test.each([
   },
 );
 
-test.each([
+test.for([
   [2024, '2024-07-01'], // Valid 01-07-2024 to 31-08-2025
   [2024, '2025-06-30'], // Valid 01-07-2024 to 31-08-2025, but created after 01-07-2025 should correspond to membership year 2025
-])(
+] satisfies [number, string][])(
   'Can create a valid Membership',
-  (membershipYear: number, createdOn: string) => {
+  ([membershipYear, createdOn]) => {
     expect(() => {
       new Membership({
         membershipYear: membershipYear,
@@ -104,15 +104,31 @@ test.each([
   },
 );
 
-test.each([
+test.for([
   ['2023-06-30', 2022],
   ['2023-07-01', 2023],
   ['2024-06-30', 2023],
   ['2024-07-01', 2024],
-])(
+] satisfies [string, number][])(
   '_getMembershipYearForDate(%s) -> %i',
-  (date: string, expectedMembershipYear: number) => {
+  ([date, expectedMembershipYear]) => {
     expect(_getMembershipYearForDate(dayjs(date))).toBe(expectedMembershipYear);
+  },
+);
+
+test.for([
+  { now: '2004-06-30', expectedMembershipYear: 2003 },
+  { now: '2004-07-01', expectedMembershipYear: 2004 },
+])(
+  'createNewMembership - creates a new membership for the correct membershipYear (%s) -> %i',
+  (args: { now: string; expectedMembershipYear: number }) => {
+    withFakeTimers((setTime) => {
+      setTime(args.now);
+
+      const membership = Membership.createNewMembership();
+      expect(membership.membershipYear).toBe(args.expectedMembershipYear);
+      expect(membership.isActive()).toBe(true);
+    });
   },
 );
 
