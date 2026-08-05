@@ -1,5 +1,22 @@
 # The captains log
 
+## 5/08/2026 - Membership validation
+
+> _author: Hektor_
+
+### Context
+
+A membership has a `membershipYear` and a `createdOn` date. They should be consistent with each other, meaning that the `createdOn` date should be within the membership year. But changing the membership period would mean that some memberships would become "invalid" because their `createdOn` date would no longer be within the membership year.
+
+### Options
+
+1. Allow "invalid" memberships and make sure the code can deal with it.
+2. Do a data migration to fix the invalid memberships. This is a one time operation, but if we change the membership period again in the future, we will have to do another data migration.
+
+### Decision
+
+I decided to allow "invalid" memberships, because this is the most flexible solution. If we change the membership period again in the future, we won't have to do a data migration.
+
 ## 12/07/2026 - Mark-as-lost endpoint
 
 > _author: Hektor_

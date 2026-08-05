@@ -1,6 +1,5 @@
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
-import { DomainValidationException } from './DomainValidationException';
 
 export class Membership {
   private readonly createdOn: Dayjs;
@@ -29,7 +28,7 @@ export class Membership {
 
   private validate() {
     if (_getMembershipYearForDate(this.createdOn) !== this.membershipYear) {
-      throw new DomainValidationException(
+      console.warn(
         `Invalid Membership(${this.membershipYear.toFixed()}, ${this.createdOn.format('YYYY-MM-DD')})`,
       );
     }

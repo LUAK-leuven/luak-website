@@ -1,6 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import dayjs from 'dayjs';
-import { DomainValidationException } from '~/model/DomainValidationException';
 import { LuakUser } from '~/model/LuakUser';
 import { Membership } from '~/model/Membership';
 
@@ -123,17 +122,8 @@ export const luakUserFromDb = (args: LuakUserVo): LuakUser => {
 export const membershipFromDb = (
   args: LuakUserVo['Memberships'][number],
 ): Membership | 'invalid membership' => {
-  try {
-    return new Membership({
-      membershipYear: args.year,
-      createdOn: dayjs(args.created_at),
-    });
-  } catch (e) {
-    if (e instanceof DomainValidationException) {
-      console.error(e.message);
-      throw showError(e);
-    } else {
-      throw e;
-    }
-  }
+  return new Membership({
+    membershipYear: args.year,
+    createdOn: dayjs(args.created_at),
+  });
 };

@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
 import { expect, test, vi } from 'vitest';
-import { DomainValidationException } from '~/app/model/DomainValidationException';
 import {
   Membership,
   _getMembershipYearForDate,
@@ -24,7 +23,7 @@ test.for([
 test.for([
   {
     membershipYear: 2023, // Valid 01-07-2023 to 31-08-2024
-    createdOn: '2023-07-03',
+    createdOn: '2023-05-03',
     now: '2023-06-30',
     isActive: false, // Now is before valid membership period
   },
@@ -78,14 +77,14 @@ test.for([
   [2024, '2025-09-01'], // Valid 01-07-2024 to 31-08-2025
   [2024, '2025-07-01'], // But created on 01-07-2025 should correspond to membership year 2025
 ] satisfies [number, string][])(
-  'A membership creation date must be valid for the membership year (%i, %s)',
+  'A membership creation date must not be valid for the membership year (%i, %s)',
   ([membershipYear, createdOn]) => {
     expect(() => {
       new Membership({
         membershipYear,
         createdOn: dayjs(createdOn),
       });
-    }).toThrow(DomainValidationException);
+    }).not.toThrow();
   },
 );
 
@@ -93,7 +92,7 @@ test.for([
   [2024, '2024-07-01'], // Valid 01-07-2024 to 31-08-2025
   [2024, '2025-06-30'], // Valid 01-07-2024 to 31-08-2025, but created after 01-07-2025 should correspond to membership year 2025
 ] satisfies [number, string][])(
-  'Can create a valid Membership',
+  'Can create a valid Membership(%i, %s)',
   ([membershipYear, createdOn]) => {
     expect(() => {
       new Membership({
