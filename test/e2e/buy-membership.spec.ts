@@ -2,8 +2,8 @@ import { expect } from '@playwright/test';
 import { authStateFile, test } from '#test/e2e/fixtures';
 import { ProfileOverviewPage } from '#test/e2e/pages/profile-overview.page';
 import { testServiceBuilder } from '#test/e2e/testUtils/testServices';
-import getLuakYear from '~/shared/utils/getLuakYear';
 import { testUsers } from './testUtils/TestUser';
+import { getCurrentMembershipYear } from '~/app/model/Membership';
 
 (
   [
@@ -35,11 +35,11 @@ import { testUsers } from './testUtils/TestUser';
 
       const memberships = await testServiceBuilder()
         .userTestService()
-        .getMemberships(testUsers[user].email);
+        .getMemberships(testUsers[user].email, getCurrentMembershipYear());
 
       // testUser unpaidMembership has already a membership, so here we also test that the membership is updated and not a new one created. But it should be made more explicit.
       expect(memberships).toHaveLength(1);
-      expect(memberships[0]?.year).toBe(getLuakYear());
+      expect(memberships[0]?.year).toBe(getCurrentMembershipYear());
     });
   });
 });

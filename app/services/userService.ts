@@ -1,7 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import dayjs from 'dayjs';
 import { LuakUser } from '~/model/LuakUser';
-import { Membership } from '~/model/Membership';
+import { getCurrentMembershipYear, Membership } from '~/model/Membership';
 
 export class UserService {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
@@ -17,6 +17,7 @@ export class UserService {
           last_name,
           phone_number,
           Memberships (
+            created_at,
             year,
             Payments (
               approved
@@ -24,22 +25,25 @@ export class UserService {
           )
         `,
       )
+      .eq('Memberships.year', getCurrentMembershipYear())
+      .eq('Memberships.Payments.approved', true)
       .throwOnError();
 
-    return data.map((user) => ({
-      id: user.id as UserId,
-      email: user.email,
-      first_name: user.first_name,
-      last_name: user.last_name,
-      phone_number: user.phone_number ?? undefined,
-      paid_membership:
-        user.Memberships.filter(
-          (membership) =>
-            membership.year === getLuakYear() &&
-            membership.Payments.filter((payment) => payment.approved).length >
-              0,
-        ).length > 0,
-    }));
+    return data.map((user) => {
+      const memberships = user.Memberships.map((membership) =>
+        membershipFromDb(membership),
+      );
+      return {
+        id: user.id as UserId,
+        email: user.email,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        phoneNumber: user.phone_number ?? undefined,
+        hasActiveMembership: memberships.some(
+          (membership) => membership?.isActive() ?? false,
+        ),
+      };
+    });
   };
 
   readonly getLuakUser = async (userId: UserId) => {
@@ -106,11 +110,9 @@ export function getFullName(user: { first_name: string; last_name: string }) {
 type LuakUserVo = Awaited<ReturnType<UserService['getLuakUser']>>;
 
 export const luakUserFromDb = (args: LuakUserVo): LuakUser => {
-  const memberships = args.Memberships.filter((x) =>
-    x.Payments.some(({ approved }) => approved),
-  )
-    .map((x) => membershipFromDb(x))
-    .filter((x) => x !== 'invalid membership');
+  const memberships = args.Memberships.map((x) => membershipFromDb(x)).filter(
+    (x) => x !== undefined,
+  );
 
   return new LuakUser({
     memberships,
@@ -121,9 +123,13 @@ export const luakUserFromDb = (args: LuakUserVo): LuakUser => {
 
 export const membershipFromDb = (
   args: LuakUserVo['Memberships'][number],
-): Membership | 'invalid membership' => {
-  return new Membership({
-    membershipYear: args.year,
-    createdOn: dayjs(args.created_at),
-  });
+): Membership | undefined => {
+  if (args.Payments.some(({ approved }) => approved)) {
+    return new Membership({
+      membershipYear: args.year,
+      createdOn: dayjs(args.created_at),
+    });
+  } else {
+    return undefined;
+  }
 };

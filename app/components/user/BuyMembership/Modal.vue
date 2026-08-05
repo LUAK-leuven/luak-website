@@ -2,12 +2,13 @@
   import createMembershipSchema from '~/components/user/BuyMembership/createMembershipSchema';
   import BoolField from '~/components/input/BoolField.vue';
   import Button from '~/components/shared/Button.vue';
+  import { Membership } from '~/model/Membership';
 
   const { handleSubmit, isSubmitting } = useForm({
     validationSchema: toTypedSchema(createMembershipSchema),
     initialValues: { sportscard: false },
   });
-  const luak_year = getLuakYear();
+  const membership = Membership.createNewMembership();
   const user = useSupabaseUser();
   const env = useRuntimeConfig().public;
 
@@ -19,7 +20,7 @@
 
   const buyMembership = handleSubmit(async (submitted) => {
     const membershipId = await userService.saveMembership({
-      luakYear: luak_year,
+      luakYear: membership.membershipYear,
       kbfUiaaMember: submitted.kbf_uiaa_member,
       sportscard: submitted.sportscard,
       student: submitted.student,
@@ -64,7 +65,10 @@
         </Button>
       </form>
       <h2 class="mb-4">
-        Buy a membership for {{ luak_year }}-{{ luak_year! + 1 }} <br />
+        Buy a membership for {{ membership.membershipYear }}-{{
+          membership.membershipYear + 1
+        }}
+        <br />
       </h2>
       <InputKbfSelect />
       <InputStudentSelect />

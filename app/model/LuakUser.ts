@@ -1,4 +1,4 @@
-import type { Membership } from './Membership';
+import { getCurrentMembershipYear, type Membership } from './Membership';
 
 export class LuakUser {
   private readonly memberships: Membership[];
@@ -23,8 +23,12 @@ export class LuakUser {
     return this.memberships.some((membership) => membership.isActive());
   };
 
+  readonly getActiveMembership = (): Membership | undefined => {
+    return this.memberships.find((membership) => membership.isActive());
+  };
+
   readonly wasMemberLastYear = () => {
-    const currentYear = getLuakYear();
+    const currentYear = getCurrentMembershipYear();
     return this.memberships.some(
       (membership) => membership.membershipYear === currentYear - 1,
     );

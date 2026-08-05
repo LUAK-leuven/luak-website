@@ -1,3 +1,5 @@
+import { getCurrentMembershipYear } from '~/model/Membership';
+
 export default defineNuxtRouteMiddleware(async (to) => {
   const supabase = useSupabaseClient();
   const user = useSupabaseUser();
@@ -11,12 +13,12 @@ export default defineNuxtRouteMiddleware(async (to) => {
     });
   }
 
-  const currentLuakYear = getLuakYear();
+  const currentMembershipYear = getCurrentMembershipYear();
   const { data } = await supabase
     .from('Memberships')
     .select('year,Payments(id)')
     .eq('user_id', user.value.sub)
-    .in('year', [currentLuakYear, currentLuakYear - 1])
+    .in('year', [currentMembershipYear, currentMembershipYear - 1])
     .eq('Payments.approved', true);
 
   if (

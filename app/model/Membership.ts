@@ -65,3 +65,7 @@ export const _getMembershipYearForDate = (date: Dayjs): number => {
     return currentYear - 1;
   else return currentYear;
 };
+
+export const getCurrentMembershipYear = (): number => {
+  return _getMembershipYearForDate(dayjs());
+};

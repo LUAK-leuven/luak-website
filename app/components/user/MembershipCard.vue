@@ -1,12 +1,23 @@
 <script setup lang="ts">
-  const luak_year = getLuakYear();
+  import type { Membership } from '~/model/Membership';
+
+  const props = defineProps<{
+    membership: Membership;
+  }>();
+
+  const membershipYear = computed(
+    () =>
+      `${(props.membership.membershipYear - 2000).toFixed()}-${(
+        props.membership.membershipYear -
+        2000 +
+        1
+      ).toFixed()}`,
+  );
 </script>
 <template>
   <UserCard image="/aiguilles_rouges.jpg">
     <template #title>
-      You have a valid membership for {{ luak_year - 2000 }}-{{
-        luak_year - 2000 + 1
-      }}
+      You have a valid membership for {{ membershipYear }}
       ✅
     </template>
     <template #description>

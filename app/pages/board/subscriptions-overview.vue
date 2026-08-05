@@ -5,6 +5,7 @@
   } from '~/components/profile/helpers';
   import dayjs from 'dayjs';
   import Text from '~/components/input/Text.vue';
+  import { getCurrentMembershipYear } from '~/model/Membership';
 
   const supabase = useSupabaseClient();
   const isLoading = ref(true);
@@ -29,7 +30,7 @@
   const filterType = ref('all');
   const sortField = ref('created_at');
   const sortDirection = ref('desc');
-  const currentYear = getLuakYear();
+  const currentYear = getCurrentMembershipYear();
   const selectedYear = ref(0);
 
   // Fetch all active subscriptions

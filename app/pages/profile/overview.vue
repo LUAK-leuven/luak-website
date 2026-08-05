@@ -1,7 +1,11 @@
 <script setup lang="ts">
   const { getUserInfo, getMembershipInfo } = useUserService();
-  const membership = await getMembershipInfo();
+  const membershipInfo = await getMembershipInfo();
   const user = await getUserInfo();
+
+  const activeMembership = computed(() =>
+    membershipInfo.value.getActiveMembership(),
+  );
 </script>
 <template>
   <FullPageCard>
@@ -14,7 +18,10 @@
       Welcome to your profile page. Here you can manage your membership! In the
       future more functionality will be added.
       <div class="my-5 mx-2 flex flex-wrap justify-evenly gap-x-4">
-        <UserMembershipCard v-if="membership.hasActiveMembership()" />
+        <UserMembershipCard
+          v-if="activeMembership !== undefined"
+          :membership="activeMembership" />
+        <!-- TODO LUAK-26 add card for when membership is still active but a new one can already be bought -->
         <UserBuyMembershipCard v-else />
         <UserCard image="/IMG_20240410_125659.jpg">
           <template #title> Profile Settings 🔧 </template>

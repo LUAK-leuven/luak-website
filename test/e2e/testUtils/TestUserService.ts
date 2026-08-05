@@ -1,16 +1,13 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '~/shared/types/database.types';
-import getLuakYear from '~/shared/utils/getLuakYear';
 import { testUsers, type TestUserKey } from './TestUser';
 import dayjs from 'dayjs';
+import { getCurrentMembershipYear } from '~/app/model/Membership';
 
 export class TestUserService {
   constructor(private readonly supabase: SupabaseClient<Database>) {}
 
-  readonly getMemberships = async (
-    email: string,
-    year: number = getLuakYear(),
-  ) => {
+  readonly getMemberships = async (email: string, year: number) => {
     const { data } = await this.supabase
       .from('Users')
       .select(
@@ -127,7 +124,7 @@ export class TestUserService {
   };
 }
 
-const luakYear = getLuakYear();
+const currentMembershipYear = getCurrentMembershipYear();
 const now = dayjs();
 
 const testUserConfig: Record<
@@ -137,33 +134,33 @@ const testUserConfig: Record<
   nonMember: [],
   unpaidMembership: [
     {
-      year: luakYear,
+      year: currentMembershipYear,
       createdOn: now.toISOString(),
       paid: false,
     },
   ],
   paidLastYear: [
     {
-      year: luakYear - 1,
+      year: currentMembershipYear - 1,
       createdOn: now.subtract(1, 'year').toISOString(),
       paid: true,
     },
   ],
   paidMembership: [
     {
-      year: luakYear,
+      year: currentMembershipYear,
       createdOn: now.toISOString(),
       paid: true,
     },
     {
-      year: luakYear - 1,
+      year: currentMembershipYear - 1,
       createdOn: now.subtract(1, 'year').toISOString(),
       paid: true,
     },
   ],
   boardMember: [
     {
-      year: luakYear,
+      year: currentMembershipYear,
       createdOn: now.toISOString(),
       paid: true,
     },
