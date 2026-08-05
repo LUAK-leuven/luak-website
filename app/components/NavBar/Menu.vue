@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import { toggleCloseFix } from '~/utils/toggleCloseFix';
-  import { queryCollectionNavigation } from '#imports'; // Remove in when we are in nuxt 4
 
   const props = defineProps<{ id?: string }>();
 
@@ -21,9 +20,9 @@
   };
 
   onMounted(() => {
-    toggleCloseFix('info-toggle');
-    toggleCloseFix('board-toggle');
-    toggleCloseFix('member-toggle');
+    toggleCloseFix(`${props.id ?? ''}.info-toggle`);
+    toggleCloseFix(`${props.id ?? ''}.board-toggle`);
+    toggleCloseFix(`${props.id ?? ''}.member-toggle`);
 
     if (props.id !== undefined) {
       // Fix drawer closing by closing drawer on click
@@ -50,7 +49,7 @@
       <NuxtLink :to="{ name: 'activities' }">Activities</NuxtLink>
     </li>
     <li>
-      <details id="info-toggle">
+      <details :id="`${id ?? ''}.info-toggle`">
         <summary>Info</summary>
         <ul class="p-2 bg-base-200 rounded-t-none w-48">
           <li
@@ -70,7 +69,7 @@
       </NuxtLink>
     </li>
     <li v-if="user.permissions.memberSection">
-      <details id="member-toggle">
+      <details :id="`${props.id ?? ''}.member-toggle`">
         <summary>Member section</summary>
         <ul class="p-2 bg-base-200 rounded-t-none w-52">
           <li><NuxtLink :to="{ name: 'stories' }">Stories</NuxtLink></li>
@@ -90,7 +89,7 @@
       </details>
     </li>
     <li v-if="user.permissions.boardSection">
-      <details id="board-toggle">
+      <details :id="`${props.id ?? ''}.board-toggle`">
         <summary>Board</summary>
         <ul class="p-2 bg-base-200 rounded-t-none w-52">
           <li>
@@ -123,7 +122,7 @@
     <NuxtLink
       v-if="!user.authenticated"
       class="btn btn-primary btn-outline"
-      :to="{ name: 'profile-overview' }"
+      :to="{ name: 'login' }"
       data-testId="nav.login">
       Log In
     </NuxtLink>

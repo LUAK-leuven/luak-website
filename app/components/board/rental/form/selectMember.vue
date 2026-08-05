@@ -30,9 +30,9 @@
       .map(
         (user) =>
           ({
-            name: user.first_name + ' ' + user.last_name,
+            name: user.firstName + ' ' + user.lastName,
             id: user.id,
-            hasPaid: user.paid_membership,
+            hasPaid: user.hasActiveMembership,
           }) satisfies SelectableUser as SelectableUser,
       )
       .concat({

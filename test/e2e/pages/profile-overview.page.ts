@@ -1,10 +1,25 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import { navigateTo } from '#test/e2e/fixtures';
+import { LoginPage } from './login.page';
 
 export class ProfileOverviewPage {
   static readonly path = '/profile/overview';
 
-  constructor(private readonly page: Page) {}
+  readonly logoutButton: Locator;
+  readonly buyMembershipButton: Locator;
+  readonly hiUserName: Locator;
+  readonly renewMembershipCard: Locator;
+  readonly buyMembershipCard: Locator;
+  readonly hasMembershipCard: Locator;
+
+  constructor(private readonly page: Page) {
+    this.logoutButton = this.page.getByTestId('profile.logout');
+    this.buyMembershipButton = this.page.getByTestId('buyMembershipButton');
+    this.hiUserName = this.page.getByTestId('userName');
+    this.renewMembershipCard = this.page.getByTestId('renewMembershipCard');
+    this.buyMembershipCard = this.page.getByTestId('buyMembershipCard');
+    this.hasMembershipCard = this.page.getByTestId('hasMembershipCard');
+  }
 
   async navigate() {
     await navigateTo(this.page, ProfileOverviewPage.path);
@@ -15,18 +30,16 @@ export class ProfileOverviewPage {
     return new ProfileOverviewPage(page);
   }
 
-  get buyMembershipButton() {
-    return this.page.getByTestId('buyMembershipButton');
-  }
-
-  get hiUserName() {
-    return this.page.getByTestId('userName');
-  }
-
   readonly buyMembership = async () => {
     await this.buyMembershipButton.click();
     return new BuyMembershipModal(this.page);
   };
+
+  async logout() {
+    await this.logoutButton.click();
+    await this.page.waitForURL(LoginPage.path);
+    return new LoginPage(this.page);
+  }
 }
 
 class BuyMembershipModal {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { queryCollection } from '#imports'; // It seems that querryCollection is imported from the server side. This hould be fixed with Nuxt 4 upgrade.
+  import { getCurrentMembershipYear } from '~/model/Membership';
 
   definePageMeta({
     layout: 'picture',
@@ -12,6 +12,9 @@
   const user = await useUserService().getMembershipInfo({
     authRequired: false,
   });
+
+  const activeMembership = computed(() => user.value.getActiveMembership());
+  const currentMembershipYear = getCurrentMembershipYear();
 </script>
 
 <template>
@@ -34,13 +37,17 @@
             Check our activities
           </NuxtLink>
           <NuxtLink
-            v-if="user.wasMemberLastYear()"
+            v-if="
+              (activeMembership === undefined && user.wasMemberLastYear()) ||
+              (activeMembership !== undefined &&
+                activeMembership.membershipYear !== currentMembershipYear)
+            "
             class="btn m-2 text-white bg-orange-400 border-orange-400 hover:bg-orange-600 hover:border-orange-600"
             :to="{ name: 'profile-overview' }">
             Renew membership
           </NuxtLink>
           <NuxtLink
-            v-else-if="!user.hasActiveMembership()"
+            v-else-if="activeMembership === undefined"
             class="btn btn-outline m-2 text-white"
             :to="{ name: 'pages-slug', params: { slug: ['become-a-member'] } }">
             Become a member

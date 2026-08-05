@@ -2,7 +2,8 @@ import type { Page } from '@playwright/test';
 import { LoginPage } from '#test/e2e/pages/login.page';
 import { testServiceBuilder } from '#test/e2e/testUtils/testServices';
 import type { TestUser, TestUserKey } from '#test/e2e/testUtils/TestUser';
-import { test as base } from '@playwright/test';
+import { test as base, expect } from '@playwright/test';
+import { ProfileOverviewPage } from './pages/profile-overview.page';
 
 export const test = base.extend({
   page: async ({ page }, use) => {
@@ -19,6 +20,9 @@ export const test = base.extend({
 export async function login(page: Page, user: TestUser) {
   const loginPage = new LoginPage(page);
   await loginPage.loginAsserted(user.email, user.password);
+  const profilePage = new ProfileOverviewPage(page);
+  await expect(profilePage.hiUserName).toBeVisible();
+  return profilePage;
 }
 
 export function authStateFile(user: TestUserKey) {
