@@ -2,6 +2,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '~/shared/types/database.types';
 import getLuakYear from '~/shared/utils/getLuakYear';
 import { testUsers, type TestUserKey } from './TestUser';
+import dayjs from 'dayjs';
 
 export class TestUserService {
   constructor(private readonly supabase: SupabaseClient<Database>) {}
@@ -43,10 +44,11 @@ export class TestUserService {
     for (const testUser of Object.keys(testUsers) as TestUserKey[]) {
       const userId = await this.getTestUserId(testUser);
 
-      for (const { year, paid } of testUserConfig[testUser]) {
+      for (const { year, paid, createdOn } of testUserConfig[testUser]) {
         const { data: membership } = await this.supabase
           .from('Memberships')
           .insert({
+            created_at: createdOn,
             user_id: userId,
             year: year,
             kbf_uiaa_member: 'kbf_luak',
@@ -113,9 +115,12 @@ export class TestUserService {
       .throwOnError();
 
     if (testUser === 'boardMember') {
-      await this.supabase.from('BoardMembers').insert({
-        user_id: userId,
-      });
+      await this.supabase
+        .from('BoardMembers')
+        .insert({
+          user_id: userId,
+        })
+        .throwOnError();
     }
 
     return userId;
@@ -123,37 +128,43 @@ export class TestUserService {
 }
 
 const luakYear = getLuakYear();
+const now = dayjs();
 
 const testUserConfig: Record<
   keyof typeof testUsers,
-  { year: number; paid: boolean }[]
+  { year: number; paid: boolean; createdOn: string }[]
 > = {
   nonMember: [],
   unpaidMembership: [
     {
       year: luakYear,
+      createdOn: now.toISOString(),
       paid: false,
     },
   ],
   paidLastYear: [
     {
       year: luakYear - 1,
+      createdOn: now.subtract(1, 'year').toISOString(),
       paid: true,
     },
   ],
   paidMembership: [
     {
       year: luakYear,
+      createdOn: now.toISOString(),
       paid: true,
     },
     {
       year: luakYear - 1,
+      createdOn: now.subtract(1, 'year').toISOString(),
       paid: true,
     },
   ],
   boardMember: [
     {
       year: luakYear,
+      createdOn: now.toISOString(),
       paid: true,
     },
   ],

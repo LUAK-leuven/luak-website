@@ -1,1 +1,3 @@
-export class DomainValidationException extends Error {}
+export class DomainValidationException extends Error {
+  override readonly name = 'DomainValidationException';
+}

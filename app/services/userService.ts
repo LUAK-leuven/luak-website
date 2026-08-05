@@ -131,7 +131,7 @@ export const membershipFromDb = (
   } catch (e) {
     if (e instanceof DomainValidationException) {
       console.error(e.message);
-      return 'invalid membership';
+      throw showError(e);
     } else {
       throw e;
     }

@@ -1,11 +1,11 @@
 import dayjs from 'dayjs';
 import { expect, test, vi } from 'vitest';
+import { DomainValidationException } from '~/app/model/DomainValidationException';
 import {
   Membership,
   _getMembershipYearForDate,
   _isValidForMembershipYear,
 } from '~/app/model/Membership';
-import { DomainValidationException } from '~/app/model/DomainValidationException';
 
 test.for([
   [2023, '2023-06-30', false], // Valid 01-07-2023 to 31-08-2024
