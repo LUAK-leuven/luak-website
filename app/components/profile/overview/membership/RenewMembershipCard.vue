@@ -10,7 +10,7 @@
   }>();
 </script>
 <template>
-  <ProfileCard image="/aiguilles_rouges.jpg">
+  <ProfileCard image="/aiguilles_rouges.jpg" data-testid="renewMembershipCard">
     <template #title>
       ♻️ Renew your membership for
       {{ formatMembershipYear(currentMembershipYear, 'long') }}

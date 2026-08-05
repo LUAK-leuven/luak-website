@@ -8,11 +8,17 @@ export class ProfileOverviewPage {
   readonly logoutButton: Locator;
   readonly buyMembershipButton: Locator;
   readonly hiUserName: Locator;
+  readonly renewMembershipCard: Locator;
+  readonly buyMembershipCard: Locator;
+  readonly hasMembershipCard: Locator;
 
   constructor(private readonly page: Page) {
     this.logoutButton = this.page.getByTestId('profile.logout');
     this.buyMembershipButton = this.page.getByTestId('buyMembershipButton');
     this.hiUserName = this.page.getByTestId('userName');
+    this.renewMembershipCard = this.page.getByTestId('renewMembershipCard');
+    this.buyMembershipCard = this.page.getByTestId('buyMembershipCard');
+    this.hasMembershipCard = this.page.getByTestId('hasMembershipCard');
   }
 
   async navigate() {
