@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { expect, test } from 'vitest';
+import { expect, test, vi } from 'vitest';
 import {
   Membership,
   _getMembershipYearForDate,
@@ -21,19 +21,55 @@ test.each([
   },
 );
 
-test.each([
-  [1, false], // Created tomorrow, not active yet
-  [0, true], // Created today, active
-  [-1, true], // Created yesterday, active
+test.for([
+  {
+    membershipYear: 2023, // Valid 01-07-2023 to 31-08-2024
+    createdOn: '2023-07-03',
+    now: '2023-06-30',
+    isActive: false, // Now is before valid membership period
+  },
+  {
+    membershipYear: 2025, // Valid 01-07-2025 to 31-08-2026
+    createdOn: '2025-07-01',
+    now: '2025-07-01',
+    isActive: true, // Now is start of valid membership period
+  },
+  {
+    membershipYear: 2025, // Valid 01-07-2025 to 31-08-2026
+    createdOn: '2025-08-04',
+    now: '2025-07-01',
+    isActive: false, // Now in valid membership period, but before createdOn
+  },
+  {
+    membershipYear: 1980, // Valid 01-07-1980 to 31-08-1981
+    createdOn: '1980-11-25',
+    now: '1981-08-31',
+    isActive: true, // Now is end of valid membership period
+  },
+  {
+    membershipYear: 2013, // Valid 01-07-2013 to 31-08-2014
+    createdOn: '2014-06-30', // Should throw error
+    now: '2014-09-01',
+    isActive: false, // Now is after valid membership period
+  },
 ])(
-  'isActive - A membership is only active after it is created (%i -> %s)',
-  (deltaCreatedOn: number, isActive: boolean) => {
-    const membership = new Membership({
-      membershipYear: dayjs().year(),
-      createdOn: dayjs().add(deltaCreatedOn, 'day'),
-    });
+  'isActive - A membership is only active after it is created - %$',
+  (args: {
+    membershipYear: number;
+    createdOn: string;
+    now: string;
+    isActive: boolean;
+  }) => {
+    withFakeTimers((setTime) => {
+      setTime(args.now);
 
-    expect(membership.isActive()).toBe(isActive);
+      const membership = new Membership({
+        membershipYear: args.membershipYear,
+        createdOn: dayjs(args.createdOn),
+      });
+
+      expect(membership.isActive()).toBe(args.isActive);
+    });
   },
 );
 
@@ -79,3 +115,11 @@ test.each([
     expect(_getMembershipYearForDate(dayjs(date))).toBe(expectedMembershipYear);
   },
 );
+
+const withFakeTimers = (
+  fn: (setTime: (time: string | Date) => void) => void,
+) => {
+  vi.useFakeTimers();
+  fn(vi.setSystemTime);
+  vi.useRealTimers();
+};

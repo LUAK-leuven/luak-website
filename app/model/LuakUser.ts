@@ -20,7 +20,7 @@ export class LuakUser {
     new LuakUser({ memberships: [], isBoard: false, authenticated: false });
 
   readonly hasActiveMembership = () => {
-    return this.memberships.some((membership) => membership.isActive);
+    return this.memberships.some((membership) => membership.isActive());
   };
 
   readonly wasMemberLastYear = () => {

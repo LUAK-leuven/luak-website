@@ -123,7 +123,7 @@
     <NuxtLink
       v-if="!user.authenticated"
       class="btn btn-primary btn-outline"
-      :to="{ name: 'profile-overview' }"
+      :to="{ name: 'login' }"
       data-testId="nav.login">
       Log In
     </NuxtLink>

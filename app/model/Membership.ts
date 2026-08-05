@@ -22,7 +22,7 @@ export class Membership {
     const now = dayjs();
     if (now.isBefore(this.createdOn, 'day')) return false;
     return _isValidForMembershipYear({
-      date: this.createdOn,
+      date: now,
       membershipYear: this.membershipYear,
     });
   }

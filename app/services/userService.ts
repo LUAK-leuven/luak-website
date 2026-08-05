@@ -1,5 +1,8 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
+import dayjs from 'dayjs';
+import { DomainValidationException } from '~/model/DomainValidationException';
 import { LuakUser } from '~/model/LuakUser';
+import { Membership } from '~/model/Membership';
 
 export class UserService {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
@@ -46,6 +49,7 @@ export class UserService {
       .select(
         `
           Memberships(
+            created_at,
             year,
             Payments(approved)
           ),
@@ -103,13 +107,33 @@ export function getFullName(user: { first_name: string; last_name: string }) {
 type LuakUserVo = Awaited<ReturnType<UserService['getLuakUser']>>;
 
 export const luakUserFromDb = (args: LuakUserVo): LuakUser => {
-  const memberships = args.Memberships.map((x) => ({
-    membershipYear: x.year,
-    paid: x.Payments.some(({ approved }) => approved),
-  }));
+  const memberships = args.Memberships.filter((x) =>
+    x.Payments.some(({ approved }) => approved),
+  )
+    .map((x) => membershipFromDb(x))
+    .filter((x) => x !== 'invalid membership');
+
   return new LuakUser({
     memberships,
     isBoard: args.BoardMembers !== null,
     authenticated: true,
   });
+};
+
+export const membershipFromDb = (
+  args: LuakUserVo['Memberships'][number],
+): Membership | 'invalid membership' => {
+  try {
+    return new Membership({
+      membershipYear: args.year,
+      createdOn: dayjs(args.created_at),
+    });
+  } catch (e) {
+    if (e instanceof DomainValidationException) {
+      console.error(e.message);
+      return 'invalid membership';
+    } else {
+      throw e;
+    }
+  }
 };
