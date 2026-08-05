@@ -1,5 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 import { navigateTo } from '#test/e2e/fixtures';
+import { ProfileOverviewPage } from './profile-overview.page';
 
 export class LoginPage {
   private readonly page: Page;
@@ -11,10 +12,6 @@ export class LoginPage {
 
   get submitButton() {
     return this.page.getByTestId('login.submit');
-  }
-
-  get logoutButton() {
-    return this.page.getByTestId('profile.logout');
   }
 
   get email() {
@@ -40,13 +37,7 @@ export class LoginPage {
     await this.login(email, password);
 
     await expect(this.errorMessage).toBeHidden();
-    await this.page.waitForURL('/profile/overview');
-    return;
-  }
-
-  async logout() {
-    await navigateTo(this.page, '/profile/overview');
-    await this.logoutButton.click();
-    await this.page.waitForURL(LoginPage.path);
+    await this.page.waitForURL(ProfileOverviewPage.path);
+    return new ProfileOverviewPage(this.page);
   }
 }

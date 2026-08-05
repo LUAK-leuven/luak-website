@@ -2,19 +2,20 @@ import { expect } from '@playwright/test';
 import { LoginPage } from '#test/e2e/pages/login.page';
 import { navigateTo, test } from '#test/e2e/fixtures';
 import { testUsers } from '#test/e2e/testUtils/TestUser';
+import { ProfileOverviewPage } from './pages/profile-overview.page';
 
 test('Login & logout — happy path', async ({ page }) => {
   const loginPage = new LoginPage(page);
-  await loginPage.loginAsserted(
+  const profilePage = await loginPage.loginAsserted(
     testUsers.unpaidMembership.email,
     testUsers.unpaidMembership.password,
   );
   await Promise.all([
-    expect(page).toHaveURL('/profile/overview'),
+    expect(page).toHaveURL(ProfileOverviewPage.path),
     expect(page.getByTestId('nav.profile').first()).toBeVisible(),
   ]);
 
-  await loginPage.logout();
+  await profilePage.logout();
   await expect(page.getByTestId('nav.login').first()).toBeVisible();
 });
 
