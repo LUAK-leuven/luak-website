@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import createMembershipSchema from '~/components/user/BuyMembership/createMembershipSchema';
+  import createMembershipSchema from '~/components/profile/overview/membership/BuyMembership/createMembershipSchema';
   import BoolField from '~/components/input/BoolField.vue';
   import Button from '~/components/shared/Button.vue';
   import { Membership } from '~/model/Membership';

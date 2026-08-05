@@ -2,10 +2,11 @@
   import {
     formatKbfUiaaStatus,
     formatStudentStatus,
-  } from '~/components/profile/helpers';
+  } from '~/components/board/subscriptions-overview/helpers';
   import dayjs from 'dayjs';
   import Text from '~/components/input/Text.vue';
   import { getCurrentMembershipYear } from '~/model/Membership';
+  import CsvExport from '~/components/board/subscriptions-overview/CsvExport.vue';
 
   const supabase = useSupabaseClient();
   const isLoading = ref(true);
@@ -221,7 +222,7 @@
       <div class="flex justify-between items-center mb-4">
         <p>Total active subscriptions: {{ filteredSubscriptions.length }}</p>
         <!-- TODO: add has_paid to export -->
-        <ProfileCsvExport
+        <CsvExport
           :data="filteredSubscriptions"
           filename="subscriptions"
           :disabled="filteredSubscriptions.length === 0" />

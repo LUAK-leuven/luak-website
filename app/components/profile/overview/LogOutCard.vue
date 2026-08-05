@@ -1,5 +1,6 @@
 <script setup lang="ts">
-  import Button from '../shared/Button.vue';
+  import Button from '~/components/shared/Button.vue';
+  import ProfileCard from '~/components/profile/overview/Card.vue';
 
   const supabase = useSupabaseClient();
   const logout = async () => {
@@ -9,7 +10,7 @@
   const user = useSupabaseUser();
 </script>
 <template>
-  <UserCard image="/chardonnet.jpg">
+  <ProfileCard image="/chardonnet.jpg">
     <template #title> Log out 👋</template>
     <template #description>
       You are currently logged in as
@@ -20,5 +21,5 @@
         Log out
       </Button>
     </template>
-  </UserCard>
+  </ProfileCard>
 </template>
