@@ -61,7 +61,11 @@
     <template #title> Lost Gear </template>
 
     <h2 class="mt-0 text-center">Rental</h2>
-    <BackButton />
+    <BackButton
+      :to="{
+        name: 'board-rentals-id',
+        params: { id: rentalId },
+      }" />
 
     <WithLazyResource
       v-slot="{ data: rental }"

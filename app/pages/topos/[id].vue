@@ -16,7 +16,7 @@
       <i class="text-sm">{{ data ? data.authors.join(', ') : '' }}</i>
     </template>
 
-    <SharedBackButton />
+    <SharedBackButton :to="{ name: 'topos-library' }" />
 
     <div class="h-2"></div>
 

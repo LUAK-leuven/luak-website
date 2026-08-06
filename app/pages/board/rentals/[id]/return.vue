@@ -18,7 +18,8 @@
     sub-title="Rental"
     :data="data"
     :is-loading="status === 'pending'"
-    default-error="Failed to load rentals">
+    default-error="Failed to load rentals"
+    :back-to="{ name: 'board-rentals' }">
     <BoardRentalReturnPage :rental="rental" :update="updateRental" />
   </DetailsPage>
 </template>
