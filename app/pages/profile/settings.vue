@@ -1,14 +1,14 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  import UpdateInfo from '~/components/profile/overview/Update/Info.vue';
+  import UpdatePassword from '~/components/profile/overview/Update/Password.vue';
+  import BackButton from '~/components/shared/BackButton.vue';
+</script>
 <template>
   <FullPageCard>
     <template #title> Profile settings </template>
-    <NuxtLink
-      class="btn btn-circle btn-sm btn-outline"
-      :to="{ name: 'profile-overview' }">
-      <span class="material-symbols-outlined"> arrow_back</span>
-    </NuxtLink>
-    <UserUpdatePassword />
+    <BackButton :to="{ name: 'profile-overview' }" />
+    <UpdatePassword />
     <div class="divider" />
-    <UserUpdateInfo />
+    <UpdateInfo />
   </FullPageCard>
 </template>

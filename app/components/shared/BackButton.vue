@@ -4,9 +4,7 @@
   defineProps<{ to: RoutesNamedLocations }>();
 </script>
 <template>
-  <NuxtLink
-    class="absolute btn btn-circle btn-sm btn-outline top-10 left-10"
-    :to="to">
+  <NuxtLink class="btn btn-circle btn-sm btn-outline" :to="to">
     <span class="material-symbols-outlined">arrow_back</span>
   </NuxtLink>
 </template>

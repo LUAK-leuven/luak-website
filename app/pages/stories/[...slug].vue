@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import BackButton from '~/components/shared/BackButton.vue';
+
   definePageMeta({
     middleware: 'active-member-guard',
     layout: 'picture',
@@ -35,11 +37,7 @@
         </template>
 
         <PageCard>
-          <NuxtLink
-            class="btn btn-circle btn-sm btn-outline mb-5"
-            :to="{ name: 'stories' }">
-            <span class="material-symbols-outlined"> arrow_back</span>
-          </NuxtLink>
+          <BackButton class="mb-5" :to="{ name: 'stories' }" />
           <ContentRenderer class="nuxt-content" :value="doc" />
         </PageCard>
       </PagesFullPageCardWithPicture>
