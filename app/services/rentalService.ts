@@ -65,6 +65,7 @@ export class RentalService {
           date_borrow,
           contact_info,
           deposit_returned,
+          deposit,
           RentedGear(
             gear_item_id,
             rented_amount,
@@ -234,6 +235,7 @@ export const rentalSummaryFromDb = (args: RentalSummaryVo): RentalSummary => {
     dateReturn: args.date_return,
     dateBorrow: args.date_borrow,
     depositReturned: args.deposit_returned,
+    depositFee: args.deposit,
   });
 };
 

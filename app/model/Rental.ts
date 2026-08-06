@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { DomainValidationException } from './DomainValidationException';
 
 abstract class RentalBase {
   readonly id: RentalId;
@@ -7,6 +8,7 @@ abstract class RentalBase {
   readonly dateReturn: string;
   readonly dateBorrow: string;
   readonly depositReturned: boolean;
+  readonly depositFee: number;
 
   constructor(args: {
     id: RentalId;
@@ -15,6 +17,7 @@ abstract class RentalBase {
     dateReturn: string;
     dateBorrow: string;
     depositReturned: boolean;
+    depositFee: number;
   }) {
     this.id = args.id;
     this.gear = args.gear;
@@ -22,6 +25,9 @@ abstract class RentalBase {
     this.dateReturn = args.dateReturn;
     this.dateBorrow = args.dateBorrow;
     this.depositReturned = args.depositReturned;
+    this.depositFee = args.depositFee;
+
+    this.validate();
   }
 
   get status(): RentalStatus {
@@ -45,8 +51,10 @@ abstract class RentalBase {
       if (!item.isFullyReturned) isAllReturned = false;
     }
 
-    if (this.depositReturned && isAllReturned) return 'returned';
-    if (this.depositReturned || isAnyReturned) return 'partially_returned';
+    if ((this.depositReturned || this.depositFee === 0) && isAllReturned)
+      return 'returned';
+    if ((this.depositReturned && this.depositFee > 0) || isAnyReturned)
+      return 'partially_returned';
     return 'not_returned';
   }
 
@@ -77,6 +85,11 @@ abstract class RentalBase {
       throw new Error(`Topo with id ${topoId} not found in rental ${this.id}`);
     return item;
   };
+
+  private readonly validate = () => {
+    if (this.depositFee < 0)
+      throw new DomainValidationException('Deposit fee cannot be negative');
+  };
 }
 
 export class RentalSummary extends RentalBase {
@@ -90,6 +103,7 @@ export class RentalSummary extends RentalBase {
     dateReturn: string;
     dateBorrow: string;
     depositReturned: boolean;
+    depositFee: number;
   }) {
     super(args);
     this.memberName = args.memberName;
@@ -97,7 +111,6 @@ export class RentalSummary extends RentalBase {
 }
 
 export class PublicRentalDetails extends RentalBase {
-  readonly depositFee: number;
   readonly paymentMethod: PaymentMethod;
 
   constructor(args: {
@@ -111,8 +124,6 @@ export class PublicRentalDetails extends RentalBase {
     paymentMethod: PaymentMethod;
   }) {
     super(args);
-
-    this.depositFee = args.depositFee;
     this.paymentMethod = args.paymentMethod;
   }
 }
@@ -121,7 +132,6 @@ export class RentalDetails extends RentalBase {
   readonly contactInfo: ContactInfo;
   readonly boardMember: string;
   readonly paymentMethod: PaymentMethod;
-  readonly depositFee: number;
   readonly comments: string;
   readonly memberId: UserId | undefined;
 
@@ -143,7 +153,6 @@ export class RentalDetails extends RentalBase {
 
     this.contactInfo = args.contactInfo;
     this.boardMember = args.boardMember;
-    this.depositFee = args.depositFee;
     this.paymentMethod = args.paymentMethod;
     this.comments = args.comments;
     this.memberId = args.memberId;
