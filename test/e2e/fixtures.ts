@@ -3,7 +3,7 @@ import { LoginPage } from '#test/e2e/pages/login.page';
 import { testServiceBuilder } from '#test/e2e/testUtils/testServices';
 import type { TestUser, TestUserKey } from '#test/e2e/testUtils/TestUser';
 import { test as base, expect } from '@playwright/test';
-import { ProfileOverviewPage } from './pages/profile-overview.page';
+import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
 
 export const test = base.extend({
   page: async ({ page }, use) => {

@@ -1,6 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 import { authStateFile, login, test } from '#test/e2e/fixtures';
-import { ProfileOverviewPage } from '#test/e2e/pages/profile-overview.page';
+import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
 import { testServiceBuilder } from '#test/e2e/testUtils/testServices';
 import { testUsers } from './testUtils/TestUser';
 import { getCurrentMembershipYear } from '~/app/model/Membership';

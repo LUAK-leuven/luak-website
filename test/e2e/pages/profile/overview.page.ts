@@ -1,6 +1,6 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import { navigateTo } from '#test/e2e/fixtures';
-import { LoginPage } from './login.page';
+import { LoginPage } from '#test/e2e/pages/login.page';
 
 export class ProfileOverviewPage {
   static readonly path = '/profile/overview';

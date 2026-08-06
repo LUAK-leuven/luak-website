@@ -2,6 +2,7 @@
   import * as yup from 'yup';
   import { yup_password } from '~/utils/yup';
   import TextField from '~/components/input/TextField.vue';
+  import Button from '~/components/shared/Button.vue';
 
   const user = useSupabaseUser();
   const supabase = useSupabaseClient();
@@ -40,17 +41,20 @@
       name="password"
       placeholder="*******"
       type="password"
-      autocomplete="new-password" />
+      autocomplete="new-password"
+      data-testid="new-password" />
     <TextField
       label="Confirm password"
       name="password2"
       placeholder="*******"
       type="password"
-      autocomplete="new-password" />
+      autocomplete="new-password"
+      data-testid="confirm-password" />
     <div class="flex justify-end">
-      <button
+      <Button
         class="btn btn-primary mt-2"
-        :class="{ 'btn-disabled': isChangedSuccessfull }">
+        :class="{ 'btn-disabled': isChangedSuccessfull }"
+        data-testid="change-password-button">
         <span v-if="isSubmitting" class="loading loading-spinner">loading</span>
         <span
           v-else-if="isChangedSuccessfull"
@@ -58,7 +62,7 @@
           check
         </span>
         <span v-else>Change Password</span>
-      </button>
+      </Button>
     </div>
   </form>
 </template>
