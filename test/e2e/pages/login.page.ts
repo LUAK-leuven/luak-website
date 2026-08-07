@@ -1,6 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 import { navigateTo } from '#test/e2e/fixtures';
-import { ProfileOverviewPage } from './profile-overview.page';
+import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
 
 export class LoginPage {
   private readonly page: Page;

@@ -1,12 +1,10 @@
 <script setup lang="ts">
-  import Button from './Button.vue';
+  import type { RoutesNamedLocations } from '@typed-router';
 
-  const router = useRouter();
+  defineProps<{ to: RoutesNamedLocations }>();
 </script>
 <template>
-  <Button
-    class="absolute btn btn-circle btn-sm btn-outline top-10 left-10"
-    @click="router.back()">
+  <NuxtLink class="btn btn-circle btn-sm btn-outline" :to="to">
     <span class="material-symbols-outlined">arrow_back</span>
-  </Button>
+  </NuxtLink>
 </template>

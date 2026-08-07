@@ -1,5 +1,7 @@
 <script setup lang="ts">
   import PublicRentalDetails from '~/components/board/rental/PublicRentalDetails.vue';
+  import BackButton from '~/components/shared/BackButton.vue';
+  import Button from '~/components/shared/Button.vue';
   import { useRentalService } from '~/composables/useRentalService';
 
   const user = await useUserService().getUserInfo();
@@ -27,6 +29,11 @@
     <template #subtitle>
       <h2>Overview of {{ user!.firstName }}'s rentals</h2>
     </template>
+
+    <BackButton
+      class="absolute top-10 left-10"
+      :to="{ name: 'profile-overview' }" />
+
     <div class="h-4"></div>
     <div v-if="status === 'pending'" class="flex justify-center">
       <span class="loading loading-spinner loading-lg" />
@@ -42,18 +49,18 @@
         :rental="rental" />
 
       <div class="flex flex-row justify-center">
-        <button
+        <Button
           v-if="!showReturned"
           class="btn btn-primary btn-outline"
           @click="onShowReturned()">
           ↧ show past rentals ↧
-        </button>
-        <button
+        </Button>
+        <Button
           v-else
           class="btn btn-primary btn-outline"
           @click="showReturned = false">
           ↥ hide past rentals ↥
-        </button>
+        </Button>
       </div>
       <template v-if="showReturned">
         <!-- TODO: fix spinner position not in center (for some reason styles fail to apply or I'm missing something here ...) -->

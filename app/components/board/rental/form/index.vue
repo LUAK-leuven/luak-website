@@ -75,7 +75,7 @@
           gear: formState.gear,
           topos: formState.topos,
           depositFee: formState.depositFee,
-          paymentMethod: formState.paymentMethod,
+          paymentMethod: formState.paymentMethod ?? 'cash',
           contactInfo: formState.contactInfo
             ? {
                 fullName: formState.contactInfo.fullName,
@@ -181,6 +181,7 @@
         v-model="paymentMethod"
         class="select select-bordered w-min"
         :class="errors.paymentMethod ? 'select-error border-4' : ''"
+        :disabled="depositFee === 0"
         data-testId="rental.form.paymentMethod">
         <option disabled selected>Payment method</option>
         <option value="cash">cash</option>

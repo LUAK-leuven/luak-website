@@ -2,6 +2,9 @@
   setup
   lang="ts"
   generic="T extends { id: EntityId<unknown> } | null | undefined">
+  import type { RoutesNamedLocations } from '@typed-router';
+  import BackButton from '~/components/shared/BackButton.vue';
+
   withDefaults(
     defineProps<{
       title?: string | undefined;
@@ -9,6 +12,7 @@
       data: T;
       isLoading: boolean;
       error?: string | undefined;
+      backTo?: RoutesNamedLocations | undefined;
       defaultError?: string | undefined;
     }>(),
     {
@@ -16,6 +20,7 @@
       title: undefined,
       subTitle: undefined,
       error: undefined,
+      backTo: undefined,
     },
   );
 </script>
@@ -30,7 +35,7 @@
       <i class="text-sm" data-testId="detailsPage.id">{{ data?.id }}</i>
     </template>
 
-    <SharedBackButton />
+    <BackButton v-if="backTo" class="absolute top-10 left-10" :to="backTo" />
 
     <PagesWithLazyResource
       v-slot="{ data: data_ }"

@@ -83,9 +83,11 @@ export function useRentalForm(
     gear: selectionFrom(allGear),
     topos: selectionFrom(allTopos),
     depositFee: yup.number().label('deposit fee').required().min(0),
-    paymentMethod: yup
-      .string<'transfer' | 'cash'>()
-      .required('You must select a payment method.'),
+    paymentMethod: yup.string<'transfer' | 'cash'>().when('depositFee', {
+      is: (depositFee: number) => depositFee > 0,
+      then: (schema) => schema.required('You must select a payment method.'),
+      otherwise: (schema) => schema.notRequired().default('cash'),
+    }),
     contactInfo: yup
       .object({
         fullName: yup.string().required().label('full name'),

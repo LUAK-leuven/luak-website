@@ -3,6 +3,7 @@
   import * as yup from 'yup';
   import TextField from '~/components/input/TextField.vue';
   import BoolField from '~/components/input/BoolField.vue';
+  import Button from '~/components/shared/Button.vue';
 
   const supabase = useSupabaseClient();
   const user = useSupabaseUser();
@@ -68,26 +69,34 @@
         label="First name"
         name="firstName"
         placeholder="Alex"
-        autocomplete="given-name" />
+        autocomplete="given-name"
+        data-testid="firstName" />
       <TextField
         class="ml-1"
         label="Last name"
         name="lastName"
         placeholder="Megos"
-        autocomplete="family-name" />
+        autocomplete="family-name"
+        data-testid="lastName" />
     </div>
     <TextField
       label="Phone Number (for WhatsApp)"
       name="phoneNumber"
       placeholder="+32468123123"
       type="tel"
-      autocomplete="tel" />
-    <BoolField name="whatsapp">Can we contact you via whatsapp?</BoolField>
-    <BoolField name="newsletter">Subscribe to monthly newsletter?</BoolField>
+      autocomplete="tel"
+      data-testid="phoneNumber" />
+    <BoolField name="whatsapp" data-testid="whatsApp">
+      Can we contact you via whatsapp?
+    </BoolField>
+    <BoolField name="newsletter" data-testid="newsletter">
+      Subscribe to monthly newsletter?
+    </BoolField>
     <div class="flex justify-end">
-      <button
+      <Button
         class="btn btn-primary mt-2"
-        :class="{ 'btn-disabled': isChangedSuccessfull || !meta.dirty }">
+        :class="{ 'btn-disabled': isChangedSuccessfull || !meta.dirty }"
+        data-testid="changeInfo">
         <span v-if="isSubmitting" class="loading loading-spinner">loading</span>
         <span
           v-else-if="isChangedSuccessfull"
@@ -95,7 +104,7 @@
           check
         </span>
         <span v-else>Change Info</span>
-      </button>
+      </Button>
     </div>
   </form>
 </template>

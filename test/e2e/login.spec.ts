@@ -2,7 +2,7 @@ import { expect } from '@playwright/test';
 import { LoginPage } from '#test/e2e/pages/login.page';
 import { navigateTo, test } from '#test/e2e/fixtures';
 import { testUsers } from '#test/e2e/testUtils/TestUser';
-import { ProfileOverviewPage } from './pages/profile-overview.page';
+import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
 
 test('Login & logout — happy path', async ({ page }) => {
   const loginPage = new LoginPage(page);

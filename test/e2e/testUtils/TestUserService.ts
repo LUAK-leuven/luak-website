@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '~/shared/types/database.types';
-import { testUsers, type TestUserKey } from './TestUser';
+import { testUsers, type TestUserKey } from '#test/e2e/testUtils/TestUser';
 import dayjs from 'dayjs';
 import { getCurrentMembershipYear } from '~/app/model/Membership';
 
@@ -35,6 +35,43 @@ export class TestUserService {
     if (e1) throw new Error(`Error deleting Memberships table:`, { cause: e1 });
 
     await this.createMemberships();
+  };
+
+  readonly getUserInfo = async (testUser: TestUserKey) => {
+    const { data } = await this.supabase
+      .from('Users')
+      .select('*')
+      .eq('email', testUsers[testUser].email)
+      .single()
+      .throwOnError();
+
+    return {
+      firstName: data.first_name,
+      lastName: data.last_name,
+      phoneNumber: data.phone_number,
+      whatsApp: data.has_whatsapp,
+      newsletter: data.has_newsletter,
+    };
+  };
+
+  readonly resetTestUser = async (testUser: TestUserKey) => {
+    const { email, firstName, lastName, password } = testUsers[testUser];
+    const { data } = await this.supabase
+      .from('Users')
+      .update({
+        email: email,
+        first_name: firstName,
+        last_name: lastName,
+      })
+      .eq('email', email)
+      .select('id')
+      .single()
+      .throwOnError();
+
+    // This will reset the auth session and breaks everything.
+    // await this.supabase.auth.admin.updateUserById(data.id, {
+    //   password: password,
+    // });
   };
 
   private readonly createMemberships = async () => {

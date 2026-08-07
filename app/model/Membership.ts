@@ -69,3 +69,14 @@ export const _getMembershipYearForDate = (date: Dayjs): number => {
 export const getCurrentMembershipYear = (): number => {
   return _getMembershipYearForDate(dayjs());
 };
+
+export type MembershipStatus = 'active' | 'inactive' | 'willExpire';
+
+export const getMembershipStatus = (
+  membership: Membership | undefined,
+): MembershipStatus => {
+  if (membership === undefined || !membership.isActive()) return 'inactive';
+  const currentMembershipYear = getCurrentMembershipYear();
+  if (membership.membershipYear === currentMembershipYear) return 'active';
+  return 'willExpire';
+};

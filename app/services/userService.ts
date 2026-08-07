@@ -1,12 +1,18 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import dayjs from 'dayjs';
 import { LuakUser } from '~/model/LuakUser';
-import { getCurrentMembershipYear, Membership } from '~/model/Membership';
+import {
+  getCurrentMembershipYear,
+  getMembershipStatus,
+  Membership,
+} from '~/model/Membership';
 
 export class UserService {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
 
   readonly getAllUsers = async () => {
+    const currentMembershipYear = getCurrentMembershipYear();
+
     const { data } = await this.supabaseClient
       .from('Users')
       .select(
@@ -25,7 +31,10 @@ export class UserService {
           )
         `,
       )
-      .eq('Memberships.year', getCurrentMembershipYear())
+      .in('Memberships.year', [
+        currentMembershipYear,
+        currentMembershipYear - 1,
+      ])
       .eq('Memberships.Payments.approved', true)
       .throwOnError();
 
@@ -33,15 +42,16 @@ export class UserService {
       const memberships = user.Memberships.map((membership) =>
         membershipFromDb(membership),
       );
+      const activeMembership = memberships.find(
+        (membership) => membership?.isActive() ?? false,
+      );
       return {
         id: user.id as UserId,
         email: user.email,
         firstName: user.first_name,
         lastName: user.last_name,
         phoneNumber: user.phone_number ?? undefined,
-        hasActiveMembership: memberships.some(
-          (membership) => membership?.isActive() ?? false,
-        ),
+        membershipStatus: getMembershipStatus(activeMembership),
       };
     });
   };

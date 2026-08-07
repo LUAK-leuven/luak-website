@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import BackButton from '~/components/shared/BackButton.vue';
   import TopoCondition from '~/components/topoLibrary/TopoCondition.vue';
 
   definePageMeta({ middleware: 'active-member-guard' });
@@ -16,7 +17,9 @@
       <i class="text-sm">{{ data ? data.authors.join(', ') : '' }}</i>
     </template>
 
-    <SharedBackButton />
+    <BackButton
+      class="absolute top-10 left-10"
+      :to="{ name: 'topos-library' }" />
 
     <div class="h-2"></div>
 

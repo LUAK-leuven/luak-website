@@ -1,5 +1,7 @@
 <script setup lang="ts">
   import Text from '~/components/input/Text.vue';
+  import type { MembershipStatus } from '~/model/Membership';
+  import SelectMemberItem from './selectMemberItem/SelectMemberItem.vue';
 
   withDefaults(
     defineProps<{
@@ -20,10 +22,10 @@
   const { getAllUsers } = useUserService();
   const { data: users, pending } = await getAllUsers();
 
-  type SelectableUser = {
+  export type SelectableUser = {
     name: string;
     id: UserId | 'non-user';
-    hasPaid: boolean;
+    membershipStatus: MembershipStatus;
   };
   const selectableUsers = computed(() =>
     (users.value ?? [])
@@ -32,13 +34,13 @@
           ({
             name: user.firstName + ' ' + user.lastName,
             id: user.id,
-            hasPaid: user.hasActiveMembership,
+            membershipStatus: user.membershipStatus,
           }) satisfies SelectableUser as SelectableUser,
       )
       .concat({
         name: 'Add a non-member',
         id: 'non-user',
-        hasPaid: true,
+        membershipStatus: 'active',
       }),
   );
 
@@ -73,17 +75,9 @@
       :disable="disable"
       @on-select="selectUser">
       <template #item="{ data }">
-        <div
+        <SelectMemberItem
           class="px-3 py-1 rounded-md w-full min-w-max"
-          :class="
-            data.id === 'non-user'
-              ? 'bg-blue-100'
-              : data.hasPaid
-                ? 'bg-green-100'
-                : 'bg-red-100'
-          ">
-          {{ data.hasPaid ? '' : '⚠️ ' }}{{ data.name }}
-        </div>
+          :user="data" />
       </template>
     </InputSearchableSelect>
     <div v-if="selectedUserId === 'non-user'">

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import BackButton from '~/components/shared/BackButton.vue';
   import { useFetchGearAndTopos } from '~/composables/board/rental/useFetchGearAndTopos';
 
   const { show: showPopup } = useToast();
@@ -78,7 +79,9 @@
       Rental-id: <i>{{ rental?.id }}</i>
     </template>
 
-    <SharedBackButton />
+    <BackButton
+      class="absolute top-10 left-10"
+      :to="{ name: 'board-rentals-id', params: { id: rentalId } }" />
 
     <div
       v-if="rentalStatus === 'pending' || pending"

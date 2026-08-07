@@ -1,0 +1,24 @@
+<script lang="ts" setup>
+  import type { SelectableUser } from '../selectMember.vue';
+  import ActiveMembership from './ActiveMembership.vue';
+  import MembershipWillExpierSoon from './MembershipWillExpierSoon.vue';
+  import NoMembership from './NoMembership.vue';
+  import NonMember from './NonMember.vue';
+
+  defineProps<{
+    user: SelectableUser;
+  }>();
+</script>
+<template>
+  <NonMember v-if="user.id === 'non-user'" :name="user.name" />
+  <ActiveMembership
+    v-else-if="user.membershipStatus === 'active'"
+    :name="user.name" />
+  <MembershipWillExpierSoon
+    v-else-if="user.membershipStatus === 'willExpire'"
+    :name="user.name" />
+  <NoMembership
+    v-else-if="user.membershipStatus === 'inactive'"
+    :name="user.name" />
+  <div v-else>❗️ {{ user.name }}</div>
+</template>
