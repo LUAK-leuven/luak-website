@@ -19,10 +19,18 @@
     }
   };
 
+  const infoToggleRefName = `${props.id ?? ''}.info-toggle`;
+  const infoToggleRef = useTemplateRef<HTMLDetailsElement>(infoToggleRefName);
+  const memberToggleRefName = `${props.id ?? ''}.member-toggle`;
+  const memberToggleRef =
+    useTemplateRef<HTMLDetailsElement>(memberToggleRefName);
+  const boardToggleRefName = `${props.id ?? ''}.board-toggle`;
+  const boardToggleRef = useTemplateRef<HTMLDetailsElement>(boardToggleRefName);
+
   onMounted(() => {
-    toggleCloseFix(`${props.id ?? ''}.info-toggle`);
-    toggleCloseFix(`${props.id ?? ''}.board-toggle`);
-    toggleCloseFix(`${props.id ?? ''}.member-toggle`);
+    toggleCloseFix(infoToggleRef);
+    toggleCloseFix(memberToggleRef);
+    toggleCloseFix(boardToggleRef);
 
     if (props.id !== undefined) {
       // Fix drawer closing by closing drawer on click
@@ -49,7 +57,7 @@
       <NuxtLink :to="{ name: 'activities' }">Activities</NuxtLink>
     </li>
     <li>
-      <details :id="`${id ?? ''}.info-toggle`">
+      <details :ref="infoToggleRefName">
         <summary>Info</summary>
         <ul class="p-2 bg-base-200 rounded-t-none w-48">
           <li
@@ -69,7 +77,7 @@
       </NuxtLink>
     </li>
     <li v-if="user.permissions.memberSection">
-      <details :id="`${props.id ?? ''}.member-toggle`">
+      <details :ref="memberToggleRefName">
         <summary>Member section</summary>
         <ul class="p-2 bg-base-200 rounded-t-none w-52">
           <li><NuxtLink :to="{ name: 'stories' }">Stories</NuxtLink></li>
@@ -89,7 +97,7 @@
       </details>
     </li>
     <li v-if="user.permissions.boardSection">
-      <details :id="`${props.id ?? ''}.board-toggle`">
+      <details :ref="boardToggleRefName">
         <summary>Board</summary>
         <ul class="p-2 bg-base-200 rounded-t-none w-52">
           <li>

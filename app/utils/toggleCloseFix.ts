@@ -1,30 +1,22 @@
-export function toggleCloseFix(id: string) {
-  const toggle = document.getElementById(id) as HTMLDetailsElement | null;
-  if (toggle === null) return;
-  const summary = toggle.getElementsByTagName('summary').item(0) as HTMLElement;
+import { onClickOutside } from '@vueuse/core';
 
-  const mouseOnElement = ref(false);
+export const toggleCloseFix = (templateRef: Ref<HTMLDetailsElement | null>) => {
+  const summaryElement = computed(
+    () => templateRef.value?.querySelector('summary') ?? undefined,
+  );
+  if (summaryElement.value === undefined) {
+    console.warn(`toggleCloseFix: summaryElement is undefined`);
+  }
 
-  const close = () => {
-    if (mouseOnElement.value) {
-      window.removeEventListener('click', close);
-    } else {
-      toggle.open = false;
-    }
-  };
+  onClickOutside(summaryElement, () => {
+    closeToggle(templateRef);
+  });
+};
 
-  const toggleEventListener = (event: Event) => {
-    if (event instanceof ToggleEvent) {
-      if (event.newState === 'open') {
-        window.addEventListener('click', close, { once: true });
-      }
-    }
-  };
-
-  const mouseEnter = () => (mouseOnElement.value = true);
-  const mouseLeave = () => (mouseOnElement.value = false);
-
-  toggle.addEventListener('toggle', toggleEventListener);
-  summary.addEventListener('mouseenter', mouseEnter);
-  summary.addEventListener('mouseleave', mouseLeave);
-}
+const closeToggle = (target: Ref<HTMLDetailsElement | null>) => {
+  if (target.value === null) {
+    console.warn(`toggleCloseFix: target is null`);
+    return;
+  }
+  target.value.open = false;
+};
