@@ -79,7 +79,10 @@ test.describe('lost gear form', () => {
     const topoLibraryPage = await TopoLibraryPage.navigate(page);
     const topoDetailsPage = await topoLibraryPage.navigateToDetails(topoName);
 
-    await expect(topoDetailsPage.amount).toHaveText('1');
+    await expect(topoDetailsPage.amount).toHaveText('1 / 1');
+    await expect(topoDetailsPage.history.itemLostEvents).toContainText(
+      '1 item(s) lost',
+    );
 
     await rentalFormPage.navigate();
     await rentalFormPage.selectSearchBar('topos');

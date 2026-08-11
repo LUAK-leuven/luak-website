@@ -80,7 +80,8 @@
         <ItemHistory
           :events="topo.events"
           purchase-date="??"
-          :initial-amount="topo.initialAmount" />
+          :initial-amount="topo.initialAmount"
+          data-testid="history" />
 
         <template v-if="topo.rentals.length > 0">
           <hr class="mt-3" />
