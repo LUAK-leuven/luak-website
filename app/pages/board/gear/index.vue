@@ -3,8 +3,9 @@
   import dayjs from 'dayjs';
   import RetirementDate from '~/components/board/gear/retirementDate.vue';
   import Text from '~/components/input/Text.vue';
+  import WithLazyResource from '~/components/pages/WithLazyResource.vue';
 
-  const { data, pending, error } = useLazyFetch('/api/gear/inventory', {
+  const { data, status, error } = useLazyFetch('/api/gear/inventory', {
     method: 'get',
   });
   const searchTerm = ref<string>();
@@ -23,16 +24,17 @@
   <FullPageCard>
     <template #title>Gear Overview </template>
 
-    <PagesWithLazyResource
+    <Text
+      v-model="searchTerm"
+      class="mb-2"
+      label="Search by name"
+      placeholder="Search by name ..." />
+
+    <WithLazyResource
       v-slot="{ data: filteredGear }"
       :data="filteredGear_"
-      :is-loading="pending"
+      :is-loading="status === 'pending'"
       :error="error?.message">
-      <Text
-        v-model="searchTerm"
-        label="Search by name"
-        placeholder="Search by name ..." />
-
       <div v-if="filteredGear.length === 0" class="text-center py-10">
         <p>No gear found matching your criteria.</p>
       </div>
@@ -83,6 +85,6 @@
           </table>
         </div>
       </ClientOnly>
-    </PagesWithLazyResource>
+    </WithLazyResource>
   </FullPageCard>
 </template>

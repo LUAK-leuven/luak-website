@@ -12,10 +12,13 @@ export class TopoService {
 
   readonly getDetails = async (topoId: TopoId) => {
     const topoDetails = await this.topoRepository.getDetails(topoId);
+
     const topoEvents = await this.gearRepository.getInventoryItemEvents({
       itemType: 'topo',
       itemId: topoId,
     });
+
+    const rentals = await this.rentalRepository.getRentalsForTopo(topoId);
 
     return {
       id: topoDetails.id,
@@ -29,7 +32,10 @@ export class TopoService {
       placeInLibrary: topoDetails.place_in_library,
       tags: topoDetails.tags,
       yearPublished: topoDetails.year_published,
+      initialAmount: topoDetails.totalAmount,
       amount: foldInventoryItemEvents(topoDetails.totalAmount, topoEvents),
+      events: topoEvents,
+      rentals: rentals,
     };
   };
 

@@ -21,7 +21,9 @@
     <span class="loading loading-spinner loading-lg" />
   </div>
 
-  <div v-else-if="!data">{{ defaultError ?? 'Failed to load page data' }}</div>
+  <div v-else-if="data === undefined || data === null">
+    {{ defaultError ?? 'Failed to load page data' }}
+  </div>
 
   <template v-else>
     <slot :data="data" />

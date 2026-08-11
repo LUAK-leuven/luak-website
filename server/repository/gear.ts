@@ -3,7 +3,7 @@ import {
   foldInventoryItemEvents,
   type InventoryItemId,
 } from '#server/domain/inventory/InventoryItem';
-import { parseEvent, type ItemEvent } from '#server/domain/inventory/ItemEvent';
+import { type ItemEvent, parseEvent } from '#server/domain/inventory/ItemEvent';
 
 export class GearDao {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
@@ -125,7 +125,7 @@ export class GearDao {
 
   public async getInventoryItemEvents(
     args: InventoryItemId,
-  ): Promise<(ItemEvent & { ocurredOn: string })[]> {
+  ): Promise<(ItemEvent & { occurredOn: string })[]> {
     const { data } = await this.supabaseClient
       .from('InventoryItemEvents')
       .select('*')
@@ -136,7 +136,7 @@ export class GearDao {
     return data.map((it) => {
       const parsedEvent = parseEvent(it.event);
       return {
-        ocurredOn: it.occured_on,
+        occurredOn: it.occured_on,
         ...parsedEvent,
       };
     });
@@ -153,7 +153,7 @@ export class GearDao {
       const parsedEvent = parseEvent(it.event);
       return {
         gearInventoryId: it.item_id as GearInventoryId,
-        occuredOn: it.occured_on,
+        occurredOn: it.occured_on,
         ...parsedEvent,
       };
     });

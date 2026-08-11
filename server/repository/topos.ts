@@ -75,7 +75,7 @@ export class TopoDao {
       const parsedEvent = parseEvent(it.event);
       return {
         topoId: it.item_id as TopoId,
-        occuredOn: it.occured_on,
+        occurredOn: it.occured_on,
         ...parsedEvent,
       };
     });

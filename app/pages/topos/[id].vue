@@ -1,12 +1,22 @@
 <script setup lang="ts">
+  import ItemHistory from '~/components/board/inventory/ItemHistory.vue';
+  import RentalsForItem from '~/components/board/inventory/RentalsForItem.vue';
   import BackButton from '~/components/shared/BackButton.vue';
   import TopoCondition from '~/components/topoLibrary/TopoCondition.vue';
 
   definePageMeta({ middleware: 'active-member-guard' });
 
+  const luakUser = await useUserService().getMembershipInfo();
+  const isBoard = computed(() => luakUser.value.permissions.boardSection);
+
   const topoId = useRoute('topos-id').params.id as TopoId;
   const { data, pending, error } = await useLazyFetch(`/api/topos/${topoId}`, {
     method: 'get',
+  });
+
+  const availableAmount = computed(() => {
+    if (data.value === undefined) return -1;
+    else return data.value.amount - sumOf(data.value.rentals, 'rentedAmount');
   });
 </script>
 
@@ -40,8 +50,15 @@
           <TopoCondition :topo-condition="topo.condition" />
         </TopoLibraryTopoDetailItem>
         <TopoLibraryTopoDetailItem name="Amount">
-          <span class="badge badge-ghost" data-testid="amount">
+          <span v-if="!isBoard" class="badge badge-ghost" data-testid="amount">
             {{ topo.amount }}
+          </span>
+          <span
+            v-else
+            class="badge"
+            :class="availableAmount > 0 ? 'badge-success' : 'badge-error'"
+            data-testid="amount">
+            {{ availableAmount }} / {{ topo.amount }}
           </span>
         </TopoLibraryTopoDetailItem>
         <TopoLibraryTopoDetailItem name="Languages">
@@ -57,6 +74,19 @@
           <span class="badge badge-info">{{ topo.yearPublished ?? 'NA' }}</span>
         </TopoLibraryTopoDetailItem>
       </div>
+      <template v-if="isBoard">
+        <hr class="my-3" />
+        <h3>History</h3>
+        <ItemHistory
+          :events="topo.events"
+          purchase-date="??"
+          :initial-amount="topo.initialAmount" />
+
+        <template v-if="topo.rentals.length > 0">
+          <hr class="mt-3" />
+          <RentalsForItem :rentals="topo.rentals" />
+        </template>
+      </template>
       <hr class="my-3" />
       <div class="flex flex-row justify-center">
         <i class="text-sm w-fit">{{ topo.id }}</i>
