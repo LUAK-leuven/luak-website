@@ -18,6 +18,7 @@ export default defineConfig({
           name: 'integration',
           include: ['test/integration/**/*.spec.ts'],
           environment: 'node',
+          setupFiles: ['test/integration/global-setup.ts'],
         },
       },
       await defineVitestProject({

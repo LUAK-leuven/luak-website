@@ -3,12 +3,14 @@ import { serverSupabaseUser } from '#supabase/server';
 import type { H3Event } from '#build/types/nitro-imports';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-export default luakEventHandler(async ({ topoService, supabase }, event) => {
-  const isBoard = await _isBoard({ event, supabase });
-  const topos = await topoService().getTopoLibrary();
-  if (isBoard) return topos;
-  else return topos.filter((topo) => topo.amount > 0);
-});
+export default luakEventHandler(
+  async ({ topoService, supabase }, event): Promise<TopoLibraryItem[]> => {
+    const isBoard = await _isBoard({ event, supabase });
+    const topos = await topoService().getTopoLibrary();
+    if (isBoard) return topos;
+    else return topos.filter((topo) => topo.amount > 0);
+  },
+);
 
 const _isBoard = async (args: {
   event: H3Event;

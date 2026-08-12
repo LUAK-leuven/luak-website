@@ -1,8 +1,9 @@
 import { validateSupabaseUrl } from '#test/validateSupabaseUrl';
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '~/shared/types/database.types';
-import { TestDao } from './testDao';
-import { TestUserService } from './TestUserService';
+import { TestDao } from '#test/testDao';
+import { TestUserService } from '#test/TestUserService';
+import { ServerTestService } from '#test/fetch';
 
 const getSupabaseClientForTests = () => {
   if (
@@ -34,5 +35,8 @@ export const testServiceBuilder = useSingleton(() => {
 
   const testDao = useSingleton(() => new TestDao(supabase()));
   const userTestService = useSingleton(() => new TestUserService(supabase()));
-  return { testDao, userTestService, supabase };
+  const serverTestService = useSingleton(
+    () => new ServerTestService(supabase()),
+  );
+  return { testDao, userTestService, serverTestService };
 });
