@@ -1,6 +1,5 @@
 <script lang="ts" setup>
   import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
-  import dayjs from 'dayjs';
   import RetirementDate from '~/components/board/gear/retirementDate.vue';
   import Text from '~/components/input/Text.vue';
   import WithLazyResource from '~/components/pages/WithLazyResource.vue';
@@ -65,11 +64,7 @@
                 </td>
                 <td v-if="sm">
                   <RetirementDate
-                    :retirement-date="
-                      gearItem.earliestRetirementDate
-                        ? dayjs(gearItem.earliestRetirementDate)
-                        : undefined
-                    " />
+                    :retirement-date="gearItem.earliestRetirementDate" />
                 </td>
                 <td>
                   <span data-testid="availableAmount">

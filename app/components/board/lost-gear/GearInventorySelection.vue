@@ -9,38 +9,22 @@
       details: string;
       purchaseDate: string | undefined;
       productionDate: string | undefined;
+      retirementDate: RetirementDate;
       totalAmount: number;
     }[];
-    lifespan: number;
     lostAmount: number | undefined;
   }>();
 
   const model = defineModel<string | undefined>({ required: true });
 
   const _inventory = computed(() =>
-    props.inventory
-      .filter((x) => x.totalAmount > 0)
-      .map((x) => {
-        const productionDate = x.productionDate
-          ? dayjs(x.productionDate)
-          : undefined;
-        const purchaseDate = x.purchaseDate ? dayjs(x.purchaseDate) : undefined;
-        const startDate =
-          purchaseDate !== undefined
-            ? purchaseDate
-            : productionDate !== undefined
-              ? productionDate.add(1, 'year')
-              : undefined;
-        return {
-          id: x.id,
-          details: x.details,
-          amount: x.totalAmount,
-          purchaseDate,
-          productionDate,
-          retirementDate: startDate?.add(props.lifespan, 'years'),
-        };
-      }),
+    props.inventory.filter((x) => x.totalAmount > 0),
   );
+
+  const formatDate = (date: string | undefined): string => {
+    if (date === undefined) return '';
+    return dayjs(date).format('MMM YYYY');
+  };
 </script>
 
 <template>
@@ -57,7 +41,7 @@
       v-for="{
         id,
         details,
-        amount,
+        totalAmount: amount,
         productionDate,
         purchaseDate,
         retirementDate,
@@ -84,10 +68,10 @@
         </template>
       </InventoryTableItem>
       <InventoryTableItem :is-archived="false">
-        {{ dayjs(productionDate)?.format('MMM YYYY') }}
+        {{ formatDate(productionDate) }}
       </InventoryTableItem>
       <InventoryTableItem :is-archived="false">
-        {{ purchaseDate?.format('MMM YYYY') }}
+        {{ formatDate(purchaseDate) }}
       </InventoryTableItem>
       <InventoryTableItem :is-archived="false">
         <RetirementDate :retirement-date="retirementDate" />
