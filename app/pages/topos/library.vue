@@ -2,6 +2,8 @@
   import Text from '~/components/input/Text.vue';
   import { string as yupString, array as yupArray } from 'yup';
   import SelectCountry from '~/components/topoLibrary/SelectCountry.vue';
+  import SelectableBadge from '~/components/input/SelectableBadge.vue';
+  import Input from '~/components/shared/Input.vue';
 
   definePageMeta({ middleware: 'active-member-guard' });
 
@@ -35,6 +37,13 @@
     if (typeof x === 'string') return [yupString().required().validateSync(x)];
     return yupArray().of(yupString().required()).required().validateSync(x);
   });
+  const includeOldTopos = useUrlState<'true' | 'false'>('old', (x) =>
+    yupString()
+      .oneOf(['true', 'false'])
+      .required()
+      .default('false')
+      .validateSync(x),
+  );
 
   const matchedTags = computed(() =>
     searchInArray(allTags.value, searchTerm.value),
@@ -51,10 +60,18 @@
         const matchesCountries =
           selectedCountries.value.length == 0 ||
           matchAny(topo.countries, selectedCountries.value);
+        const matchesOldTopos =
+          includeOldTopos.value === 'true' ||
+          !(
+            topo.placeInLibrary === 'Oude doos - oud papier' ||
+            topo.placeInLibrary === 'Old/Inspiration' ||
+            topo.placeInLibrary === 'Oude doos'
+          );
         return (
           (matchesSearch || matchesTags) &&
           matchesTypesOfClimbing &&
-          matchesCountries
+          matchesCountries &&
+          matchesOldTopos
         );
       })
       .sort((a, b) => {
@@ -91,7 +108,7 @@
               </Text>
               <span class="font-bold mt-3">Type(s) of climbing:</span>
               <div class="flex flex-row flex-wrap gap-x-1 gap-y-1">
-                <InputSelectableBadge
+                <SelectableBadge
                   v-for="typeOfClimbing of allTypesOfClimbing"
                   :key="typeOfClimbing"
                   :text="typeOfClimbing"
@@ -120,6 +137,13 @@
                 :options="allCountries"
                 placeholder="Select country">
               </SelectCountry>
+              <div class="flex flex-row items-center gap-2 mt-3">
+                <span class="font-bold">Include old topos:</span>
+                <Input
+                  v-model="includeOldTopos"
+                  class="toggle toggle-lg toggle-primary"
+                  type="checkbox" />
+              </div>
             </div>
           </template>
         </Collapsable>

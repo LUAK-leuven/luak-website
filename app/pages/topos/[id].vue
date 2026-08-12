@@ -27,9 +27,7 @@
       <i class="text-sm">{{ data ? data.authors.join(', ') : '' }}</i>
     </template>
 
-    <BackButton
-      class="absolute top-10 left-10"
-      :to="{ name: 'topos-library' }" />
+    <BackButton class="absolute top-10 left-10" :to="undefined" />
 
     <div class="h-2"></div>
 
