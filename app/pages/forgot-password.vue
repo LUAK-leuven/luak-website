@@ -13,13 +13,16 @@
   const { handleSubmit, isSubmitting, setFieldError } = useForm({
     validationSchema: toTypedSchema(formSchema),
   });
+
   const isSentSuccessfully = ref(false);
+
   const onSubmit = handleSubmit(async (submitted) => {
     const { error } = await supabase.auth.resetPasswordForEmail(
       submitted.email,
       { redirectTo: `${url.origin}/reset-password` },
     );
     if (error) {
+      console.error(error);
       setFieldError('email', error.message);
     } else isSentSuccessfully.value = true;
   });

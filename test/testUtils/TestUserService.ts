@@ -69,11 +69,18 @@ export class TestUserService {
       .select('id')
       .single()
       .throwOnError();
+  };
 
-    // This will reset the auth session and breaks everything.
-    // await this.supabase.auth.admin.updateUserById(data.id, {
-    //   password: password,
-    // });
+  readonly resetTestUserPassword = async (testUser: TestUserKey) => {
+    const { data } = await this.supabase
+      .from('Users')
+      .select('id')
+      .eq('email', testUsers[testUser].email)
+      .single()
+      .throwOnError();
+    await this.supabase.auth.admin.updateUserById(data.id, {
+      password: testUsers[testUser].password,
+    });
   };
 
   readonly getTestUserSession = async (testUser: TestUserKey) => {

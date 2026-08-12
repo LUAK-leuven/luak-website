@@ -4,8 +4,6 @@
   import LoadingButton from '~/components/shared/LoadingButton.vue';
   import { useToast } from '~/composables/useToast';
 
-  definePageMeta({ middleware: 'unauthenticated' });
-
   const supabase = useSupabaseClient();
   const route = useRoute();
   const user = useSupabaseUser();
