@@ -1,12 +1,11 @@
-import { testUsers, type TestUserKey } from '#test/TestUser';
-import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Database } from '~/shared/types/database.types';
+import type { TestUserKey } from '#test/TestUser';
 import { $fetch } from '@nuxt/test-utils/e2e';
+import type { TestUserService } from '#test/TestUserService';
 
 export class ServerTestService {
   private cookies: Partial<Record<TestUserKey, string>> = {};
 
-  constructor(private readonly supabase: SupabaseClient<Database>) {}
+  constructor(private readonly testUserService: TestUserService) {}
 
   readonly fetch = async (url: string, testUser: TestUserKey) => {
     if (this.cookies[testUser] === undefined) {
@@ -21,14 +20,8 @@ export class ServerTestService {
   };
 
   private readonly getTestUserAuthHeaders = async (testUser: TestUserKey) => {
-    const { email, password } = testUsers[testUser];
-    const { data, error } = await this.supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (error)
-      throw new Error(`Error signing in user ${email}:`, { cause: error });
+    const session = await this.testUserService.getTestUserSession(testUser);
 
-    return btoa(JSON.stringify(data.session));
+    return btoa(JSON.stringify(session));
   };
 }

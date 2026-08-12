@@ -36,7 +36,7 @@ export const testServiceBuilder = useSingleton(() => {
   const testDao = useSingleton(() => new TestDao(supabase()));
   const userTestService = useSingleton(() => new TestUserService(supabase()));
   const serverTestService = useSingleton(
-    () => new ServerTestService(supabase()),
+    () => new ServerTestService(userTestService()),
   );
   return { testDao, userTestService, serverTestService };
 });
