@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '~/shared/types/database.types';
-import { testUsers, type TestUserKey } from '#test/e2e/testUtils/TestUser';
+import { testUsers, type TestUserKey } from '#test/TestUser';
 import dayjs from 'dayjs';
 import { getCurrentMembershipYear } from '~/app/model/Membership';
 
@@ -34,7 +34,9 @@ export class TestUserService {
       .neq('id', '00000000-0000-0000-0000-000000000000');
     if (e1) throw new Error(`Error deleting Memberships table:`, { cause: e1 });
 
-    await this.createMemberships();
+    for (const testUser of Object.keys(testUsers) as TestUserKey[]) {
+      await this.createMemberships(testUser);
+    }
   };
 
   readonly getUserInfo = async (testUser: TestUserKey) => {
@@ -74,36 +76,61 @@ export class TestUserService {
     // });
   };
 
-  private readonly createMemberships = async () => {
-    for (const testUser of Object.keys(testUsers) as TestUserKey[]) {
-      const userId = await this.getTestUserId(testUser);
+  readonly getTestUserSession = async (testUser: TestUserKey) => {
+    const { email, password } = testUsers[testUser];
 
-      for (const { year, paid, createdOn } of testUserConfig[testUser]) {
-        const { data: membership } = await this.supabase
-          .from('Memberships')
+    const { data: user } = await this.supabase
+      .from('Users')
+      .select('id')
+      .eq('email', email)
+      .maybeSingle()
+      .throwOnError();
+    console.log(`user - ${testUser} - ${email}`, user);
+    if (user === null) {
+      await this.createTestUser(testUser);
+    }
+
+    const { data, error } = await this.supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error)
+      throw new Error(`Error signing in user ${email}:`, { cause: error });
+    const { error: err } = await this.supabase.auth.signOut();
+    if (err)
+      throw new Error(`Error signing out user ${email}:`, { cause: err });
+
+    return data.session;
+  };
+
+  private readonly createMemberships = async (testUser: TestUserKey) => {
+    const userId = await this.getTestUserId(testUser);
+
+    for (const { year, paid, createdOn } of testUserConfig[testUser]) {
+      const { data: membership } = await this.supabase
+        .from('Memberships')
+        .insert({
+          created_at: createdOn,
+          user_id: userId,
+          year: year,
+          kbf_uiaa_member: 'kbf_luak',
+          sportscard: false,
+          student: 'not_student',
+        })
+        .select('id')
+        .single()
+        .throwOnError();
+
+      if (paid) {
+        await this.supabase
+          .from('Payments')
           .insert({
-            created_at: createdOn,
-            user_id: userId,
-            year: year,
-            kbf_uiaa_member: 'kbf_luak',
-            sportscard: false,
-            student: 'not_student',
+            id: crypto.randomUUID(),
+            membership_id: membership.id,
+            amount: 20,
+            approved: true,
           })
-          .select('id')
-          .single()
           .throwOnError();
-
-        if (paid) {
-          await this.supabase
-            .from('Payments')
-            .insert({
-              id: crypto.randomUUID(),
-              membership_id: membership.id,
-              amount: 20,
-              approved: true,
-            })
-            .throwOnError();
-        }
       }
     }
   };

@@ -40,34 +40,66 @@ export class RentalDao {
     }[]
   > {
     const { data } = await this.supabaseClient
-      .from('Rentals')
+      .from('RentedGear')
       .select(
         `
-          id,
-          RentedGear(
-            gear_item_id,
-            rented_amount,
-            returned_amount,
-            lost_amount
-          ),
-          member:Users!member_id(
-            first_name,
-            last_name
-          ),
-          contact_info
+          rented_amount,
+          returned_amount,
+          lost_amount,
+          Rentals(
+            id,
+            member:Users!member_id(
+              first_name,
+              last_name
+            ),
+            contact_info
+          )
         `,
       )
-      .eq('RentedGear.gear_item_id', gearItemId)
+      .eq('gear_item_id', gearItemId)
       .throwOnError();
 
     return data
       .map((x) => ({
-        id: x.id as RentalId,
-        rentedAmount: sumBy(
-          x.RentedGear,
-          (x) => x.rented_amount - x.returned_amount - x.lost_amount,
-        ),
-        memberName: contactInfoFromDb(x).fullName,
+        id: x.Rentals.id as RentalId,
+        rentedAmount: x.rented_amount - x.returned_amount - x.lost_amount,
+        memberName: contactInfoFromDb(x.Rentals).fullName,
+      }))
+      .filter((x) => x.rentedAmount > 0);
+  }
+
+  async getRentalsForTopo(topoId: TopoId): Promise<
+    {
+      id: RentalId;
+      rentedAmount: number;
+      memberName: string;
+    }[]
+  > {
+    const { data } = await this.supabaseClient
+      .from('RentedTopos')
+      .select(
+        `
+          rented_amount,
+          returned_amount,
+          lost_amount,
+          Rentals(
+            id,
+            member:Users!member_id(
+              first_name,
+              last_name
+            ),
+            contact_info
+          )
+        `,
+      )
+      .eq('topo_id', topoId)
+      .throwOnError();
+
+    return data
+      .map((x) => ({
+        id: x.Rentals.id as RentalId,
+        rentedAmount: x.rented_amount - x.returned_amount - x.lost_amount,
+        memberName: contactInfoFromDb(x.Rentals).fullName,
       }))
       .filter((x) => x.rentedAmount > 0);
   }

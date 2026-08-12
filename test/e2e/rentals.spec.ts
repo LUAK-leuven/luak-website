@@ -11,7 +11,7 @@ import { RentalDetailsPage } from '#test/e2e/pages/rental/details.page';
 import { RentalsOverviewPage } from '#test/e2e/pages/rentals-overview.page';
 import { uuidRegex, sleep } from '~/shared/utils/utils';
 import { RentalReturnPage } from '#test/e2e/pages/rental/return.page';
-import { testUsers } from '#test/e2e/testUtils/TestUser';
+import { testUsers } from '#test/TestUser';
 
 test.use({ storageState: authStateFile('boardMember') });
 

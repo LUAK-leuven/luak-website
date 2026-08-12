@@ -30,7 +30,7 @@ export type GearInventoryDetails = {
     details: string;
     initialAmount: number;
     totalAmount: number;
-    events: (ItemEvent & { occuredOn: string })[];
+    events: (ItemEvent & { occurredOn: string })[];
   }[];
   rentals: {
     id: RentalId;

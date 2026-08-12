@@ -1,6 +1,8 @@
 <template>
   <div class="relative w-full flex flex-col flex-wrap items-center">
-    <h1 class="w-full text-center text-5xl mt-16 mb-10" data-testId="page.title">
+    <h1
+      class="w-full text-center text-5xl mt-16 mb-10"
+      data-testId="page.title">
       <slot name="title" />
     </h1>
     <page-card>

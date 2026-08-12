@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 import { LoginPage } from '#test/e2e/pages/login.page';
-import { testServiceBuilder } from '#test/e2e/testUtils/testServices';
-import type { TestUser, TestUserKey } from '#test/e2e/testUtils/TestUser';
+import { testServiceBuilder } from '#test/testServices';
+import type { TestUser, TestUserKey } from '#test/TestUser';
 import { test as base, expect } from '@playwright/test';
 import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
 

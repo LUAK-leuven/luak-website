@@ -29,6 +29,10 @@ jobs:
         run: yarn supabase start --log-level error -x edge-runtime,imgproxy,logflare,mailpit,postgres-meta,realtime,storage-api,studio,supavisor,vector
       - name: Install Playwright Browsers
         run: yarn playwright install --with-deps chromium
+      - name: Start the dev server
+        run: |
+          yarn dev > nuxt.log 2>&1 &
+          npx wait-on http://localhost:3000
       - name: Run tests
         run: yarn test
       - uses: actions/upload-artifact@v7

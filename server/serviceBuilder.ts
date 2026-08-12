@@ -28,6 +28,8 @@ export const serviceBuilder = async (h3Event: H3Event) => {
     gearRepo,
     topoRepo,
     rentalRepo,
+
+    supabase,
   };
 };
 

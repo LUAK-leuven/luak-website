@@ -3,7 +3,7 @@ import { authStateFile, cleanDatabase, test } from '#test/e2e/fixtures';
 import { RentalFormPage } from '#test/e2e/pages/rental/form.page';
 import { TopoLibraryPage } from '#test/e2e/pages/topos/library.page';
 import { GearInventoryPage } from '#test/e2e/pages/gear/inventory.page';
-import { testUsers } from '#test/e2e/testUtils/TestUser';
+import { testUsers } from '#test/TestUser';
 import { RentalDetailsPage } from '#test/e2e/pages/rental/details.page';
 
 test.use({ storageState: authStateFile('boardMember') });
@@ -79,7 +79,10 @@ test.describe('lost gear form', () => {
     const topoLibraryPage = await TopoLibraryPage.navigate(page);
     const topoDetailsPage = await topoLibraryPage.navigateToDetails(topoName);
 
-    await expect(topoDetailsPage.amount).toHaveText('1');
+    await expect(topoDetailsPage.amount).toHaveText('1 / 1');
+    await expect(topoDetailsPage.history.itemLostEvents).toContainText(
+      '1 item(s) lost',
+    );
 
     await rentalFormPage.navigate();
     await rentalFormPage.selectSearchBar('topos');
@@ -196,47 +199,6 @@ test.describe('lost gear form', () => {
         totalAmount: 0,
       },
     });
-  });
-
-  test('topo with total amount 0 is not shown in library', async ({ page }) => {
-    const rentalFormPage = await RentalFormPage.navigate(page);
-    const topoName = 'Ailefriode';
-
-    // Create a rental
-    await rentalFormPage.fillForm({
-      memberName: testUsers.paidMembership.fullName,
-      paymentMethod: 'cash',
-    });
-    await rentalFormPage.addItem('topos', 'Ailefriode', 1);
-    const rentalDetailsPage = await rentalFormPage.submit();
-
-    // Mark as lost
-    const lostGearPage = await rentalDetailsPage.markItemAsLost(topoName);
-
-    await expect(lostGearPage.title).toHaveText('Lost Gear');
-    await lostGearPage.expectToHave({
-      topo: {
-        title: topoName,
-        year: 2011,
-        rentedAmount: 1,
-        unreturnedAmount: 1,
-        lostAmount: 1,
-      },
-    });
-    await lostGearPage.submit();
-
-    await rentalDetailsPage.expectItem({
-      name: topoName,
-      rentedAmount: 1,
-      returnedAmount: 0,
-      lostAmount: 1,
-    });
-
-    const topoLibraryPage = await TopoLibraryPage.navigate(page);
-    await expect(
-      topoLibraryPage.getTopo('Topo Flone').linkToDetails,
-    ).toBeVisible();
-    await expect(topoLibraryPage.getTopo(topoName).linkToDetails).toBeHidden();
   });
 });
 

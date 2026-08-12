@@ -12,6 +12,15 @@ export default defineConfig({
           environment: 'node',
         },
       },
+      {
+        resolve: { tsconfigPaths: true },
+        test: {
+          name: 'integration',
+          include: ['test/integration/**/*.spec.ts'],
+          environment: 'node',
+          setupFiles: ['test/integration/global-setup.ts'],
+        },
+      },
       await defineVitestProject({
         resolve: { tsconfigPaths: true },
         test: {

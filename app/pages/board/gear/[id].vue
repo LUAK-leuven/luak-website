@@ -3,6 +3,8 @@
   import { useBreakpoints, breakpointsTailwind } from '@vueuse/core';
   import InventoryTableItem from '~/components/board/gear/inventoryTableItem.vue';
   import RetirementDate from '~/components/board/gear/retirementDate.vue';
+  import RentalsForItem from '~/components/board/inventory/RentalsForItem.vue';
+  import ItemHistory from '~/components/board/inventory/ItemHistory.vue';
 
   const gearItemId = useRoute('board-gear-id').params.id as GearItemId;
 
@@ -84,7 +86,7 @@
     </div>
 
     <hr class="my-3" />
-    <b>Inventory</b>
+    <h3 class="mb-2">Inventory</h3>
     <ClientOnly>
       <div
         class="grid grid-cols-[3fr_1fr_2fr] lg:grid-cols-[4fr_1fr_2fr_2fr_2fr] border rounded-sm overflow-x-scroll">
@@ -128,37 +130,12 @@
           <InventoryTableItem
             class="col-span-full border-t-0"
             :is-archived="totalAmount <= 0">
-            <ul class="ml-5">
-              <li>
-                {{ displayPurchaseDate({ purchaseDate, productionDate }) }}
-                : Bought
-                {{ initialAmount }}
-                item(s)
-              </li>
-              <li
-                v-for="(event, idx) of events"
-                :key="idx"
-                data-testid="lostItem">
-                <div class="flex flex-row flex-wrap gap-x-1">
-                  {{ dayjs(event.occuredOn).format('DD-MM-YYYY') }}:
-                  <template v-if="event.eventName === 'ItemLostEvent'">
-                    <span v-if="event.rentalId === undefined">
-                      {{ event.lostAmount }} item(s) lost without rental
-                    </span>
-                    <SharedLinkTo
-                      v-else
-                      :text="`${event.lostAmount} item(s) lost`"
-                      :to="{
-                        name: 'board-rentals-id',
-                        params: { id: event.rentalId },
-                      }" />
-                  </template>
-                  <span v-else-if="event.eventName === 'ItemArchivedEvent'">
-                    {{ event.amount }} item(s) archived
-                  </span>
-                </div>
-              </li>
-            </ul>
+            <ItemHistory
+              :events="events"
+              :purchase-date="
+                displayPurchaseDate({ purchaseDate, productionDate })
+              "
+              :initial-amount="initialAmount" />
           </InventoryTableItem>
         </div>
       </div>
@@ -166,20 +143,7 @@
 
     <template v-if="gearItems.rentals.length > 0">
       <hr class="my-3" />
-      <b>Rentals</b>
-      <div class="grid grid-cols-[3fr_1fr] border rounded-sm overflow-x-scroll">
-        <b class="border px-1">Name</b>
-        <b class="border px-1">Amount</b>
-        <template
-          v-for="{ id, memberName, rentedAmount } of gearItems.rentals"
-          :key="id">
-          <SharedLinkTo
-            class="border p-1"
-            :text="memberName"
-            :to="{ name: 'board-rentals-id', params: { id } }" />
-          <div class="border p-1">{{ rentedAmount }}</div>
-        </template>
-      </div>
+      <RentalsForItem :rentals="gearItems.rentals" />
     </template>
   </PagesDetailsPage>
 </template>
