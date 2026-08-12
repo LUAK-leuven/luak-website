@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import dayjs, { type Dayjs } from 'dayjs';
+  import dayjs from 'dayjs';
   import { useBreakpoints, breakpointsTailwind } from '@vueuse/core';
   import InventoryTableItem from '~/components/board/gear/inventoryTableItem.vue';
   import RetirementDate from '~/components/board/gear/retirementDate.vue';
@@ -8,63 +8,36 @@
 
   const gearItemId = useRoute('board-gear-id').params.id as GearItemId;
 
-  const {
-    data: data_,
-    pending,
-    error,
-  } = useLazyFetch(() => `/api/gear/inventory/${gearItemId}`, {
-    method: 'get',
-    transform: (x) => x as GearInventoryDetails,
-  });
-  const data = computed(() =>
-    data_.value
-      ? {
-          ...data_.value,
-          inventory: data_.value.inventory
-            .map((x) => {
-              const productionDate = x.productionDate
-                ? dayjs(x.productionDate)
-                : undefined;
-              const purchaseDate = x.purchaseDate
-                ? dayjs(x.purchaseDate)
-                : undefined;
-              const retirementDate = x.retirementDate
-                ? dayjs(x.retirementDate)
-                : undefined;
-              return {
-                ...x,
-                productionDate,
-                purchaseDate,
-                retirementDate,
-              };
-            })
-            .sort((a, b) => {
-              if (
-                a.retirementDate === undefined &&
-                b.retirementDate === undefined
-              )
-                return 0;
-              if (a.retirementDate === undefined) return -1;
-              if (b.retirementDate === undefined) return 1;
-              if (a.retirementDate.isSame(b.retirementDate)) return 0;
-              if (a.retirementDate.isBefore(b.retirementDate)) return 1;
-              return -1;
-            }),
-        }
-      : null,
+  const { data, pending, error } = useLazyFetch(
+    () => `/api/gear/inventory/${gearItemId}`,
+    {
+      method: 'get',
+      transform: (x) => x as GearInventoryDetails,
+    },
   );
 
   const bp = useBreakpoints(breakpointsTailwind);
   const lg = computed(() => bp.lg.value);
 
+  const formatDate = (date: string | undefined): string => {
+    if (date === undefined) return '';
+    return dayjs(date).format('DD-MM-YYYY');
+  };
+
   const displayPurchaseDate = (args: {
-    purchaseDate: Dayjs | undefined;
-    productionDate: Dayjs | undefined;
+    purchaseDate: string | undefined;
+    productionDate: string | undefined;
   }) => {
-    if (args.purchaseDate) return args.purchaseDate.format('DD-MM-YYYY');
-    if (args.productionDate)
-      return `> ${args.productionDate.format('DD-MM-YYYY')}`;
+    if (args.purchaseDate !== undefined)
+      return dayjs(args.purchaseDate).format('DD-MM-YYYY');
+    if (args.productionDate !== undefined)
+      return `> ${dayjs(args.productionDate).format('DD-MM-YYYY')}`;
     return '??';
+  };
+
+  const dipslayLifespan = (lifespan: number): string => {
+    if (lifespan === 0) return '-';
+    return `${lifespan.toFixed()} years`;
   };
 </script>
 <template>
@@ -81,7 +54,7 @@
         Available: {{ gearItems.availableAmount }} /
         {{ gearItems.totalAmount }}
       </span>
-      <span>Lifespan: {{ gearItems.lifespan }} years</span>
+      <span> Lifespan: {{ dipslayLifespan(gearItems.lifespan) }} </span>
       <span>Deposit fee: {{ (gearItems.depositFee / 100).toFixed(2) }} €</span>
     </div>
 
@@ -89,12 +62,19 @@
     <h3 class="mb-2">Inventory</h3>
     <ClientOnly>
       <div
-        class="grid grid-cols-[3fr_1fr_2fr] lg:grid-cols-[4fr_1fr_2fr_2fr_2fr] border rounded-sm overflow-x-scroll">
+        class="grid border rounded-sm overflow-x-scroll"
+        :class="
+          gearItems.lifespan === 0
+            ? 'grid-cols-[3fr_1fr] lg:grid-cols-[4fr_1fr_2fr_2fr]'
+            : 'grid-cols-[3fr_1fr_2fr] lg:grid-cols-[4fr_1fr_2fr_2fr_2fr]'
+        ">
         <b class="border px-1">Details</b>
         <b class="border px-1">Amount</b>
         <b v-if="lg" class="border px-1">Production date</b>
         <b v-if="lg" class="border px-1">Purchase date</b>
-        <b class="border px-1">Retirement date</b>
+        <b v-if="gearItems.lifespan !== 0" class="border px-1">
+          Retirement date
+        </b>
         <div
           v-for="{
             id,
@@ -118,12 +98,14 @@
             {{ totalAmount }}
           </InventoryTableItem>
           <InventoryTableItem v-if="lg" :is-archived="totalAmount <= 0">
-            {{ productionDate?.format('MMM YYYY') }}
+            {{ formatDate(productionDate) }}
           </InventoryTableItem>
           <InventoryTableItem v-if="lg" :is-archived="totalAmount <= 0">
-            {{ purchaseDate?.format('MMM YYYY') }}
+            {{ formatDate(purchaseDate) }}
           </InventoryTableItem>
-          <InventoryTableItem :is-archived="totalAmount <= 0">
+          <InventoryTableItem
+            v-if="gearItems.lifespan !== 0"
+            :is-archived="totalAmount <= 0">
             <RetirementDate :retirement-date="retirementDate" />
           </InventoryTableItem>
 

@@ -2,6 +2,11 @@ import { groupBy, min, sumOf } from '~~/shared/utils/utils';
 import type { GearDao } from '#server/repository/gear';
 import type { RentalDao } from '#server/repository/rentals';
 import dayjs from 'dayjs';
+import type {
+  GearInventorySummary,
+  RetirementDate,
+} from '~~/shared/types/gear';
+import type { Date } from '~~/shared/types/common';
 
 export class GearService {
   constructor(
@@ -33,7 +38,7 @@ export class GearService {
         earliestRetirementDate: this.calculateEarliestRetirementDate(
           inventoryItems,
           gearItem.lifespan,
-        )?.format('YYYY-MM-DD'),
+        ),
         depositFee: gearItem.depositFee,
       };
     });
@@ -63,7 +68,7 @@ export class GearService {
             productionDate: item.productionDate,
             purchaseDate: item.purchaseDate,
             lifespan: gearItem.lifespan,
-          })?.format('YYYY-MM-DD'),
+          }),
           details: item.details,
           initialAmount: item.initialAmount,
           totalAmount: item.totalAmount,
@@ -78,20 +83,16 @@ export class GearService {
     purchaseDate: string | undefined;
     productionDate: string | undefined;
     lifespan: number;
-  }) {
-    const productionDate = args.productionDate
-      ? dayjs(args.productionDate)
-      : undefined;
-    const purchaseDate = args.purchaseDate
-      ? dayjs(args.purchaseDate)
-      : undefined;
+  }): RetirementDate {
+    if (args.lifespan === 0) return 'infinite';
     const startDate =
-      purchaseDate !== undefined
-        ? purchaseDate
-        : productionDate !== undefined
-          ? productionDate.add(1, 'year')
+      args.purchaseDate !== undefined
+        ? dayjs(args.purchaseDate)
+        : args.productionDate !== undefined
+          ? dayjs(args.productionDate).add(1, 'year')
           : undefined;
-    return startDate?.add(args.lifespan, 'y');
+    if (startDate === undefined) return 'missing info';
+    return startDate.add(args.lifespan, 'y').format('YYYY-MM-DD') as Date;
   }
 
   private calculateEarliestRetirementDate(
@@ -100,7 +101,9 @@ export class GearService {
       purchaseDate: string | undefined;
     }[],
     lifespan: number,
-  ) {
+  ): GearInventorySummary['earliestRetirementDate'] {
+    if (lifespan === 0) return 'infinite';
+
     const retirementDates = inventoryItems.map((item) =>
       this.calculateRetirementDate({
         purchaseDate: item.purchaseDate,
@@ -108,12 +111,14 @@ export class GearService {
         lifespan: lifespan,
       }),
     );
-    return (
+    const earliestRetirementDate =
       min(retirementDates, (a, b) => {
-        if (a === undefined) return true;
-        if (b === undefined) return false;
-        return a.isBefore(b);
-      }) ?? undefined
-    );
+        if (a === 'infinite' || a === 'missing info') return true;
+        if (b === 'infinite' || b === 'missing info') return false;
+        return dayjs(a).isBefore(b);
+      }) ?? undefined;
+
+    if (earliestRetirementDate === undefined) return 'missing info';
+    return earliestRetirementDate;
   }
 }

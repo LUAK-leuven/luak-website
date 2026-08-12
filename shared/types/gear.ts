@@ -1,6 +1,7 @@
 import type { ItemEvent } from '~~/server/domain/inventory/ItemEvent'; // TODO: invalid dependency?
 import type { EntityId } from './ddd';
 import type { RentalId } from './rental';
+import type { Date } from './common';
 
 export type GearItemId = EntityId<'gearItem'>;
 export type GearInventoryId = EntityId<'gearInventory'>;
@@ -11,7 +12,7 @@ export type GearInventorySummary = {
   name: string;
   totalAmount: number;
   availableAmount: number;
-  earliestRetirementDate: string | undefined;
+  earliestRetirementDate: RetirementDate;
   depositFee: number;
 };
 
@@ -26,7 +27,7 @@ export type GearInventoryDetails = {
     id: GearInventoryId;
     productionDate: string | undefined;
     purchaseDate: string | undefined;
-    retirementDate: string | undefined;
+    retirementDate: RetirementDate;
     details: string;
     initialAmount: number;
     totalAmount: number;
@@ -38,3 +39,5 @@ export type GearInventoryDetails = {
     memberName: string;
   }[];
 };
+
+export type RetirementDate = Date | 'missing info' | 'infinite';
