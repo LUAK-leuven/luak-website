@@ -9,7 +9,7 @@
     autocomplete?: AutoFillField | undefined;
   }>();
 
-  const model = defineModel<string | number | undefined>();
+  const model = defineModel<string | number | boolean | undefined>();
 
   const emit = defineEmits<{
     focus: [];

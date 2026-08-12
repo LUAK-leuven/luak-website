@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { useDebounceFn } from '@vueuse/core';
   import Text from '~/components/input/Text.vue';
+  import Input from '~/components/shared/Input.vue';
   import { useRentalService } from '~/composables/useRentalService';
 
   definePageMeta({
@@ -79,7 +80,7 @@
         <label class="italic text-xs w-max" for="showReturned">
           show returned
         </label>
-        <input
+        <Input
           id="showReturned"
           v-model="showReturned"
           class="toggle toggle-lg toggle-primary"

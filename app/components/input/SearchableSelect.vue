@@ -6,7 +6,7 @@
     shift,
     autoUpdate,
   } from '@floating-ui/vue';
-  import Input from '../shared/Input.vue';
+  import Input from '~/components/shared/Input.vue';
 
   const props = withDefaults(
     defineProps<{
