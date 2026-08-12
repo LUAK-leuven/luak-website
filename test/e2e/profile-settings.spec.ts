@@ -1,13 +1,9 @@
 import test, { expect } from '@playwright/test';
-import {
-  TestUser,
-  testUsers,
-  type TestUserKey,
-} from '#test/e2e/testUtils/TestUser';
+import { TestUser, testUsers, type TestUserKey } from '#test/TestUser';
 import { randomOf } from '~/shared/utils/utils';
 import { authStateFile, login } from '#test/e2e/fixtures';
 import { ProfileSettingsPage } from '#test/e2e/pages/profile/settings.page';
-import { testServiceBuilder } from '#test/e2e/testUtils/testServices';
+import { testServiceBuilder } from '#test/testServices';
 import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
 
 const user = randomOf(Object.keys(testUsers)) as TestUserKey;
