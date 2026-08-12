@@ -46,23 +46,21 @@ export class TopoService {
 
     const groupedTopoEvents = groupBy(topoEvents, (e) => e.topoId);
 
-    return topos
-      .map((topo) => ({
-        id: topo.id,
-        authors: topo.authors,
-        condition: topo.condition,
-        countries: topo.countries,
-        placeInLibrary: topo.placeInLibrary,
-        tags: topo.tags,
-        title: topo.title,
-        typesOfClimbing: topo.typesOfClimbing,
-        yearPublished: topo.yearPublished,
-        amount: foldInventoryItemEvents(
-          topo.initialAmount,
-          groupedTopoEvents[topo.id] ?? [],
-        ),
-      }))
-      .filter((topo) => topo.amount > 0);
+    return topos.map((topo) => ({
+      id: topo.id,
+      authors: topo.authors,
+      condition: topo.condition,
+      countries: topo.countries,
+      placeInLibrary: topo.placeInLibrary,
+      tags: topo.tags,
+      title: topo.title,
+      typesOfClimbing: topo.typesOfClimbing,
+      yearPublished: topo.yearPublished,
+      amount: foldInventoryItemEvents(
+        topo.initialAmount,
+        groupedTopoEvents[topo.id] ?? [],
+      ),
+    }));
   };
 
   readonly getTopos = async () => {

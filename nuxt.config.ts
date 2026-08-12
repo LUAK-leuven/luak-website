@@ -93,7 +93,7 @@ export default defineNuxtConfig({
       compilerOptions: {
         paths: {
           '~/*': ['../*'],
-          '#test/*': ['../test/*'],
+          '#test/*': ['../test/*', '../test/testUtils/*'],
         },
         ...tsCompilerOptions,
       },

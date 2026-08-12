@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '~/shared/types/database.types';
-import { testUsers, type TestUserKey } from '#test/e2e/testUtils/TestUser';
+import { testUsers, type TestUserKey } from '#test/TestUser';
 import dayjs from 'dayjs';
 import { getCurrentMembershipYear } from '~/app/model/Membership';
 
@@ -72,6 +72,17 @@ export class TestUserService {
     // await this.supabase.auth.admin.updateUserById(data.id, {
     //   password: password,
     // });
+  };
+
+  readonly getTestUserToken = async (testUser: TestUserKey) => {
+    const { email, password } = testUsers[testUser];
+    const { data, error } = await this.supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error)
+      throw new Error(`Error signing in user ${email}:`, { cause: error });
+    return data.session.access_token;
   };
 
   private readonly createMemberships = async () => {

@@ -1,5 +1,5 @@
 import { request } from '@playwright/test';
-import { validateSupabaseUrl } from '#test/e2e/global-setup-and-teardown/validateSupabaseUrl';
+import { validateSupabaseUrl } from '#test/validateSupabaseUrl';
 
 export default async function () {
   const ctx = await request.newContext({ baseURL: process.env.BASE_URL! });

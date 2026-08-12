@@ -1,10 +1,10 @@
-import { validateSupabaseUrl } from '../global-setup-and-teardown/validateSupabaseUrl';
+import { validateSupabaseUrl } from '#test/validateSupabaseUrl';
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '~/shared/types/database.types';
 import { TestDao } from './testDao';
 import { TestUserService } from './TestUserService';
 
-function getSupabaseClientForTests() {
+const getSupabaseClientForTests = () => {
   if (
     !process.env.NUXT_PUBLIC_SUPABASE_URL ||
     !process.env.NUXT_SUPABASE_SECRET_KEY
@@ -19,7 +19,7 @@ function getSupabaseClientForTests() {
     process.env.NUXT_SUPABASE_SECRET_KEY, // IMPORTANT: secret key in order to bypass RLS
   );
   return supabase;
-}
+};
 
 const useSingleton = <T>(create: () => T) => {
   let instance: T | undefined = undefined;
@@ -34,5 +34,5 @@ export const testServiceBuilder = useSingleton(() => {
 
   const testDao = useSingleton(() => new TestDao(supabase()));
   const userTestService = useSingleton(() => new TestUserService(supabase()));
-  return { testDao, userTestService };
+  return { testDao, userTestService, supabase };
 });
