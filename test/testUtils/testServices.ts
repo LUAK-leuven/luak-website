@@ -4,6 +4,7 @@ import type { Database } from '~/shared/types/database.types';
 import { TestDao } from '#test/testDao';
 import { TestUserService } from '#test/TestUserService';
 import { ServerTestService } from '#test/fetch';
+import { MailpitService } from './MailpitService';
 
 const getSupabaseClientForTests = () => {
   if (
@@ -38,5 +39,8 @@ export const testServiceBuilder = useSingleton(() => {
   const serverTestService = useSingleton(
     () => new ServerTestService(userTestService()),
   );
-  return { testDao, userTestService, serverTestService };
+  const mailpitService = useSingleton(
+    () => new MailpitService('http://localhost:54324'),
+  );
+  return { testDao, userTestService, serverTestService, mailpitService };
 });

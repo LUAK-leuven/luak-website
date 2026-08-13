@@ -26,7 +26,7 @@ jobs:
       - name: Install
         run: yarn install --frozen-lockfile
       - name: Start supabase server
-        run: yarn supabase start --log-level error -x edge-runtime,imgproxy,logflare,mailpit,postgres-meta,realtime,storage-api,studio,supavisor,vector
+        run: yarn supabase start --log-level error -x edge-runtime,imgproxy,logflare,postgres-meta,realtime,storage-api,studio,supavisor,vector
       - name: Install Playwright Browsers
         run: yarn playwright install --with-deps chromium
       - name: Start the dev server

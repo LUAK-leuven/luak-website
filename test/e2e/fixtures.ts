@@ -1,9 +1,10 @@
 import type { Page } from '@playwright/test';
 import { LoginPage } from '#test/e2e/pages/login.page';
 import { testServiceBuilder } from '#test/testServices';
-import type { TestUser, TestUserKey } from '#test/TestUser';
+import { testUsers, type TestUser, type TestUserKey } from '#test/TestUser';
 import { test as base, expect } from '@playwright/test';
 import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
+import { randomOf } from '~/shared/utils/utils';
 
 export const test = base.extend({
   page: async ({ page }, use) => {
@@ -14,6 +15,19 @@ export const test = base.extend({
     );
 
     await use(page);
+  },
+});
+
+export const randomUserTest = test.extend<{
+  user: TestUserKey;
+}>({
+  // eslint-disable-next-line no-empty-pattern
+  user: async ({}, use) => {
+    const user = randomOf(Object.keys(testUsers)) as TestUserKey;
+    await use(user);
+  },
+  storageState: async ({ user }, use) => {
+    await use(authStateFile(user));
   },
 });
 

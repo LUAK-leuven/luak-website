@@ -57,8 +57,8 @@ export class TestUserService {
   };
 
   readonly resetTestUser = async (testUser: TestUserKey) => {
-    const { email, firstName, lastName, password } = testUsers[testUser];
-    const { data } = await this.supabase
+    const { email, firstName, lastName } = testUsers[testUser];
+    await this.supabase
       .from('Users')
       .update({
         email: email,
@@ -66,8 +66,6 @@ export class TestUserService {
         last_name: lastName,
       })
       .eq('email', email)
-      .select('id')
-      .single()
       .throwOnError();
   };
 
