@@ -123,7 +123,7 @@ test.describe('Forgot password', () => {
 const waitForEmail = async (
   user: TestUserKey,
   start: Dayjs,
-  timeout: number = 2_000,
+  timeout: number = 5_000,
 ) => {
   const mailpitService = testServiceBuilder().mailpitService();
 
