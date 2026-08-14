@@ -1,17 +1,28 @@
 <script setup lang="ts">
-  defineProps<{
-    src: string[];
-    caption?: string | undefined;
-  }>();
+  import FullscreenImage from './FullscreenImage.vue';
+
+  withDefaults(
+    defineProps<{
+      images: { src: string; caption?: string }[];
+      groupCaption?: string | undefined;
+      fullscreen?: boolean;
+    }>(),
+    { groupCaption: undefined, fullscreen: true },
+  );
 </script>
 
 <template>
   <div class="flex flex-col items-center">
     <div class="flex flex-row flex-wrap justify-center gap-4">
-      <NuxtImg v-for="(image, idx) of src" :key="idx" :src="image" />
+      <FullscreenImage
+        v-for="({ src, caption }, idx) of images"
+        :key="idx"
+        :src="src"
+        :caption="caption"
+        :fullscreen="fullscreen" />
     </div>
-    <p v-if="caption">
-      <em>{{ caption }}</em>
+    <p v-if="groupCaption !== undefined">
+      <em>{{ groupCaption }}</em>
     </p>
   </div>
 </template>

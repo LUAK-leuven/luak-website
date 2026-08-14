@@ -18,10 +18,10 @@ In the end we're with a small group of 6 that want to have fun up there: Emiel, 
 
 ::images
 ---
-src:
-  - /stories/sialouze/IMG_1791.jpg
-  - /stories/sialouze/IMG_1792.jpg
-caption: Topo of the Sialouze
+images:
+  - src: /stories/sialouze/IMG_1791.jpg
+  - src: /stories/sialouze/IMG_1792.jpg
+group-caption: Topo of the Sialouze
 ---
 ::
 
@@ -36,10 +36,11 @@ So after shifting around some gear - we ate the watermelon so that I could carry
 
 ::images
 ---
-src:
-  - /stories/sialouze/IMG_4203.jpg
-  - /stories/sialouze/IMG_4208.jpg
-caption: "Cooking a delicious meal at the bivouac spot; Let's test how high we can bring the chips bag before it explodes"
+images:
+  - src: /stories/sialouze/IMG_4203.jpg
+    caption: Cooking a delicious meal at the bivouac spot
+  - src: /stories/sialouze/IMG_4208.jpg
+    caption: Let's test how high we can bring the chips bag before it explodes
 ---
 ::
 
@@ -55,9 +56,9 @@ Damn it, what do we do now? You don't want to be the 3rd or 4th rope party in su
 
 ::images
 ---
-src:
-  - /stories/sialouze/IMG_1797.jpg
-caption: Too many people on the Sialouze
+images:
+  - src: /stories/sialouze/IMG_1797.jpg
+group-caption: Too many people on the Sialouze
 ---
 ::
 
@@ -65,9 +66,9 @@ When Kasper asks: "Do you see any route without people in it", I reply half joki
 
 ::images
 ---
-src:
-  - /stories/sialouze/original-topo-unchi-maka.jpg
-caption: The original topo of Unchi Maka
+images:
+  - src: /stories/sialouze/original-topo-unchi-maka.jpg
+group-caption: The original topo of Unchi Maka
 ---
 ::
 
@@ -79,11 +80,11 @@ I start with leading, Emiel and Kasper follow as second after me, followed by Li
 
 ::images
 ---
-src:
-  - /stories/sialouze/IMG_4209.jpg
-  - /stories/sialouze/IMG_4221.jpg
-  - /stories/sialouze/IMG_4230.jpg
-caption: The first pitches are fun and easy
+images:
+  - src: /stories/sialouze/IMG_4209.jpg
+  - src: /stories/sialouze/IMG_4221.jpg
+  - src: /stories/sialouze/IMG_4230.jpg
+group-caption: The first pitches are fun and easy climbing on beautiful granite
 ---
 ::
 
@@ -91,11 +92,11 @@ caption: The first pitches are fun and easy
 
 ::images
 ---
-src:
-  - /stories/sialouze/IMG_4256.jpg
-  - /stories/sialouze/IMG_4259.jpg
-  - /stories/sialouze/IMG_4271.jpg
-caption: Here we go, the first 7a+ pitch
+images:
+  - src: /stories/sialouze/IMG_4256.jpg
+  - src: /stories/sialouze/IMG_4259.jpg
+  - src: /stories/sialouze/IMG_4271.jpg
+group-caption: Here we go, the first 7a+ pitch
 ---
 ::
 
@@ -103,9 +104,9 @@ caption: Here we go, the first 7a+ pitch
 
 ::images
 ---
-src:
-  - /stories/sialouze/IMG_4267.jpg
-caption: The chips bag didn't make it to the top
+images:
+  - src: /stories/sialouze/IMG_4267.jpg
+group-caption: The chips bag didn't make it to the top
 ---
 ::
 
@@ -118,9 +119,9 @@ I switch places with Kasper who will lead the final 4 pitches. In his second pit
 
 ::images
 ---
-src:
-  - /stories/sialouze/20260718_163118.jpg
-caption: Summit picture
+images:
+  - src: /stories/sialouze/20260718_163118.jpg
+group-caption: Summit picture
 ---
 ::
 
@@ -130,9 +131,9 @@ Once back at basecamp it's already quite late (7 p.m.), so we decide to first ea
 
 ::images
 ---
-src:
-  - /stories/sialouze/IMG_4282.jpg
-caption: Everyone is happy to be back at basecamp after a long day of climbing
+images:
+  - src: /stories/sialouze/IMG_4282.jpg
+group-caption: Everyone is happy to be back at basecamp after a long day of climbing
 ---
 ::
 
