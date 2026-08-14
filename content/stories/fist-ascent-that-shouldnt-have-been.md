@@ -12,30 +12,23 @@ Summer meet 2021 – location La Bérarde
 
 The first climbing day was an absolute joy. 3 climbing parties went to cascade d’en bas for climbing next to the B-E-A-Utifull waterfall on perfect crispy granite. Febe and Kobe (who took his big camera) climbed a 6a-max route on the right side. I climbed with Cedric a stunning sustained route graded 6b on the left flank. (Even though not often travelled ) the route felt like an absolute classic.
 
-::flex-box
+::images
 ---
-justify: justify-center
+images:
+  - src: /stories/DSC04222-min-600x400.JPG
+  - src: /stories/DSC04244-min-600x400.JPG
+group-caption: Cedric and Sander in the crux pitch. A super delicate (yet powerful) 6b slab. in crazy exposure
 ---
-#item1
-![DSC04222-min-600x400.JPG](/stories/DSC04222-min-600x400.JPG)
-
-#item2
-![Sander climbing](/stories/DSC04244-min-600x400.JPG)
-
-#item3
-*Cedric and Sander in the crux pitch. A super delicate (yet powerful) 6b slab. in crazy exposure*
 ::
 
 Amazing 3D-climbing on perfect granite. No-hands-kneebars, hand and footjams, heelhooks – a full range of movements in a crazy (AND VERY EXPOSED) atmosphere. Since I brought my camera, and Kobe was photographing from the other side this gave some amazing pictures.
 
-::flex-box
+::images
 ---
-justify: justify-center
+images:
+  - src: /stories/edited-7329-min-600x400.jpg
+group-caption: Venezuela?? Nono, just perfect la berarde granite
 ---
-#item1
-![edited-7329-min-600x400.jpg](/stories/edited-7329-min-600x400.jpg)
-
-*Venezuela?? Nono, just perfect la berarde granite*
 ::
 
 ## Some alpine plans
@@ -44,16 +37,14 @@ Needless to say – the psych was VERY high in the camping lot that evening. And
 
 Earlier I had promised Kobe we would go on an alpine style trad outing together. Our aim was going to do the approach towards cirque du soreiller that same evening (bivouac style). The day after we would try to climb the pillier du chèze (on tête du rouget) and sleep a second night before doing another climb on aiguille dibona or aiguille orientale du soreiller. We packed – took photo’s of the guidebook - had dinner and left for the 2-3 hours approach.
 
-::flex-box
-#item1
-![DSC04260-min-600x400.JPG](/stories/DSC04260-min-600x400.JPG)
-
-*Stunning evening sunrays, making our approach very enjoyable*
-
-#item2
-![DSC04262-min-600x400.JPG](/stories/DSC04262-min-600x400.JPG)
-
-Arrival at cirque du soreiller. the crazy spire is the famous aiguille dibona. The wall on its right: aiguille orientale du soreiller
+::images
+---
+images:
+  - src: /stories/DSC04260-min-600x400.JPG
+    caption: Stunning evening sunrays, making our approach very enjoyable
+  - src: /stories/DSC04262-min-600x400.JPG
+    caption: "Arrival at cirque du soreiller. The crazy spire is the famous aiguille dibona. The wall on its right: aiguille orientale du soreiller"
+---
 ::
 
 Where early in the evening there was some rainclouds, now the sky cleared up entirely and we enjoyed the hike in stunning evening light. By the time the last sunrays were hitting the mountains we arrived in cirque du soreiller. We get the name (and reputation now) – half a circle of crazy, big alpine walls are waiting for us, with the inspiring Dibona as guardian.

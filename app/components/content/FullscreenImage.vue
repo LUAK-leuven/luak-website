@@ -65,9 +65,9 @@
     ref="container"
     class="flex flex-col items-center m-2 mb-4"
     :class="{
-      'flex justify-center': isFullscreen,
+      'justify-center': isFullscreen,
     }">
-    <div class="relative size-fit">
+    <div class="relative" :class="isFullscreen ? 'size-full' : 'size-fit'">
       <Button
         v-if="fullscreen"
         class="absolute right-2 top-2 z-10 size-8 rounded-full bg-black/60 text-white border-0"
@@ -90,11 +90,11 @@
       </Button>
       <NuxtImg
         class="custom-img"
-        :class="{
-          'size-full object-contain': isFullscreen,
-          'rounded-lg shadow-2xl max-w-60 max-h-60 md:max-w-80 md:max-h-80':
-            !isFullscreen,
-        }"
+        :class="
+          isFullscreen
+            ? 'size-full object-contain'
+            : 'rounded-lg shadow-2xl max-w-60 max-h-60 md:max-w-80 md:max-h-80'
+        "
         :src="src"
         :alt="alt">
       </NuxtImg>
