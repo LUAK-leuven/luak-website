@@ -1,16 +1,15 @@
 <script setup lang="ts">
-  defineProps<{ arrowBack?: string }>();
+  import type { RoutesNamedLocations } from '@typed-router';
+  import BackButton from '../shared/BackButton.vue';
+
+  defineProps<{ backTo?: RoutesNamedLocations | undefined }>();
 </script>
 <template>
   <FullPageCard>
     <template #title> Page Not Found </template>
 
-    <NuxtLink
-      v-if="arrowBack"
-      class="btn btn-circle btn-sm btn-outline mb-5"
-      :to="arrowBack">
-      <span class="material-symbols-outlined">arrow_back</span>
-    </NuxtLink>
+    <BackButton v-if="backTo !== undefined" :to="backTo" />
+
     <div class="text-center">
       <p>Oops! The content you're looking for doesn't exist.</p>
       <NuxtLink class="link" :to="{ name: 'index' }">Go back home</NuxtLink>
