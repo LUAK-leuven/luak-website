@@ -1,7 +1,6 @@
 ---
 title: Ettringen Weekend
 date: 2026-04-25
-description: "On the weekend of 25-26 April there will be a climbing meet in Ettringen, a very cool crack and trad climbing area in Germany. "
 image: /activities/ettringen.jpg
 price: 0
 ---
