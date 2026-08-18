@@ -1,7 +1,6 @@
 ---
 title: Start Academic year 24-25
 date: 2024-08-16
-description: helloooww luak people and interested people ✌️
 image: /news/new_academic_year_2024.jpg
 ---
 
