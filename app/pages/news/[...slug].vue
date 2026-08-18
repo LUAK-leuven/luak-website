@@ -38,5 +38,5 @@
       </PageCard>
     </PagesFullPageCardWithPicture>
   </template>
-  <PagesPageNotFound v-else arrow_back="/news" />
+  <PagesPageNotFound v-else class="mt-20" :back-to="{ name: 'news' }" />
 </template>

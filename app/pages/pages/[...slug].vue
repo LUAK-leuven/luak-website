@@ -1,9 +1,11 @@
 <script setup lang="ts">
+  import PageNotFound from '~/components/pages/PageNotFound.vue';
+
   const route = useRoute();
   const { data: doc } = await useAsyncData(route.path, () => {
     return queryCollection('pages').path(route.path).first();
   });
-  if (doc.value == null) {
+  if (doc.value === null || doc.value === undefined) {
     throw createError({ statusCode: 404, statusMessage: 'Page Not Found' });
   }
 </script>
@@ -15,9 +17,5 @@
 
     <ContentRenderer class="nuxt-content w-full" :value="doc" />
   </FullPageCard>
-  <FullPageCard v-else>
-    <template #title> Page Not Found </template>
-    <p>Oops! The content you're looking for doesn't exist.</p>
-    <NuxtLink class="link" :to="{ name: 'index' }">Go back home</NuxtLink>
-  </FullPageCard>
+  <PageNotFound v-else />
 </template>

@@ -2,19 +2,20 @@
   import BackButton from '~/components/shared/BackButton.vue';
 
   definePageMeta({
-    middleware: 'active-member-guard',
     layout: 'picture',
   });
 
   const route = useRoute();
-  const { data: doc } = await useAsyncData(route.path, () => {
-    return queryCollection('stories').path(route.path).first();
+  const { data: doc } = await useAsyncData(route.path, async () => {
+    return (
+      (await queryCollection('stories').path(route.path).first()) ?? undefined
+    );
   });
 </script>
 
 <template>
   <main>
-    <template v-if="doc">
+    <template v-if="doc !== undefined">
       <PagesFullPageCardWithPicture :image-url="doc.image">
         <template #title>
           <div class="max-w-[90wh] flex flex-col items-center">
@@ -43,6 +44,6 @@
       </PagesFullPageCardWithPicture>
     </template>
 
-    <PagesPageNotFound v-else arrow_back="/stories" />
+    <PagesPageNotFound v-else class="mt-20" :back-to="{ name: 'stories' }" />
   </main>
 </template>

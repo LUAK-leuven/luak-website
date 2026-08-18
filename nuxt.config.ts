@@ -16,7 +16,7 @@ export default defineNuxtConfig({
       link: [
         {
           rel: 'stylesheet',
-          href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200',
+          href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@200..600,0..1&icon_names=arrow_back,arrow_forward,check,download,filter_alt,fullscreen,fullscreen_exit,info,more_vert,open_in_new,qr_code_scanner&display=block',
         },
       ],
     },

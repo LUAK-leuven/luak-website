@@ -17,7 +17,10 @@
       <strong>{{ user?.email }}</strong>
     </template>
     <template #actions>
-      <Button class="btn-error" data-testId="profile.logout" @click="logout">
+      <Button
+        class="btn btn-error"
+        data-testId="profile.logout"
+        @click="logout">
         Log out
       </Button>
     </template>

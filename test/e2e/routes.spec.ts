@@ -43,7 +43,7 @@ const accessGraph: {
   },
   {
     rule: 'public section',
-    paths: ['/pages/christmas-bets/'], // TODO: 'pages/christmas-bets/' should be in member section.
+    paths: ['/activities/'],
     users: {
       unauthenticated: 'allow',
       nonMember: 'allow',
@@ -55,7 +55,7 @@ const accessGraph: {
   },
   {
     rule: 'authenticated - non-member',
-    paths: ['/profile/overview'],
+    paths: ['/profile/overview', '/pages/christmas-bets/'], // TODO: 'pages/christmas-bets/' should be in member section.
     users: {
       unauthenticated: 'skip', // Supabase redirect doesn't use the redirect query param, so we can't test this.
       nonMember: 'allow',
@@ -81,7 +81,9 @@ const accessGraph: {
 
 allUsers.forEach((testUser) => {
   test.describe(testUser, () => {
-    if (testUser !== 'unauthenticated') {
+    if (testUser === 'unauthenticated') {
+      test.use({ storageState: undefined });
+    } else {
       test.use({ storageState: authStateFile(testUser) });
     }
     accessGraph.forEach(({ rule, paths, users: { [testUser]: access } }) => {
@@ -97,6 +99,8 @@ allUsers.forEach((testUser) => {
     });
   });
 });
+
+const baseURL = process.env.BASE_URL!;
 
 async function testAccess(path: string, access: Access, page: Page) {
   switch (access) {
@@ -121,13 +125,13 @@ async function testAccess(path: string, access: Access, page: Page) {
 async function assertHasAccess(path: string, page: Page) {
   const response = await page.goto(path);
   expect(response?.ok()).toBe(true);
-  expect(response?.url().endsWith(path)).toBe(true);
+  expect(response?.url()).toBe(baseURL + path);
 }
 
 async function assertIsRedirectedToLogin(path: string, page: Page) {
   const response = await page.goto(path);
   expect(response?.ok()).toBe(true);
-  expect(response?.url()).toContain('/login?redirect=' + path);
+  expect(response?.url()).toBe(baseURL + '/login?redirect=' + path);
 }
 
 async function assertHasNoAccess(path: string, page: Page) {

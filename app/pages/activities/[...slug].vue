@@ -34,5 +34,5 @@
       <ContentRenderer class="nuxt-content" :value="page" />
     </PageCard>
   </PagesFullPageCardWithPicture>
-  <PagesPageNotFound v-else class="mt-20" />
+  <PagesPageNotFound v-else class="mt-20" :back-to="{ name: 'activities' }" />
 </template>

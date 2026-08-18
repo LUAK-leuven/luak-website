@@ -15,7 +15,6 @@
 
 <template>
   <button
-    class="btn"
     :disabled="disabled || _disabled"
     :type="type"
     :tabindex="tabindex"
