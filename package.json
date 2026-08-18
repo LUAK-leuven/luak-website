@@ -41,7 +41,7 @@
     "prettier": "^3.9.6",
     "prettier-plugin-organize-attributes": "^1.0.0",
     "sass": "^1.99.0",
-    "supabase": "^2.101.0",
+    "supabase": "^2.115.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.65.0",
     "vitest": "^4.1.7",
