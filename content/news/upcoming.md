@@ -1,7 +1,6 @@
 ---
 title: Summermeet location & upcoming activities
 date: 2025-04-16
-description: The long standing debate of where the next summermeet will take place has finally reached its destination.
 image: /news/bergjes_met_sneeuw.jpg
 ---
 
