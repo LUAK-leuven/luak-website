@@ -4,8 +4,6 @@
   import LoadingButton from '~/components/shared/LoadingButton.vue';
   import { useToast } from '~/composables/useToast';
 
-  definePageMeta({ middleware: 'unauthenticated' });
-
   const supabase = useSupabaseClient();
   const route = useRoute();
   const user = useSupabaseUser();
@@ -84,20 +82,25 @@
           name="pwd1"
           placeholder="******"
           type="password"
-          autocomplete="new-password" />
+          autocomplete="new-password"
+          data-testid="new-password" />
         <TextField
           label="Confirm your password:"
           name="pwd2"
           placeholder="******"
           type="password"
-          autocomplete="new-password" />
+          autocomplete="new-password"
+          data-testid="confirm-password" />
         <div class="flex justify-end">
-          <LoadingButton text="Submit" :click-handler="onSubmit" />
+          <LoadingButton
+            text="Submit"
+            :click-handler="onSubmit"
+            data-testid="submitButton" />
         </div>
       </form>
     </div>
 
-    <dialog id="auth-error" class="modal">
+    <dialog id="auth-error" class="modal" data-testid="errorDialog">
       <div class="modal-box">
         <h2>Error: {{ authError?.error }}</h2>
         <p>{{ authError?.description }}</p>

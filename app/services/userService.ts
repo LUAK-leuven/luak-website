@@ -71,7 +71,7 @@ export class UserService {
       )
       .eq('id', userId)
       .eq('Memberships.Payments.approved', true)
-      .single()
+      .maybeSingle()
       .throwOnError();
 
     return data;

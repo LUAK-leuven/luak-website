@@ -73,6 +73,7 @@ export default defineNuxtConfig({
       login: '/login',
       callback: '/confirmLogin',
       include: ['/profile(/*)?'],
+      exclude: ['/profile/overview'],
       saveRedirectToCookie: true,
     },
     cookieOptions: {

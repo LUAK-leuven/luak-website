@@ -21,6 +21,15 @@ export class TestUser {
   }
 }
 
+export const testUserKeys = [
+  'nonMember',
+  'unpaidMembership',
+  'paidLastYear',
+  'paidMembership',
+  'boardMember',
+] as const;
+export type TestUserKey = (typeof testUserKeys)[number];
+
 export const testUsers = {
   nonMember: new TestUser({
     firstName: 'Non',
@@ -50,6 +59,4 @@ export const testUsers = {
     email: 'board_member@test.com',
     password: 'password',
   }),
-} as const satisfies Record<string, TestUser>;
-
-export type TestUserKey = keyof typeof testUsers;
+} as const satisfies Record<TestUserKey, TestUser>;

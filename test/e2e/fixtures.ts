@@ -1,11 +1,15 @@
 import type { Page } from '@playwright/test';
 import { LoginPage } from '#test/e2e/pages/login.page';
 import { testServiceBuilder } from '#test/testServices';
-import type { TestUser, TestUserKey } from '#test/TestUser';
+import { testUsers, type TestUser, type TestUserKey } from '#test/TestUser';
 import { test as base, expect } from '@playwright/test';
 import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
+import { randomOf } from '~/shared/utils/utils';
+import { AppPage } from './pages/app.page';
 
-export const test = base.extend({
+export const test = base.extend<{
+  luakPage: AppPage;
+}>({
   page: async ({ page }, use) => {
     // Block external requests to Google Calendar and Google Fonts because they are not needed for the tests and can cause flakiness.
     await page.route('**://calendar.google.com/**', (route) => route.abort());
@@ -14,6 +18,22 @@ export const test = base.extend({
     );
 
     await use(page);
+  },
+  luakPage: async ({ page }, use) => {
+    await use(new AppPage(page));
+  },
+});
+
+export const randomUserTest = test.extend<{
+  user: TestUserKey;
+}>({
+  // eslint-disable-next-line no-empty-pattern
+  user: async ({}, use) => {
+    const user = randomOf(Object.keys(testUsers)) as TestUserKey;
+    await use(user);
+  },
+  storageState: async ({ user }, use) => {
+    await use(authStateFile(user));
   },
 });
 

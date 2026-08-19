@@ -1,5 +1,9 @@
 <script setup lang="ts">
-  import * as yup from 'yup';
+  import {
+    object as yupObject,
+    string as yupString,
+    bool as yupBool,
+  } from 'yup';
   import { yup_password, yup_phone } from '~/utils/yup';
   import TextField from '~/components/input/TextField.vue';
   import LoadingButton from '~/components/shared/LoadingButton.vue';
@@ -11,28 +15,38 @@
 
   const supabase = useSupabaseClient();
 
-  const formSchema = yup.object({
-    firstName: yup.string().required().label('First name'),
-    lastName: yup.string().required().label('Last name'),
-    email: yup.string().required().email(),
+  const { show: showToast } = useToast();
+
+  const url = useRequestURL();
+
+  const formSchema = yupObject({
+    firstName: yupString().required().label('First name'),
+    lastName: yupString().required().label('Last name'),
+    email: yupString().required().email(),
     password: yup_password.required(),
-    newsletter: yup.bool().default(true),
-    whatsapp: yup.bool().default(true),
+    newsletter: yupBool().default(true),
+    whatsapp: yupBool().default(true),
     phoneNumber: yup_phone.transform((v: string) => (v ? v : undefined)),
   });
-  const { handleSubmit, setFieldError } = useForm({
+  const { handleSubmit } = useForm({
     validationSchema: toTypedSchema(formSchema),
   });
 
   const onSubmit = async () => {
     await handleSubmit(async (submitted) => {
-      const { error } = await supabase.auth.signUp({
+      const { error, data } = await supabase.auth.signUp({
         email: submitted.email,
         password: submitted.password,
+        options: {
+          emailRedirectTo: `${url.origin}/profile/overview`,
+        },
       });
       if (error) {
-        setFieldError('password', error.message);
-      } else {
+        showToast('error', error.message);
+        return;
+      }
+      if (data.session) {
+        // Email confirmation disabled
         const { error } = await supabase.from('Users').insert({
           first_name: submitted.firstName,
           last_name: submitted.lastName,
@@ -42,8 +56,36 @@
           email: submitted.email,
         });
         if (error) {
-          setFieldError('password', error.message);
-        } else await navigateTo({ name: 'confirmLogin' });
+          showToast('error', error.message);
+          return;
+        }
+        await navigateTo({ name: 'profile-overview' });
+      } else {
+        // Email confirmation enabled
+        if (data.user === null) {
+          showToast('error', 'An unexpected error occurred');
+          return;
+        }
+        const { error } = await supabase.from('Users').insert({
+          id: data.user.id,
+          first_name: submitted.firstName,
+          last_name: submitted.lastName,
+          has_newsletter: submitted.newsletter,
+          has_whatsapp: submitted.whatsapp,
+          phone_number: submitted.phoneNumber ?? null,
+          email: submitted.email,
+        });
+        if (error) {
+          showToast('error', 'An unexpected error occurred');
+          console.error(error);
+          return;
+        } else {
+          showToast(
+            'success',
+            `A confirmation email has been sent to ${submitted.email}. Confirm your email address to enable your account.`,
+          );
+          await navigateTo({ name: 'index' });
+        }
       }
     })();
   };
@@ -61,32 +103,37 @@
             label="First name *"
             name="firstName"
             placeholder="Alex"
-            autocomplete="given-name" />
+            autocomplete="given-name"
+            data-testid="firstName" />
           <TextField
             class="ml-1"
             label="Last name *"
             name="lastName"
             placeholder="Megos"
-            autocomplete="family-name" />
+            autocomplete="family-name"
+            data-testid="lastName" />
         </div>
         <TextField
           label="Email *"
           name="email"
           placeholder="youremail@example.com"
           type="email"
-          autocomplete="email" />
+          autocomplete="email"
+          data-testid="email" />
         <TextField
           label="Phone Number (for WhatsApp)"
           name="phoneNumber"
           placeholder="+32468123123"
           type="tel"
-          autocomplete="tel" />
+          autocomplete="tel"
+          data-testid="phone" />
         <TextField
           label="Password *"
           name="password"
           placeholder="*******"
           type="password"
-          autocomplete="new-password" />
+          autocomplete="new-password"
+          data-testid="password" />
         <BoolField name="whatsapp">Can we contact you via whatsapp?</BoolField>
         <BoolField name="newsletter">
           Subscribe to monthly newsletter?
@@ -97,7 +144,8 @@
           <LoadingButton
             class="w-full"
             text="Sign up"
-            :click-handler="onSubmit" />
+            :click-handler="onSubmit"
+            data-testid="submitButton" />
         </div>
       </form>
     </div>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import * as yup from 'yup';
   import TextField from '~/components/input/TextField.vue';
+  import Button from '~/components/shared/Button.vue';
 
   definePageMeta({ middleware: 'unauthenticated' });
 
@@ -13,13 +14,16 @@
   const { handleSubmit, isSubmitting, setFieldError } = useForm({
     validationSchema: toTypedSchema(formSchema),
   });
+
   const isSentSuccessfully = ref(false);
+
   const onSubmit = handleSubmit(async (submitted) => {
     const { error } = await supabase.auth.resetPasswordForEmail(
       submitted.email,
       { redirectTo: `${url.origin}/reset-password` },
     );
     if (error) {
+      console.error(error);
       setFieldError('email', error.message);
     } else isSentSuccessfully.value = true;
   });
@@ -40,11 +44,13 @@
           name="email"
           placeholder="youremail@example.com"
           type="email"
-          autocomplete="email" />
+          autocomplete="email"
+          data-testid="emailInput" />
         <div class="flex justify-end">
-          <button
+          <Button
             class="btn btn-primary mt-2"
-            :class="{ 'btn-disabled': isSentSuccessfully }">
+            :class="{ 'btn-disabled': isSentSuccessfully }"
+            data-testid="submitButton">
             <span v-if="isSubmitting" class="loading loading-spinner">
               loading
             </span>
@@ -54,7 +60,7 @@
               check
             </span>
             <span v-else>Sent reset link</span>
-          </button>
+          </Button>
         </div>
       </form>
     </div>

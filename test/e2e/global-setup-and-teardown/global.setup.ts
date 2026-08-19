@@ -6,7 +6,7 @@ test('clean db', async () => {
   const { testDao, userTestService } = testServiceBuilder();
   await testDao().cleanInventoryEvents();
   await testDao().clearRentals();
-  await userTestService().resetTestMemberships();
+  await userTestService().resetTestUsers();
 });
 
 if (process.env.SKIP_LOGIN_SETUP !== 'true') {
