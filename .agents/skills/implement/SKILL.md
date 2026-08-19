@@ -52,7 +52,22 @@ Write the implementation that makes the test pass. Apply the **4 rules of simple
 - Run the tests (`yarn test`) and fix any issues.
 - **Check for consumer breakage beyond the plan's acceptance criteria.** Read [ai-context/delivery.md](../../../ai-context/delivery.md). Every step must be deliverable — search for every consumer of anything whose shape you changed (composable return values, component props/emits, shared types, util signatures) and confirm each one still works, even if the plan's acceptance criteria never mention it. Typecheck and lint passing is not sufficient proof — a `useState`/singleton consumer or an unused-looking import can still be silently broken.
 
-### 4. Report
+### 4. Refactor
+
+With the tests passing, look for opportunities to improve the code you just wrote (and code you touched) without changing its behaviour:
+
+- Check for refactoring opportunities — unclear names, awkward structure, misplaced logic.
+- Remove unused variables, functions, or imports.
+- Extract repeated code into reusable functions.
+
+Rules for this step:
+
+- **No functionality changes.** This step is about code quality and maintainability only — do not add, remove, or alter behaviour.
+- After each refactor, re-run `yarn typecheck`, `yarn lintfix`, and `yarn test` to confirm the code still behaves identically and all tests still pass.
+- If a refactor is not required by the current step (per the 4 rules of simple design), keep it small and localized — do not refactor unrelated code.
+- If you are unsure whether a refactor changes behaviour, stop and ask rather than guessing.
+
+### 5. Report
 
 Tell the user:
 
@@ -97,6 +112,7 @@ Ask one focused question at a time. Do not list every possible concern — prior
 - Do not implement more than one step.
 - Do not skip the TDD sub-step when a test is possible.
 - Do not add abstractions, utilities, or refactors that are not required by the current step.
+- Do not change functionality during refactoring.
 - Do not assume the plan is correct if the codebase contradicts it — raise it.
 - Do not leave linting errors or broken tests behind.
 - Do not silently fix a broken consumer/integration point outside the plan's acceptance criteria — report it and update the plan first (see ai-context/delivery.md).

@@ -16,12 +16,10 @@ Make sure to read [ai-context](./ai-context/index.md) so that you can load the c
 - TypeScript is **mandatory everywhere**, including `<script setup lang="ts">` in all SFCs.
 - Never use `any` type and avoid `unknown`, use the correct types at all times.
 - **Avoid type casting**.
-- Run `yarn lint` to verify you're not introducing errors.
+- Run `yarn typecheck` and `yarn lint` to verify you're not introducing errors.
 - Use `import type { ... }` for type-only imports.
-- Prefer named exports; use `import * as yup from 'yup'` only for namespace-style libraries.
 - Use branded ID types (`EntityId<'user'>`, `UserId`, `RentalId`) for all primary keys.
 - Cast Supabase row IDs: `data.id as UserId`.
-- Do not duplicate database types, use `Database['public']['Tables']['X']['Row']` for table row types, `Enums<'x'>` for DB enums.
 - Utility types live in `app/utils/typeUtils.ts`: `Defined<T>`, `GetReturn<T>`, `Unwrap<T>`.
 - Generic components use `<script setup lang="ts" generic="T">`.
 

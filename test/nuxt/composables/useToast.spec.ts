@@ -1,5 +1,13 @@
 import { mountSuspended } from '@nuxt/test-utils/runtime';
-import { expect, test, vi } from 'vitest';
+import { afterEach, beforeEach, expect, test, vi } from 'vitest';
+
+beforeEach(() => {
+  vi.useFakeTimers();
+});
+
+afterEach(() => {
+  vi.useRealTimers();
+});
 
 const ToastHost = defineComponent({
   setup() {
@@ -63,4 +71,49 @@ test('useToast does not close a toast with an unknown id', async () => {
   );
   await wrapper.get('[data-testid="close-first"]').trigger('click');
   warn.mockRestore();
+});
+
+test('useToast automatically closes a toast after 4000ms', async () => {
+  const wrapper = await mountSuspended(ToastHost);
+
+  await wrapper.get('[data-testid="show-success"]').trigger('click');
+  expect(wrapper.get('[data-testid="toast-count"]').text()).toBe('1');
+
+  await vi.advanceTimersByTimeAsync(4000);
+
+  expect(wrapper.get('[data-testid="toast-count"]').text()).toBe('0');
+});
+
+test('useToast clears the timer when a toast is closed manually', async () => {
+  const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+  const wrapper = await mountSuspended(ToastHost);
+
+  await wrapper.get('[data-testid="show-success"]').trigger('click');
+  await wrapper.get('[data-testid="close-first"]').trigger('click');
+  await vi.advanceTimersByTimeAsync(4000);
+
+  expect(wrapper.get('[data-testid="toast-count"]').text()).toBe('0');
+  expect(warn).not.toHaveBeenCalled();
+  warn.mockRestore();
+});
+
+test('useToast runs independent timers for each toast', async () => {
+  const wrapper = await mountSuspended(ToastHost);
+
+  await wrapper.get('[data-testid="show-success"]').trigger('click');
+  await vi.advanceTimersByTimeAsync(1000);
+  await wrapper.get('[data-testid="show-error"]').trigger('click');
+
+  await vi.advanceTimersByTimeAsync(2999);
+  expect(wrapper.get('[data-testid="toast-messages"]').text()).toBe(
+    'Success message, Error message',
+  );
+
+  await vi.advanceTimersByTimeAsync(1);
+  expect(wrapper.get('[data-testid="toast-messages"]').text()).toBe(
+    'Error message',
+  );
+
+  await vi.advanceTimersByTimeAsync(3000);
+  expect(wrapper.get('[data-testid="toast-count"]').text()).toBe('0');
 });
