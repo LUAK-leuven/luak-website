@@ -19,12 +19,16 @@ export function useUserService() {
         if (user.value === null)
           if (args?.authRequired) throw new Error('User not logged in');
           else return 'unauthenticated';
-        return await userService.getLuakUser(user.value.sub as UserId);
+        const userData = await userService.getLuakUser(
+          user.value.sub as UserId,
+        );
+        if (userData === null) return 'unauthenticated';
+        return userData;
       },
       { watch: [user], lazy: false },
     );
-    watch(error, (value) => {
-      if (value) throw showError(value);
+    watch(error, async (value) => {
+      if (value) await useNuxtApp().runWithContext(() => showError(value));
     });
     return computed(() => {
       if (data.value === undefined || data.value === 'unauthenticated')

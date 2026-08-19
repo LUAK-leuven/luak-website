@@ -100,7 +100,7 @@ double_confirm_changes = true
 # If enabled, users need to confirm their email address before signing in.
 enable_confirmations = true
 # If enabled, requires the user's current password to be provided when changing to a new password.
-secure_password_change = false # TODO LUAK-11 enable
+secure_password_change = true
 # Controls the minimum amount of time that must pass before sending another signup confirmation or password reset email.
 max_frequency = "1s"
 

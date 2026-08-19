@@ -3,10 +3,6 @@
   import TextField from '~/components/input/TextField.vue';
   import LoadingButton from '~/components/shared/LoadingButton.vue';
 
-  definePageMeta({
-    middleware: 'unauthenticated',
-  });
-
   const supabase = useSupabaseClient();
   const redirect = useRoute().query['redirect'] as string | null;
 

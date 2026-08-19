@@ -6,8 +6,11 @@
 
   const user = useSupabaseUser();
   const supabase = useSupabaseClient();
+  const { show: showToast } = useToast();
+
   const isChangedSuccessfull = ref(false);
-  const { handleSubmit, setFieldError, isSubmitting } = useForm({
+
+  const { handleSubmit, isSubmitting } = useForm({
     validationSchema: toTypedSchema(
       yup.object({
         password: yup_password.required(),
@@ -25,9 +28,10 @@
       password: submitted.password,
     });
     if (error) {
-      setFieldError('password', error.message);
+      showToast('error', error.message);
     } else {
       isChangedSuccessfull.value = true;
+      showToast('success', 'Password changed successfully.');
     }
   });
 </script>
