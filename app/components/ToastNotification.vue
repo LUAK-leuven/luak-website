@@ -1,8 +1,9 @@
 <script setup lang="ts">
   import Button from './shared/Button.vue';
 
-  defineProps<{
+  const { type, paused } = defineProps<{
     type: 'success' | 'warning' | 'error' | 'info';
+    paused?: boolean;
   }>();
   const emit = defineEmits<{
     close: [];
@@ -11,7 +12,7 @@
 
 <template>
   <div
-    class="alert flex justify-between"
+    class="alert relative flex justify-between overflow-hidden"
     :class="{
       'alert-info': type === 'info',
       'alert-success': type === 'success',
@@ -27,5 +28,9 @@
       @click="emit('close')">
       ✕
     </Button>
+    <div
+      class="toast-progress absolute bottom-0 left-0 h-1 w-full bg-current opacity-50"
+      :style="{ animationPlayState: paused === true ? 'paused' : 'running' }"
+      data-testid="toast-progress" />
   </div>
 </template>

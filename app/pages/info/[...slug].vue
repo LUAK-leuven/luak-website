@@ -1,7 +1,7 @@
 <script setup lang="ts">
   const route = useRoute();
   const { data: doc } = await useAsyncData(route.path, () => {
-    return queryCollection('info_').path(route.path).first();
+    return queryCollection('infoPages').path(route.path).first();
   });
 </script>
 <template>
