@@ -2,7 +2,7 @@
 title: LUAK 55 year weekend
 date: 2026-09-26
 price: 300
-image: "/luak-logo.png"
+image: "/activities/logo-55y-square.png"
 ---
 
 LUAK turns 55 this year and we're gonna celebrate! The weekend of 26-27 september we're headed to Freyr to climb during the day, and to eat together and talk around the campfire in the evening. It's guaranteed to be a lively meet!
