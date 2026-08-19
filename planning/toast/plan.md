@@ -165,7 +165,7 @@ Refactor the toast notification system from a single-toast singleton (`useState<
 
 ---
 
-### Step 7 — Implement hover pause/resume
+### ~~Step 7 — Implement hover pause/resume~~ DONE
 
 **Goal**: Hovering over a `ToastNotification` card pauses the countdown (the interval stops decrementing `remainingMs`, and `progress` freezes); moving the cursor away resumes it from where it left off.
 

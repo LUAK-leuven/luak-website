@@ -31,3 +31,15 @@ test('renders a half-width progress bar when progress is 0.5', async () => {
     wrapper.get('[data-testid="toast-progress"]').attributes('style'),
   ).toContain('width: 50%');
 });
+
+test('emits pause and resume when the toast is hovered', async () => {
+  const wrapper = await mountSuspended(ToastNotification, {
+    props: { type: 'info', progress: 1 },
+  });
+
+  await wrapper.get('[data-testid="toast"]').trigger('mouseenter');
+  await wrapper.get('[data-testid="toast"]').trigger('mouseleave');
+
+  expect(wrapper.emitted('pause')).toHaveLength(1);
+  expect(wrapper.emitted('resume')).toHaveLength(1);
+});

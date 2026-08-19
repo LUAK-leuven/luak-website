@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { useToast } from '~/composables/useToast';
 
-  const { toasts, close } = useToast();
+  const { toasts, close, pauseToast, resumeToast } = useToast();
 </script>
 <template>
   <NuxtLayout>
@@ -16,7 +16,9 @@
       :key="toast.id"
       :type="toast.type"
       :progress="toast.progress"
-      @close="close(toast.id)">
+      @close="close(toast.id)"
+      @pause="pauseToast(toast.id)"
+      @resume="resumeToast(toast.id)">
       {{ toast.message }}
     </ToastNotification>
   </div>

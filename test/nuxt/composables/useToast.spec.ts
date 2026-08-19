@@ -18,8 +18,10 @@ const ToastHost = defineComponent({
       <button data-testid="show-success" @click="show('success', 'Success message')" />
       <button data-testid="show-error" @click="show('error', 'Error message')" />
       <button data-testid="close-first" @click="close(toasts[0]?.id ?? '')" />
-      <button data-testid="close-last" @click="close(toasts[toasts.length - 1]?.id ?? '')" />
-      <button data-testid="close-unknown" @click="close('unknown-id')" />
+       <button data-testid="close-last" @click="close(toasts[toasts.length - 1]?.id ?? '')" />
+       <button data-testid="close-unknown" @click="close('unknown-id')" />
+       <button data-testid="pause-first" @click="pauseToast(toasts[0]?.id ?? '')" />
+       <button data-testid="resume-first" @click="resumeToast(toasts[0]?.id ?? '')" />
       <p data-testid="toast-count">{{ toasts.length }}</p>
        <p data-testid="toast-ids">{{ toasts.map((toast) => toast.id).join(', ') }}</p>
        <p data-testid="toast-messages">{{ toasts.map((toast) => toast.message).join(', ') }}</p>
@@ -134,5 +136,47 @@ test('useToast runs independent timers for each toast', async () => {
   );
 
   await vi.advanceTimersByTimeAsync(3000);
+  expect(wrapper.get('[data-testid="toast-count"]').text()).toBe('0');
+});
+
+test('useToast pauses a toast without changing its progress', async () => {
+  const wrapper = await mountSuspended(ToastHost);
+
+  await wrapper.get('[data-testid="show-success"]').trigger('click');
+  await vi.advanceTimersByTimeAsync(1000);
+  await wrapper.get('[data-testid="pause-first"]').trigger('click');
+
+  expect(wrapper.get('[data-testid="toast-progress"]').text()).toBe('0.75');
+
+  await vi.advanceTimersByTimeAsync(2000);
+
+  expect(wrapper.get('[data-testid="toast-progress"]').text()).toBe('0.75');
+  expect(wrapper.get('[data-testid="toast-count"]').text()).toBe('1');
+
+  await wrapper.get('[data-testid="close-first"]').trigger('click');
+});
+
+test('useToast resumes a paused toast from its current progress', async () => {
+  const wrapper = await mountSuspended(ToastHost);
+
+  await wrapper.get('[data-testid="show-success"]').trigger('click');
+  await vi.advanceTimersByTimeAsync(1000);
+  await wrapper.get('[data-testid="pause-first"]').trigger('click');
+  await wrapper.get('[data-testid="resume-first"]').trigger('click');
+  await vi.advanceTimersByTimeAsync(1000);
+
+  expect(wrapper.get('[data-testid="toast-progress"]').text()).toBe('0.5');
+
+  await wrapper.get('[data-testid="close-first"]').trigger('click');
+});
+
+test('useToast clears paused toast bookkeeping when dismissed', async () => {
+  const wrapper = await mountSuspended(ToastHost);
+
+  await wrapper.get('[data-testid="show-success"]').trigger('click');
+  await wrapper.get('[data-testid="pause-first"]').trigger('click');
+  await wrapper.get('[data-testid="close-first"]').trigger('click');
+  await vi.advanceTimersByTimeAsync(4000);
+
   expect(wrapper.get('[data-testid="toast-count"]').text()).toBe('0');
 });

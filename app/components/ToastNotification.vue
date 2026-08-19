@@ -7,6 +7,8 @@
   }>();
   const emit = defineEmits<{
     close: [];
+    pause: [];
+    resume: [];
   }>();
 </script>
 
@@ -20,7 +22,9 @@
       'alert-error': type === 'error',
     }"
     role="alert"
-    data-testid="toast">
+    data-testid="toast"
+    @mouseenter="emit('pause')"
+    @mouseleave="emit('resume')">
     <slot />
     <Button
       class="btn btn-sm btn-circle btn-ghost text-xl self-center items-end"
