@@ -39,7 +39,7 @@ Refactor the toast notification system from a single-toast singleton (`useState<
 
 ## Steps
 
-### Step 1 — Add component and unit tests for the current implementation
+### ~~Step 1 — Add component and unit tests for the current implementation~~ DONE
 
 **Goal**: Establish a test baseline for `ToastNotification.vue` and `useToast.ts` in their current form before any refactoring begins.
 

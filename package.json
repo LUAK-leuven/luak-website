@@ -11,6 +11,7 @@
     "sb:start": "supabase start -x edge-runtime,imgproxy,logflare,realtime,storage-api,supavisor,vector",
     "sb:gentypes": "yarn --silent supabase gen types --lang typescript --local > types/database.types.ts",
     "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck",
     "lint": "yarn lint:eslint && yarn lint:prettier",
     "lint:eslint": "eslint .",
     "lint:prettier": "prettier . --check",

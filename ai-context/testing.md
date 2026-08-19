@@ -10,3 +10,7 @@ Examples of trivial tests to avoid:
 Instead, focus tests on behaviour that involves actual logic: conditional rendering based on computed state, event emission, data transformation, side effects (timers, API calls), and edge cases.
 
 When in doubt, ask: "if I deleted the component-specific logic here and just left a static template, would this test still fail?" If not, the test is not worth writing.
+
+## One behaviour per test
+
+Do not combine multiple distinct behaviours into a single test. Split a test so that each test asserts one behaviour, and name each test after the specific behaviour it verifies (e.g. `useToast queues multiple toasts`, `useToast closes the toast with the matching id`, `useToast does not close a toast with an unknown id`) rather than a broad name covering all of them (e.g. `useToast manages a queue of toasts`).

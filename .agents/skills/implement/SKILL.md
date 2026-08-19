@@ -45,7 +45,8 @@ Write the implementation that makes the test pass. Apply the **4 rules of simple
 
 ### 3. Verify
 
-- Run the linter (`yarn lint`) and fix any issues.
+- Run type checking (`yarn typecheck`) and fix any issues.
+- Run the linter (`yarn lintfix`) and fix any issues.
 - Run the test suite. All tests must pass.
 - Check that the acceptance criteria from the plan step are met — go through each criterion explicitly.
 - Run the tests (`yarn test`) and fix any issues.
