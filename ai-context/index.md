@@ -1,3 +1,4 @@
 - [project structure](./project-structure.md): where to find files and where they should belong
 - [tech stack](./tech-stack.md)
 - [glossary](./glossary.md)
+- [testing](./testing.md): guidelines for writing good tests
