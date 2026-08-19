@@ -55,7 +55,7 @@
     "@vee-validate/nuxt": "^4.12.8",
     "@vee-validate/yup": "^4.12.8",
     "@vueuse/core": "^14.3.0",
-    "better-sqlite3": "^13.0.1",
+    "better-sqlite3": "^13.0.3",
     "dayjs": "^1.11.20",
     "nuxt-typed-router": "^4.0.10",
     "qrcode": "^1.5.4",
