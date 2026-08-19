@@ -5,7 +5,11 @@ export class AppPage {
   readonly toastMessage: Locator;
 
   constructor(private readonly page: Page) {
-    this.toastMessage = page.getByTestId('toast');
+    this.toastMessage = page.getByTestId('toast').first();
+  }
+
+  toastAt(index: number): Locator {
+    return this.page.getByTestId('toast').nth(index);
   }
 
   readonly toMyProfile = async () =>

@@ -11,7 +11,7 @@
 
 <template>
   <div
-    class="alert fixed z-50 w-[90%] mx-[5%] md:w-[80%] md:mx-[10%] bottom-0 right-0 mb-5 flex justify-between"
+    class="alert flex justify-between"
     :class="{
       'alert-info': type === 'info',
       'alert-success': type === 'success',

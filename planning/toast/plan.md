@@ -58,7 +58,7 @@ Refactor the toast notification system from a single-toast singleton (`useState<
 
 ---
 
-### Step 2 — Define the `ToastItem` type and refactor `useToast.ts` to a queue
+### ~~Step 2 — Define the `ToastItem` type and refactor `useToast.ts` to a queue~~ DONE
 
 **Goal**: Replace the singleton `useState<ToastState | undefined>` with a `useState<ToastItem[]>` queue, with `show()` pushing new items and `close(id)` removing by id. No timers yet.
 
@@ -82,7 +82,7 @@ Refactor the toast notification system from a single-toast singleton (`useState<
 
 ---
 
-### Step 3 — Update `app.vue` to render the toast queue
+### ~~Step 3 — Update `app.vue` to render the toast queue~~ DONE
 
 **Goal**: Replace the single `<ToastNotification v-if="state !== undefined">` with a `v-for` loop inside a DaisyUI `toast` stacking container, consuming `toasts` and `close(id)` from `useToast()`, and update the e2e page object so existing toast tests continue to pass.
 

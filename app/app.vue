@@ -8,10 +8,15 @@
     <NuxtPage />
   </NuxtLayout>
 
-  <ToastNotification
+  <div
     v-if="toasts.length > 0"
-    :type="toasts[0]!.type"
-    @close="close(toasts[0]!.id)">
-    {{ toasts[0]!.message }}
-  </ToastNotification>
+    class="toast toast-bottom toast-end z-50 w-[90%] mx-[5%] md:w-[80%] md:mx-[10%]">
+    <ToastNotification
+      v-for="toast in toasts"
+      :key="toast.id"
+      :type="toast.type"
+      @close="close(toast.id)">
+      {{ toast.message }}
+    </ToastNotification>
+  </div>
 </template>
