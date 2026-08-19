@@ -18,7 +18,8 @@
       'alert-warning': type === 'warning',
       'alert-error': type === 'error',
     }"
-    role="alert">
+    role="alert"
+    data-testid="toast">
     <slot />
     <Button
       class="btn btn-sm btn-circle btn-ghost text-xl self-center items-end"

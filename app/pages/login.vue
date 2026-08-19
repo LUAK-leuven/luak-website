@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import * as yup from 'yup';
+  import { string as yupString, object as yupObject } from 'yup';
   import TextField from '~/components/input/TextField.vue';
   import LoadingButton from '~/components/shared/LoadingButton.vue';
 
@@ -10,9 +10,9 @@
   const supabase = useSupabaseClient();
   const redirect = useRoute().query['redirect'] as string | null;
 
-  const formSchema = yup.object({
-    email: yup.string().required().email(),
-    password: yup.string().required(),
+  const formSchema = yupObject({
+    email: yupString().required().email(),
+    password: yupString().required(),
   });
   const { handleSubmit, setFieldError } = useForm({
     validationSchema: toTypedSchema(formSchema),
@@ -67,10 +67,10 @@
           data-testId="login.submit" />
       </form>
       <div class="divider">OR</div>
-      <NuxtLink :to="{ name: 'signup' }">
-        <button class="btn btn-outline btn-primary w-full p-5">
-          Create an account
-        </button>
+      <NuxtLink
+        class="btn btn-outline btn-primary w-full p-5"
+        :to="{ name: 'signup' }">
+        Create an account
       </NuxtLink>
     </div>
   </div>

@@ -5,8 +5,11 @@ import { testUsers, type TestUser, type TestUserKey } from '#test/TestUser';
 import { test as base, expect } from '@playwright/test';
 import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
 import { randomOf } from '~/shared/utils/utils';
+import { AppPage } from './pages/app.page';
 
-export const test = base.extend({
+export const test = base.extend<{
+  luakPage: AppPage;
+}>({
   page: async ({ page }, use) => {
     // Block external requests to Google Calendar and Google Fonts because they are not needed for the tests and can cause flakiness.
     await page.route('**://calendar.google.com/**', (route) => route.abort());
@@ -15,6 +18,9 @@ export const test = base.extend({
     );
 
     await use(page);
+  },
+  luakPage: async ({ page }, use) => {
+    await use(new AppPage(page));
   },
 });
 

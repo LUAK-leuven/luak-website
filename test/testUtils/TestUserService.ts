@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '~/shared/types/database.types';
-import { testUsers, type TestUserKey } from '#test/TestUser';
+import { testUserKeys, testUsers, type TestUserKey } from '#test/TestUser';
 import dayjs from 'dayjs';
 import { getCurrentMembershipYear } from '~/app/model/Membership';
 
@@ -28,13 +28,21 @@ export class TestUserService {
   };
 
   readonly resetTestMemberships = async () => {
-    const { error: e1 } = await this.supabase
+    await this.supabase
       .from('Memberships')
       .delete()
-      .neq('id', '00000000-0000-0000-0000-000000000000');
-    if (e1) throw new Error(`Error deleting Memberships table:`, { cause: e1 });
+      .neq('id', '00000000-0000-0000-0000-000000000000')
+      .throwOnError();
 
     for (const testUser of Object.keys(testUsers) as TestUserKey[]) {
+      await this.createMemberships(testUser);
+    }
+  };
+
+  readonly resetTestUsers = async () => {
+    await this.deleteAllUsers();
+    for (const testUser of testUserKeys) {
+      await this.createTestUser(testUser);
       await this.createMemberships(testUser);
     }
   };
@@ -56,7 +64,7 @@ export class TestUserService {
     };
   };
 
-  readonly resetTestUser = async (testUser: TestUserKey) => {
+  readonly resetTestUserInfo = async (testUser: TestUserKey) => {
     const { email, firstName, lastName } = testUsers[testUser];
     await this.supabase
       .from('Users')
@@ -145,14 +153,10 @@ export class TestUserService {
       .from('Users')
       .select('id')
       .eq('email', testUsers[testUser].email)
-      .maybeSingle()
+      .single()
       .throwOnError();
 
-    if (data === null) {
-      return await this.createTestUser(testUser);
-    } else {
-      return data.id;
-    }
+    return data.id;
   };
 
   private readonly createTestUser = async (testUser: TestUserKey) => {
@@ -190,6 +194,20 @@ export class TestUserService {
     }
 
     return userId;
+  };
+
+  private readonly deleteAllUsers = async () => {
+    await this.supabase
+      .from('Users')
+      .delete()
+      .neq('id', '00000000-0000-0000-0000-000000000000')
+      .throwOnError();
+
+    const { data, error } = await this.supabase.auth.admin.listUsers();
+    if (error) throw new Error('Failed to list users', { cause: error });
+    for (const user of data.users) {
+      await this.supabase.auth.admin.deleteUser(user.id);
+    }
   };
 }
 

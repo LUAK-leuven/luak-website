@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { TestUser, testUsers, type TestUserKey } from '#test/TestUser';
+import { TestUser, testUsers } from '#test/TestUser';
 import {
   authStateFile,
   login,
@@ -12,7 +12,7 @@ import { testServiceBuilder } from '#test/testServices';
 import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
 import { ForgotPasswordPage } from './pages/forgot-password.page';
 import { findBy, sleep } from '~/shared/utils/utils';
-import dayjs, { type Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { ResetPasswordPage } from './pages/reset-password.page';
 
 const testUserService = testServiceBuilder().userTestService();
@@ -29,6 +29,7 @@ randomUserTest('Can change user information', async ({ page, user }) => {
   await profileSettingsPage.changeInfoButton.click();
 
   await expect(profileSettingsPage.changeInfoButton).toHaveText('check');
+  await sleep(200);
 
   const userInfo = await testUserService.getUserInfo(user);
   expect(userInfo.firstName).toBe('NewFirstName');
@@ -37,7 +38,7 @@ randomUserTest('Can change user information', async ({ page, user }) => {
   expect(userInfo.whatsApp).toBe(true);
   expect(userInfo.newsletter).toBe(true);
 
-  await testUserService.resetTestUser(user);
+  await testUserService.resetTestUserInfo(user);
 });
 
 randomUserTest(
@@ -83,13 +84,17 @@ test.describe('Forgot password', () => {
       await forgotPasswordPage.emailInput.press('Enter');
       await expect(forgotPasswordPage.submitButton).toHaveText('check');
 
-      const email = await waitForEmail(user, start);
+      const mailpitService = testServiceBuilder().mailpitService();
+      const email = await mailpitService.waitForEmail((message) => {
+        if (message.Read) return false;
+        if (message.Subject !== 'Reset your LUAK password') return false;
+        if (findBy(message.To, 'Address', testUsers[user].email) === undefined)
+          return false;
+        if (dayjs(message.Created).isBefore(start)) return false;
+        return true;
+      });
 
-      const message = await testServiceBuilder()
-        .mailpitService()
-        .getMessage(email.ID);
-
-      const passwordResetLink = extractPasswordResetLink(message.Text);
+      const passwordResetLink = extractPasswordResetLink(email.Text);
 
       await navigateTo(page, passwordResetLink);
       const resetPasswordPage = new ResetPasswordPage(page);
@@ -120,37 +125,8 @@ test.describe('Forgot password', () => {
   );
 });
 
-const waitForEmail = async (
-  user: TestUserKey,
-  start: Dayjs,
-  timeout: number = 5_000,
-) => {
-  const mailpitService = testServiceBuilder().mailpitService();
-
-  const deadline = dayjs().add(timeout, 'millisecond');
-  while (dayjs().isBefore(deadline)) {
-    const messages = await mailpitService.getAllMessages();
-    const filteredMessages = messages.filter((message) => {
-      if (message.Read) return false;
-      if (message.Subject !== 'Reset your password') return false;
-      if (findBy(message.To, 'Address', testUsers[user].email) === undefined)
-        return false;
-      if (dayjs(message.Created).isBefore(start)) return false;
-      return true;
-    });
-
-    if (filteredMessages.length > 1)
-      throw new Error('More than one email found');
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    if (filteredMessages.length === 1) return filteredMessages[0]!;
-
-    await sleep(200);
-  }
-  throw new Error('Timeout waiting for email');
-};
-
-const extractPasswordResetLink = (html: string) => {
-  const match = html.match(/(?<=Reset password \( ).+(?= \))/);
+const extractPasswordResetLink = (text: string) => {
+  const match = text.match(/(?<=Reset password \( ).+(?= \))/);
   if (match === null)
     throw new Error('Could not extract reset link from email.');
   return match[0];

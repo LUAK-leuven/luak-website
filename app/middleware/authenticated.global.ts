@@ -1,5 +1,5 @@
 export default defineNuxtRouteMiddleware(async (to) => {
-  if (to.path.startsWith('/stories') || to.path === '/pages/christmas-bets') {
+  if (isAuthenticatedRoute(to.path)) {
     const user = useSupabaseUser();
 
     if (!user.value) {
@@ -12,3 +12,13 @@ export default defineNuxtRouteMiddleware(async (to) => {
     }
   }
 });
+
+const isAuthenticatedRoute = (path: string) => {
+  if (path.startsWith('/stories')) return true;
+  if (path === '/pages/christmas-bets') return true;
+  if (path.startsWith('/profile')) {
+    if (path === '/profile/overview') return false;
+    else return true;
+  }
+  return false;
+};

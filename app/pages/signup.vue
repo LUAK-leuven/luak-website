@@ -1,5 +1,9 @@
 <script setup lang="ts">
-  import * as yup from 'yup';
+  import {
+    object as yupObject,
+    string as yupString,
+    bool as yupBool,
+  } from 'yup';
   import { yup_password, yup_phone } from '~/utils/yup';
   import TextField from '~/components/input/TextField.vue';
   import LoadingButton from '~/components/shared/LoadingButton.vue';
@@ -11,28 +15,38 @@
 
   const supabase = useSupabaseClient();
 
-  const formSchema = yup.object({
-    firstName: yup.string().required().label('First name'),
-    lastName: yup.string().required().label('Last name'),
-    email: yup.string().required().email(),
+  const { show: showToast } = useToast();
+
+  const url = useRequestURL();
+
+  const formSchema = yupObject({
+    firstName: yupString().required().label('First name'),
+    lastName: yupString().required().label('Last name'),
+    email: yupString().required().email(),
     password: yup_password.required(),
-    newsletter: yup.bool().default(true),
-    whatsapp: yup.bool().default(true),
+    newsletter: yupBool().default(true),
+    whatsapp: yupBool().default(true),
     phoneNumber: yup_phone.transform((v: string) => (v ? v : undefined)),
   });
-  const { handleSubmit, setFieldError } = useForm({
+  const { handleSubmit } = useForm({
     validationSchema: toTypedSchema(formSchema),
   });
 
   const onSubmit = async () => {
     await handleSubmit(async (submitted) => {
-      const { error } = await supabase.auth.signUp({
+      const { error, data } = await supabase.auth.signUp({
         email: submitted.email,
         password: submitted.password,
+        options: {
+          emailRedirectTo: `${url.origin}/profile/overview`,
+        },
       });
       if (error) {
-        setFieldError('password', error.message);
-      } else {
+        showToast('error', error.message);
+        return;
+      }
+      if (data.session) {
+        // Email confirmation disabled
         const { error } = await supabase.from('Users').insert({
           first_name: submitted.firstName,
           last_name: submitted.lastName,
@@ -42,8 +56,36 @@
           email: submitted.email,
         });
         if (error) {
-          setFieldError('password', error.message);
-        } else await navigateTo({ name: 'confirmLogin' });
+          showToast('error', error.message);
+          return;
+        }
+        await navigateTo({ name: 'profile-overview' });
+      } else {
+        // Email confirmation enabled
+        if (data.user === null) {
+          showToast('error', 'An unexpected error occurred');
+          return;
+        }
+        const { error } = await supabase.from('Users').insert({
+          id: data.user.id,
+          first_name: submitted.firstName,
+          last_name: submitted.lastName,
+          has_newsletter: submitted.newsletter,
+          has_whatsapp: submitted.whatsapp,
+          phone_number: submitted.phoneNumber ?? null,
+          email: submitted.email,
+        });
+        if (error) {
+          showToast('error', 'An unexpected error occurred');
+          console.error(error);
+          return;
+        } else {
+          showToast(
+            'success',
+            `A confirmation email has been sent to ${submitted.email}. Confirm your email address to enable your account.`,
+          );
+          await navigateTo({ name: 'index' });
+        }
       }
     })();
   };
