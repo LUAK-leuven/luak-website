@@ -21,8 +21,9 @@ const ToastHost = defineComponent({
       <button data-testid="close-last" @click="close(toasts[toasts.length - 1]?.id ?? '')" />
       <button data-testid="close-unknown" @click="close('unknown-id')" />
       <p data-testid="toast-count">{{ toasts.length }}</p>
-      <p data-testid="toast-ids">{{ toasts.map((toast) => toast.id).join(', ') }}</p>
-      <p data-testid="toast-messages">{{ toasts.map((toast) => toast.message).join(', ') }}</p>
+       <p data-testid="toast-ids">{{ toasts.map((toast) => toast.id).join(', ') }}</p>
+       <p data-testid="toast-messages">{{ toasts.map((toast) => toast.message).join(', ') }}</p>
+       <p data-testid="toast-progress">{{ toasts.map((toast) => toast.progress).join(', ') }}</p>
     </div>
   `,
 });
@@ -84,6 +85,19 @@ test('useToast automatically closes a toast after 4000ms', async () => {
   expect(wrapper.get('[data-testid="toast-count"]').text()).toBe('0');
 });
 
+test('useToast exposes timed progress', async () => {
+  const wrapper = await mountSuspended(ToastHost);
+
+  await wrapper.get('[data-testid="show-success"]').trigger('click');
+
+  expect(wrapper.get('[data-testid="toast-progress"]').text()).toBe('1');
+
+  await vi.advanceTimersByTimeAsync(2000);
+  expect(wrapper.get('[data-testid="toast-progress"]').text()).toBe('0.5');
+
+  await wrapper.get('[data-testid="close-first"]').trigger('click');
+});
+
 test('useToast clears the timer when a toast is closed manually', async () => {
   const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
   const wrapper = await mountSuspended(ToastHost);
@@ -104,7 +118,12 @@ test('useToast runs independent timers for each toast', async () => {
   await vi.advanceTimersByTimeAsync(1000);
   await wrapper.get('[data-testid="show-error"]').trigger('click');
 
-  await vi.advanceTimersByTimeAsync(2999);
+  await vi.advanceTimersByTimeAsync(1000);
+  expect(wrapper.get('[data-testid="toast-progress"]').text()).toBe(
+    '0.5, 0.75',
+  );
+
+  await vi.advanceTimersByTimeAsync(1999);
   expect(wrapper.get('[data-testid="toast-messages"]').text()).toBe(
     'Success message, Error message',
   );

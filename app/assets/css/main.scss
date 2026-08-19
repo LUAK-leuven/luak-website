@@ -6,19 +6,6 @@
   font-display: swap;
 }
 
-@keyframes toast-progress {
-  from {
-    width: 100%;
-  }
-  to {
-    width: 0;
-  }
-}
-
-.toast-progress {
-  animation: toast-progress 4s linear forwards;
-}
-
 h1 {
   font-family: 'WhiteOnBlack', sans-serif;
 }

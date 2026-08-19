@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import Button from './shared/Button.vue';
 
-  const { type, paused } = defineProps<{
+  const { type, progress } = defineProps<{
     type: 'success' | 'warning' | 'error' | 'info';
-    paused?: boolean;
+    progress: number;
   }>();
   const emit = defineEmits<{
     close: [];
@@ -29,8 +29,8 @@
       ✕
     </Button>
     <div
-      class="toast-progress absolute bottom-0 left-0 h-1 w-full bg-current opacity-50"
-      :style="{ animationPlayState: paused === true ? 'paused' : 'running' }"
+      class="absolute bottom-0 left-0 h-1 bg-current opacity-50 transition-[width] duration-100 ease-linear"
+      :style="{ width: `${progress * 100}%` }"
       data-testid="toast-progress" />
   </div>
 </template>

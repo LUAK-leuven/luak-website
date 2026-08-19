@@ -15,6 +15,7 @@
       v-for="toast in toasts"
       :key="toast.id"
       :type="toast.type"
+      :progress="toast.progress"
       @close="close(toast.id)">
       {{ toast.message }}
     </ToastNotification>

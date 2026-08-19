@@ -27,7 +27,7 @@ Refactor the toast notification system from a single-toast singleton (`useState<
 3. **Progress bar position**: Thin bar along the bottom edge of each toast card, shrinking from full-width to zero left-to-right over the toast's duration.
 4. **Hover pause**: Hovering over a toast pauses both the JS dismiss timer and the CSS progress bar animation. Moving the cursor away resumes both from where they left off (not restarted from full duration).
 5. **Timer implementation**: Plain `setTimeout`/`clearTimeout` at module scope (not tied to any component's lifecycle), guarded with `import.meta.client` for SSR safety. Each toast id maps to its own timeout handle.
-6. **Progress bar animation**: CSS `animation` with `animation-play-state` toggled between `running` and `paused` via a reactive boolean prop/data property. The animation duration matches the toast duration (4s).
+6. **Progress bar mechanism**: `useToast.ts` owns a per-toast reactive `progress` fraction (1 → 0), updated via a `setInterval` tick (100ms) that decrements an internal `remainingMs` counter. `ToastNotification.vue` is a pure renderer of `progress` — it has no timing or animation logic of its own, only a Tailwind `transition-[width]` utility for visual smoothing between ticks. This removes any possibility of the timer and visual bar diverging, since there is only one countdown value.
 7. **Backward compatibility**: The `show(type, message)` signature is unchanged — all 9 existing call sites require no edits. Only `app.vue` changes its consumption of the composable (`state` → `toasts`, `close()` → `close(id)`).
 8. **`ToastNotification.vue` positioning**: Remove the fixed-positioning Tailwind classes from the component; positioning is delegated to the DaisyUI `toast` wrapper in `app.vue`.
 
@@ -123,7 +123,7 @@ Refactor the toast notification system from a single-toast singleton (`useState<
 
 ---
 
-### Step 5 — Add progress bar to `ToastNotification.vue`
+### ~~Step 5 — Add progress bar to `ToastNotification.vue`~~ DONE
 
 **Goal**: Render a thin progress bar along the bottom edge of each toast card that shrinks from full-width to zero over 4 seconds using a CSS animation, and expose a `paused` prop that halts the animation mid-progress when `true`.
 
@@ -140,18 +140,40 @@ Refactor the toast notification system from a single-toast singleton (`useState<
 
 ---
 
-### Step 6 — Implement hover pause/resume
+### ~~Step 6 — Drive the progress bar from a reactive countdown in `useToast.ts`~~ DONE
 
-**Goal**: Hovering over a `ToastNotification` card pauses the progress bar animation and the JS dismiss timer; moving the cursor away resumes both from where they left off.
+**Goal**: Replace the CSS-animation-based progress bar with a JS-driven reactive `progress` value owned by `useToast.ts`, so there is a single source of truth for a toast's remaining time. This also prepares the ground for Step 7 (pause/resume), since pausing becomes "stop decrementing" and resuming becomes "keep decrementing from where it stopped" — no timestamp math required.
+
+**TDD**: Extend `useToast.spec.ts` using fake timers:
+- Immediately after `show()`, the new toast's `progress` is `1`.
+- After 2000ms (half of the 4000ms duration), `progress` is `0.5`.
+- After the full 4000ms, the toast is removed from `toasts` (existing Step 4 behaviour, now driven by the same interval instead of a separate timeout).
+- Two toasts started at different times each have independent `progress` values that decrease at their own rate.
+
+**Acceptance criteria**:
+- `ToastItem` gains a `progress: number` field (fraction, `1` → `0`).
+- The Step 4 per-toast `setTimeout` is replaced by a per-toast `setInterval` ticking every `100ms` (new internal constant, not exported — it is an implementation/refresh-rate detail, not a duplicated duration value).
+- A module-scope `Map<id, remainingMs>` tracks each toast's remaining milliseconds, decremented by the tick size on each interval firing; `progress = remainingMs / TOAST_DURATION_MS` (clamped to `>= 0`).
+- When `remainingMs` reaches `0`, the interval is cleared and `close(id)` is called (same auto-dismiss guarantee as Step 4, verified by the same class of tests).
+- `close(id)` clears the interval and removes both bookkeeping map entries (interval handle and remaining milliseconds) for that id, same as the Step 4 timeout cleanup.
+- `import.meta.client` guards all `setInterval`/`clearInterval` calls (SSR safety, same as Step 4).
+- `ToastNotification.vue`: remove the `paused` prop, the `@keyframes toast-progress` and `.toast-progress` animation rules from `main.scss`. Add a required `progress: number` prop. Render the bar width as `:style="{ width: \`${progress * 100}%\` }"`, with Tailwind utility classes `transition-[width] duration-100 ease-linear` for smoothing (no custom CSS).
+- `app.vue`: pass `:progress="toast.progress"` to each `<ToastNotification>` instead of any duration/paused wiring.
+- `ToastNotification.spec.ts`: rewrite tests to assert rendered width from a given `progress` prop value (for example, `1`, `0.5`, and `0`) — no fake timers are needed because this is purely presentational.
+
+**Notes**: This step supersedes the CSS-animation implementation from Step 5. No duration value needs to travel to the component; the component becomes incapable of drifting from the timer because it renders the composable's reactive countdown directly.
+
+---
+
+### Step 7 — Implement hover pause/resume
+
+**Goal**: Hovering over a `ToastNotification` card pauses the countdown (the interval stops decrementing `remainingMs`, and `progress` freezes); moving the cursor away resumes it from where it left off.
 
 **Acceptance criteria**:
 - `ToastNotification.vue` emits `pause` on `mouseenter` and `resume` on `mouseleave`.
-- `app.vue` handles these events: on `pause`, records the remaining duration for that toast's timer and cancels the `setTimeout`; on `resume`, starts a new `setTimeout` for the remaining duration.
-- The progress bar's `paused` prop is set to `true` on `pause` and `false` on `resume`.
-- If the toast is dismissed (manually or by timer) while paused, no error occurs.
-- A toast that was never hovered dismisses after exactly 4 seconds as before (Step 4 tests remain green).
-- `pauseToast(id)` cancels the running timer.
-- `resumeToast(id)` after pause starts a new timer for the remaining duration.
-- A toast dismissed while paused does not throw or cause stale timers.
+- `useToast.ts` exposes `pauseToast(id)` (clears the interval and leaves `remainingMs`/`progress` untouched) and `resumeToast(id)` (starts a new interval continuing to decrement the same `remainingMs`).
+- `app.vue` calls `pauseToast(toast.id)` and `resumeToast(toast.id)` on the `pause` and `resume` events.
+- If the toast is dismissed (manually or by the countdown reaching `0`) while paused, no error occurs and no stale interval remains.
+- A toast that was never hovered dismisses after exactly 4000ms as before (Step 6 tests remain green).
 
-**Notes**: Remaining duration must be tracked per-toast-id in `useToast.ts`. At the moment `show()` is called, `startTime` is recorded. When `pause` fires, elapsed = `Date.now() - startTime`; remaining = `4000 - elapsed`. `clearTimeout` the current handle, store `remaining` alongside the toast, clear `startTime`. When `resume` fires, set a new `startTime = Date.now()`, start a new `setTimeout(remaining)`, update the handle. Expose `pauseToast(id)` and `resumeToast(id)` from `useToast()` for `app.vue` to call. The progress bar animation `animation-delay` approach (negative delay to resume from mid-point) may be fragile; instead, on resume, use an inline `animation-duration` style equal to the remaining duration so the CSS animation duration matches the new JS timer. This requires `ToastNotification.vue` to accept a `remainingDuration` prop (number, default 4000) that sets the animation duration via an inline style.
+**Notes**: Because Step 6 models the countdown as a plain `remainingMs` counter rather than timestamps, pause/resume requires no elapsed-time recomputation. `pauseToast` clears the interval, while `resumeToast` starts a new interval that continues decrementing the same stored value.
