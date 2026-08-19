@@ -16,6 +16,7 @@ Guides a structured planning session that ends with a `planning/<feature-name>/p
 - **TDD first**: wherever behaviour can be verified with a test, the test step comes before the implementation step.
 - **All design decisions resolved**: the developer must be able to execute every step without making a design choice. Ambiguities are resolved by asking the user before writing the plan.
 - **Agile increments**: steps are ordered so that each one produces a runnable, testable increment. Avoid big-bang steps.
+- **Every step is deliverable**: a step must leave the app in a shippable state — no broken consumers, even ones the plan doesn't explicitly call out elsewhere. See [ai-context/delivery.md](../../../ai-context/delivery.md).
 - **Incremental design**: infrastructure (helpers, base classes, shared utilities) is introduced at the step where it is first actually needed — never created upfront in isolation. Each step builds only what the current increment requires; later steps extend it as needed.
 
 ---
@@ -29,6 +30,7 @@ Before writing anything, explore the codebase to understand:
 - Which existing files, components, composables, pages, or services are relevant.
 - What patterns are already established that the new feature must follow.
 - Any constraints (auth, permissions, DB schema, existing types) that affect the feature.
+- For any file, composable, component, or type whose public shape the plan will change, every place that consumes it — these consumers must be accounted for in the step that changes the shape (see [ai-context/delivery.md](../../../ai-context/delivery.md)).
 
 Use the `explore` subagent for broad searches to avoid consuming context with raw listings. Read actual file contents — do not rely on filenames alone.
 
@@ -103,6 +105,7 @@ A flat list of all behaviours that must be covered by tests at the end of the fe
 - Acceptance criteria are written from the user's or system's perspective ("the user sees…", "the API returns…", "the DB row is created…").
 - Steps are ordered smallest-first: types and schema before logic, logic before UI, UI before integration.
 - Each step must be independently completable — no step should require finishing a later step to work.
+- Each step must be deliverable on its own: if it changes a composable's/component's/type's public shape, its acceptance criteria must include updating every known consumer of that shape, not just the new behaviour.
 - Infrastructure (helpers, base classes, shared utilities) is introduced at the step where it is first needed, not upfront. A step that creates a helper must also be the step that first uses it — a helper created in step N with no consumer until step N+3 is a sign the steps need merging or reordering.
 
 ### Step 6 — Incorporate user feedback

@@ -94,3 +94,4 @@ Make sure to read [ai-context](./ai-context/index.md) so that you can load the c
 - Run `yarn lint` and `yarn test` before committing to verify you didn't introduce errors.
 - Keep the DaisyUI theme (`nord`) consistent; do not introduce inline styles or raw hex colors.
 - Do not add new dependencies without good reason — check if `@vueuse/core`, `dayjs`, or existing utils cover the need.
+- Whenever you fix a bug that `yarn typecheck`, `yarn lint`, and `yarn test` all would have missed, close that guardrail gap (add a test, stricter type, or lint rule) — see [ai-context/guardrail-gaps.md](./ai-context/guardrail-gaps.md). This applies to any bug fix, not just plan-step work.

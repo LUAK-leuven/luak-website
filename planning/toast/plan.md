@@ -74,8 +74,11 @@ Refactor the toast notification system from a single-toast singleton (`useState<
 - Multiple `show()` calls accumulate in `toasts`; each `close(id)` removes exactly one item.
 - Calling `close()` with an unknown id emits a `console.warn` and does not modify the array.
 - The `state` export is removed.
+- `app.vue` no longer references the removed `state` export: it renders `<ToastNotification>` using the first item in `toasts` (`toasts[0]`), so the app keeps showing/dismissing a single toast at a time, unchanged from the current behaviour. This is the minimal integration fix needed to keep this step deliverable — full multi-toast stacking rendering is still Step 3's job.
 
 **Notes**: `id` can be generated with `crypto.randomUUID()`, which is available in the browser and Nuxt's server runtime. The existing exported type for toast type (`'success' | 'warning' | 'error' | 'info'`) should be extracted as a named type alias (`ToastType`) to avoid repetition in the new `ToastItem` interface.
+
+**Plan update (post-implementation)**: this step originally only covered `useToast.ts` and missed that `app.vue` consumes `state` directly for rendering `ToastNotification`. Refactoring the composable without touching `app.vue` broke that integration (typecheck/build failure, no toast rendered). The `app.vue` change above was added to this step's acceptance criteria after the fact so the step is deliverable on its own; Step 3 still fully replaces this with the `v-for` stacking container.
 
 ---
 

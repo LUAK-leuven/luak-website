@@ -50,6 +50,7 @@ Write the implementation that makes the test pass. Apply the **4 rules of simple
 - Run the test suite. All tests must pass.
 - Check that the acceptance criteria from the plan step are met — go through each criterion explicitly.
 - Run the tests (`yarn test`) and fix any issues.
+- **Check for consumer breakage beyond the plan's acceptance criteria.** Read [ai-context/delivery.md](../../../ai-context/delivery.md). Every step must be deliverable — search for every consumer of anything whose shape you changed (composable return values, component props/emits, shared types, util signatures) and confirm each one still works, even if the plan's acceptance criteria never mention it. Typecheck and lint passing is not sufficient proof — a `useState`/singleton consumer or an unused-looking import can still be silently broken.
 
 ### 4. Report
 
@@ -59,8 +60,20 @@ Tell the user:
 - What test(s) you wrote (if any).
 - Which acceptance criteria are met.
 - Any concerns, surprises, or things that felt wrong during implementation.
+- If a guardrail gap was found and closed (see below), what it was and what safety net now catches it.
 
 Do **not** start the next step. Stop here and wait.
+
+### If verification finds broken consumers the plan didn't mention
+
+Do not fix this quietly and move on. Follow [ai-context/delivery.md](../../../ai-context/delivery.md):
+
+1. Stop before reporting the step as done.
+2. Report the breakage to the user: what broke, why, and the minimal fix needed.
+3. Propose the plan update (adjust the current step's acceptance criteria/notes in `plan.md`) that would make this step deliverable.
+4. Once the user confirms, update `plan.md` and implement the fix as part of this same step, then re-verify.
+5. If `yarn typecheck`, `yarn lint`, and `yarn test` all passed despite this breakage, that guardrail gap must be closed now — see [ai-context/guardrail-gaps.md](../../../ai-context/guardrail-gaps.md). Diagnose why the guardrails missed it and add a test (preferred), stricter type, or lint rule so the same class of breakage is caught automatically next time.
+6. Only then report the step as complete and stop, including what the guardrail gap was and what safety net was added.
 
 ---
 
@@ -73,6 +86,7 @@ Stop immediately and ask the user if:
 - A design decision is required that the plan did not resolve.
 - You are about to make a change that feels risky or irreversible and you are not fully confident.
 - Two or more valid approaches exist and the choice matters.
+- Verification reveals the step broke a consumer the plan's acceptance criteria didn't cover (see ai-context/delivery.md) — stop and report before proposing a plan fix, do not patch it silently.
 
 Ask one focused question at a time. Do not list every possible concern — prioritise the most blocking one.
 
@@ -85,3 +99,5 @@ Ask one focused question at a time. Do not list every possible concern — prior
 - Do not add abstractions, utilities, or refactors that are not required by the current step.
 - Do not assume the plan is correct if the codebase contradicts it — raise it.
 - Do not leave linting errors or broken tests behind.
+- Do not silently fix a broken consumer/integration point outside the plan's acceptance criteria — report it and update the plan first (see ai-context/delivery.md).
+- Do not fix a breakage that `yarn typecheck`/`yarn lint`/`yarn test` all missed without also closing that guardrail gap (see [ai-context/guardrail-gaps.md](../../../ai-context/guardrail-gaps.md)) — otherwise the same breakage will recur uncaught.

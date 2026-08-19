@@ -2,3 +2,5 @@
 - [tech stack](./tech-stack.md)
 - [glossary](./glossary.md)
 - [testing](./testing.md): guidelines for writing good tests
+- [delivery](./delivery.md): every plan step must be deliverable — how to find consumers and handle breakage a plan didn't anticipate
+- [guardrail gaps](./guardrail-gaps.md): whenever a bug wasn't caught by typecheck/lint/tests, close that gap (add a test, stricter type, or lint rule) — applies to any bug fix, not just plan steps
