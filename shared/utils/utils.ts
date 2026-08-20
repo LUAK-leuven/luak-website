@@ -93,3 +93,7 @@ export const uuidRegex = `[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-
 export const randomOf = <T>(arr: T[]): T =>
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   arr[Math.floor(Math.random() * arr.length)]!;
+
+export const randomInt = (min: number, max: number): number => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
