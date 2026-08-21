@@ -1,10 +1,11 @@
 import dayjs from 'dayjs';
-import { expect, test, vi } from 'vitest';
+import { expect, test } from 'vitest';
 import {
   Membership,
   _getMembershipYearForDate,
   _isValidForMembershipYear,
 } from '~/app/model/Membership';
+import { withFakeTimers } from '#test/vitest/withFakeTimers';
 
 test.for([
   [2023, '2023-06-30', false], // Valid 01-07-2023 to 31-08-2024
@@ -59,7 +60,7 @@ test.for([
     now: string;
     isActive: boolean;
   }) => {
-    withFakeTimers((setTime) => {
+    withFakeTimers(({ setTime }) => {
       setTime(args.now);
 
       const membership = new Membership({
@@ -121,7 +122,7 @@ test.for([
 ])(
   'createNewMembership - creates a new membership for the correct membershipYear (%s) -> %i',
   (args: { now: string; expectedMembershipYear: number }) => {
-    withFakeTimers((setTime) => {
+    withFakeTimers(({ setTime }) => {
       setTime(args.now);
 
       const membership = Membership.createNewMembership();
@@ -130,11 +131,3 @@ test.for([
     });
   },
 );
-
-const withFakeTimers = (
-  fn: (setTime: (time: string | Date) => void) => void,
-) => {
-  vi.useFakeTimers();
-  fn(vi.setSystemTime);
-  vi.useRealTimers();
-};

@@ -1,22 +1,24 @@
 export type ToastType = 'success' | 'warning' | 'error' | 'info';
 
 export type ToastItem = {
-  id: string;
+  id: ToastId;
   type: ToastType;
   message: string;
   progress: number;
 };
 
+type ToastId = EntityId<'toast'>;
+
 const TOAST_DURATION_MS = 5000;
 const PROGRESS_TICK_MS = 100;
 
-const toastIntervals = new Map<string, ReturnType<typeof setInterval>>();
-const toastRemaining = new Map<string, number>();
+const toastIntervals = new Map<ToastId, ReturnType<typeof setInterval>>();
+const toastRemaining = new Map<ToastId, number>();
 
 export function useToast() {
   const toasts = useState<ToastItem[]>('luak.toast', () => []);
 
-  const startInterval = (id: string) => {
+  const startInterval = (id: ToastId) => {
     if (!import.meta.client || toastIntervals.has(id)) {
       return;
     }
@@ -43,16 +45,18 @@ export function useToast() {
   };
 
   const show = (type: ToastType, message: string) => {
-    const id = crypto.randomUUID();
+    const id = crypto.randomUUID() as ToastId;
     toasts.value.push({ id, type, message, progress: 1 });
 
     if (import.meta.client) {
       toastRemaining.set(id, TOAST_DURATION_MS);
       startInterval(id);
     }
+
+    return id;
   };
 
-  const close = (id: string) => {
+  const close = (id: ToastId) => {
     if (import.meta.client) {
       const interval = toastIntervals.get(id);
 
@@ -73,7 +77,7 @@ export function useToast() {
     toasts.value.splice(toastIndex, 1);
   };
 
-  const pauseToast = (id: string) => {
+  const pauseToast = (id: ToastId) => {
     if (!import.meta.client) {
       return;
     }
@@ -85,7 +89,7 @@ export function useToast() {
     }
   };
 
-  const resumeToast = (id: string) => {
+  const resumeToast = (id: ToastId) => {
     if (toasts.value.some((toast) => toast.id === id)) {
       startInterval(id);
     }

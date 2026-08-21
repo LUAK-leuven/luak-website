@@ -1,182 +1,145 @@
-import { mountSuspended } from '@nuxt/test-utils/runtime';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
+
+const toastTimeout = 5000;
+const toastProgress = (timeMs: number) => 1 - timeMs / toastTimeout;
 
 beforeEach(() => {
   vi.useFakeTimers();
+  clearNuxtState('luak.toast', { reset: true });
 });
 
 afterEach(() => {
   vi.useRealTimers();
 });
 
-const ToastHost = defineComponent({
-  setup() {
-    return useToast();
-  },
-  template: `
-    <div>
-      <button data-testid="show-success" @click="show('success', 'Success message')" />
-      <button data-testid="show-error" @click="show('error', 'Error message')" />
-      <button data-testid="close-first" @click="close(toasts[0]?.id ?? '')" />
-       <button data-testid="close-last" @click="close(toasts[toasts.length - 1]?.id ?? '')" />
-       <button data-testid="close-unknown" @click="close('unknown-id')" />
-       <button data-testid="pause-first" @click="pauseToast(toasts[0]?.id ?? '')" />
-       <button data-testid="resume-first" @click="resumeToast(toasts[0]?.id ?? '')" />
-      <p data-testid="toast-count">{{ toasts.length }}</p>
-       <p data-testid="toast-ids">{{ toasts.map((toast) => toast.id).join(', ') }}</p>
-       <p data-testid="toast-messages">{{ toasts.map((toast) => toast.message).join(', ') }}</p>
-       <p data-testid="toast-progress">{{ toasts.map((toast) => toast.progress).join(', ') }}</p>
-    </div>
-  `,
-});
-
 test('useToast queues multiple toasts', async () => {
-  const wrapper = await mountSuspended(ToastHost);
+  const { toasts, show } = useToast();
 
-  await wrapper.get('[data-testid="show-success"]').trigger('click');
-  await wrapper.get('[data-testid="show-error"]').trigger('click');
-  expect(wrapper.get('[data-testid="toast-count"]').text()).toBe('2');
-  expect(wrapper.get('[data-testid="toast-messages"]').text()).toBe(
-    'Success message, Error message',
-  );
-  const toastIds = wrapper.get('[data-testid="toast-ids"]').text().split(', ');
-  expect(toastIds).toHaveLength(2);
-  expect(toastIds[0]).not.toBe(toastIds[1]);
+  show('success', 'same message');
+  show('success', 'same message');
 
-  await wrapper.get('[data-testid="close-first"]').trigger('click');
-  await wrapper.get('[data-testid="close-last"]').trigger('click');
+  expect(toasts.value).toHaveLength(2);
+  expect(toasts.value[0]!.id).not.toBe(toasts.value[1]!.id);
 });
 
 test('useToast closes the toast with the matching id', async () => {
-  const wrapper = await mountSuspended(ToastHost);
+  const { show, close, toasts } = useToast();
 
-  await wrapper.get('[data-testid="show-success"]').trigger('click');
-  await wrapper.get('[data-testid="show-error"]').trigger('click');
-  await wrapper.get('[data-testid="close-first"]').trigger('click');
+  const id1 = show('error', 'toast 1');
+  const id2 = show('warning', 'toast 2');
+  const id3 = show('info', 'hey');
+  expect(toasts.value).toHaveLength(3);
 
-  expect(wrapper.get('[data-testid="toast-count"]').text()).toBe('1');
-  expect(wrapper.get('[data-testid="toast-messages"]').text()).toBe(
-    'Error message',
-  );
+  close(id2);
 
-  await wrapper.get('[data-testid="close-last"]').trigger('click');
+  expect(toasts.value).toHaveLength(2);
+  expect(toasts.value[0]!.id).toBe(id1);
+  expect(toasts.value[1]!.id).toBe(id3);
 });
 
 test('useToast does not close a toast with an unknown id', async () => {
   const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-  const wrapper = await mountSuspended(ToastHost);
+  const { close, show, toasts } = useToast();
+  show('error', 'hi there');
 
-  await wrapper.get('[data-testid="show-success"]').trigger('click');
-  await wrapper.get('[data-testid="close-unknown"]').trigger('click');
-  expect(wrapper.get('[data-testid="toast-count"]').text()).toBe('1');
+  const unknownId = crypto.randomUUID();
+  // @ts-expect-error ToastId is not exposed, but it's just a string so doesn't matter
+  close(unknownId);
+
+  expect(toasts.value).toHaveLength(1);
   expect(warn).toHaveBeenCalledWith(
-    'Toast with id "unknown-id" was not found.',
+    `Toast with id "${unknownId}" was not found.`,
   );
-  await wrapper.get('[data-testid="close-first"]').trigger('click');
+
   warn.mockRestore();
 });
 
-test('useToast automatically closes a toast after 4000ms', async () => {
-  const wrapper = await mountSuspended(ToastHost);
+test(`useToast automatically closes a toast after ${toastTimeout.toFixed()}ms`, async () => {
+  const { show, toasts } = useToast();
 
-  await wrapper.get('[data-testid="show-success"]').trigger('click');
-  expect(wrapper.get('[data-testid="toast-count"]').text()).toBe('1');
+  show('info', 'tttttoaaaaast 🫨');
 
-  await vi.advanceTimersByTimeAsync(4000);
+  await vi.advanceTimersByTimeAsync(toastTimeout);
 
-  expect(wrapper.get('[data-testid="toast-count"]').text()).toBe('0');
+  expect(toasts.value).toHaveLength(0);
 });
 
 test('useToast exposes timed progress', async () => {
-  const wrapper = await mountSuspended(ToastHost);
+  const { show, toasts } = useToast();
 
-  await wrapper.get('[data-testid="show-success"]').trigger('click');
+  show('success', 'abc');
 
-  expect(wrapper.get('[data-testid="toast-progress"]').text()).toBe('1');
+  expect(toasts.value[0]?.progress).toBe(1);
 
-  await vi.advanceTimersByTimeAsync(2000);
-  expect(wrapper.get('[data-testid="toast-progress"]').text()).toBe('0.5');
-
-  await wrapper.get('[data-testid="close-first"]').trigger('click');
+  await vi.advanceTimersByTimeAsync(toastTimeout / 2);
+  expect(toasts.value[0]?.progress).toBe(0.5);
 });
 
 test('useToast clears the timer when a toast is closed manually', async () => {
   const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-  const wrapper = await mountSuspended(ToastHost);
+  const { show, close, toasts } = useToast();
 
-  await wrapper.get('[data-testid="show-success"]').trigger('click');
-  await wrapper.get('[data-testid="close-first"]').trigger('click');
-  await vi.advanceTimersByTimeAsync(4000);
+  const id = show('info', 'another toast');
+  await vi.advanceTimersByTimeAsync(toastTimeout / 3);
+  close(id);
 
-  expect(wrapper.get('[data-testid="toast-count"]').text()).toBe('0');
+  expect(toasts.value).toHaveLength(0);
+
+  await vi.advanceTimersByTimeAsync(toastTimeout);
+
   expect(warn).not.toHaveBeenCalled();
+
   warn.mockRestore();
 });
 
 test('useToast runs independent timers for each toast', async () => {
-  const wrapper = await mountSuspended(ToastHost);
+  const { show, toasts } = useToast();
 
-  await wrapper.get('[data-testid="show-success"]').trigger('click');
+  show('error', 'toast 1');
   await vi.advanceTimersByTimeAsync(1000);
-  await wrapper.get('[data-testid="show-error"]').trigger('click');
+  show('info', 'toast 2');
 
   await vi.advanceTimersByTimeAsync(1000);
-  expect(wrapper.get('[data-testid="toast-progress"]').text()).toBe(
-    '0.5, 0.75',
-  );
+  expect(toasts.value[0]?.progress).toBe(toastProgress(2000));
+  expect(toasts.value[1]?.progress).toBe(toastProgress(1000));
 
-  await vi.advanceTimersByTimeAsync(1999);
-  expect(wrapper.get('[data-testid="toast-messages"]').text()).toBe(
-    'Success message, Error message',
-  );
-
-  await vi.advanceTimersByTimeAsync(1);
-  expect(wrapper.get('[data-testid="toast-messages"]').text()).toBe(
-    'Error message',
-  );
+  await vi.advanceTimersByTimeAsync(toastTimeout - 2000);
+  expect(toasts.value).toHaveLength(1);
 
   await vi.advanceTimersByTimeAsync(3000);
-  expect(wrapper.get('[data-testid="toast-count"]').text()).toBe('0');
+  expect(toasts.value).toHaveLength(0);
 });
 
-test('useToast pauses a toast without changing its progress', async () => {
-  const wrapper = await mountSuspended(ToastHost);
+test('useToast pauses a toast without changing its progress, and resumes', async () => {
+  const { show, pauseToast, resumeToast, toasts } = useToast();
 
-  await wrapper.get('[data-testid="show-success"]').trigger('click');
+  const id1 = show('warning', 'toast 1');
+  show('error', 'toast 2');
+
+  pauseToast(id1);
   await vi.advanceTimersByTimeAsync(1000);
-  await wrapper.get('[data-testid="pause-first"]').trigger('click');
 
-  expect(wrapper.get('[data-testid="toast-progress"]').text()).toBe('0.75');
+  expect(toasts.value[0]?.progress).toBe(toastProgress(0));
+  expect(toasts.value[1]?.progress).toBe(toastProgress(1000));
 
+  resumeToast(id1);
   await vi.advanceTimersByTimeAsync(2000);
 
-  expect(wrapper.get('[data-testid="toast-progress"]').text()).toBe('0.75');
-  expect(wrapper.get('[data-testid="toast-count"]').text()).toBe('1');
-
-  await wrapper.get('[data-testid="close-first"]').trigger('click');
-});
-
-test('useToast resumes a paused toast from its current progress', async () => {
-  const wrapper = await mountSuspended(ToastHost);
-
-  await wrapper.get('[data-testid="show-success"]').trigger('click');
-  await vi.advanceTimersByTimeAsync(1000);
-  await wrapper.get('[data-testid="pause-first"]').trigger('click');
-  await wrapper.get('[data-testid="resume-first"]').trigger('click');
-  await vi.advanceTimersByTimeAsync(1000);
-
-  expect(wrapper.get('[data-testid="toast-progress"]').text()).toBe('0.5');
-
-  await wrapper.get('[data-testid="close-first"]').trigger('click');
+  expect(toasts.value[0]?.progress).toBe(toastProgress(2000));
 });
 
 test('useToast clears paused toast bookkeeping when dismissed', async () => {
-  const wrapper = await mountSuspended(ToastHost);
+  const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+  const { show, pauseToast, close, toasts } = useToast();
+  const id = show('warning', 'hellooooo');
 
-  await wrapper.get('[data-testid="show-success"]').trigger('click');
-  await wrapper.get('[data-testid="pause-first"]').trigger('click');
-  await wrapper.get('[data-testid="close-first"]').trigger('click');
-  await vi.advanceTimersByTimeAsync(4000);
+  pauseToast(id);
+  close(id);
 
-  expect(wrapper.get('[data-testid="toast-count"]').text()).toBe('0');
+  expect(toasts.value).toHaveLength(0);
+
+  await vi.advanceTimersByTimeAsync(toastTimeout);
+  expect(warn).not.toHaveBeenCalled();
+
+  warn.mockRestore();
 });

@@ -1,9 +1,10 @@
 import dayjs from 'dayjs';
-import { expect, test, vi } from 'vitest';
+import { expect, test } from 'vitest';
 import { DomainValidationException } from '~/app/model/DomainValidationException';
 import { LuakUser } from '~/app/model/LuakUser';
 import { Membership } from '~/app/model/Membership';
 import { randomBool } from '~/shared/utils/utils';
+import { withFakeTimers } from '#test/vitest/withFakeTimers';
 
 test('create - throws exception when has memberships and is unauthenticated', () => {
   expect(
@@ -32,25 +33,26 @@ test('create - can create a valid LuakUser', () => {
 });
 
 test('getActiveMembership - returns the most recent active membership', () => {
-  vi.useFakeTimers();
-  vi.setSystemTime('2026-08-20');
+  withFakeTimers(({ setTime }) => {
+    setTime('2026-08-20');
 
-  const membership1 = new Membership({
-    membershipYear: 2025,
-    createdOn: dayjs('2025-09-23'),
-  });
-  const membership2 = new Membership({
-    membershipYear: 2026,
-    createdOn: dayjs('2026-07-30'),
-  });
-  expect(membership1.isActive()).toBe(true);
-  expect(membership2.isActive()).toBe(true);
+    const membership1 = new Membership({
+      membershipYear: 2025,
+      createdOn: dayjs('2025-09-23'),
+    });
+    const membership2 = new Membership({
+      membershipYear: 2026,
+      createdOn: dayjs('2026-07-30'),
+    });
+    expect(membership1.isActive()).toBe(true);
+    expect(membership2.isActive()).toBe(true);
 
-  const luakUser = aLuakUser({
-    memberships: [membership1, membership2],
-  });
+    const luakUser = aLuakUser({
+      memberships: [membership1, membership2],
+    });
 
-  expect(luakUser.getActiveMembership()).toBe(membership2);
+    expect(luakUser.getActiveMembership()).toBe(membership2);
+  });
 });
 
 type LuakUserArgs = ConstructorParameters<typeof LuakUser>[0];
