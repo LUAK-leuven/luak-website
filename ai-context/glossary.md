@@ -9,4 +9,4 @@
 - **gearItem**: Gear that a member can rent. This is an aggregate of an item from the inventory because it needs to be less detailed than the inventory.
 - **inventory**: A very detailed inventory of all the climbing gear. Every item is uniquely identified.
 - **topo**: A topo is a book. It is always uniquely identified.
-- **story**: Members can write stories about adventures they live. These can be posted on the website.
+- **story**: Members can write stories about their climbing adventures. These can be posted on the website.

@@ -18,14 +18,13 @@ State clearly what was learned. One sentence. Answer: _"What would have gone wro
 - **New skill** if the learning is about a distinct workflow or domain not covered by an existing skill.
 - **Update existing skill** if the learning refines, extends or corrects a rule in a skill that already exists.
 
-To check existing skills, list `.apm/skills` and reveal relevant `SKILL.md` files.
+To check existing skills, list `.agents/skills` and reveal relevant `SKILL.md` files.
 
 ### Step 3 - Make the change
 
 - For a **new skill**:
-  1. Fetch the [apm skill documentation](https://microsoft.github.io/apm/producer/author-primitives/skills/) and read it **before** writing anything — the format is non-trivial and must be followed exactly.
-  2. Create a directory under `.apm/skills/<skill-name>/` — this is the **only** correct location. Do not use `.agents/skills/` or `.opencode/skills/`.
-  3. Write `SKILL.md` following the format from the docs.
+  1. Create a directory under `.agents/skills/<skill-name>/` — this is the **only** correct location.
+  2. Write `SKILL.md` following the format from the docs.
 - For an **update**: use the edit tool to add or modify only the relevant section of the existing `SKILL.md`. Do not rewrite the whole file.
 
 ## Rules

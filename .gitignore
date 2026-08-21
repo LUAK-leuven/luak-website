@@ -20,7 +20,6 @@ logs
 .fleet
 .idea
 .vscode
-/planning/
 .playwright-cli
 
 # Local env files
@@ -34,9 +33,6 @@ logs
 /playwright-report/
 test/e2e/.auth/
 
-# APM dependencies
-apm.lock.yaml
-apm_modules/
-.agents/
+# Agentic dev dependencies
 .opencode/
 .claude/

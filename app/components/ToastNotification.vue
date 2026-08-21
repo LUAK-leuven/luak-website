@@ -1,17 +1,20 @@
 <script setup lang="ts">
   import Button from './shared/Button.vue';
 
-  defineProps<{
+  const { type, progress } = defineProps<{
     type: 'success' | 'warning' | 'error' | 'info';
+    progress: number;
   }>();
   const emit = defineEmits<{
     close: [];
+    pause: [];
+    resume: [];
   }>();
 </script>
 
 <template>
   <div
-    class="alert fixed z-50 w-[90%] mx-[5%] md:w-[80%] md:mx-[10%] bottom-0 right-0 mb-5 flex justify-between"
+    class="alert relative flex justify-between overflow-hidden"
     :class="{
       'alert-info': type === 'info',
       'alert-success': type === 'success',
@@ -19,7 +22,9 @@
       'alert-error': type === 'error',
     }"
     role="alert"
-    data-testid="toast">
+    data-testid="toast"
+    @mouseenter="emit('pause')"
+    @mouseleave="emit('resume')">
     <slot />
     <Button
       class="btn btn-sm btn-circle btn-ghost text-xl self-center items-end"
@@ -27,5 +32,9 @@
       @click="emit('close')">
       ✕
     </Button>
+    <div
+      class="absolute bottom-0 left-0 h-1 bg-current opacity-50 transition-[width] duration-100 ease-linear"
+      :style="{ width: `${progress * 100}%` }"
+      data-testid="toast-progress" />
   </div>
 </template>

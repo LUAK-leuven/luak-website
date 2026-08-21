@@ -1,3 +1,4 @@
+import { DomainValidationException } from './DomainValidationException';
 import { getCurrentMembershipYear, type Membership } from './Membership';
 
 export class LuakUser {
@@ -5,6 +6,9 @@ export class LuakUser {
   private readonly isBoard: boolean;
 
   readonly authenticated: boolean;
+
+  static UnauthenticatedUser = () =>
+    new LuakUser({ memberships: [], isBoard: false, authenticated: false });
 
   constructor(args: {
     memberships: Membership[];
@@ -14,17 +18,33 @@ export class LuakUser {
     this.memberships = args.memberships;
     this.isBoard = args.isBoard;
     this.authenticated = args.authenticated;
+
+    this.validate();
   }
 
-  static UnauthenticatedUser = () =>
-    new LuakUser({ memberships: [], isBoard: false, authenticated: false });
+  private readonly validate = () => {
+    if (!this.authenticated && (this.memberships.length > 0 || this.isBoard)) {
+      throw new DomainValidationException();
+    }
+  };
 
   readonly hasActiveMembership = () => {
     return this.memberships.some((membership) => membership.isActive());
   };
 
   readonly getActiveMembership = (): Membership | undefined => {
-    return this.memberships.find((membership) => membership.isActive());
+    return this.memberships
+      .filter((membership) => membership.isActive())
+      .reduce<Membership | undefined>((result, memberhship) => {
+        if (result === undefined) return memberhship;
+        if (memberhship.membershipYear > result.membershipYear)
+          return memberhship;
+        else return result;
+      }, undefined);
+  };
+
+  readonly getActiveMemberships = (): Membership[] => {
+    return this.memberships.filter((membership) => membership.isActive());
   };
 
   readonly wasMemberLastYear = () => {

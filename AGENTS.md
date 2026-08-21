@@ -16,12 +16,10 @@ Make sure to read [ai-context](./ai-context/index.md) so that you can load the c
 - TypeScript is **mandatory everywhere**, including `<script setup lang="ts">` in all SFCs.
 - Never use `any` type and avoid `unknown`, use the correct types at all times.
 - **Avoid type casting**.
-- Run `yarn lint` to verify you're not introducing errors.
+- Run `yarn typecheck` and `yarn lint` to verify you're not introducing errors.
 - Use `import type { ... }` for type-only imports.
-- Prefer named exports; use `import * as yup from 'yup'` only for namespace-style libraries.
 - Use branded ID types (`EntityId<'user'>`, `UserId`, `RentalId`) for all primary keys.
 - Cast Supabase row IDs: `data.id as UserId`.
-- Do not duplicate database types, use `Database['public']['Tables']['X']['Row']` for table row types, `Enums<'x'>` for DB enums.
 - Utility types live in `app/utils/typeUtils.ts`: `Defined<T>`, `GetReturn<T>`, `Unwrap<T>`.
 - Generic components use `<script setup lang="ts" generic="T">`.
 
@@ -64,19 +62,6 @@ Make sure to read [ai-context](./ai-context/index.md) so that you can load the c
 - If the error is an error that should be thrown (e.g., a 404 page), use `throw createError({ statusCode: 404, statusMessage: '...' })`.
 - Form errors: use `setFieldError('field', message)` via vee-validate.
 
-### Form Validation (vee-validate + yup)
-
-```ts
-const schema = yup.object({ field: yup.string().required() });
-const { handleSubmit, isSubmitting, setFieldError } = useForm({
-  validationSchema: toTypedSchema(schema),
-});
-const onSubmit = handleSubmit(async (values) => {
-  // call service, setFieldError on failure
-});
-```
-
-Shared yup validators (phone, password) live in `app/utils/yup.ts`.
 
 ### UI / Styling
 
@@ -102,8 +87,9 @@ Shared yup validators (phone, password) live in `app/utils/yup.ts`.
 
 ## Key Rules for AI Agents
 
-1. Use project composables and middleware for auth/membership logic — do not reinvent them.
-2. Use `~/` path alias, never relative `../../` imports for project files.
-3. Run `yarn lint` and `yarn test` before committing to verify you didn't introduce errors.
-4. Keep the DaisyUI theme (`nord`) consistent; do not introduce inline styles or raw hex colors.
-5. Do not add new dependencies without good reason — check if `@vueuse/core`, `dayjs`, or existing utils cover the need.
+- Use project composables and middleware for auth/membership logic — do not reinvent them.
+- Use path alias, never relative `../../` imports for project files.
+- Run `yarn lint` and `yarn test` before committing to verify you didn't introduce errors.
+- Keep the DaisyUI theme (`nord`) consistent; do not introduce inline styles or raw hex colors.
+- Do not add new dependencies without good reason — check if `@vueuse/core`, `dayjs`, or existing utils cover the need.
+- Whenever you fix a bug that `yarn typecheck`, `yarn lint`, and `yarn test` all would have missed, close that guardrail gap (add a test, stricter type, or lint rule) — see [ai-context/guardrail-gaps.md](./ai-context/guardrail-gaps.md). This applies to any bug fix, not just plan-step work.

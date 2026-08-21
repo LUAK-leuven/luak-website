@@ -4,7 +4,7 @@
   const props = defineProps<{ id?: string }>();
 
   const { data: info_navigation } = await useAsyncData('info_navigation', () =>
-    queryCollectionNavigation('info_'),
+    queryCollectionNavigation('infoPages'),
   );
   const user = await useUserService().getMembershipInfo({
     authRequired: false,

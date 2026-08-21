@@ -51,10 +51,8 @@ abstract class RentalBase {
       if (!item.isFullyReturned) isAllReturned = false;
     }
 
-    if ((this.depositReturned || this.depositFee === 0) && isAllReturned)
-      return 'returned';
-    if ((this.depositReturned && this.depositFee > 0) || isAnyReturned)
-      return 'partially_returned';
+    if (this.depositReturned && isAllReturned) return 'returned';
+    if (this.depositReturned || isAnyReturned) return 'partially_returned';
     return 'not_returned';
   }
 

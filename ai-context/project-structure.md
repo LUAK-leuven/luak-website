@@ -21,9 +21,10 @@
 - `supabase/`: The supabase backend (Deno runtime)
   - `migrations/`: DB migrations
   - `functions/`: Supabase edge functions
-  - `config.toml`: Supabase config
+  - `config.toml`: Local Supabase config
   - `seed.sql`: Seed file
 - `test/`:
   - `e2e/`: Contains playwright e2e tests
+  - `integration/`: E2e tests for the server
   - `nuxt/components/`: Contains component tests; Uses Vitest with Nuxt; Has the same structure as the components folder
   - `unit/`: Unit tests

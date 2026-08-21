@@ -1,22 +1,105 @@
+export type ToastType = 'success' | 'warning' | 'error' | 'info';
+
+export type ToastItem = {
+  id: ToastId;
+  type: ToastType;
+  message: string;
+  progress: number;
+};
+
+type ToastId = EntityId<'toast'>;
+
+const TOAST_DURATION_MS = 5000;
+const PROGRESS_TICK_MS = 100;
+
+const toastIntervals = new Map<ToastId, ReturnType<typeof setInterval>>();
+const toastRemaining = new Map<ToastId, number>();
+
 export function useToast() {
-  const toast = useState<
-    | {
-        type: 'success' | 'warning' | 'error' | 'info';
-        message: string;
+  const toasts = useState<ToastItem[]>('luak.toast', () => []);
+
+  const startInterval = (id: ToastId) => {
+    if (!import.meta.client || toastIntervals.has(id)) {
+      return;
+    }
+
+    toastIntervals.set(
+      id,
+      setInterval(() => {
+        const remaining = Math.max(
+          0,
+          (toastRemaining.get(id) ?? 0) - PROGRESS_TICK_MS,
+        );
+        const toast = toasts.value.find((item) => item.id === id);
+
+        toastRemaining.set(id, remaining);
+        if (toast !== undefined) {
+          toast.progress = remaining / TOAST_DURATION_MS;
+        }
+
+        if (remaining === 0) {
+          close(id);
+        }
+      }, PROGRESS_TICK_MS),
+    );
+  };
+
+  const show = (type: ToastType, message: string) => {
+    const id = crypto.randomUUID() as ToastId;
+    toasts.value.push({ id, type, message, progress: 1 });
+
+    if (import.meta.client) {
+      toastRemaining.set(id, TOAST_DURATION_MS);
+      startInterval(id);
+    }
+
+    return id;
+  };
+
+  const close = (id: ToastId) => {
+    if (import.meta.client) {
+      const interval = toastIntervals.get(id);
+
+      if (interval !== undefined) {
+        clearInterval(interval);
+        toastIntervals.delete(id);
       }
-    | undefined
-  >('luak.toast');
+      toastRemaining.delete(id);
+    }
 
-  const show = (
-    type: 'success' | 'warning' | 'error' | 'info',
-    message: string,
-  ) => {
-    toast.value = { type, message };
+    const toastIndex = toasts.value.findIndex((toast) => toast.id === id);
+
+    if (toastIndex === -1) {
+      console.warn(`Toast with id "${id}" was not found.`);
+      return;
+    }
+
+    toasts.value.splice(toastIndex, 1);
   };
 
-  const close = () => {
-    toast.value = undefined;
+  const pauseToast = (id: ToastId) => {
+    if (!import.meta.client) {
+      return;
+    }
+
+    const interval = toastIntervals.get(id);
+    if (interval !== undefined) {
+      clearInterval(interval);
+      toastIntervals.delete(id);
+    }
   };
 
-  return { show, close, state: readonly(toast) };
+  const resumeToast = (id: ToastId) => {
+    if (toasts.value.some((toast) => toast.id === id)) {
+      startInterval(id);
+    }
+  };
+
+  return {
+    show,
+    close,
+    pauseToast,
+    resumeToast,
+    toasts: readonly(toasts),
+  };
 }

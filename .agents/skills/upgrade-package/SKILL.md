@@ -1,6 +1,6 @@
 ---
 name: upgrade-package
-description: Use this skill whenever a package upgrade is requested.
+description: Use this skill whenever a package upgrade is requested, whether a single package or multiple.
 ---
 
 ## Step 1 — Identify impacted functionalities

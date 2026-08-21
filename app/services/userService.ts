@@ -117,7 +117,7 @@ export function getFullName(user: { first_name: string; last_name: string }) {
   return user.first_name + ' ' + user.last_name;
 }
 
-type LuakUserVo = Awaited<ReturnType<UserService['getLuakUser']>>;
+type LuakUserVo = NonNullable<Awaited<ReturnType<UserService['getLuakUser']>>>;
 
 export const luakUserFromDb = (args: LuakUserVo): LuakUser => {
   const memberships = args.Memberships.map((x) => membershipFromDb(x)).filter(

@@ -25,9 +25,6 @@ Next set the right env variables to connect with supabase. check `.env.example` 
 
 Firs you need to install the [playwright](https://playwright.dev) browsers: `yarn playwright install chromium`
 
-## Agentic development
-
-We use [apm](https://microsoft.github.io/apm/) as it is tool-agnostic.
 
 ## Nuxt Studio
 
