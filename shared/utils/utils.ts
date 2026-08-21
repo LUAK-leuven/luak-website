@@ -97,3 +97,5 @@ export const randomOf = <T>(arr: T[]): T =>
 export const randomInt = (min: number, max: number): number => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
+
+export const randomBool = (probTrue: number = 0.5) => Math.random() < probTrue;

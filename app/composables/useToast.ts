@@ -1,13 +1,13 @@
 export type ToastType = 'success' | 'warning' | 'error' | 'info';
 
-export interface ToastItem {
+export type ToastItem = {
   id: string;
   type: ToastType;
   message: string;
   progress: number;
-}
+};
 
-const TOAST_DURATION_MS = 4000;
+const TOAST_DURATION_MS = 5000;
 const PROGRESS_TICK_MS = 100;
 
 const toastIntervals = new Map<string, ReturnType<typeof setInterval>>();

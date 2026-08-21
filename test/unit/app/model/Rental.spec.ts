@@ -1,12 +1,8 @@
 import { describe, expect, test } from 'vitest';
-import {
-  RentalGearItem,
-  RentalSummary,
-  type RentalTopoItem,
-} from '~/app/model/Rental';
+import { RentalGearItem, RentalSummary } from '~/app/model/Rental';
 import type { GearItemId } from '~/shared/types/gear';
 import type { RentalId } from '~/shared/types/rental';
-import { randomInt, randomOf } from '~/shared/utils/utils';
+import { randomBool, randomInt, randomOf } from '~/shared/utils/utils';
 
 describe('Rental status', () => {
   test('"returned" when all items are returned and deposit is returned', () => {
@@ -36,26 +32,17 @@ describe('Rental status', () => {
   });
 });
 
-const aRentalSummary = (
-  args: Partial<{
-    id: RentalId;
-    gear: RentalGearItem[];
-    topos: RentalTopoItem[];
-    dateBorrow: string;
-    dateReturn: string;
-    depositFee: number;
-    depositReturned: boolean;
-    memberName: string;
-  }>,
-) => {
-  const defaultArgs = {
+type RentalSummaryArgs = ConstructorParameters<typeof RentalSummary>[0];
+
+const aRentalSummary = (args: Partial<RentalSummaryArgs>): RentalSummary => {
+  const defaultArgs: RentalSummaryArgs = {
     id: crypto.randomUUID() as RentalId,
     gear: [],
     topos: [],
     dateBorrow: '2024-01-01',
     dateReturn: '2024-01-01',
     depositFee: randomOf([0, randomInt(1, 100)]),
-    depositReturned: randomOf([true, false]),
+    depositReturned: randomBool(),
     memberName: 'John Doe',
   };
   return new RentalSummary({
@@ -64,15 +51,11 @@ const aRentalSummary = (
   });
 };
 
+type RentalGearItemArgs = ConstructorParameters<typeof RentalGearItem>[0];
+
 const aRentalGearItem = (
-  args: Partial<{
-    id: GearItemId;
-    name: string;
-    rentedAmount: number;
-    returnedAmount: number;
-    lostAmount: number;
-  }> = {},
-) => {
+  args: Partial<RentalGearItemArgs> = {},
+): RentalGearItem => {
   const rentedAmount =
     args.rentedAmount === undefined ? randomInt(1, 10) : args.rentedAmount;
   const returnedAmount =
