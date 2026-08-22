@@ -38,7 +38,7 @@
         email: submitted.email,
         password: submitted.password,
         options: {
-          emailRedirectTo: `${url.origin}/profile/overview`,
+          emailRedirectTo: `${url.origin}/auth/confirmEmail`,
         },
       });
       if (error) {

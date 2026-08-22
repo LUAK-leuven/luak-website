@@ -19,8 +19,12 @@ export function useToast() {
   const toasts = useState<ToastItem[]>('luak.toast', () => []);
 
   const startInterval = (id: ToastId) => {
-    if (!import.meta.client || toastIntervals.has(id)) {
-      return;
+    if (!import.meta.client || toastIntervals.has(id)) return;
+
+    const toast = toasts.value.find((item) => item.id === id);
+    if (toast === undefined) return;
+    if (!toastRemaining.has(id)) {
+      toastRemaining.set(id, toast.progress * TOAST_DURATION_MS);
     }
 
     toastIntervals.set(
@@ -45,13 +49,15 @@ export function useToast() {
   };
 
   const show = (type: ToastType, message: string) => {
+    if (!import.meta.client)
+      throw new Error('useToast.show can only be used on the client side.');
+
     const id = crypto.randomUUID() as ToastId;
+
     toasts.value.push({ id, type, message, progress: 1 });
 
-    if (import.meta.client) {
-      toastRemaining.set(id, TOAST_DURATION_MS);
-      startInterval(id);
-    }
+    toastRemaining.set(id, TOAST_DURATION_MS);
+    startInterval(id);
 
     return id;
   };
