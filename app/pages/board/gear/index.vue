@@ -1,5 +1,9 @@
 <script lang="ts" setup>
-  import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
+  import {
+    breakpointsTailwind,
+    refDebounced,
+    useBreakpoints,
+  } from '@vueuse/core';
   import RetirementDate from '~/components/board/gear/retirementDate.vue';
   import Text from '~/components/input/Text.vue';
   import WithLazyResource from '~/components/pages/WithLazyResource.vue';
@@ -7,7 +11,8 @@
   const { data, status, error } = useLazyFetch('/api/gear/inventory', {
     method: 'get',
   });
-  const searchTerm = ref<string>();
+  const searchInput = ref<string>();
+  const searchTerm = refDebounced(searchInput, 250);
 
   const filteredGear_ = computed(() =>
     data.value?.filter((gearItem) =>
@@ -21,10 +26,10 @@
 
 <template>
   <FullPageCard>
-    <template #title>Gear Overview </template>
+    <template #title>Gear Overview</template>
 
     <Text
-      v-model="searchTerm"
+      v-model="searchInput"
       class="mb-2"
       label="Search by name"
       placeholder="Search by name ..." />
