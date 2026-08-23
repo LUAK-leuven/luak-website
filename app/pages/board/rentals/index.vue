@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { useDebounceFn } from '@vueuse/core';
+  import { refDebounced } from '@vueuse/core';
   import Text from '~/components/input/Text.vue';
   import Input from '~/components/shared/Input.vue';
   import { useRentalService } from '~/composables/useRentalService';
@@ -32,11 +32,7 @@
   });
 
   const searchInput = ref<string>();
-  const debounceFn = useDebounceFn((value: string | undefined) => value, 250);
-  const searchTerm = ref<string>();
-  effect(async () => {
-    searchTerm.value = await debounceFn(searchInput.value);
-  });
+  const searchTerm = refDebounced(searchInput, 200);
   const showReturned = ref<boolean>();
 
   const filteredRentals = computed(() => {

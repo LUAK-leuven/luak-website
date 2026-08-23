@@ -7,6 +7,7 @@
   import Text from '~/components/input/Text.vue';
   import { getCurrentMembershipYear } from '~/model/Membership';
   import CsvExport from '~/components/board/subscriptions-overview/CsvExport.vue';
+  import { refDebounced } from '@vueuse/core';
 
   const supabase = useSupabaseClient();
   const isLoading = ref(true);
@@ -27,7 +28,8 @@
       has_paid: boolean;
     }>
   >([]);
-  const searchTerm = ref<string>();
+  const searchInput = ref<string>();
+  const searchTerm = refDebounced(searchInput, 250);
   const filterType = ref('all');
   const sortField = ref('created_at');
   const sortDirection = ref('desc');
@@ -181,7 +183,7 @@
       <!-- Filters -->
       <div class="flex flex-col md:flex-row gap-4 mb-6">
         <Text
-          v-model="searchTerm"
+          v-model="searchInput"
           class="min-w-48 flex-1"
           label="Search by name"
           placeholder="Search by name">

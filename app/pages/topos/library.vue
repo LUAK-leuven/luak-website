@@ -1,9 +1,11 @@
 <script setup lang="ts">
   import Text from '~/components/input/Text.vue';
-  import { string as yupString, array as yupArray } from 'yup';
+  import { string as yupString } from 'yup';
   import SelectCountry from '~/components/topoLibrary/SelectCountry.vue';
   import SelectableBadge from '~/components/input/SelectableBadge.vue';
   import Input from '~/components/shared/Input.vue';
+  import { refDebounced } from '@vueuse/core';
+  import { asArray } from '~/utils/QueryParams';
 
   definePageMeta({ middleware: 'active-member-guard' });
 
@@ -24,18 +26,20 @@
     ...new Set(topos.value?.flatMap((it) => it.tags)),
   ]);
 
-  const searchTerm = useUrlState<string | undefined>('search', (x) =>
+  const searchInput = useUrlState<string | undefined>('search', (x) =>
     yupString().optional().validateSync(x),
   );
+  const searchTerm = refDebounced(searchInput, 250);
+
   const selectedTypesOfClimbing = useUrlState<string[]>('type', (x) => {
-    if (x === undefined) return [];
-    if (typeof x === 'string') return [yupString().required().validateSync(x)];
-    return yupArray().of(yupString().required()).required().validateSync(x);
+    return asArray(x).filter(
+      (it) => it !== null && allTypesOfClimbing.value.includes(it),
+    ) as string[];
   });
   const selectedCountries = useUrlState<string[]>('country', (x) => {
-    if (x === undefined) return [];
-    if (typeof x === 'string') return [yupString().required().validateSync(x)];
-    return yupArray().of(yupString().required()).required().validateSync(x);
+    return asArray(x).filter(
+      (it) => it !== null && allCountries.value.includes(it),
+    ) as string[];
   });
   const includeOldTopos = useUrlState<'true' | 'false'>('old', (x) =>
     yupString()
@@ -101,7 +105,7 @@
             <div class="flex flex-col">
               <span class="font-bold">Search:</span>
               <Text
-                v-model="searchTerm"
+                v-model="searchInput"
                 type="text"
                 placeholder="Search by title"
                 data-testid="search-input">

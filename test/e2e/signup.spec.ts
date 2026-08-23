@@ -7,15 +7,15 @@ import dayjs from 'dayjs';
 import { findBy } from '~/shared/utils/utils';
 import { ProfileOverviewPage } from './pages/profile/overview.page';
 
-const newUser = new TestUser({
-  firstName: 'New',
-  lastName: 'User',
-  email: 'example@test.com',
-  password: 'pass1234',
-});
-
 test('Can sign up a new user', async ({ page, luakPage }) => {
   const signupPage = await SignupPage.navigate(page);
+
+  const newUser = new TestUser({
+    firstName: 'New',
+    lastName: 'User',
+    email: 'example@test.com',
+    password: 'pass1234',
+  });
 
   await signupPage.fillForm({
     firstName: newUser.firstName,
@@ -46,9 +46,19 @@ test('Can sign up a new user', async ({ page, luakPage }) => {
 
   const profilePage = new ProfileOverviewPage(page);
   await expect(profilePage.hiUserName).toContainText(newUser.firstName);
+  await expect(luakPage.toastMessage).toContainText(
+    'Email confirmed successfully',
+  );
 
   await profilePage.logout();
   await login(page, newUser);
+  await profilePage.logout();
+
+  // Show error when confirmation link is not valid
+  await navigateTo(page, confirmationLink);
+
+  await expect(page).toHaveURL('/');
+  await expect(luakPage.toastMessage).toContainClass('alert-error');
 });
 
 const extractConfirmationLink = (text: string) => {
