@@ -35,7 +35,7 @@ const accessGraph: {
     users: {
       unauthenticated: 'redirect',
       nonMember: 'abort',
-      unpaidMembership: 'allow', // TODO: This should not be allowed.
+      unpaidMembership: 'abort',
       paidLastYear: 'allow', // TODO: I guess we want to allow this.
       paidMembership: 'allow',
       boardMember: 'allow',
