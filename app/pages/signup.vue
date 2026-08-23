@@ -3,6 +3,7 @@
     object as yupObject,
     string as yupString,
     bool as yupBool,
+    ref as yupRef,
   } from 'yup';
   import { yup_password, yup_phone } from '~/utils/yup';
   import TextField from '~/components/input/TextField.vue';
@@ -24,6 +25,10 @@
     lastName: yupString().required().label('Last name'),
     email: yupString().required().email(),
     password: yup_password.required(),
+    password2: yupString()
+      .required()
+      .oneOf([yupRef('password')], 'Passwords must match')
+      .label('Confirm password'),
     newsletter: yupBool().default(true),
     whatsapp: yupBool().default(true),
     phoneNumber: yup_phone.transform((v: string) => (v ? v : undefined)),
@@ -134,6 +139,13 @@
           type="password"
           autocomplete="new-password"
           data-testid="password" />
+        <TextField
+          label="Confirm password *"
+          name="password2"
+          placeholder="*******"
+          type="password"
+          autocomplete="new-password"
+          data-testid="confirm-password" />
         <BoolField name="whatsapp">Can we contact you via whatsapp?</BoolField>
         <BoolField name="newsletter">
           Subscribe to monthly newsletter?

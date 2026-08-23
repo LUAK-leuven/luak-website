@@ -9,6 +9,7 @@ export class SignupPage {
   readonly emailInput: Locator;
   readonly phoneInput: Locator;
   readonly passwordInput: Locator;
+  readonly confirmPasswordInput: Locator;
   readonly submitButton: Locator;
 
   constructor(private readonly page: Page) {
@@ -17,6 +18,9 @@ export class SignupPage {
     this.emailInput = page.getByTestId('email').getByRole('textbox');
     this.phoneInput = page.getByTestId('phone').getByRole('textbox');
     this.passwordInput = page.getByTestId('password').getByRole('textbox');
+    this.confirmPasswordInput = page
+      .getByTestId('confirm-password')
+      .getByRole('textbox');
     this.submitButton = page.getByTestId('submitButton');
   }
 
@@ -38,5 +42,6 @@ export class SignupPage {
     if (user.phoneNumber !== undefined)
       await this.phoneInput.fill(user.phoneNumber);
     await this.passwordInput.fill(user.password);
+    await this.confirmPasswordInput.fill(user.password);
   };
 }
