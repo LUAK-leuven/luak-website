@@ -6,6 +6,7 @@
     ref as yupRef,
   } from 'yup';
   import { yup_password, yup_phone } from '~/utils/yup';
+  import { useWaitForAuthUser } from '~/composables/useWaitForAuthUser';
   import TextField from '~/components/input/TextField.vue';
   import LoadingButton from '~/components/shared/LoadingButton.vue';
   import BoolField from '~/components/input/BoolField.vue';
@@ -64,6 +65,7 @@
           showToast('error', error.message);
           return;
         }
+        await useWaitForAuthUser();
         await navigateTo({ name: 'profile-overview' });
       } else {
         // Email confirmation enabled

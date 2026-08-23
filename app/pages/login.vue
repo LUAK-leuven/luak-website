@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { string as yupString, object as yupObject } from 'yup';
+  import { useWaitForAuthUser } from '~/composables/useWaitForAuthUser';
   import TextField from '~/components/input/TextField.vue';
   import LoadingButton from '~/components/shared/LoadingButton.vue';
 
@@ -23,6 +24,7 @@
       if (error) {
         setFieldError('password', error.message);
       } else {
+        await useWaitForAuthUser();
         if (redirect) {
           await navigateTo(redirect);
         } else {
