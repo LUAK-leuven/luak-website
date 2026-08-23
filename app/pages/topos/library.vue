@@ -1,10 +1,10 @@
 <script setup lang="ts">
   import Text from '~/components/input/Text.vue';
-  import { string as yupString, array as yupArray } from 'yup';
+  import { string as yupString } from 'yup';
   import SelectCountry from '~/components/topoLibrary/SelectCountry.vue';
   import SelectableBadge from '~/components/input/SelectableBadge.vue';
   import Input from '~/components/shared/Input.vue';
-  import { watchDebounced } from '@vueuse/core';
+  import { refDebounced } from '@vueuse/core';
   import { asArray } from '~/utils/QueryParams';
 
   definePageMeta({ middleware: 'active-member-guard' });
@@ -26,17 +26,10 @@
     ...new Set(topos.value?.flatMap((it) => it.tags)),
   ]);
 
-  const searchInput = ref<string>();
-  const searchTerm = useUrlState<string | undefined>('search', (x) =>
+  const searchInput = useUrlState<string | undefined>('search', (x) =>
     yupString().optional().validateSync(x),
   );
-  watchDebounced(
-    searchInput,
-    (newValue) => {
-      searchTerm.value = newValue;
-    },
-    { debounce: 250 },
-  );
+  const searchTerm = refDebounced(searchInput, 250);
 
   const selectedTypesOfClimbing = useUrlState<string[]>('type', (x) => {
     return asArray(x).filter(
