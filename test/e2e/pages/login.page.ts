@@ -10,6 +10,11 @@ export class LoginPage {
     this.page = page;
   }
 
+  static async navigate(page: Page) {
+    await navigateTo(page, LoginPage.path);
+    return new LoginPage(page);
+  }
+
   get submitButton() {
     return this.page.getByTestId('login.submit');
   }
@@ -33,7 +38,6 @@ export class LoginPage {
   }
 
   async loginAsserted(email: string, password: string) {
-    await navigateTo(this.page, LoginPage.path);
     await this.login(email, password);
 
     await expect(this.errorMessage).toBeHidden();

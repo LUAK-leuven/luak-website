@@ -92,9 +92,6 @@ List these as actionable items, not steps (they may already be done).
 **Notes**: (optional) any constraint, edge case, or codebase-specific context the developer needs.
 
 [repeat for each step]
-
-## Testing Checklist
-A flat list of all behaviours that must be covered by tests at the end of the feature. Derived from all TDD entries above, plus any integration or e2e scenarios.
 ```
 
 #### Step writing rules

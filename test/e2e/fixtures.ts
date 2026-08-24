@@ -3,7 +3,6 @@ import { LoginPage } from '#test/e2e/pages/login.page';
 import { testServiceBuilder } from '#test/testServices';
 import { testUsers, type TestUser, type TestUserKey } from '#test/TestUser';
 import { test as base, expect } from '@playwright/test';
-import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
 import { randomOf } from '~/shared/utils/utils';
 import { AppPage } from './pages/app.page';
 
@@ -38,9 +37,8 @@ export const randomUserTest = test.extend<{
 });
 
 export async function login(page: Page, user: TestUser) {
-  const loginPage = new LoginPage(page);
-  await loginPage.loginAsserted(user.email, user.password);
-  const profilePage = new ProfileOverviewPage(page);
+  const loginPage = await LoginPage.navigate(page);
+  const profilePage = await loginPage.loginAsserted(user.email, user.password);
   await expect(profilePage.hiUserName).toBeVisible();
   return profilePage;
 }
