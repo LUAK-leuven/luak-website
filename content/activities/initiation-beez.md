@@ -18,4 +18,6 @@ Practical:
 
 Usually the initiations are full very quickly (due to the limited amount of places and high demand). Therefore we also ask to only register if you are sure you can come, and let us know (in advance!) if you cannot make it anymore.
 
-:br Contact-Person for this activity: TBD
+---
+
+Contact-Person for this activity: Lukas

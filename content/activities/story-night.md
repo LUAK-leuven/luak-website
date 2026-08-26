@@ -1,13 +1,16 @@
 ---
 title: Story Night
-date: 2025-10-16
-description: Get taken away to the alps, to brand new Belgian crags, to an adventure waiting to happen,... all with a projector and the firsthand account of a fellow LUAKker.
-image: /news/zomer-2025-71.jpg
+date: 2026-10-15
+image: /stories/sialouze/original-topo-unchi-maka.jpg
 price: 0
 ---
 
 Get taken away to the alps, to brand new Belgian crags, to an adventure waiting to happen,... all with a projector and the firsthand account of a fellow LUAKker.
 
-At the LUAK clubhouse starting 20:30. (free entry, no registrations)
+At the [LUAK clubhouse](https://maps.app.goo.gl/ccjoQiijrza8ceUb7) starting 20:30. (free entry, no registrations)
 
 If you want to tell a story yourself, please let us know, you are very welcome!
+
+---
+
+Contact-Person for this activity: Hektor

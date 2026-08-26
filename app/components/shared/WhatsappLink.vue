@@ -46,7 +46,7 @@
 </script>
 
 <template>
-  <a :href="`https://wa.me/${cleanedPhoneNumber}`">
+  <a :href="`https://wa.me/${cleanedPhoneNumber}`" target="_blank">
     {{ phoneNumber }}
   </a>
 </template>

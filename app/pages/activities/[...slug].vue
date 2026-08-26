@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import FullPageCardWithPicture from '~/components/pages/FullPageCardWithPicture.vue';
   import BackButton from '~/components/shared/BackButton.vue';
 
   definePageMeta({
@@ -12,7 +13,7 @@
 </script>
 
 <template>
-  <PagesFullPageCardWithPicture v-if="page" :image-url="page.image">
+  <FullPageCardWithPicture v-if="page" :image-url="page.image">
     <template #title>
       <div class="max-w-[90wh]">
         <h1 class="mb-14 text-center text-5xl">
@@ -33,6 +34,6 @@
       <BackButton class="mb-5" :to="{ name: 'activities' }" />
       <ContentRenderer class="nuxt-content" :value="page" />
     </PageCard>
-  </PagesFullPageCardWithPicture>
+  </FullPageCardWithPicture>
   <PagesPageNotFound v-else class="mt-20" :back-to="{ name: 'activities' }" />
 </template>
