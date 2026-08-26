@@ -14,7 +14,12 @@
 <template>
   <FullPageCard>
     <template #title> My Profile </template>
-    <span v-if="!user">Not logged in yet</span>
+    <div v-if="!user" class="text-center">
+      <p>Not logged in yet</p>
+      <NuxtLink class="btn btn-primary" :to="{ name: 'login' }">
+        Log in
+      </NuxtLink>
+    </div>
     <template v-else>
       <h2 data-testId="userName">
         Hi {{ user.firstName ?? 'LUAK member' }} 👋
