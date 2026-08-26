@@ -11,3 +11,7 @@ No registrations necessary, but we will make a groupchat to facilitate carpoolin
 If you would like to come on this awesome weekend send a WhatsApp message to Mo (:whats-app{phone-number="+32 468 15 23 35"}) or email to [luak.bestuur@gmail.com], then we will add you to the groupchat.
 
 P.S.: There will be limited edition T-shirts available, so don't miss out! \:o ;)
+
+---
+
+Contact-Person for this activity: Mo

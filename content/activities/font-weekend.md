@@ -1,15 +1,14 @@
 ---
-title: Fontainebleau Weekend
-date: 2026-05-14
-description: On the long weekend of 14-17 May we are going to the magical forests of Fontainebleau.
+title: Pfalz weekend?
+date: 2026-10-31
 image: /activities/font.jpg
 price: 0
 ---
 
-On the long weekend of 14-17 May we are going to the magical forests of Fontainebleau.
+On the long weekend of 31 October -  2 November we are planning to go bouldering in Pfalz.
 
-Because this is a bouldering trip, no experience with belaying or lead climbing is required. But don't underestimate the dangers of bouldering, there are more accidents with bouldering than sportclimbing! So make sure you know how to spot someone and how to safely fall on a crashpad. If you're not familiar with this it might be a good idea to check out some videos on youtube😉.
+We still need to organize the trip, more info will come later.
 
-Want to join? Register by filling in [this form](https://docs.google.com/forms/d/e/1FAIpQLSfFEbZRwVuaEMhtScn9dsYZKHFh1n7EVZFEPHv3uoisSZXAvw/viewform?usp=dialog).
+---
 
-:br Contact-Person for this activity: Arthur
+Contact-Person for this activity: Arthur
