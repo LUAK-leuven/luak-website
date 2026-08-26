@@ -1,7 +1,8 @@
 name: Reset studio branch
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
       - master
 

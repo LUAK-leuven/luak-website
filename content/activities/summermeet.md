@@ -1,8 +1,5 @@
 ---
 title: "Summermeet: Ailefroide"
-description: |-
-  Every year the people of LUAK spend a week together in the mountains🏔️. This year they are going back to Ailefroide from Monday 13 July to Tuesday 21 July.
-  So gather your climbing gear and join our epic climging adventures in the Ecrins.
 date: 2026-07-13
 image: /activities/ailefroide-sunrise.jpg
 price: 0
@@ -28,7 +25,3 @@ Ailefroide is an accessible place with a bit of everything: sport climbing, mult
 ---
 
 Want to join the summermeet? Register [here](https://docs.google.com/forms/d/e/1FAIpQLSefoKYp4tu3RnXzRbIDaIuQ2_qnFAPZ-3hf4M9GbMDooW250w/viewform?usp=dialog).
-
----
-
-TEST
