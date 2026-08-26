@@ -21,7 +21,7 @@ jobs:
             --base master \
             --head "${{ github.ref_name }}" \
             --title "Update content" \
-            --message "Automatically generated PR for changes made in Nuxt Studio"
+            --body "Automatically generated PR for changes made in Nuxt Studio"
         env:
           GH_TOKEN: ${{ secrets.LUAK_PR_GITHUB_TOKEN }}
 
