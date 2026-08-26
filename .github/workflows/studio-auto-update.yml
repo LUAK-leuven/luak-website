@@ -1,0 +1,58 @@
+name: Reset studio branch
+
+on:
+  push:
+    branches:
+      - master
+
+# Don't run two sync operations simultaneously.
+concurrency:
+  group: sync-content
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  rebase-studio:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch branches
+        run: |
+          git fetch origin master studio
+
+      - name: Check whether studio branch exists
+        id: check
+        run: |
+          if git show-ref --verify --quiet refs/remotes/origin/studio; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Rebase studio onto master
+        if: steps.check.outputs.exists == 'true'
+        run: |
+          git checkout -B studio origin/studio
+          if ! git rebase origin/master; then
+            echo "Rebase failed due to conflicts."
+            git rebase --abort
+            exit 1
+          fi
+
+      - name: Push rebased studio branch
+        if: steps.check.outputs.exists == 'true'
+        run: |
+          git push --force-with-lease origin studio:studio
