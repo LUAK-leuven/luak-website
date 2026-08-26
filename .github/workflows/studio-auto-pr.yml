@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pull-requests: write
 
 jobs:
@@ -25,13 +25,14 @@ jobs:
             --title "Update content" \
             --body "Automatically generated PR for changes made in Nuxt Studio"
         env:
-          GH_TOKEN: ${{ secrets.LUAK_PR_GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
 
       - name: Enable pull request automerge
+        if: ${{ !cancelled() }}
         run: |
           gh pr merge \
           --auto \
           --merge \
           "${{ github.ref_name }}"
         env:
-          GH_TOKEN: ${{ secrets.LUAK_PR_GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
