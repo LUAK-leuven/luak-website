@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - studio
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -13,6 +14,8 @@ jobs:
   create-pr:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v6
+
       - name: Create pull request
         id: cpr
         run: |
@@ -20,15 +23,16 @@ jobs:
             --base master \
             --head "${{ github.ref_name }}" \
             --title "Update content" \
-            --message "Automatically generated PR for changes made in Nuxt Studio"
+            --body "Automatically generated PR for changes made in Nuxt Studio"
         env:
-          GH_TOKEN: ${{ secrets.LUAK_PR_GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
 
       - name: Enable pull request automerge
+        if: ${{ !cancelled() }}
         run: |
           gh pr merge \
           --auto \
           --merge \
           "${{ github.ref_name }}"
         env:
-          GH_TOKEN: ${{ secrets.LUAK_PR_GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
