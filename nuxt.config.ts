@@ -66,6 +66,7 @@ export default defineNuxtConfig({
       branch: 'studio',
       private: true,
     },
+    dev: true,
   },
   supabase: {
     redirect: true,
