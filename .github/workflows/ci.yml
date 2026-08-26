@@ -31,13 +31,14 @@ jobs:
       - name: Start supabase server
         run: yarn supabase start --log-level error -x edge-runtime,imgproxy,logflare,postgres-meta,realtime,storage-api,studio,supavisor,vector
 
+      - name: Start dev server
+        run: yarn dev > nuxt.log 2>&1 &
+
       - name: Install Playwright Browsers
         run: yarn playwright install --with-deps chromium
 
-      - name: Start the dev server
-        run: |
-          yarn dev > nuxt.log 2>&1 &
-          npx wait-on http://localhost:3000
+      - name: Wait for dev server to be up
+        run: npx wait-on http://localhost:3000 -t 5m
 
       - name: Run tests
         run: yarn test
