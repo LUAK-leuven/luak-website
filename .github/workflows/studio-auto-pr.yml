@@ -13,23 +13,22 @@ jobs:
   create-pr:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - name: Create pull request
+        id: cpr
+        run: |
+          gh pr create \
+            --base master \
+            --head "${{ github.ref_name }}" \
+            --title "Update content" \
+            --message "Automatically generated PR for changes made in Nuxt Studio"
+        env:
+          GH_TOKEN: ${{ secrets.LUAK_PR_GITHUB_TOKEN }}
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v8
-        with:
-          token: ${{ secrets.LUAK_PR_GITHUB_TOKEN }}
-          base: master
-          branch: studio
-          title: 'Content updates'
-          body: 'Automatically created from Nuxt Studio.'
-          labels: studio
-          author: 'studio-auto-pr <web@luak.be>'
-
-      - name: Enable Pull Request Automerge
-        if: steps.cpr.outputs.pull-request-operation == 'created'
-        uses: peter-evans/enable-pull-request-automerge@v3
-        with:
-          token: ${{ secrets.LUAK_PR_GITHUB_TOKEN }}
-          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
-          merge-method: merge
+      - name: Enable pull request automerge
+        run: |
+          gh pr merge \
+          --auto \
+          --merge \
+          "${{ github.ref_name }}"
+        env:
+          GH_TOKEN: ${{ secrets.LUAK_PR_GITHUB_TOKEN }}
