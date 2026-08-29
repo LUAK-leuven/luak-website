@@ -7,9 +7,12 @@
     placeholder?: string;
     disabled?: boolean;
     autocomplete?: AutoFillField | undefined;
+    checked?: boolean;
   }>();
 
-  const model = defineModel<string | number | boolean | undefined>();
+  const model = defineModel<string | number | boolean | undefined>({
+    required: true,
+  });
 
   const emit = defineEmits<{
     focus: [];
@@ -28,6 +31,7 @@
     :tabindex="tabindex"
     :placeholder="placeholder"
     :autocomplete="autocomplete"
+    :checked="checked"
     @focus="emit('focus')"
     @blur="emit('blur')" />
 </template>

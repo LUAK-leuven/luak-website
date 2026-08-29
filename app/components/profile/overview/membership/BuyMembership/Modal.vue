@@ -6,7 +6,7 @@
 
   const { handleSubmit, isSubmitting } = useForm({
     validationSchema: toTypedSchema(createMembershipSchema),
-    initialValues: { sportscard: false },
+    initialValues: { sportscard: false, houserules: false },
   });
   const membership = Membership.createNewMembership();
   const user = useSupabaseUser();
@@ -48,6 +48,7 @@
 </script>
 
 <template>
+  <!--TODO: fix type error-->
   <Button
     class="btn"
     onclick="buy_membership_modal.showModal()"

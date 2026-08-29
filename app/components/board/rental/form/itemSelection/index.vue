@@ -101,6 +101,7 @@
 </script>
 
 <template>
+  <!--TODO: typeerror - type inference not working or something else?-->
   <BoardRentalFormItemSelectionSearchBar
     :available-items="availableItems"
     :placeholder="placeholder"

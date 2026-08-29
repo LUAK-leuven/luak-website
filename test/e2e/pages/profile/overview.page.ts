@@ -54,8 +54,10 @@ class BuyMembershipModal {
   constructor(private readonly page: Page) {
     this.kbfUiaaSelect = this.page.getByTestId('kbf-uiaa-select');
     this.studentSelect = this.page.getByTestId('student-select');
-    this.sportscardCheckbox = this.page.getByTestId('sportscard');
-    this.houseRules = this.page.getByTestId('houserules');
+    this.sportscardCheckbox = this.page
+      .getByTestId('sportscard')
+      .getByRole('checkbox');
+    this.houseRules = this.page.getByTestId('houserules').getByRole('checkbox');
 
     this.price = this.page.getByTestId('price');
     this.buyMembershipButton = this.page.getByTestId('buy-membership-button');

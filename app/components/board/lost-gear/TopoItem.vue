@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import Number from '~/components/input/Number.vue';
+  import Number from '~/components/input/NumberCompact.vue';
   import WithLazyResource from '~/components/pages/WithLazyResource.vue';
   import { object as yupObject, number as yupNumber } from 'yup';
   import { ErrorMessage } from 'vee-validate';

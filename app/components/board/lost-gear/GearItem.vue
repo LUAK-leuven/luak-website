@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import WithLazyResource from '~/components/pages/WithLazyResource.vue';
   import LoadingButton from '~/components/shared/LoadingButton.vue';
-  import Number from '~/components/input/Number.vue';
+  import Number from '~/components/input/NumberCompact.vue';
   import {
     object as yupObject,
     number as yupNumber,

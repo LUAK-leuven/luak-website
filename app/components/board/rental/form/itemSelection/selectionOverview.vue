@@ -1,5 +1,5 @@
 <script lang="ts" setup generic="T extends EntityId<unknown>">
-  import InputNumber from '~/components/input/Number.vue';
+  import InputNumber from '~/components/input/NumberCompact.vue';
 
   defineProps<{
     selectedItems: {

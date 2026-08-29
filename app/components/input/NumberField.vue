@@ -1,11 +1,9 @@
 <script setup lang="ts">
-  import type { TextType } from '~/components/shared/input/TextType.ts';
   import FormInput from './FormInput.vue';
 
   withDefaults(
     defineProps<{
       label?: string | undefined;
-      type?: TextType;
       error?: string | undefined;
       placeholder?: string;
       disabled?: boolean;
@@ -13,7 +11,6 @@
       autocomplete?: AutoFillField | undefined;
     }>(),
     {
-      type: 'text',
       placeholder: '',
       disabled: false,
       label: undefined,
@@ -23,7 +20,7 @@
     },
   );
 
-  const model = defineModel<string | undefined>({ required: true });
+  const model = defineModel<number | undefined>({ required: true });
 
   const emit = defineEmits<{
     focus: [];
@@ -33,11 +30,10 @@
 <template>
   <FormInput :label="label" :error="error" :disabled="disabled" :round="round">
     <slot name="label-start" />
-    <SharedInputText
+    <SharedInputNumber
       v-model="model"
       class="w-full"
       :class="{ 'bg-gray-300': disabled }"
-      :type="type"
       :placeholder="placeholder"
       :disabled="disabled"
       :autocomplete="autocomplete"

@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T extends EntityId<unknown>">
-  import NumberInput from '~/components/input/Number.vue';
+  import NumberInput from '~/components/input/NumberCompact.vue';
   import type { RentalItem } from '~/model/Rental';
   import getItemColor from '../getItemColor';
   import Button from '~/components/shared/Button.vue';

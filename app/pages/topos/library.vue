@@ -3,7 +3,6 @@
   import { string as yupString } from 'yup';
   import SelectCountry from '~/components/topoLibrary/SelectCountry.vue';
   import SelectableBadge from '~/components/input/SelectableBadge.vue';
-  import Input from '~/components/shared/Input.vue';
   import { refDebounced } from '@vueuse/core';
   import { asArray } from '~/utils/QueryParams';
 
@@ -41,13 +40,15 @@
       (it) => it !== null && allCountries.value.includes(it),
     ) as string[];
   });
-  const includeOldTopos = useUrlState<'true' | 'false'>('old', (x) =>
-    yupString()
-      .oneOf(['true', 'false'])
-      .required()
-      .default('false')
-      .validateSync(x),
-  );
+  const _includeOldTopos = useUrlState<null | undefined>('old', (x) => {
+    if (x === undefined) return undefined;
+    else return null;
+  });
+  const includeOldTopos = computed(() => _includeOldTopos.value === null);
+  const setIncludeOldTopos = (value: boolean) => {
+    if (value) _includeOldTopos.value = null;
+    else _includeOldTopos.value = undefined;
+  };
 
   const matchedTags = computed(() =>
     searchInArray(allTags.value, searchTerm.value),
@@ -65,7 +66,7 @@
           selectedCountries.value.length == 0 ||
           matchAny(topo.countries, selectedCountries.value);
         const matchesOldTopos =
-          includeOldTopos.value === 'true' ||
+          includeOldTopos.value ||
           !(
             topo.placeInLibrary === 'Oude doos - oud papier' ||
             topo.placeInLibrary === 'Old/Inspiration' ||
@@ -143,20 +144,18 @@
               </SelectCountry>
               <div class="flex flex-row items-center gap-2 mt-3">
                 <span class="font-bold">Include old topos:</span>
-                <Input
-                  v-model="includeOldTopos"
+                <SharedInputBool
                   class="toggle toggle-lg toggle-primary"
-                  type="checkbox" />
+                  :model-value="includeOldTopos"
+                  @update:model-value="setIncludeOldTopos" />
               </div>
             </div>
           </template>
         </Collapsable>
 
-        <div>
-          <p>
-            Found {{ filteredTopos.length }} out of {{ topos!.length }} topos.
-          </p>
-        </div>
+        <p>
+          Found {{ filteredTopos.length }} out of {{ topos!.length }} topos.
+        </p>
 
         <div class="overflow-x-auto max-w-[80vw]">
           <table class="table table-zebra">

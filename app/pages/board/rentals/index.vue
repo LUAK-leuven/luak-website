@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import { refDebounced } from '@vueuse/core';
   import Text from '~/components/input/Text.vue';
-  import Input from '~/components/shared/Input.vue';
   import { useRentalService } from '~/composables/useRentalService';
+
+  import { refDebounced } from '@vueuse/core';
 
   definePageMeta({
     layout: false,
@@ -33,7 +33,7 @@
 
   const searchInput = ref<string>();
   const searchTerm = refDebounced(searchInput, 200);
-  const showReturned = ref<boolean>();
+  const showReturned = ref<boolean>(false);
 
   const filteredRentals = computed(() => {
     const selectedRentals =
@@ -69,14 +69,13 @@
         v-model="searchInput"
         class="w-full"
         type="text"
-        name="search"
         placeholder="Search by name ..."
         round />
       <div class="flex flex-col items-center">
         <label class="italic text-xs w-max" for="showReturned">
           show returned
         </label>
-        <Input
+        <SharedInputBool
           id="showReturned"
           v-model="showReturned"
           class="toggle toggle-lg toggle-primary"

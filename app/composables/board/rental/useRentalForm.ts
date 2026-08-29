@@ -59,7 +59,7 @@ function selectionFrom<T extends EntityId<unknown>>(
 }
 
 export function useRentalForm(
-  initialState: Partial<RentalFormState>,
+  initialState: Partial2<RentalFormState>,
   allGear: RentalItem<GearItemId>[],
   allTopos: RentalItem<TopoId>[],
 ) {

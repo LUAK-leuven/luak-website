@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import Text from '~/components/input/Text.vue';
+  import NumberField from '~/components/input/NumberField.vue';
 
   const props = defineProps<{
     computedDeposit: number;
@@ -12,12 +12,11 @@
   };
 </script>
 <template>
-  <Text
+  <NumberField
     v-model="model"
     label="Deposit fee *"
-    type="number"
     :placeholder="computedDeposit.toFixed()"
     @focus="autoFillPlaceholder">
-    <template #label1><span class="mr-1">€</span></template>
-  </Text>
+    <template #label-start><span class="mr-1">€</span></template>
+  </NumberField>
 </template>
