@@ -29,6 +29,9 @@ export default defineNuxtConfig({
   },
   css: ['~/assets/css/main.scss'],
   devtools: { enabled: true },
+  experimental: {
+    typescriptPlugin: true,
+  },
   modules: [
     '@nuxtjs/tailwindcss',
     '@nuxt/content',
