@@ -12,7 +12,7 @@ const strictRules = Object.assign(
 
 export default withNuxt(
   {
-    ignores: ['supabase/functions/**'],
+    ignores: ['supabase/**', '**/database.types.ts'],
   },
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.vue'],

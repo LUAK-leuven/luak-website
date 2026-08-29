@@ -19,6 +19,7 @@ export default async function () {
   } catch (err) {
     console.error(
       `\n❌  Safety check failed — could not reach ${process.env.BASE_URL!}/api/_test-guard.\n` +
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `    ${err}\n`,
     );
     process.exit(1);

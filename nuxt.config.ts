@@ -111,7 +111,7 @@ export default defineNuxtConfig({
       compilerOptions: {
         ...tsCompilerOptions,
       },
-      include: ['../*.ts'],
+      include: ['../*.ts', '../*.mjs'],
     },
   },
 });
