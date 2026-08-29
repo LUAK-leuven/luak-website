@@ -8,7 +8,7 @@ export function formatToDMY(dateString: string): string {
     console.warn(
       `formatToDMY received an invalid date string: "${dateString}"`,
     );
-    return '';
+    return 0; // should fail CI (:
   }
 
   return parsedDate.format('DD-MM-YYYY');
