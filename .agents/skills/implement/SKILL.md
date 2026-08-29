@@ -36,6 +36,8 @@ If no test framework exists for this type of behaviour (e.g. a pure UI layout ch
 
 ### 2. Implement
 
+Read [ai-context/code-style.md](../../../ai-context/code-style.md) before writing any implementation code, and apply its conventions.
+
 Write the implementation that makes the test pass. Apply the **4 rules of simple design** in order:
 
 1. **Passes the tests** — the code must make the failing test(s) pass. Nothing else.

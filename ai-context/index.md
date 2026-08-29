@@ -1,5 +1,6 @@
 - [project structure](./project-structure.md): where to find files and where they should belong
 - [tech stack](./tech-stack.md)
+- [code style](./code-style.md): Coding conventions — read before writing or editing any code
 - [glossary](./glossary.md)
 - [testing](./testing.md): guidelines for writing good tests
 - [delivery](./delivery.md): every plan step must be deliverable — how to find consumers and handle breakage a plan didn't anticipate
