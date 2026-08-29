@@ -1,5 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
-import type { TopoId } from '~/shared/types/gear';
+import type { TopoId } from '#shared/types/gear';
 import { navigateTo } from '#test/e2e/fixtures';
 import { ItemHistoryComponent } from '#test/e2e/pages/ItemHistory';
 

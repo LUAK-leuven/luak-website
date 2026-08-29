@@ -3,7 +3,7 @@ import { authStateFile, login, test } from '#test/e2e/fixtures';
 import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
 import { testServiceBuilder } from '#test/testServices';
 import { testUsers } from '#test/TestUser';
-import { getCurrentMembershipYear } from '~/app/model/Membership';
+import { getCurrentMembershipYear } from '~/model/Membership';
 import dayjs, { type Dayjs } from 'dayjs';
 
 (

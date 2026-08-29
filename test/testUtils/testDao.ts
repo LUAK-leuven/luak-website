@@ -1,8 +1,8 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Database } from '~/shared/types/database.types';
+import type { Database } from '#shared/types/database.types';
 import dayjs from 'dayjs';
-import type { InventoryItemId } from '~/server/domain/inventory/InventoryItem';
-import type { ItemEvent } from '~/server/domain/inventory/ItemEvent';
+import type { InventoryItemId } from '#server/domain/inventory/InventoryItem';
+import type { ItemEvent } from '#server/domain/inventory/ItemEvent';
 
 export class TestDao {
   constructor(private readonly supabase: SupabaseClient<Database>) {}

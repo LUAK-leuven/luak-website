@@ -1,8 +1,8 @@
 import { expect, type Locator, type Page } from '@playwright/test';
-import type { RentalId } from '~/shared/types/rental';
+import type { RentalId } from '#shared/types/rental';
 import { navigateTo } from '#test/e2e/fixtures';
-import { uuidRegex } from '~/shared/utils/utils';
-import { RentalDetailsPage } from './details.page';
+import { uuidRegex } from '#shared/utils/utils';
+import { RentalDetailsPage } from '#test/e2e/pages/rental/details.page';
 
 export class RentalReturnPage {
   private readonly page: Page;

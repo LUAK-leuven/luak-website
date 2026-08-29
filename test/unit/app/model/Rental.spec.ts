@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'vitest';
-import { RentalGearItem, RentalSummary } from '~/app/model/Rental';
-import type { GearItemId } from '~/shared/types/gear';
-import type { RentalId } from '~/shared/types/rental';
-import { randomBool, randomInt, randomOf } from '~/shared/utils/utils';
+import { RentalGearItem, RentalSummary } from '~/model/Rental';
+import type { GearItemId } from '#shared/types/gear';
+import type { RentalId } from '#shared/types/rental';
+import { randomBool, randomInt, randomOf } from '#shared/utils/utils';
 
 describe('Rental status', () => {
   test('"returned" when all items are returned and deposit is returned', () => {

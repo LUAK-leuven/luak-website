@@ -36,7 +36,9 @@ This section becomes the "Current Usage Contexts" section of the document and gr
 
 Before listing options, name the underlying trade-off explicitly. This is usually a two-column comparison table (e.g. approach A vs approach B across dimensions like: verbosity, type safety, coupling, testability, composability). This table makes it immediately clear why a single obvious solution does not already exist.
 
-### Step 4 — Draft 2–3 options
+### Step 4 — Draft multiple options
+
+Use subagents to draft 2-3 (more is allowed if relevant) options.
 
 Each option must:
 
@@ -44,8 +46,6 @@ Each option must:
 - Include a brief structural sketch (pseudocode or component tree is enough — no full implementation)
 - List concrete **pros** and **cons** grounded in the actual codebase, not generic platitudes
 - Be genuinely distinct — if two options collapse to the same approach, merge them
-
-Aim for 2–3 options. More than three dilutes focus.
 
 ### Step 5 — Ask clarifying questions before recommending
 

@@ -1,7 +1,7 @@
 import { navigateTo } from '#test/e2e/fixtures';
-import { FullPageCard } from './FullPageCard';
+import { FullPageCard } from '#test/e2e/pages/FullPageCard';
 import { expect, type Locator, type Page } from '@playwright/test';
-import { RentalDetailsPage } from './rental/details.page';
+import { RentalDetailsPage } from '#test/e2e/pages/rental/details.page';
 
 export class LostGearPage extends FullPageCard {
   static readonly path = '/board/lost-gear';

@@ -3,8 +3,8 @@ import { LoginPage } from '#test/e2e/pages/login.page';
 import { testServiceBuilder } from '#test/testServices';
 import { testUsers, type TestUser, type TestUserKey } from '#test/TestUser';
 import { test as base, expect } from '@playwright/test';
-import { randomOf } from '~/shared/utils/utils';
-import { AppPage } from './pages/app.page';
+import { randomOf } from '#shared/utils/utils';
+import { AppPage } from '#test/e2e/pages/app.page';
 
 export const test = base.extend<{
   luakPage: AppPage;

@@ -4,7 +4,7 @@ import {
   Membership,
   _getMembershipYearForDate,
   _isValidForMembershipYear,
-} from '~/app/model/Membership';
+} from '~/model/Membership';
 import { withFakeTimers } from '#test/vitest/withFakeTimers';
 
 test.for([

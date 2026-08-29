@@ -97,22 +97,22 @@ export default defineNuxtConfig({
       },
     },
     sharedTsConfig: {
-      compilerOptions: tsCompilerOptions,
-    },
-    nodeTsConfig: {
       compilerOptions: {
-        paths: {
-          '~/*': ['../*'],
-          '#test/*': ['../test/*', '../test/testUtils/*'],
-        },
+        paths: { '#test/*': ['../test/*', '../test/testUtils/*'] },
         ...tsCompilerOptions,
       },
       include: [
-        '../test/**/*',
-        '../content.config.ts',
-        '../playwright.config.ts',
-        '../vitest.config.ts',
+        '../test/unit/**/*',
+        '../test/integration/**/*',
+        '../test/e2e/**/*',
+        '../test/testUtils/**/*',
       ],
+    },
+    nodeTsConfig: {
+      compilerOptions: {
+        ...tsCompilerOptions,
+      },
+      include: ['../*.ts'],
     },
   },
 });
