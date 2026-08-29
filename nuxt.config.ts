@@ -90,6 +90,9 @@ export default defineNuxtConfig({
     strict: true,
     tsConfig: {
       compilerOptions: tsCompilerOptions,
+      vueCompilerOptions: {
+        strictTemplates: true,
+      },
     },
     sharedTsConfig: {
       compilerOptions: tsCompilerOptions,
