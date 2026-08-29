@@ -31,14 +31,11 @@
 
   const onSubmit = async () =>
     await handleSubmit(async (formState) => {
-      const { error } = await useSupabaseClient().rpc(
-        'mark_topo_as_lost',
-        {
-          p_lost_amount: formState.lostAmount,
-          p_rental_id: props.rentalId,
-          p_topo_id: props.topo.itemId.id,
-        },
-      );
+      const { error } = await useSupabaseClient().rpc('mark_topo_as_lost', {
+        p_lost_amount: formState.lostAmount,
+        p_rental_id: props.rentalId,
+        p_topo_id: props.topo.itemId.id,
+      });
 
       if (error) {
         console.error(error.message);
@@ -61,14 +58,14 @@
     :error="error?.message">
     <form @submit.prevent>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div data-testid="topo.title">Title: {{ topo.name }}</div>
-        <div data-testid="topo.year_published">
+        <div data-testId="topo.title">Title: {{ topo.name }}</div>
+        <div data-testId="topo.year_published">
           Year: {{ topoDetails.yearPublished }}
         </div>
-        <div data-testid="rentedAmount">
+        <div data-testId="rentedAmount">
           Rented amount: {{ topo.rentedAmount }}
         </div>
-        <div data-testid="unreturnedAmount">
+        <div data-testId="unreturnedAmount">
           Unreturned amount: {{ props.topo.unreturnedAmount }}
         </div>
         <div>
@@ -77,19 +74,19 @@
             <Number
               v-model="lostAmount"
               :text-box-color="errors.lostAmount ? 'input-error' : ''"
-              data-testid="lostAmount" />
+              data-testId="lostAmount" />
           </div>
           <ErrorMessage
             class="text-error"
             name="lostAmount"
-            data-testid="lostAmount.error" />
+            data-testId="lostAmount.error" />
         </div>
       </div>
       <div class="flex flex-row justify-end mt-3">
         <LoadingButton
           text="Save changes"
           :click-handler="onSubmit"
-          data-testid="saveButton" />
+          data-testId="saveButton" />
       </div>
     </form>
   </WithLazyResource>

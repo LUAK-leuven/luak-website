@@ -72,10 +72,10 @@
       </h2>
       <InputKbfSelect />
       <InputStudentSelect />
-      <BoolField name="sportscard" data-testid="sportscard">
+      <BoolField name="sportscard" data-testId="sportscard">
         Do you have a sportscard?
       </BoolField>
-      <BoolField name="houserules" data-testid="houserules">
+      <BoolField name="houserules" data-testId="houserules">
         Do you agree to the
         <NuxtLink
           class="text-primary underline"
@@ -94,12 +94,12 @@
           <div class="stat-title">First time member discount</div>
           <div class="stat-value text-primary flex gap-2 justify-self-end">
             <div class="line-through text-red-500 text-2xl self-end">20 €</div>
-            <div data-testid="price">{{ price }} €</div>
+            <div data-testId="price">{{ price }} €</div>
           </div>
         </div>
         <div v-else class="stat w-fit">
           <div class="stat-title">Total price</div>
-          <div class="stat-value text-primary" data-testid="price">
+          <div class="stat-value text-primary" data-testId="price">
             {{ price }} €
           </div>
         </div>
@@ -111,7 +111,7 @@
         </form>
         <Button
           class="btn btn-primary"
-          data-testid="buy-membership-button"
+          data-testId="buy-membership-button"
           @click="buyMembership">
           <span v-if="isSubmitting" class="loading loading-spinner">
             loading

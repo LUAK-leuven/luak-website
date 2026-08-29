@@ -14,7 +14,7 @@
       class="select select-bordered w-full max-w-xs mb-2"
       name="kbf_uiaa_member"
       as="select"
-      data-testid="kbf-uiaa-select">
+      data-testId="kbf-uiaa-select">
       <option disabled selected>Choose an option...</option>
       <option value="not">No</option>
       <option value="kbf_luak">Yes, under LUAK as club</option>

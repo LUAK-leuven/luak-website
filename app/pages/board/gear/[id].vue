@@ -28,7 +28,7 @@
     :error="error?.message"
     :back-to="{ name: 'board-gear' }">
     <div class="flex flex-row flex-wrap justify-between gap-3 mt-3">
-      <span data-testid="gearItem-amount">
+      <span data-testId="gearItem-amount">
         Available: {{ gearItems.availableAmount }} /
         {{ gearItems.totalAmount }}
       </span>

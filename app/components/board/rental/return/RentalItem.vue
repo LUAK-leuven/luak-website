@@ -23,7 +23,7 @@
       :class="itemStatusColor">
       {{ item.displayName }}
       <ul v-if="item.lostAmount > 0" class="ml-5">
-        <li data-testid="lostItem">{{ item.lostAmount }} item(s) Lost</li>
+        <li data-testId="lostItem">{{ item.lostAmount }} item(s) Lost</li>
       </ul>
     </div>
     <div class="border p-1 flex flex-row justify-between items-center">
@@ -48,7 +48,7 @@
           }
         ">
         <template #label-end>
-          <span class="m-0 w-max" data-testid="rentedAmount">
+          <span class="m-0 w-max" data-testId="rentedAmount">
             / {{ item.returnableAmount }}
           </span>
         </template>

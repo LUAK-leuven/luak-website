@@ -141,6 +141,7 @@
       <div class="flex flex-row gap-1 items-center">
         <span>Deposit:</span>
         <span data-testId="depositFee">{{ rental.depositFee.toFixed(2) }}</span>
+        <!-- @vue-expect-error Field doesn't expose type prop but it is described in the docs ... -->
         <Field
           class="checkbox checkbox-success border-2 ml-1"
           name="depositReturned"

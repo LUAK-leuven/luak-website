@@ -108,7 +108,7 @@
                 v-model="searchInput"
                 type="text"
                 placeholder="Search by title"
-                data-testid="search-input">
+                data-testId="search-input">
               </Text>
               <span class="font-bold mt-3">Type(s) of climbing:</span>
               <div class="flex flex-row flex-wrap gap-x-1 gap-y-1">
@@ -119,7 +119,7 @@
                   :model-value="
                     selectedTypesOfClimbing.some((x) => x === typeOfClimbing)
                   "
-                  :data-testid="`toc.${typeOfClimbing}`"
+                  :data-testId="`toc.${typeOfClimbing}`"
                   @update:model-value="
                     (value) => {
                       if (value)
@@ -173,7 +173,7 @@
               <tr
                 v-for="topo in filteredTopos"
                 :key="topo.id"
-                :data-testid="`topo-${topo.title}`">
+                :data-testId="`topo-${topo.title}`">
                 <td>
                   <NuxtLink :to="{ name: 'topos-id', params: { id: topo.id } }">
                     <div class="flex flex-row gap-1 items-center">

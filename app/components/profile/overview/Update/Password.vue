@@ -46,19 +46,19 @@
       placeholder="*******"
       type="password"
       autocomplete="new-password"
-      data-testid="new-password" />
+      data-testId="new-password" />
     <TextField
       label="Confirm password"
       name="password2"
       placeholder="*******"
       type="password"
       autocomplete="new-password"
-      data-testid="confirm-password" />
+      data-testId="confirm-password" />
     <div class="flex justify-end">
       <Button
         class="btn btn-primary mt-2"
         :class="{ 'btn-disabled': isChangedSuccessfull }"
-        data-testid="change-password-button">
+        data-testId="change-password-button">
         <span v-if="isSubmitting" class="loading loading-spinner">loading</span>
         <span
           v-else-if="isChangedSuccessfull"

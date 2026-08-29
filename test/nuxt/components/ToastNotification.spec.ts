@@ -7,7 +7,7 @@ test('emits close when the close button is clicked', async () => {
     props: { type: 'info', progress: 1 },
   });
 
-  await wrapper.get('[data-testid="toast-close-button"]').trigger('click');
+  await wrapper.get('[data-testId="toast-close-button"]').trigger('click');
 
   expect(wrapper.emitted('close')).toHaveLength(1);
 });
@@ -17,7 +17,7 @@ test('renders a full progress bar when progress is 1', async () => {
     props: { type: 'info', progress: 1 },
   });
 
-  const progressBar = wrapper.get('[data-testid="toast-progress"]');
+  const progressBar = wrapper.get('[data-testId="toast-progress"]');
 
   expect(progressBar.attributes('style')).toContain('width: 100%');
 });
@@ -28,7 +28,7 @@ test('renders a half-width progress bar when progress is 0.5', async () => {
   });
 
   expect(
-    wrapper.get('[data-testid="toast-progress"]').attributes('style'),
+    wrapper.get('[data-testId="toast-progress"]').attributes('style'),
   ).toContain('width: 50%');
 });
 
@@ -37,8 +37,8 @@ test('emits pause and resume when the toast is hovered', async () => {
     props: { type: 'info', progress: 1 },
   });
 
-  await wrapper.get('[data-testid="toast"]').trigger('mouseenter');
-  await wrapper.get('[data-testid="toast"]').trigger('mouseleave');
+  await wrapper.get('[data-testId="toast"]').trigger('mouseenter');
+  await wrapper.get('[data-testId="toast"]').trigger('mouseleave');
 
   expect(wrapper.emitted('pause')).toHaveLength(1);
   expect(wrapper.emitted('resume')).toHaveLength(1);

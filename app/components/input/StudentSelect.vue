@@ -7,7 +7,7 @@
       class="select select-bordered w-full max-w-xs mb-2"
       name="student"
       as="select"
-      data-testid="student-select">
+      data-testId="student-select">
       <option disabled selected>Choose an option...</option>
       <option value="not_student">No</option>
       <option value="student_kul">Yes, I'm a student at KUL</option>

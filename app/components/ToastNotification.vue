@@ -22,19 +22,19 @@
       'alert-error': type === 'error',
     }"
     role="alert"
-    data-testid="toast"
+    data-testId="toast"
     @mouseenter="emit('pause')"
     @mouseleave="emit('resume')">
     <slot />
     <Button
       class="btn btn-sm btn-circle btn-ghost text-xl self-center items-end"
-      data-testid="toast-close-button"
+      data-testId="toast-close-button"
       @click="emit('close')">
       ✕
     </Button>
     <div
       class="absolute bottom-0 left-0 h-1 bg-current opacity-50 transition-[width] duration-100 ease-linear"
       :style="{ width: `${progress * 100}%` }"
-      data-testid="toast-progress" />
+      data-testId="toast-progress" />
   </div>
 </template>

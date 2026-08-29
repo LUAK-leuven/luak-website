@@ -111,14 +111,14 @@
             name="firstName"
             placeholder="Alex"
             autocomplete="given-name"
-            data-testid="firstName" />
+            data-testId="firstName" />
           <TextField
             class="ml-1"
             label="Last name *"
             name="lastName"
             placeholder="Megos"
             autocomplete="family-name"
-            data-testid="lastName" />
+            data-testId="lastName" />
         </div>
         <TextField
           label="Email *"
@@ -126,28 +126,28 @@
           placeholder="youremail@example.com"
           type="email"
           autocomplete="email"
-          data-testid="email" />
+          data-testId="email" />
         <TextField
           label="Phone Number (for WhatsApp)"
           name="phoneNumber"
           placeholder="+32468123123"
           type="tel"
           autocomplete="tel"
-          data-testid="phone" />
+          data-testId="phone" />
         <TextField
           label="Password *"
           name="password"
           placeholder="*******"
           type="password"
           autocomplete="new-password"
-          data-testid="password" />
+          data-testId="password" />
         <TextField
           label="Confirm password *"
           name="password2"
           placeholder="*******"
           type="password"
           autocomplete="new-password"
-          data-testid="confirm-password" />
+          data-testId="confirm-password" />
         <BoolField name="whatsapp">Can we contact you via whatsapp?</BoolField>
         <BoolField name="newsletter">
           Subscribe to monthly newsletter?
@@ -159,7 +159,7 @@
             class="w-full"
             text="Sign up"
             :click-handler="onSubmit"
-            data-testid="submitButton" />
+            data-testId="submitButton" />
         </div>
       </form>
     </div>

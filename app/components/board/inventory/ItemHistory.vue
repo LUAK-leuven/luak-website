@@ -15,7 +15,7 @@
 <template>
   <ul class="ml-5">
     <li>
-      <div class="flex flex-row flex-wrap gap-x-1" data-testid="purchase">
+      <div class="flex flex-row flex-wrap gap-x-1" data-testId="purchase">
         {{ purchaseDate }}: Bought {{ initialAmount }} item(s)
       </div>
     </li>
@@ -25,7 +25,7 @@
         <template v-if="event.eventName === 'ItemLostEvent'">
           <span
             v-if="event.rentalId === undefined"
-            data-testid="lostItem-wo-rental">
+            data-testId="lostItem-wo-rental">
             {{ event.lostAmount }} item(s) lost without rental
           </span>
           <SharedLinkTo
@@ -35,11 +35,11 @@
               name: 'board-rentals-id',
               params: { id: event.rentalId },
             }"
-            data-testid="lostItem" />
+            data-testId="lostItem" />
         </template>
         <span
           v-else-if="event.eventName === 'ItemArchivedEvent'"
-          data-testid="archived">
+          data-testId="archived">
           {{ event.amount }} item(s) archived
         </span>
       </div>

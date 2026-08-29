@@ -70,14 +70,14 @@
         name="firstName"
         placeholder="Alex"
         autocomplete="given-name"
-        data-testid="firstName" />
+        data-testId="firstName" />
       <TextField
         class="ml-1"
         label="Last name"
         name="lastName"
         placeholder="Megos"
         autocomplete="family-name"
-        data-testid="lastName" />
+        data-testId="lastName" />
     </div>
     <TextField
       label="Phone Number (for WhatsApp)"
@@ -85,18 +85,18 @@
       placeholder="+32468123123"
       type="tel"
       autocomplete="tel"
-      data-testid="phoneNumber" />
-    <BoolField name="whatsapp" data-testid="whatsApp">
+      data-testId="phoneNumber" />
+    <BoolField name="whatsapp" data-testId="whatsApp">
       Can we contact you via whatsapp?
     </BoolField>
-    <BoolField name="newsletter" data-testid="newsletter">
+    <BoolField name="newsletter" data-testId="newsletter">
       Subscribe to monthly newsletter?
     </BoolField>
     <div class="flex justify-end">
       <Button
         class="btn btn-primary mt-2"
         :class="{ 'btn-disabled': isChangedSuccessfull || !meta.dirty }"
-        data-testid="changeInfo">
+        data-testId="changeInfo">
         <span v-if="isSubmitting" class="loading loading-spinner">loading</span>
         <span
           v-else-if="isChangedSuccessfull"

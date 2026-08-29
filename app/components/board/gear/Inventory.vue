@@ -88,13 +88,13 @@
         } of sortedInventory"
         :key="id"
         class="contents"
-        data-testid="inventory-row">
+        data-testId="inventory-row">
         <InventoryTableItem :is-archived="totalAmount <= 0">
           {{ details }}
         </InventoryTableItem>
         <InventoryTableItem
           :is-archived="totalAmount <= 0"
-          data-testid="amount">
+          data-testId="amount">
           {{ totalAmount }}
         </InventoryTableItem>
         <InventoryTableItem v-if="lg" :is-archived="totalAmount <= 0">

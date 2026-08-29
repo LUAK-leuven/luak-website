@@ -56,15 +56,12 @@
   const onSubmit = async () =>
     handleSubmit(
       async (formState) => {
-        const { error } = await useSupabaseClient().rpc(
-          'mark_gear_as_lost',
-          {
-            p_gear_item_id: props.gearItem.itemId.id,
-            p_rental_id: props.rentalId,
-            p_inventory_item_id: formState.inventoryItem,
-            p_lost_amount: formState.lostAmount,
-          },
-        );
+        const { error } = await useSupabaseClient().rpc('mark_gear_as_lost', {
+          p_gear_item_id: props.gearItem.itemId.id,
+          p_rental_id: props.rentalId,
+          p_inventory_item_id: formState.inventoryItem,
+          p_lost_amount: formState.lostAmount,
+        });
         if (error) {
           console.error(error.message);
           show('error', 'Server error: Failed to submit response.');
@@ -88,12 +85,12 @@
 
   <form @submit.prevent>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      <div data-testid="gear.name">Gear item: {{ gearItem.name }}</div>
+      <div data-testId="gear.name">Gear item: {{ gearItem.name }}</div>
 
-      <div data-testid="rentedAmount">
+      <div data-testId="rentedAmount">
         Rented amount: {{ gearItem.rentedAmount }}
       </div>
-      <div data-testid="unreturnedAmount">
+      <div data-testId="unreturnedAmount">
         Unreturned amount: {{ gearItem.unreturnedAmount }}
       </div>
       <div>
@@ -102,12 +99,12 @@
           <Number
             v-model="lostAmount"
             :text-box-color="errors.lostAmount ? 'input-error' : ''"
-            data-testid="lostAmount" />
+            data-testId="lostAmount" />
         </div>
         <ErrorMessage
           class="text-error"
           name="lostAmount"
-          data-testid="lostAmount.error" />
+          data-testId="lostAmount.error" />
       </div>
     </div>
 
@@ -115,14 +112,13 @@
     <h2 class="text-center">Select inventory item</h2>
 
     <WithLazyResource
-      v-slot="{ data: { inventory, lifespan } }"
+      v-slot="{ data: { inventory } }"
       :data="data"
       :is-loading="pending"
       :error="error?.message">
       <GearInventorySelection
         v-model="inventoryItem"
         :inventory="inventory"
-        :lifespan="lifespan"
         :lost-amount="lostAmount" />
     </WithLazyResource>
 
@@ -130,7 +126,7 @@
       <LoadingButton
         text="Save changes"
         :click-handler="onSubmit"
-        data-testid="saveButton" />
+        data-testId="saveButton" />
     </div>
   </form>
 </template>

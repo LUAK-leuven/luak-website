@@ -15,7 +15,9 @@
     lostAmount: number | undefined;
   }>();
 
-  const model = defineModel<string | undefined>({ required: true });
+  const selectedItem = defineModel<GearInventoryId | undefined>({
+    required: true,
+  });
 
   const _inventory = computed(() =>
     props.inventory.filter((x) => x.totalAmount > 0),
@@ -30,7 +32,7 @@
 <template>
   <div
     class="grid grid-cols-[auto_4fr_1fr_2fr_2fr_2fr] border rounded-sm overflow-x-scroll"
-    data-testid="inventory-selection">
+    data-testId="inventory-selection">
     <b class="border px-1"></b>
     <b class="border px-1">Details</b>
     <b class="border px-1">Amount</b>
@@ -48,11 +50,11 @@
       } of _inventory"
       :key="id"
       class="contents"
-      :class="{ 'border-5 bg-blue-100': model === id }"
-      data-testid="table-row">
+      :class="{ 'border-5 bg-blue-100': selectedItem === id }"
+      data-testId="table-row">
       <InventoryTableItem :is-archived="false">
         <input
-          v-model="model"
+          v-model="selectedItem"
           class="radio radio-primary"
           type="radio"
           name="inventoryItem"
@@ -61,9 +63,9 @@
       <InventoryTableItem :is-archived="false">
         {{ details }}
       </InventoryTableItem>
-      <InventoryTableItem :is-archived="false" data-testid="amount">
+      <InventoryTableItem :is-archived="false" data-testId="amount">
         {{ amount }}
-        <template v-if="id === model && lostAmount !== undefined">
+        <template v-if="id === selectedItem && lostAmount !== undefined">
           -> {{ amount - lostAmount }}
         </template>
       </InventoryTableItem>
