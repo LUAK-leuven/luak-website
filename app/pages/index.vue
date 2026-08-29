@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import PageCard from '~/components/PageCard.vue';
   import { getCurrentMembershipYear } from '~/model/Membership';
 
   definePageMeta({

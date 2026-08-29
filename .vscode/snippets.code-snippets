@@ -1,0 +1,76 @@
+{
+  // Place your luak-website workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and
+  // description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope
+  // is left empty or omitted, the snippet gets applied to all languages. The prefix is what is
+  // used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+  // $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders.
+  // Placeholders with the same ids are connected.
+  // Example:
+  // "Print to console": {
+  // 	"scope": "javascript,typescript",
+  // 	"prefix": "log",
+  // 	"body": [
+  // 		"console.log('$1');",
+  // 		"$2"
+  // 	],
+  // 	"description": "Log output to console"
+  // }
+  //
+  // You can also restrict snippets to specific files using include/exclude patterns:
+  // "Test snippet": {
+  // 	"scope": "javascript,typescript",
+  // 	"prefix": "test",
+  // 	"body": "test('$1', () => {\n\t$0\n});",
+  // 	"include": ["**/*.test.ts", "*.spec.ts"],
+  // 	"exclude": ["**/temp/*.ts"],
+  // 	"description": "Insert test block"
+  // }
+  "Vue component": {
+    "prefix": "vc",
+    "body": [
+      "<script setup lang=\"ts\">",
+      "  $0",
+      "</script>",
+      "<template>",
+      "  ",
+      "</template>",
+    ],
+    "include": "*.vue",
+    "isFileTemplate": true,
+  },
+  "Vue props": {
+    "prefix": "prop",
+    "body": ["const props = defineProps<{$0}>();"],
+    "include": "*.vue",
+  },
+  "Vue emit": {
+    "prefix": "emit",
+    "body": ["const emit = defineEmits<{", "${0:eventName}: []", "}>();"],
+    "include": "*.vue",
+  },
+  "Vue model": {
+    "prefix": "model",
+    "body": "const model = defineModel<${0:T}>();",
+    "include": "*.vue",
+  },
+
+  "Playwright test page": {
+    "prefix": "page",
+    "body": [
+      "export class ${0:Name}Page {",
+      "  constructor(private readonly page: Page) {}",
+      "}",
+    ],
+    "include": "*.page.ts",
+  },
+  "Playwright page locator": {
+    "prefix": "locator",
+    "body": "readonly ${0:locator}: Locator;",
+    "include": "*.page.ts",
+  },
+  "Playwright getByTestId": {
+    "prefix": "testid",
+    "body": "const ${0:this.}$1 = page.getByTestId('$2');",
+    "include": "**/test/e2e/**/*.ts",
+  },
+}

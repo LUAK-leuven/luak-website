@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "denoland.vscode-deno",
+    "tamasfe.even-better-toml",
+    "nuxtr.nuxt-vscode-extentions",
+    "bradlc.vscode-tailwindcss"
+  ]
+}
