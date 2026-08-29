@@ -3,11 +3,12 @@
 
   defineProps<{
     type: InputTypeHTMLAttribute;
-    tabindex?: number;
-    placeholder?: string;
+    tabindex?: number | undefined;
+    placeholder?: string | undefined;
     disabled?: boolean;
     autocomplete?: AutoFillField | undefined;
     checked?: boolean;
+    id?: string | undefined;
   }>();
 
   const model = defineModel<string | number | boolean | undefined>({
@@ -25,6 +26,7 @@
 
 <template>
   <input
+    :id="id"
     v-model="model"
     :disabled="_disabled || disabled"
     :type="type"

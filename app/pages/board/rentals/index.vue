@@ -78,8 +78,7 @@
         <SharedInputBool
           id="showReturned"
           v-model="showReturned"
-          class="toggle toggle-lg toggle-primary"
-          type="checkbox" />
+          class="toggle toggle-lg toggle-primary" />
       </div>
     </div>
     <span

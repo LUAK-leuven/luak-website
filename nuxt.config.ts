@@ -93,7 +93,6 @@ export default defineNuxtConfig({
       vueCompilerOptions: {
         strictTemplates: true,
         dataAttributes: ['data-testId', 'data-tip'],
-        fallthroughAttributes: true,
       },
     },
     sharedTsConfig: {

@@ -1,6 +1,7 @@
 <script setup lang="ts">
   defineProps<{
     modelValue: boolean;
+    id?: string | undefined;
   }>();
   const emit = defineEmits<{
     'update:modelValue': [value: boolean];
@@ -13,6 +14,7 @@
 </script>
 <template>
   <SharedInput
+    :id="id"
     :model-value="modelValue"
     type="checkbox"
     @update:model-value="parseInput" />

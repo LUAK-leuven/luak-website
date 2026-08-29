@@ -22,11 +22,11 @@ export class RentalDetailsPage {
     await navigateTo(this.page, this.path(rentalId));
   };
 
-  async getRentalId(): RentalId {
+  async getRentalId(): Promise<RentalId> {
     await expect(this.page.getByTestId('detailsPage.id')).toBeVisible();
     const rentalId = await this.page.getByTestId('detailsPage.id').innerText();
     expect(rentalId).toBeTruthy();
-    return rentalId;
+    return rentalId as RentalId;
   }
 
   get member() {

@@ -1,9 +1,13 @@
 <script setup lang="ts">
   defineProps<{
     modelValue: number | undefined;
+    placeholder?: string | undefined;
+    disabled?: boolean | undefined;
+    autocomplete?: AutoFillField | undefined;
   }>();
   const emit = defineEmits<{
     'update:modelValue': [value: number | undefined];
+    focus: [];
   }>();
 
   const parseInput = (value: unknown) => {
@@ -16,5 +20,9 @@
   <SharedInput
     :model-value="modelValue"
     type="number"
-    @update:model-value="parseInput" />
+    :placeholder="placeholder"
+    :disabled="disabled"
+    :autocomplete="autocomplete"
+    @update:model-value="parseInput"
+    @focus="() => emit('focus')" />
 </template>

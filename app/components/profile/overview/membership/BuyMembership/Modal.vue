@@ -12,6 +12,8 @@
   const user = useSupabaseUser();
   const env = useRuntimeConfig().public;
 
+  const modal = useTemplateRef<HTMLDialogElement>('buy_membership_modal');
+
   const userService = useUserService();
 
   const membershipInfo = await userService.getMembershipInfo({
@@ -48,17 +50,16 @@
 </script>
 
 <template>
-  <!--TODO: fix type error-->
   <Button
     class="btn"
-    onclick="buy_membership_modal.showModal()"
-    data-testId="buyMembershipButton">
+    data-testId="buyMembershipButton"
+    @click="modal?.showModal()">
     Buy a membership
   </Button>
 
   <!-- --------------------------------------------- -->
 
-  <dialog id="buy_membership_modal" class="modal modal-bottom md:modal-middle">
+  <dialog ref="buy_membership_modal" class="modal modal-bottom md:modal-middle">
     <div class="modal-box bg-base-100 text-black">
       <form method="dialog">
         <Button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
