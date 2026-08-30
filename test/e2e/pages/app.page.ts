@@ -1,5 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
-import { ProfileOverviewPage } from './profile/overview.page';
+import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
 
 export class AppPage {
   readonly toastMessage: Locator;

@@ -1,5 +1,5 @@
 export type TopoLibraryItem = {
-  id: globalThis.TopoId;
+  id: TopoId;
   authors: string[];
   condition: TopoCondition;
   countries: string[];

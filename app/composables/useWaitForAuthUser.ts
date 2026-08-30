@@ -22,13 +22,10 @@ export function useWaitForAuthUser(): Promise<void> {
     };
 
     const timeout = setTimeout(finish, AUTH_USER_WAIT_TIMEOUT);
-    const stopWatching = watch(
-      user,
-      (value) => {
-        if (value) {
-          finish();
-        }
-      },
-    );
+    const stopWatching = watch(user, (value) => {
+      if (value) {
+        finish();
+      }
+    });
   });
 }

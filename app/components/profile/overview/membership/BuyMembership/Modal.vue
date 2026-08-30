@@ -6,11 +6,13 @@
 
   const { handleSubmit, isSubmitting } = useForm({
     validationSchema: toTypedSchema(createMembershipSchema),
-    initialValues: { sportscard: false },
+    initialValues: { sportscard: false, houserules: false },
   });
   const membership = Membership.createNewMembership();
   const user = useSupabaseUser();
   const env = useRuntimeConfig().public;
+
+  const modal = useTemplateRef<HTMLDialogElement>('buy_membership_modal');
 
   const userService = useUserService();
 
@@ -50,14 +52,14 @@
 <template>
   <Button
     class="btn"
-    onclick="buy_membership_modal.showModal()"
-    data-testId="buyMembershipButton">
+    data-testId="buyMembershipButton"
+    @click="modal?.showModal()">
     Buy a membership
   </Button>
 
   <!-- --------------------------------------------- -->
 
-  <dialog id="buy_membership_modal" class="modal modal-bottom md:modal-middle">
+  <dialog ref="buy_membership_modal" class="modal modal-bottom md:modal-middle">
     <div class="modal-box bg-base-100 text-black">
       <form method="dialog">
         <Button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
@@ -72,10 +74,10 @@
       </h2>
       <InputKbfSelect />
       <InputStudentSelect />
-      <BoolField name="sportscard" data-testid="sportscard">
+      <BoolField name="sportscard" data-testId="sportscard">
         Do you have a sportscard?
       </BoolField>
-      <BoolField name="houserules" data-testid="houserules">
+      <BoolField name="houserules" data-testId="houserules">
         Do you agree to the
         <NuxtLink
           class="text-primary underline"
@@ -94,12 +96,12 @@
           <div class="stat-title">First time member discount</div>
           <div class="stat-value text-primary flex gap-2 justify-self-end">
             <div class="line-through text-red-500 text-2xl self-end">20 €</div>
-            <div data-testid="price">{{ price }} €</div>
+            <div data-testId="price">{{ price }} €</div>
           </div>
         </div>
         <div v-else class="stat w-fit">
           <div class="stat-title">Total price</div>
-          <div class="stat-value text-primary" data-testid="price">
+          <div class="stat-value text-primary" data-testId="price">
             {{ price }} €
           </div>
         </div>
@@ -111,7 +113,7 @@
         </form>
         <Button
           class="btn btn-primary"
-          data-testid="buy-membership-button"
+          data-testId="buy-membership-button"
           @click="buyMembership">
           <span v-if="isSubmitting" class="loading loading-spinner">
             loading

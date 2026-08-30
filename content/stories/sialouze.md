@@ -3,7 +3,7 @@ title: Unexpected adventures on the Sialouze
 author: Hektor Letraublon
 date: 2026-07-23
 image: /stories/sialouze/IMG_1799.jpg
-teaser: Finally the wheather for the coming days will get better, no more chance of thunderstorms in the afternoon. This means it is time to our make big plans for summermeet!
+teaser: Finally the weather for the coming days will get better, no more chance of thunderstorms in the afternoon. This means it is time to our make big plans for summermeet!
 ---
 
 Summermeet 2026 - location Ailefriode
@@ -12,7 +12,7 @@ Summermeet 2026 - location Ailefriode
 
 Finally, the weather for the coming days will get better, no more chance of thunderstorms in the afternoon. This means it is time to our make big plans for summermeet!
 
-We've been talking for a while already about doing one of the multipitches on the Aiguille de Sialouze. The Sialouze is a 400m high alpine wall (starting at ±3100m) with some very nice multipitches on a very good granite with some nice cracks for climbging and placing gear.
+We've been talking for a while already about doing one of the multipitches on the Aiguille de Sialouze. The Sialouze is a 400m high alpine wall (starting at ±3100m) with some very nice multipitches on a very good granite with some nice cracks for climbing and placing gear.
 
 In the end we're with a small group of 6 that want to have fun up there: Emiel, Kasper, Liedewij, Lukas, Mo, and me (Hektor). After some discussions we settle for the following teams: Kasper, Mo and I will go in *Jour de Colère*, while Emiel, Liedewij and Lukas go for *Ventre à Terre*. We decide that we'll sleep in a tent and not in the hut because then we are 1 hour closer to the wall, and it is more fun!
 
@@ -31,7 +31,7 @@ Today is a semi rest day, we prepare our backpacks for tomorrow and chill on the
 Liedewij, Emiel and I decide to continue our LUAK tradition of carrying fresh food up and cooking a good meal. Two years ago I brought a cauliflower up the mountain, so this time I decided to carry a (small) watermelon 🍉 which fits nicely in my helmet 🤪.
 
 It is yet again a very warm day, so we're not too eager to walk up in this heat, but we have to at some point.
-So at 3 p.m. we're finally ready and start our approach to the bivouac spot (which is 1 hour beyond the Sele hut). After 1h of walking Mo decides to return😢 because they are already suffering from the approach (which they wouldn't in normal circumstances) and if the approach is already difficult the climb tomorrow won't be better. They havn't fully recovered yet from being ill yesterday.
+So at 3 p.m. we're finally ready and start our approach to the bivouac spot (which is 1 hour beyond the Sele hut). After 1h of walking Mo decides to return😢 because they are already suffering from the approach (which they wouldn't in normal circumstances) and if the approach is already difficult the climb tomorrow won't be better. They haven't fully recovered yet from being ill yesterday.
 So after shifting around some gear - we ate the watermelon so that I could carry some more stuff - and a goodbye, Mo returns and we continue our approach.
 
 ::images
@@ -110,7 +110,7 @@ group-caption: The chips bag didn't make it to the top
 ---
 ::
 
-**SamWay II** - I'm standing at the anchor right under the 7c crux, which is clearly visible, a short overhanging section right above the anchor of about 4 bolts (10m) long. I try to onsight it, but ofcours I fail (knowing that my max level is 7c+). I continue to try to free all the (hard and physical) moves in the overhang. In the end I skip one move (the crux) in order not to lose too much time, but it felt doable (next time I'll free it). The rest of the pitch is much easier (I guess around 6c-7a).
+**SamWay II** - I'm standing at the anchor right under the 7c crux, which is clearly visible, a short overhanging section right above the anchor of about 4 bolts (10m) long. I try to onsight it, but ofcourse I fail (knowing that my max level is 7c+). I continue to try to free all the (hard and physical) moves in the overhang. In the end I skip one move (the crux) in order not to lose too much time, but it felt doable (next time I'll free it). The rest of the pitch is much easier (I guess around 6c-7a).
 The rest of the team follows, but the overhang is way too hard to do with a backpack, and there are still some pitches to go. So, in order to save time and energy, they quickly decide to jumar on the rope.
 
 Next are two 5c pitches which I link in a single pitch with a shit load of rope drag at the end (so not the best choice). The second pitch is shared with *Attaque à Main Armée*. Everyone starts to feel the hard pitches that we did before and we are also getting a little late on our timing. We all still want to reach the top; continuing in *Unchi Maka* means we still have a 7a+, 7a and 7b+ to go, which would be a bit too much (it's basically the same amount of hard pitches as we already did). So we decide to do the end via *Attaque à Main Armée* which is max 6a+.

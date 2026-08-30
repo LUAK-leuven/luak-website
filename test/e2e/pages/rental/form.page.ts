@@ -1,7 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import type { Dayjs } from 'dayjs';
 import { navigateTo } from '#test/e2e/fixtures';
-import { RentalDetailsPage } from './details.page';
+import { RentalDetailsPage } from '#test/e2e/pages/rental/details.page';
 
 export class RentalFormPage {
   private readonly page: Page;

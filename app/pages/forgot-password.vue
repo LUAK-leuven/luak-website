@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import * as yup from 'yup';
   import TextField from '~/components/input/TextField.vue';
-  import Button from '~/components/shared/Button.vue';
+  import LuakButton from '~/components/shared/Button.vue';
 
   definePageMeta({ middleware: 'unauthenticated' });
 
@@ -45,12 +45,12 @@
           placeholder="youremail@example.com"
           type="email"
           autocomplete="email"
-          data-testid="emailInput" />
+          data-testId="emailInput" />
         <div class="flex justify-end">
-          <Button
+          <LuakButton
             class="btn btn-primary mt-2"
             :class="{ 'btn-disabled': isSentSuccessfully }"
-            data-testid="submitButton">
+            data-testId="submitButton">
             <span v-if="isSubmitting" class="loading loading-spinner">
               loading
             </span>
@@ -60,7 +60,7 @@
               check
             </span>
             <span v-else>Sent reset link</span>
-          </Button>
+          </LuakButton>
         </div>
       </form>
     </div>

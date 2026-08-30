@@ -29,6 +29,9 @@ export default defineNuxtConfig({
   },
   css: ['~/assets/css/main.scss'],
   devtools: { enabled: true },
+  experimental: {
+    typescriptPlugin: true,
+  },
   modules: [
     '@nuxtjs/tailwindcss',
     '@nuxt/content',
@@ -87,24 +90,28 @@ export default defineNuxtConfig({
     strict: true,
     tsConfig: {
       compilerOptions: tsCompilerOptions,
+      vueCompilerOptions: {
+        strictTemplates: true,
+        dataAttributes: ['data-testId', 'data-tip'],
+      },
     },
     sharedTsConfig: {
-      compilerOptions: tsCompilerOptions,
-    },
-    nodeTsConfig: {
       compilerOptions: {
-        paths: {
-          '~/*': ['../*'],
-          '#test/*': ['../test/*', '../test/testUtils/*'],
-        },
+        paths: { '#test/*': ['../test/*', '../test/testUtils/*'] },
         ...tsCompilerOptions,
       },
       include: [
-        '../test/**/*',
-        '../content.config.ts',
-        '../playwright.config.ts',
-        '../vitest.config.ts',
+        '../test/unit/**/*',
+        '../test/integration/**/*',
+        '../test/e2e/**/*',
+        '../test/testUtils/**/*',
       ],
+    },
+    nodeTsConfig: {
+      compilerOptions: {
+        ...tsCompilerOptions,
+      },
+      include: ['../*.ts', '../*.mjs'],
     },
   },
 });

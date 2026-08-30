@@ -1,12 +1,12 @@
 <script setup lang="ts">
   import { useField } from 'vee-validate';
-  import type { InputTypeHTMLAttribute } from 'vue';
   import Text from '~/components/input/Text.vue';
+  import type { TextType } from '~/components/shared/input/TextType';
 
   const props = withDefaults(
     defineProps<{
       label?: string | undefined;
-      type?: InputTypeHTMLAttribute;
+      type?: TextType;
       name: string;
       placeholder?: string;
       disabled?: boolean;
@@ -38,7 +38,7 @@
     :disabled="disabled"
     :round="round"
     :autocomplete="autocomplete">
-    <template #label1>
+    <template #label-start>
       <slot name="label-start" />
     </template>
     <template #label-end>

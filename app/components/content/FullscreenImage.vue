@@ -88,6 +88,7 @@
           fullscreen
         </span>
       </Button>
+      <!-- @vue-expect-error alt is not on NuxtImg type, but it is actually a supported prop -->
       <NuxtImg
         class="custom-img"
         :class="

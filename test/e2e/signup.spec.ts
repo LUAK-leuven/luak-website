@@ -4,8 +4,8 @@ import { expect } from '@playwright/test';
 import { SignupPage } from '#test/e2e/pages/signup.page';
 import { testServiceBuilder } from '#test/testServices';
 import dayjs from 'dayjs';
-import { findBy } from '~/shared/utils/utils';
-import { ProfileOverviewPage } from './pages/profile/overview.page';
+import { findBy } from '#shared/utils/utils';
+import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
 
 test('Can sign up a new user', async ({ page, luakPage }) => {
   const signupPage = await SignupPage.navigate(page);

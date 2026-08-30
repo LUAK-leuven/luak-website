@@ -11,7 +11,7 @@
     <Button
       class="btn btn-circle btn-xs btn-ghost"
       :tabindex="0"
-      data-testid="rentalItemMenuButton">
+      data-testId="rentalItemMenuButton">
       <span class="material-symbols-outlined">more_vert</span>
     </Button>
     <ul
@@ -28,7 +28,7 @@
               itemId: itemId.id,
             },
           }"
-          data-testid="markAsLost">
+          data-testId="markAsLost">
           Mark as lost
         </NuxtLink>
       </li>

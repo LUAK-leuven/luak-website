@@ -47,6 +47,7 @@ export const getBy = <T extends Record<K, V>, K extends keyof T, V>(
   if (res === undefined) {
     console.error('getBy:', arr);
     throw Error(
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-base-to-string
       `Could not find by ${key.toString()} with value ${value} in [${arr.join()}]`,
     );
   }

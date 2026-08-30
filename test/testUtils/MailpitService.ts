@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
-import type { EntityId } from '~/shared/types/ddd';
-import { sleep } from '~/shared/utils/utils';
+import type { EntityId } from '#shared/types/ddd';
+import { sleep } from '#shared/utils/utils';
 
 type Recipient = {
   Name: string;

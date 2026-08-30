@@ -21,8 +21,10 @@ export class ProfileSettingsPage {
     this.phoneNumberInput = page
       .getByTestId('phoneNumber')
       .getByRole('textbox');
-    this.whatsAppCheckbox = page.getByTestId('whatsApp');
-    this.newsletterCheckbox = page.getByTestId('newsletter');
+    this.whatsAppCheckbox = page.getByTestId('whatsApp').getByRole('checkbox');
+    this.newsletterCheckbox = page
+      .getByTestId('newsletter')
+      .getByRole('checkbox');
     this.changeInfoButton = page.getByTestId('changeInfo');
 
     this.newPasswordInput = page

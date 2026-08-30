@@ -12,7 +12,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-test('useToast queues multiple toasts', async () => {
+test('useToast queues multiple toasts', () => {
   const { toasts, show } = useToast();
 
   show('success', 'same message');
@@ -22,7 +22,7 @@ test('useToast queues multiple toasts', async () => {
   expect(toasts.value[0]!.id).not.toBe(toasts.value[1]!.id);
 });
 
-test('useToast closes the toast with the matching id', async () => {
+test('useToast closes the toast with the matching id', () => {
   const { show, close, toasts } = useToast();
 
   const id1 = show('error', 'toast 1');
@@ -37,7 +37,7 @@ test('useToast closes the toast with the matching id', async () => {
   expect(toasts.value[1]!.id).toBe(id3);
 });
 
-test('useToast does not close a toast with an unknown id', async () => {
+test('useToast does not close a toast with an unknown id', () => {
   const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
   const { close, show, toasts } = useToast();
   show('error', 'hi there');

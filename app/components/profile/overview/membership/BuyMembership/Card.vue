@@ -7,7 +7,7 @@
   }>();
 </script>
 <template>
-  <ProfileCard image="/aiguilles_rouges.jpg" data-testid="buyMembershipCard">
+  <ProfileCard image="/aiguilles_rouges.jpg" data-testId="buyMembershipCard">
     <template #title>
       Not yet a member for
       {{ formatMembershipYear(currentMembershipYear, 'long') }} 😢

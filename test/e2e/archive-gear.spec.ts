@@ -1,11 +1,11 @@
 import { authStateFile, cleanDatabase, test } from '#test/e2e/fixtures';
 import { testServiceBuilder } from '#test/testServices';
-import { itemArchivedEvent } from '~/server/domain/inventory/ItemEvent';
-import type { GearInventoryId, TopoId } from '~/shared/types/gear';
-import { GearInventoryPage } from './pages/gear/inventory.page';
+import { itemArchivedEvent } from '#server/domain/inventory/ItemEvent';
+import type { GearInventoryId, TopoId } from '#shared/types/gear';
+import { GearInventoryPage } from '#test/e2e/pages/gear/inventory.page';
 import { expect } from '@playwright/test';
-import { RentalFormPage } from './pages/rental/form.page';
-import { TopoDetailsPage } from './pages/topos/details.page';
+import { RentalFormPage } from '#test/e2e/pages/rental/form.page';
+import { TopoDetailsPage } from '#test/e2e/pages/topos/details.page';
 
 test.use({ storageState: authStateFile('boardMember') });
 

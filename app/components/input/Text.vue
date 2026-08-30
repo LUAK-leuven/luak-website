@@ -1,11 +1,11 @@
 <script setup lang="ts">
-  import type { InputTypeHTMLAttribute } from 'vue';
-  import Input from '../shared/Input.vue';
+  import type { TextType } from '~/components/shared/input/TextType.ts';
+  import FormInput from './FormInput.vue';
 
   withDefaults(
     defineProps<{
       label?: string | undefined;
-      type?: InputTypeHTMLAttribute;
+      type?: TextType;
       error?: string | undefined;
       placeholder?: string;
       disabled?: boolean;
@@ -23,43 +23,25 @@
     },
   );
 
-  const model = defineModel<string | number | undefined>();
+  const model = defineModel<string | undefined>({ required: true });
 
   const emit = defineEmits<{
     focus: [];
   }>();
-
-  watch(model, (value) => {
-    if (value === '') model.value = undefined;
-  });
 </script>
 
 <template>
-  <div class="form-control w-full">
-    <div v-if="label" class="label">
-      <span class="label-text">{{ label }}</span>
-    </div>
-    <label
-      class="input input-bordered w-full flex items-center"
-      :class="{
-        'bg-gray-300': disabled,
-        'rounded-full': round,
-        'input-error': error,
-      }">
-      <slot name="label1" />
-      <Input
-        v-model="model"
-        class="w-full"
-        :class="{ 'bg-gray-300': disabled }"
-        :type="type"
-        :placeholder="placeholder"
-        :disabled="disabled"
-        :autocomplete="autocomplete"
-        @focus="() => emit('focus')" />
-      <slot name="label-end" />
-    </label>
-    <span v-if="error" class="text-error" data-testId="error-message">
-      {{ error }}
-    </span>
-  </div>
+  <FormInput :label="label" :error="error" :disabled="disabled" :round="round">
+    <slot name="label-start" />
+    <SharedInputText
+      v-model="model"
+      class="w-full"
+      :class="{ 'bg-gray-300': disabled }"
+      :type="type"
+      :placeholder="placeholder"
+      :disabled="disabled"
+      :autocomplete="autocomplete"
+      @focus="() => emit('focus')" />
+    <slot name="label-end" />
+  </FormInput>
 </template>

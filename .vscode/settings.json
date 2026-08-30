@@ -1,0 +1,8 @@
+{
+  "deno.enablePaths": ["supabase/functions"],
+  "editor.gotoLocation.multipleDefinitions": "goto",
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
+  "js/ts.tsdk.promptToUseWorkspaceVersion": true,
+  "js/ts.updateImportsOnFileMove.enabled": "always",
+  "cSpell.words": ["jumar", "onsight"]
+}

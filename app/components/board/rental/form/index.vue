@@ -9,7 +9,7 @@
     boardMemberName: string;
     allGear: RentalItem<GearItemId>[];
     allTopos: RentalItem<TopoId>[];
-    initialValues: Partial<{
+    initialValues: Partial2<{
       memberId: UserId | 'non-user';
       contactInfo: {
         fullName: string;

@@ -1,6 +1,6 @@
 # LUAK website
 
-The techstack used for this project is:
+The tech stack used for this project is:
 
 - Nuxt
 - Nuxt Content + Nuxt Studio (visual content editing)
@@ -21,6 +21,22 @@ The techstack used for this project is:
 
 Next set the right env variables to connect with supabase. check `.env.example` and the [Supabase Docs](https://supabase.com/docs/guides/getting-started)
 
+### Editor
+
+It is recommended to use Visual Studio Code with the following extensions:
+
+- Nuxt Extension pack
+- Even Better TOML
+- ESLint
+- Deno
+- Prettier - Code formatter
+- Tailwind CSS IntelliSense
+
+#### Running tests from the editor:
+
+- Vitest
+- Playwright Test for VSCode
+
 ### e2e-tests
 
 Firs you need to install the [playwright](https://playwright.dev) browsers: `yarn playwright install chromium`
@@ -38,7 +54,7 @@ To run against the production database: `yarn dev --dotenv .env.production`
 
 ## Test users
 
-Some test users are created when running the e2e tests. If you need them for manual testing after a frech DB reset run `yarn test:e2e --project="setup db"`
+Some test users are created when running the e2e tests. If you need them for manual testing after a fresh DB reset run `yarn test:e2e --project="setup db"`
 
 ## Supabase
 

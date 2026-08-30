@@ -1,6 +1,59 @@
 # The captains log
 
-## 5/08/2026 - Membership validation
+## 29/08/2026 - Typescript config & project structure for tests
+
+> _author: Hektor_
+
+### Context
+
+When we migrated to Nuxt 4 the typescript behavior changed. Now there are 4 separate typescript projects: 'app', 'server', 'shared' and 'node'.
+Initially I included the unit and e2e tests in the 'node' project thinking they don't need Nuxt's auto imports and aliases.
+
+But when running `nuxt typecheck` I was getting a lot of unresolved imports from the `shared/` and `app/model/` directories. In the editor there was no error visible.
+The underlying problem was transitive dependencies/imports. My tests were importing files from `shared/`, but those files do use Nuxt's import aliases. Which could not be resolved in the 'node' project. This also explains why I didn't get any errors in the IDE. Those files in the `shared/` folder resolve to the 'shared' project.
+
+### Options
+
+#### Option 1 - Create a separate typescript project for tests
+
+This separate typescript project can extend the 'shared' project so that Nuxt's import aliases and auto-imports work.
+
+```json
+{
+  "extends": "./.nuxt/tsconfig.shared.json",
+  "include": [
+    "./test/unit/**/*",
+    "./test/integration/**/*",
+    "./test/e2e/**/*",
+    "./test/testUtils/**/*"
+  ]
+}
+```
+
+**pros**: Clean separation of tests from production code.
+**cons**:
+  - More custom config
+  - It is not possible to set test aliases without overriding Nuxt's aliases
+
+#### Option 2 - Include tests to the 'shared' project
+
+Instead of including the test folders in the 'node' project, include them in the 'shared' project.
+
+**pros**: By far the simplest solution.
+**cons**: The `#test` alias is available in production code (this was also the case before).
+
+#### Option 3 - Restructure the whole project
+
+This is the "let's rewrite everything" option to restructure the whole project (including production code), so that the domain does not live in the Nuxt context and can easily be imported and tested without the need of Nuxt's aliases.
+
+  **pros**: Solves other architectural issues.
+  **cons**: Scope is way too large.
+
+### Decision
+
+I decided to go for option 2, because this is by far the simplest.
+
+## 05/08/2026 - Membership validation
 
 > _author: Hektor_
 

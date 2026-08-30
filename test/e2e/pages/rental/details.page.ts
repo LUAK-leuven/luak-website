@@ -1,10 +1,10 @@
 import { expect, type Page } from '@playwright/test';
 import type { Dayjs } from 'dayjs';
-import type { RentalId } from '~/shared/types/rental';
+import type { RentalId } from '#shared/types/rental';
 import { testUsers } from '#test/TestUser';
-import { uuidRegex } from '~/shared/utils/utils';
-import { RentalReturnPage } from './return.page';
-import { LostGearPage } from '../lost-gear.page';
+import { uuidRegex } from '#shared/utils/utils';
+import { RentalReturnPage } from '#test/e2e/pages/rental/return.page';
+import { LostGearPage } from '#test/e2e/pages/lost-gear.page';
 import { navigateTo } from '#test/e2e/fixtures';
 
 export class RentalDetailsPage {
@@ -22,11 +22,11 @@ export class RentalDetailsPage {
     await navigateTo(this.page, this.path(rentalId));
   };
 
-  async getRentalId(): RentalId {
+  async getRentalId(): Promise<RentalId> {
     await expect(this.page.getByTestId('detailsPage.id')).toBeVisible();
     const rentalId = await this.page.getByTestId('detailsPage.id').innerText();
     expect(rentalId).toBeTruthy();
-    return rentalId;
+    return rentalId as RentalId;
   }
 
   get member() {

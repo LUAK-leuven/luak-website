@@ -29,6 +29,9 @@ jobs:
       - name: Install
         run: yarn install --frozen-lockfile
 
+      - name: Typecheck
+        run: yarn typecheck && yarn lint:eslint
+
       - name: Start supabase server
         run: yarn supabase start --log-level error -x edge-runtime,imgproxy,logflare,postgres-meta,realtime,storage-api,studio,supavisor,vector
 

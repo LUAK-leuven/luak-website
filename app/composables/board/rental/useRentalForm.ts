@@ -59,7 +59,7 @@ function selectionFrom<T extends EntityId<unknown>>(
 }
 
 export function useRentalForm(
-  initialState: Partial<RentalFormState>,
+  initialState: Partial2<RentalFormState>,
   allGear: RentalItem<GearItemId>[],
   allTopos: RentalItem<TopoId>[],
 ) {
@@ -141,24 +141,10 @@ export function useRentalForm(
 
   const [selectedUser, userAttr] = defineField('memberId', errorAttr);
 
-  const fullName = computed({
-    get: () => values.contactInfo?.fullName,
-    set: (value: string) => {
-      setFieldValue('contactInfo.fullName', value);
-    },
-  });
-  const email = computed({
-    get: () => values.contactInfo?.email,
-    set: (value: string) => {
-      setFieldValue('contactInfo.email', value);
-    },
-  });
-  const phone = computed({
-    get: () => values.contactInfo?.phone,
-    set: (value: string) => {
-      setFieldValue('contactInfo.phone', value);
-    },
-  });
+  const [fullName] = defineField('contactInfo.fullName');
+  const [email] = defineField('contactInfo.email');
+  const [phone] = defineField('contactInfo.phone');
+
   const [dateBorrow, dateBorrowAttr] = defineField('dateBorrow', errorAttr);
   const [dateReturn, dateReturnAttr] = defineField('dateReturn', errorAttr);
   const [depositFee, depositFeeAttr] = defineField('depositFee', errorAttr);

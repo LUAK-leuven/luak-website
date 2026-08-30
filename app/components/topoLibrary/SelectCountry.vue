@@ -34,7 +34,7 @@
       v-for="it of selected"
       :key="it"
       class="badge badge-lg badge-success border border-neutral"
-      :data-testid="`country.${it}`">
+      :data-testId="`country.${it}`">
       {{ it }}
       <button class="btn btn-ghost btn-xs" @click="() => removeSelection(it)">
         ❌

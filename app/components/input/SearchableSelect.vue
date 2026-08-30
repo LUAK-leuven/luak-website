@@ -6,7 +6,6 @@
     shift,
     autoUpdate,
   } from '@floating-ui/vue';
-  import Input from '~/components/shared/Input.vue';
 
   const props = withDefaults(
     defineProps<{
@@ -71,7 +70,7 @@
       <span v-if="hidden && selectedItem !== undefined" class="label w-max">
         <slot name="item" :data="selectedItem" />
       </span>
-      <Input
+      <SharedInputText
         v-model="textValue"
         :class="{
           'w-0': hidden && selectedItem !== undefined,

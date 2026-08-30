@@ -2,91 +2,31 @@
 
 ## Project Overview
 
-The LUAK website is a website for a climbing club. It is mostly content based. The club regularely organizes activities, which are shown on the activities page (and news page).
+The LUAK website is a website for a climbing club. It is mostly content based. The club regularly organizes activities, which are shown on the activities page (and news page).
 The website is also used by the board to keep track of rented gear (LUAK has a lot of climbing gear and topos that can be rented by its members). This is all part of the board section.
 
 Make sure to read [ai-context](./ai-context/index.md) so that you can load the correct context.
+
+## Tech stack
+
+- **Framework**: Nuxt 4, Typescript
+- **Styling**: TailwindCSS, DaisyUI
+- **Backend**: Supabase
+- **Devtools**: ESLint, Prettier
+
+More details can be found in [tech stack](./ai-context/tech-stack.md).
 
 ---
 
 ## Code Style
 
-### TypeScript
-
-- TypeScript is **mandatory everywhere**, including `<script setup lang="ts">` in all SFCs.
-- Never use `any` type and avoid `unknown`, use the correct types at all times.
-- **Avoid type casting**.
-- Run `yarn typecheck` and `yarn lint` to verify you're not introducing errors.
-- Use `import type { ... }` for type-only imports.
-- Use branded ID types (`EntityId<'user'>`, `UserId`, `RentalId`) for all primary keys.
-- Cast Supabase row IDs: `data.id as UserId`.
-- Utility types live in `app/utils/typeUtils.ts`: `Defined<T>`, `GetReturn<T>`, `Unwrap<T>`.
-- Generic components use `<script setup lang="ts" generic="T">`.
-
-### Vue SFCs
-
-- Always use Composition API with `<script setup lang="ts">`.
-- Use `defineProps<{ ... }>()` (generic typed), `withDefaults()` when needed.
-- Use typed emits: `defineEmits<{ close: []; onSelect: [value: T] }>()`.
-- Use `defineModel<T>()` for two-way binding.
-- Nuxt auto-imports are available (`ref`, `computed`, `useAsyncData`, `useSupabaseClient`, `definePageMeta`, etc.) — no explicit import needed.
-- Use `NuxtLink` instead of `<a>`, `NuxtImg` instead of `<img>`, `ContentRenderer` for Markdown.
-
-### Imports & Aliases
-
-- Prefer named aliases over absolute paths (e.g., `#server/gearService` instead of `~~/server/gearService`).
-- Prefer absolute imports over relative imports for project files (e.g., `~/utils/yup` instead of `../../utils/yup`).
-- Nuxt aliases: `~/` refers to `app/`, and `~~/` refers to the project root.
-- Type-only imports must use `import type`.
-- Nuxt auto-imported APIs do not need explicit imports.
-
-### Formatting (Prettier)
-
-- Run `yarn lintfix` to auto-fix all formatting.
-
-### Naming Conventions
-
-| Entity                | Convention                                   | Example                                |
-|-----------------------|----------------------------------------------|----------------------------------------|
-| Vue component files   | PascalCase                                   | `ActivityItem.vue`, `NavBar/index.vue` |
-| Composables           | camelCase, `use` prefix                      | `useLuakMember.ts`                     |
-| Utility files         | camelCase                                    | `gearService.ts`, `getLuakYear.ts`     |
-| TypeScript types      | PascalCase                                   | `UnsavedRental`, `RentalId`            |
-| Component props/emits | camelCase in TS, kebab-case in template      | `isLoading` / `:is-loading`            |
-| DB columns            | snake_case (from Supabase)                   | `created_at`, `is_active`              |
-| Pages                 | kebab-case directories                       | `pages/board/rentals/[id].vue`         |
-
-### Error Handling
-
-- To show an error/success to the user, use `useToast().show('error' | 'success', message)`.
-- If the error is an error that should be thrown (e.g., a 404 page), use `throw createError({ statusCode: 404, statusMessage: '...' })`.
-- Form errors: use `setFieldError('field', message)` via vee-validate.
-
-
-### UI / Styling
-
-- Reuse existing components (such as the `Button` iso the native html `button`) and composables for UI.
-- Use **TailwindCSS + DaisyUI** classes for all UI. Active theme: `nord`.
-- DaisyUI patterns: `btn btn-primary`, `card card-compact`, `badge badge-info`, `modal`, `loading loading-spinner`,
-  `alert alert-success`.
-- Global base styles and custom fonts in `app/assets/css/main.scss`.
-- Do not write raw CSS.
-
----
-
-## Integration Points
-
-- **Supabase**: Auth, DB, Storage via `@nuxtjs/supabase`. Types in `shared/types/database.types.ts` — **regenerate after any
-  schema change**.
-- **Stripe**: Payment links in Nuxt runtime config; webhook handler in `supabase/functions/stripe-webhook/`.
-- **Nuxt Content**: Markdown-driven pages; schemas defined in `content.config.ts`.
-- **Nuxt Studio**: Visual content editing interface for `content/` directory.
-- **Edge Functions**: Deno runtime in `supabase/functions/`; VSCode Deno extension scoped to that path.
+Before writing or editing any code, read [ai-context/code-style.md](./ai-context/code-style.md) for coding conventions.
 
 ---
 
 ## Key Rules for AI Agents
 
+- Resolving open design questions is not authorization to implement. After a diagnostic or design discussion where the user answered questions (e.g. via the `question` tool), do not proceed to file edits, `todowrite`, or build/test-running steps for the underlying change. For non-trivial or multi-step changes, use the `write-plan` skill to produce a `planning/<feature>/plan.md` for review; otherwise explicitly ask "Should I proceed with implementation?" and wait for confirmation.
 - Use project composables and middleware for auth/membership logic — do not reinvent them.
 - Use path alias, never relative `../../` imports for project files.
 - Run `yarn lint` and `yarn test` before committing to verify you didn't introduce errors.

@@ -19,7 +19,6 @@ logs
 .DS_Store
 .fleet
 .idea
-.vscode
 .playwright-cli
 
 # Local env files

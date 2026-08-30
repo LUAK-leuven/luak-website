@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { GearDetailsPage } from './details.page';
+import { GearDetailsPage } from '#test/e2e/pages/gear/details.page';
 
 export class GearInventoryPage {
   readonly path = '/board/gear';

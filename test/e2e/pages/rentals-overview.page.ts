@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import type { RentalId } from '~/shared/types/rental';
+import type { RentalId } from '#shared/types/rental';
 import { navigateTo } from '#test/e2e/fixtures';
 
 export class RentalsOverviewPage {

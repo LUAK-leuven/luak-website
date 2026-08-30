@@ -8,7 +8,7 @@
   }>();
 </script>
 <template>
-  <ProfileCard image="/aiguilles_rouges.jpg" data-testid="hasMembershipCard">
+  <ProfileCard image="/aiguilles_rouges.jpg" data-testId="hasMembershipCard">
     <template #title>
       You have a valid membership for
       {{ formatMembershipYear(membership.membershipYear, 'short') }}

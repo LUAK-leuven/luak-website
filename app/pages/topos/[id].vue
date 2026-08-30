@@ -48,14 +48,14 @@
           <TopoCondition :topo-condition="topo.condition" />
         </TopoLibraryTopoDetailItem>
         <TopoLibraryTopoDetailItem name="Amount">
-          <span v-if="!isBoard" class="badge badge-ghost" data-testid="amount">
+          <span v-if="!isBoard" class="badge badge-ghost" data-testId="amount">
             {{ topo.amount }}
           </span>
           <span
             v-else
             class="badge"
             :class="availableAmount > 0 ? 'badge-success' : 'badge-error'"
-            data-testid="amount">
+            data-testId="amount">
             {{ availableAmount }} / {{ topo.amount }}
           </span>
         </TopoLibraryTopoDetailItem>
@@ -79,7 +79,7 @@
           :events="topo.events"
           purchase-date="??"
           :initial-amount="topo.initialAmount"
-          data-testid="history" />
+          data-testId="history" />
 
         <template v-if="topo.rentals.length > 0">
           <hr class="mt-3" />

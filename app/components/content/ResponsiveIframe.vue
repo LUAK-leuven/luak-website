@@ -15,8 +15,6 @@
 </template>
 
 <style>
-  /* Responsive iFrame */
-
   .responsive-iframe-container {
     position: relative;
     padding-bottom: 56.25%;

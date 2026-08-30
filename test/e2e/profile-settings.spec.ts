@@ -10,10 +10,10 @@ import {
 import { ProfileSettingsPage } from '#test/e2e/pages/profile/settings.page';
 import { testServiceBuilder } from '#test/testServices';
 import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
-import { ForgotPasswordPage } from './pages/forgot-password.page';
-import { findBy, sleep } from '~/shared/utils/utils';
+import { ForgotPasswordPage } from '#test/e2e/pages/forgot-password.page';
+import { findBy, sleep } from '#shared/utils/utils';
 import dayjs from 'dayjs';
-import { ResetPasswordPage } from './pages/reset-password.page';
+import { ResetPasswordPage } from '#test/e2e/pages/reset-password.page';
 
 const testUserService = testServiceBuilder().userTestService();
 
