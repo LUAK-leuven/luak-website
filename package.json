@@ -31,7 +31,7 @@
     "@vue/test-utils": "^2.4.6",
     "daisyui": "^3.9.4",
     "dotenv": "^17.4.2",
-    "eslint": "^10.8.1",
+    "eslint": "^10.9.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-node": "^0.4.0",
     "eslint-plugin-nuxt": "^4.0.0",
