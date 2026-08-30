@@ -9,7 +9,12 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
-      interval: weekly
+      interval: 'weekly'
     ignore:
       - dependency-name: 'daisyui'
         update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
