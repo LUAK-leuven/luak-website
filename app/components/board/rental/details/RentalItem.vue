@@ -2,6 +2,7 @@
   import ItemMenu from './ItemMenu.vue';
   import type { RentalItem } from '~/model/Rental.js';
   import getItemColor from '../getItemColor.js';
+  import type { RentalId } from '#shared/api/rest/rental.ts';
 
   const props = defineProps<{
     item: RentalItem;

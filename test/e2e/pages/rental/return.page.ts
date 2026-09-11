@@ -1,5 +1,5 @@
 import { expect, type Locator, type Page } from '@playwright/test';
-import type { RentalId } from '#shared/types/rental';
+import type { RentalId } from '#shared/api/rest/rental';
 import { navigateTo } from '#test/e2e/fixtures';
 import { uuidRegex } from '#shared/utils/utils';
 import { RentalDetailsPage } from '#test/e2e/pages/rental/details.page';

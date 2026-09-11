@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import DetailsPage from '~/components/pages/DetailsPage.vue';
+  import type { RentalId } from '#shared/api/rest/rental';
 
   const { update, get } = useRentalService();
 

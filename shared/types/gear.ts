@@ -1,6 +1,6 @@
 import type { ItemEvent } from '~~/server/domain/inventory/ItemEvent'; // TODO: invalid dependency?
 import type { EntityId } from './ddd';
-import type { RentalId } from './rental';
+import type { RentalId } from '#shared/api/rest/rental';
 import type { Date } from './common';
 
 export type GearItemId = EntityId<'gearItem'>;

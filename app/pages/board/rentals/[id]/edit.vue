@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import BackButton from '~/components/shared/BackButton.vue';
   import { useFetchGearAndTopos } from '~/composables/board/rental/useFetchGearAndTopos';
+  import type { RentalId } from '#shared/api/rest/rental';
 
   const { show: showPopup } = useToast();
   const rentalId = useRoute('board-rentals-id-edit').params.id as RentalId;

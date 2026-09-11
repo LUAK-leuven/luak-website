@@ -1,5 +1,6 @@
 import { object, literal, number, discriminatedUnion, uuid } from 'zod';
 import type { infer as Infer, ZodType } from 'zod';
+import type { RentalId } from '#shared/api/rest/rental';
 
 const itemLostEventSchema = object({
   eventName: literal('ItemLostEvent'),

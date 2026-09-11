@@ -2,13 +2,14 @@
   import WithLazyResource from '~/components/pages/WithLazyResource.vue';
   import LoadingButton from '~/components/shared/LoadingButton.vue';
   import Number from '~/components/input/NumberCompact.vue';
+  import GearInventorySelection from './GearInventorySelection.vue';
+  import type { RentalGearItem } from '~/model/Rental.js';
+  import type { RentalId } from '#shared/api/rest/rental.ts';
   import {
     object as yupObject,
     number as yupNumber,
     string as yupString,
   } from 'yup';
-  import GearInventorySelection from './GearInventorySelection.vue';
-  import type { RentalGearItem } from '~/model/Rental.js';
 
   const props = defineProps<{
     rentalId: RentalId;
