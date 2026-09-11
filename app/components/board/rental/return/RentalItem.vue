@@ -3,6 +3,7 @@
   import type { RentalItem } from '~/model/Rental';
   import getItemColor from '../getItemColor';
   import Button from '~/components/shared/Button.vue';
+  import type { RentalId } from '#shared/api/rest/rental';
 
   const props = defineProps<{
     rentalId: RentalId;

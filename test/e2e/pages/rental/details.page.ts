@@ -1,6 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 import type { Dayjs } from 'dayjs';
-import type { RentalId } from '#shared/types/rental';
+import type { RentalId } from '#shared/api/rest/rental';
 import { testUsers } from '#test/TestUser';
 import { uuidRegex } from '#shared/utils/utils';
 import { RentalReturnPage } from '#test/e2e/pages/rental/return.page';

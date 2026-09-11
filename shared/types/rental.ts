@@ -1,4 +1,4 @@
-export type RentalId = EntityId<'rental'>;
+import type { RentalId } from '#shared/api/rest/rental';
 
 export type PaymentMethod = Enums<'payment_method'>;
 

@@ -1,11 +1,14 @@
 <script setup lang="ts">
   import FullPageCard from '~/components/FullPageCard.vue';
-  import { ValidationError, string as yupString } from 'yup';
   import WithLazyResource from '~/components/pages/WithLazyResource.vue';
   import PaymentBadge from '~/components/board/rental/PaymentBadge.vue';
   import TopoItem from '~/components/board/lost-gear/TopoItem.vue';
   import GearItem from '~/components/board/lost-gear/GearItem.vue';
   import BackButton from '~/components/shared/BackButton.vue';
+
+  import type { RentalId } from '#shared/api/rest/rental';
+
+  import { ValidationError, string as yupString } from 'yup';
 
   const route = useRoute('board-lost-gear');
   const rentalId = computed(
