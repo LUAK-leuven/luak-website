@@ -2,6 +2,8 @@
   import createMembershipSchema from '~/components/profile/overview/membership/BuyMembership/createMembershipSchema';
   import BoolField from '~/components/input/BoolField.vue';
   import Button from '~/components/shared/Button.vue';
+  import Modal from '~/components/shared/Modal.vue';
+
   import { Membership } from '~/model/Membership';
 
   const { handleSubmit, isSubmitting } = useForm({
@@ -12,7 +14,7 @@
   const user = useSupabaseUser();
   const env = useRuntimeConfig().public;
 
-  const modal = useTemplateRef<HTMLDialogElement>('buy_membership_modal');
+  const showBuyMembershipModal = ref<boolean>(false);
 
   const userService = useUserService();
 
@@ -53,74 +55,70 @@
   <Button
     class="btn"
     data-testId="buyMembershipButton"
-    @click="modal?.showModal()">
+    @click="showBuyMembershipModal = true">
     Buy a membership
   </Button>
 
   <!-- --------------------------------------------- -->
 
-  <dialog ref="buy_membership_modal" class="modal modal-bottom md:modal-middle">
-    <div class="modal-box bg-base-100 text-black">
-      <form method="dialog">
-        <Button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-          ✕
-        </Button>
-      </form>
-      <h2 class="mb-4">
-        Buy a membership for {{ membership.membershipYear }}-{{
-          membership.membershipYear + 1
-        }}
-        <br />
-      </h2>
-      <InputKbfSelect />
-      <InputStudentSelect />
-      <BoolField name="sportscard" data-testId="sportscard">
-        Do you have a sportscard?
-      </BoolField>
-      <BoolField name="houserules" data-testId="houserules">
-        Do you agree to the
-        <NuxtLink
-          class="text-primary underline"
-          :to="{
-            name: 'info-slug',
-            params: { slug: ['rules_and_regulations'] },
-          }">
-          house rules
-        </NuxtLink>
-        ?
-        <span class="italic text-error">(required)</span>
-      </BoolField>
+  <Modal v-model:open="showBuyMembershipModal" class="text-black">
+    <Button
+      class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+      @click="showBuyMembershipModal = false">
+      ✕
+    </Button>
+    <h2 class="mb-4">
+      Buy a membership for {{ membership.membershipYear }}-{{
+        membership.membershipYear + 1
+      }}
+      <br />
+    </h2>
+    <InputKbfSelect />
+    <InputStudentSelect />
+    <BoolField name="sportscard" data-testId="sportscard">
+      Do you have a sportscard?
+    </BoolField>
+    <BoolField name="houserules" data-testId="houserules">
+      Do you agree to the
+      <NuxtLink
+        class="text-primary underline"
+        :to="{
+          name: 'info-slug',
+          params: { slug: ['rules_and_regulations'] },
+        }">
+        house rules
+      </NuxtLink>
+      ?
+      <span class="italic text-error">(required)</span>
+    </BoolField>
 
-      <div class="flex w-full justify-end">
-        <div v-if="membershipInfo.isFirstTimeMember()" class="stat w-fit">
-          <div class="stat-title">First time member discount</div>
-          <div class="stat-value text-primary flex gap-2 justify-self-end">
-            <div class="line-through text-red-500 text-2xl self-end">20 €</div>
-            <div data-testId="price">{{ price }} €</div>
-          </div>
-        </div>
-        <div v-else class="stat w-fit">
-          <div class="stat-title">Total price</div>
-          <div class="stat-value text-primary" data-testId="price">
-            {{ price }} €
-          </div>
+    <div class="flex w-full justify-end">
+      <div v-if="membershipInfo.isFirstTimeMember()" class="stat w-fit">
+        <div class="stat-title">First time member discount</div>
+        <div class="stat-value text-primary flex gap-2 justify-self-end">
+          <div class="line-through text-red-500 text-2xl self-end">20 €</div>
+          <div data-testId="price">{{ price }} €</div>
         </div>
       </div>
-
-      <div class="modal-action">
-        <form method="dialog">
-          <Button class="btn">Close</Button>
-        </form>
-        <Button
-          class="btn btn-primary"
-          data-testId="buy-membership-button"
-          @click="buyMembership">
-          <span v-if="isSubmitting" class="loading loading-spinner">
-            loading
-          </span>
-          <span v-else>buy membership</span>
-        </Button>
+      <div v-else class="stat w-fit">
+        <div class="stat-title">Total price</div>
+        <div class="stat-value text-primary" data-testId="price">
+          {{ price }} €
+        </div>
       </div>
     </div>
-  </dialog>
+
+    <div class="modal-action">
+      <Button class="btn" @click="showBuyMembershipModal = false">Close</Button>
+      <Button
+        class="btn btn-primary"
+        data-testId="buy-membership-button"
+        @click="buyMembership">
+        <span v-if="isSubmitting" class="loading loading-spinner">
+          loading
+        </span>
+        <span v-else>buy membership</span>
+      </Button>
+    </div>
+  </Modal>
 </template>

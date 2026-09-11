@@ -1,20 +1,19 @@
 <script setup lang="ts">
-  import dayjs from 'dayjs';
-  import PaymentModal from '~/components/PaymentModal.vue';
   import { useToast } from '~/composables/useToast';
   import { useRentalService } from '~/composables/useRentalService';
   import { useFetchGearAndTopos } from '~/composables/board/rental/useFetchGearAndTopos';
+  import { usePaymentModal } from '~/composables/components/usePaymentModal';
+
+  import dayjs from 'dayjs';
 
   const { show: showPopup } = useToast();
   const { save: saveRental } = useRentalService();
 
-  const showPaymentModal = ref(false);
-  const depositFee = ref<number>();
-  const rentalId = ref<RentalId>();
-
   const user = await useUserService().getUserInfo();
 
   const { allGear, allTopos, pending } = useFetchGearAndTopos();
+
+  const { openPaymentModal } = usePaymentModal();
 
   async function handleSubmit(state: Omit<UnsavedRental, 'boardMemberId'>) {
     if (user.value === undefined) {
@@ -27,15 +26,13 @@
     });
 
     if (!error && id) {
-      rentalId.value = id;
+      await navigateTo({
+        name: 'board-rentals-id',
+        params: { id },
+      });
+
       if (state.paymentMethod === 'transfer') {
-        depositFee.value = state.depositFee;
-        showPaymentModal.value = true;
-      } else {
-        await navigateTo({
-          name: 'board-rentals-id',
-          params: { id: rentalId.value },
-        });
+        openPaymentModal();
       }
       showPopup('success', 'Rental saved successfully.');
       return { error: undefined };
@@ -44,15 +41,6 @@
       return { error };
     }
   }
-
-  const closeModal = async () => {
-    showPaymentModal.value = false;
-    if (rentalId.value)
-      await navigateTo({
-        name: 'board-rentals-id',
-        params: { id: rentalId.value },
-      });
-  };
 </script>
 
 <template>
@@ -75,11 +63,5 @@
         dateBorrow: dayjs().format('YYYY-MM-DD').toString(),
         dateReturn: dayjs().add(3, 'w').format('YYYY-MM-DD').toString(),
       }" />
-
-    <PaymentModal
-      :is-open="showPaymentModal"
-      :amount="depositFee ?? 0"
-      message="Deposit fee"
-      @close="closeModal" />
   </FullPageCard>
 </template>
