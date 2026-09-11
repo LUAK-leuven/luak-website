@@ -13,13 +13,15 @@ export const sumBy = <T>(array: T[], getValue: (i: T) => number): number => {
   return array.reduce((sum, current) => sum + getValue(current), 0);
 };
 
-export const single = <T>(array: T[]): T | undefined => {
+export const single = <T>(array: T[]): T => {
   if (array.length > 1)
     throw Error(
       'Cannot convert array containing multiple elements to a single element!',
     );
-  else if (array.length === 0) return undefined;
-  else return array[0];
+  else if (array.length === 0)
+    throw Error('Cannot convert empty array to a single element!');
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  else return array[0]!;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

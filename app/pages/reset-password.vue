@@ -2,6 +2,7 @@
   import * as yup from 'yup';
   import TextField from '~/components/input/TextField.vue';
   import LoadingButton from '~/components/shared/LoadingButton.vue';
+  import Modal from '~/components/shared/Modal.vue';
   import { useToast } from '~/composables/useToast';
 
   const supabase = useSupabaseClient();
@@ -9,7 +10,7 @@
   const user = useSupabaseUser();
   const { show: showPopup } = useToast();
 
-  const dialog = ref<HTMLDialogElement>();
+  const showErrorModal = ref<boolean>(false);
   const authError = ref<{ error: string; description: string }>();
 
   const formSchema = yup.object({
@@ -46,14 +47,11 @@
 
   watch(authError, (value) => {
     if (value) {
-      if (dialog.value === undefined) alert(value.error);
-      else dialog.value.showModal();
+      showErrorModal.value = true;
     }
   });
 
   onMounted(() => {
-    dialog.value = document.getElementById('auth-error') as HTMLDialogElement;
-
     if (route.query.error) {
       authError.value = {
         error: route.query.error as string,
@@ -100,16 +98,17 @@
       </form>
     </div>
 
-    <dialog id="auth-error" class="modal" data-testId="errorDialog">
-      <div class="modal-box">
-        <h2>Error: {{ authError?.error }}</h2>
-        <p>{{ authError?.description }}</p>
-        <div class="flex flex-row justify-end">
-          <NuxtLink class="btn btn-primary" :to="{ name: 'index' }">
-            OK
-          </NuxtLink>
-        </div>
+    <Modal
+      v-model:open="showErrorModal"
+      :backdrop="false"
+      data-testId="errorDialog">
+      <h2>Error: {{ authError?.error }}</h2>
+      <p>{{ authError?.description }}</p>
+      <div class="flex flex-row justify-end">
+        <NuxtLink class="btn btn-primary" :to="{ name: 'index' }">
+          OK
+        </NuxtLink>
       </div>
-    </dialog>
+    </Modal>
   </div>
 </template>

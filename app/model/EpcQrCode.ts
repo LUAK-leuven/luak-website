@@ -41,10 +41,9 @@ export class EpcQrCode {
   }) {
     this.version = props.version ?? '002';
     const encoding = props.encoding ?? 'UTF-8';
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.char = single(
       EpcQrCode.encodingMap.filter((it) => it[0] === encoding),
-    )![1];
+    )[1];
     if (
       props.bic !== undefined &&
       !(props.bic.length === 8 || props.bic.length === 11)

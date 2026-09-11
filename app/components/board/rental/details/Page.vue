@@ -2,6 +2,8 @@
   import PaymentModal from '~/components/PaymentModal.vue';
   import RentalItem from '~/components/board/rental/details/RentalItem.vue';
   import Button from '~/components/shared/Button.vue';
+
+  import { usePaymentModal } from '~/composables/components/usePaymentModal';
   import type { RentalDetails } from '~/model/Rental';
   import { formatToDMY } from '~/utils/rental/dateFormatter';
 
@@ -16,7 +18,7 @@
     });
   }
 
-  const showPaymentModal = ref(false);
+  const { openPaymentModal } = usePaymentModal();
 </script>
 
 <template>
@@ -58,9 +60,9 @@
       <span v-if="rental.depositReturned" class="badge badge-success">
         returned
       </span>
-      <button @click="showPaymentModal = true">
+      <Button @click="openPaymentModal">
         <span class="material-symbols-outlined"> qr_code_scanner </span>
-      </button>
+      </Button>
     </div>
     <div data-testId="paymentMethod">Payment: {{ rental.paymentMethod }}</div>
     <div class="flex flex-row gap-1 items-center">
@@ -80,7 +82,7 @@
     :class="'grid-cols-[3fr_1fr_auto]'"
     data-testId="gear-and-topos-overview">
     <b class="border px-1">Gear</b>
-    <b class="border px-1">Returend / Rented</b>
+    <b class="border px-1">Returned / Rented</b>
     <b class="border px-1"></b>
     <RentalItem
       v-for="item of rental.items"
@@ -107,9 +109,5 @@
     </Button>
   </div>
 
-  <PaymentModal
-    :is-open="showPaymentModal"
-    :amount="rental.depositFee"
-    message="Deposit fee"
-    @close="showPaymentModal = false" />
+  <PaymentModal :amount="rental.depositFee" />
 </template>
