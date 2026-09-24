@@ -5,6 +5,8 @@ import { TopoDao } from '#server/repository/topos';
 import { TopoService } from '#server/service/topo';
 import { RentalDao } from '#server/repository/rentals';
 import { GearService } from '#server/service/gear';
+import type { RentalRepository } from '#server/domain/rental/RentalRepository';
+import { RentalDao as RentalDao2 } from './adapter-supabase/RentalDao';
 
 export const serviceBuilder = async (h3Event: H3Event) => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-arguments
@@ -13,6 +15,10 @@ export const serviceBuilder = async (h3Event: H3Event) => {
   const gearRepo = useSingleton(() => new GearDao(supabase));
   const topoRepo = useSingleton(() => new TopoDao(supabase));
   const rentalRepo = useSingleton(() => new RentalDao(supabase));
+
+  const rentalRepository = useSingleton<RentalRepository>(
+    () => new RentalDao2(supabase),
+  );
 
   const topoService = useSingleton(
     () => new TopoService(topoRepo(), gearRepo(), rentalRepo()),
@@ -28,6 +34,8 @@ export const serviceBuilder = async (h3Event: H3Event) => {
     gearRepo,
     topoRepo,
     rentalRepo,
+
+    rentalRepository,
 
     supabase,
   };
