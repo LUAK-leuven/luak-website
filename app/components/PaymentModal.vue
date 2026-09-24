@@ -39,7 +39,6 @@
 </script>
 
 <template>
-  isOpen: {{ isOpen }}
   <Modal v-model:open="isOpen">
     <h3 class="text-lg font-bold">Payment QR Code</h3>
     <p class="py-3">
