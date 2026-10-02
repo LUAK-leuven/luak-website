@@ -1,6 +1,6 @@
 ---
 title: Initiation Pépinster
-date: 2026-10-03
+date: 2026-10-04
 image: /activities/20231008134533_IMG_4973.jpg
 price: 0
 tag: beginner friendly
