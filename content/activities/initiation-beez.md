@@ -1,6 +1,6 @@
 ---
 title: Initiation Beez
-date: 2026-10-11
+date: 2026-10-10
 image: /activities/initiatie_beez.jpg
 price: 0
 tag: beginner friendly
