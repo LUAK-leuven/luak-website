@@ -32,7 +32,7 @@ export class LoginPage {
   }
 
   async login(email: string, password: string) {
-    await this.email.fill(email);
+    await this.email.fill(email, { timeout: 7_000 });
     await this.password.fill(password);
     await this.submitButton.click();
   }
