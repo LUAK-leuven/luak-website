@@ -1,7 +1,11 @@
 name: Auto merge studio content
 
 on:
-  push:
+  workflow_run:
+    workflows:
+      - 'LUAK-web CI'
+    types:
+      - completed
     branches:
       - studio
   workflow_dispatch:
