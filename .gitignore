@@ -30,7 +30,3 @@ logs
 /test-results/
 /playwright-report/
 test/e2e/.auth/
-
-# Agentic dev dependencies
-.opencode/
-.claude/
