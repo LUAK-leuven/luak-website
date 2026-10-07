@@ -1,6 +1,10 @@
 import { describe, expect, test } from 'vitest';
 import type { TopoRepository } from '#server/domain/topo/repository';
-import type { TopoId, TopoRecord } from '#server/domain/topo/topo';
+import type {
+  TopoId,
+  TopoLibraryRecord,
+  TopoRecord,
+} from '#server/domain/topo/topo';
 import type { GearDao } from '#server/repository/gear';
 import type { RentalDao } from '#server/repository/rentals';
 import { TopoServiceImpl } from '#server/service/topo';
@@ -61,5 +65,49 @@ describe('TopoService', () => {
       events,
       rentals: [],
     });
+  });
+
+  test('filters out-of-stock topos when requested', async () => {
+    const topoRepository = {
+      getTopoLibrary: () =>
+        Promise.resolve([
+          {
+            id: 'in-stock' as TopoId,
+            authors: [],
+            condition: null,
+            countries: [],
+            placeInLibrary: 'A1',
+            tags: [],
+            title: 'In stock',
+            typesOfClimbing: [],
+            yearPublished: null,
+            initialAmount: 1,
+          },
+          {
+            id: 'out-of-stock' as TopoId,
+            authors: [],
+            condition: null,
+            countries: [],
+            placeInLibrary: 'A2',
+            tags: [],
+            title: 'Out of stock',
+            typesOfClimbing: [],
+            yearPublished: null,
+            initialAmount: 0,
+          },
+        ] satisfies TopoLibraryRecord[]),
+      getAllTopoInventoryItemEvents: () => Promise.resolve([]),
+    } satisfies Pick<
+      TopoRepository,
+      'getTopoLibrary' | 'getAllTopoInventoryItemEvents'
+    >;
+
+    const topos = await new TopoServiceImpl(
+      topoRepository as unknown as TopoRepository,
+      {} as GearDao,
+      {} as RentalDao,
+    ).getTopoLibrary({ includeOutOfStock: false });
+
+    expect(topos.map((topo) => topo.id)).toEqual(['in-stock']);
   });
 });

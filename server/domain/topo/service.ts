@@ -7,6 +7,6 @@ import type {
 
 export interface TopoService {
   getDetails(topoId: TopoId): Promise<TopoDetails>;
-  getTopoLibrary(): Promise<TopoLibraryItem[]>;
+  getTopoLibrary(options: { includeOutOfStock: boolean }): Promise<TopoLibraryItem[]>;
   getTopos(): Promise<TopoListItem[]>;
 }

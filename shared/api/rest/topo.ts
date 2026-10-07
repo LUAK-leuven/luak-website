@@ -42,3 +42,24 @@ export type TopoDetails = {
     memberName: string;
   }[];
 };
+
+export type TopoLibraryItem = {
+  id: TopoId;
+  authors: string[];
+  condition: TopoCondition;
+  countries: string[];
+  placeInLibrary: string;
+  tags: string[];
+  title: string;
+  typesOfClimbing: string[];
+  yearPublished: number | null;
+  amount: number;
+};
+
+export type TopoListItem = {
+  id: TopoId;
+  title: string;
+  totalAmount: number;
+  availableAmount: number;
+  yearPublished: number | null;
+};
