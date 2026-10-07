@@ -1,7 +1,7 @@
-import type { ItemEvent } from '~~/server/domain/inventory/ItemEvent'; // TODO: invalid dependency?
-import type { EntityId } from './ddd';
-import type { RentalId } from './rental';
-import type { Date } from './common';
+import type { EntityId } from '#shared/types/ddd';
+import type { Date } from '#shared/types/common';
+import type { RentalId } from '#shared/types/rental';
+import type { InventoryItemEvent } from './inventory';
 
 export type GearItemId = EntityId<'gearItem'>;
 export type GearInventoryId = EntityId<'gearInventory'>;
@@ -30,7 +30,7 @@ export type GearInventoryDetails = {
     details: string;
     initialAmount: number;
     totalAmount: number;
-    events: (ItemEvent & { occurredOn: string })[];
+    events: InventoryItemEvent[];
   }[];
   rentals: {
     id: RentalId;

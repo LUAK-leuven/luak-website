@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import dayjs from 'dayjs';
-  import type { RetirementDate } from '~~/shared/types/gear';
+  import type { RetirementDate } from '#shared/api/rest/gear';
 
   const props = defineProps<{
     retirementDate: RetirementDate;

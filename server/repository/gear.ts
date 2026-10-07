@@ -4,6 +4,7 @@ import {
   type InventoryItemId,
 } from '#server/domain/inventory/InventoryItem';
 import { type ItemEvent, parseEvent } from '#server/domain/inventory/ItemEvent';
+import type { GearInventoryId, GearItemId } from '#shared/api/rest/gear';
 
 export class GearDao {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
