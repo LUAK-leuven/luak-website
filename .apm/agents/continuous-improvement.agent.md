@@ -1,7 +1,6 @@
 ---
 name: continuous-improvement
 description: Improves tha ai harness based on the user's feedback.
-mode: primary
 model: github-copilot/claude-sonnet-5
 tools:
   read: true
