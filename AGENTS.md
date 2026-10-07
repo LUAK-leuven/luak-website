@@ -8,7 +8,11 @@ The website is also used by the board to keep track of rented gear.
 - **Framework**: Nuxt 4, Typescript
 - **Styling**: TailwindCSS, DaisyUI
 - **Backend**: Supabase
-- **Devtools**: ESLint, Prettier
+- **Devtools**: yarn, ESLint, Prettier
+
+## Continuous Improvement
+
+When the user provides with feedback, or a correction you should not only apply the fix but also **use the continuous improvement agent** to enhance the AI harness for future interactions.
 
 ## Key Rules for AI Agents
 

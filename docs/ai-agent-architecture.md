@@ -54,6 +54,20 @@ GET   /api/members
 - Shared input schemas are used for frontend early validation and server validation. The validation-library choice is not part of this decision.
 - The rental form uses current available stock, not total inventory, for amount validation. Availability is folded into the rentals work and means current stock only; date-range availability is not planned.
 
+## Per-domain layering
+
+Each domain (e.g. `topo`, `gear`, `rental`) follows this structure, modeled after the `topo` migration:
+
+- `server/domain/<domain>/<domain>.ts` — domain types and classes (e.g. `Topo`, `TopoCondition`). Pure: no imports from Supabase, adapters, `server/service`, or Nuxt/Nitro. The only allowed exception is types from `shared/api/rest/*`.
+- `server/domain/<domain>/repository.ts` — the repository interface only (e.g. `TopoRepository`). Import types from `./<domain>.ts`; do not declare types here.
+- `server/domain/<domain>/service.ts` — the service interface only (e.g. `TopoService`). Same rule: import types, don't declare them here.
+- `server/adapter-supabase/<domain>/repository.ts` — the Supabase implementation (e.g. `SupabaseTopoRepository implements TopoRepository`). This is where DB enum/row shapes are mapped to domain types; use an explicit mapper function (e.g. `mapTopoCondition`) rather than casting.
+- `server/service/<domain>.ts` — the service implementation (e.g. `TopoServiceImpl implements TopoService`), depending on the repository interface, not the concrete adapter.
+- `shared/api/rest/<domain>.ts` — DTOs returned by API routes (e.g. `TopoDetails`), plus any identifier/enum type that both the API and the domain need (e.g. `TopoId`, `TopoCondition`). `shared/` cannot import from `server/`, so when the domain needs a type that `shared/` also needs, define it in `shared/api/rest/*` and have the domain re-export it — don't define it in `shared/types/*` and don't duplicate it.
+- `server/api/<domain>/*.ts` — stays a thin route: validate params, call the service, return its result.
+
+Import types explicitly; don't rely on global auto-import for domain identifiers like `TopoId`.
+
 ## Migration sequence
 
 Work incrementally, one focused PR at a time. Before migrating an insufficiently tested domain, add tests for current behavior. Each migration removes the unused code it replaces.
