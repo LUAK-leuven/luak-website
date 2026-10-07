@@ -2,6 +2,10 @@
   import InventoryTableItem from '../gear/inventoryTableItem.vue';
   import RetirementDate from '../gear/retirementDate.vue';
   import dayjs from 'dayjs';
+  import type {
+    GearInventoryId,
+    RetirementDate as RetirementDateType,
+  } from '#shared/api/rest/gear';
 
   const props = defineProps<{
     inventory: {
@@ -9,7 +13,7 @@
       details: string;
       purchaseDate: string | undefined;
       productionDate: string | undefined;
-      retirementDate: RetirementDate;
+      retirementDate: RetirementDateType;
       totalAmount: number;
     }[];
     lostAmount: number | undefined;

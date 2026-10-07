@@ -5,6 +5,7 @@
   import ItemHistory from '~/components/board/inventory/ItemHistory.vue';
   import RetirementDate from '~/components/board/gear/retirementDate.vue';
   import InventoryTableItem from '~/components/board/gear/inventoryTableItem.vue';
+  import type { GearInventoryDetails } from '#shared/api/rest/gear';
 
   const props = defineProps<{
     hasInfiniteLifespan: boolean;

@@ -1,6 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { contactInfoFromDb } from '~/services/rentalService';
 import type { TopoId } from '#shared/api/rest/topo';
+import type { GearItemId } from '#shared/api/rest/gear';
 
 export class RentalDao {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}

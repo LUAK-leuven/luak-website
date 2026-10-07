@@ -1,25 +1,13 @@
 import type { EntityId } from '#shared/types/ddd';
 import type { RentalId } from '#shared/types/rental';
+import type { InventoryItemEvent } from '#shared/api/rest/inventory';
 
 export type TopoId = EntityId<'topo'>;
 
 export type TopoCondition =
   'as_good_as_new' | 'good' | 'used' | 'damaged' | 'falling_appart' | null;
 
-export type TopoItemLostEvent = {
-  eventName: 'ItemLostEvent';
-  rentalId?: RentalId | undefined;
-  lostAmount: number;
-  occurredOn: string;
-};
-
-export type TopoItemArchivedEvent = {
-  eventName: 'ItemArchivedEvent';
-  amount: number;
-  occurredOn: string;
-};
-
-export type TopoEvent = TopoItemLostEvent | TopoItemArchivedEvent;
+export type TopoEvent = InventoryItemEvent;
 
 export type TopoDetails = {
   id: TopoId;

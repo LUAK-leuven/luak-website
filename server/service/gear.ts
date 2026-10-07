@@ -3,9 +3,11 @@ import type { GearDao } from '#server/repository/gear';
 import type { RentalDao } from '#server/repository/rentals';
 import dayjs from 'dayjs';
 import type {
+  GearInventoryDetails,
+  GearItemId,
   GearInventorySummary,
   RetirementDate,
-} from '~~/shared/types/gear';
+} from '#shared/api/rest/gear';
 import type { Date } from '~~/shared/types/common';
 
 export class GearService {

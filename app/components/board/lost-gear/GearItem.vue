@@ -8,6 +8,7 @@
     string as yupString,
   } from 'yup';
   import GearInventorySelection from './GearInventorySelection.vue';
+  import type { GearInventoryId } from '#shared/api/rest/gear';
   import type { RentalGearItem } from '~/model/Rental.js';
 
   const props = defineProps<{
