@@ -3,12 +3,16 @@ import type {
   TopoCondition,
   TopoDetails as TopoDetailsDto,
   TopoId,
+  TopoLibraryItem as TopoLibraryItemDto,
+  TopoListItem as TopoListItemDto,
 } from '#shared/api/rest/topo';
 
 export type { TopoCondition } from '#shared/api/rest/topo';
 export type { TopoId } from '#shared/api/rest/topo';
 
 export type TopoDetails = TopoDetailsDto;
+export type TopoLibraryItem = TopoLibraryItemDto;
+export type TopoListItem = TopoListItemDto;
 
 export type TopoRecord = {
   totalAmount: number;
@@ -38,10 +42,6 @@ export type TopoLibraryRecord = {
   initialAmount: number;
 };
 
-export type TopoLibraryItem = Omit<TopoLibraryRecord, 'initialAmount'> & {
-  amount: number;
-};
-
 export type TopoSummary = {
   id: TopoId;
   title: string;
@@ -52,12 +52,4 @@ export type TopoSummary = {
 export type TopoInventoryItemEvent = ItemEvent & {
   topoId: TopoId;
   occurredOn: string;
-};
-
-export type TopoListItem = {
-  id: TopoId;
-  title: string;
-  totalAmount: number;
-  availableAmount: number;
-  yearPublished: number | null;
 };

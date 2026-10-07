@@ -3,6 +3,7 @@ import type { GearDao } from '#server/repository/gear';
 import { foldInventoryItemEvents } from '~~/server/domain/inventory/InventoryItem';
 import type { RentalDao } from '#server/repository/rentals';
 import type { TopoService } from '#server/domain/topo/service';
+import { groupBy, sumOf } from '#shared/utils/utils';
 import type {
   TopoDetails,
   TopoLibraryItem,
@@ -46,28 +47,34 @@ export class TopoServiceImpl implements TopoService {
     };
   };
 
-  readonly getTopoLibrary = async (): Promise<TopoLibraryItem[]> => {
+  readonly getTopoLibrary = async ({
+    includeOutOfStock,
+  }: {
+    includeOutOfStock: boolean;
+  }): Promise<TopoLibraryItem[]> => {
     const topos = await this.topoRepository.getTopoLibrary();
     const topoEvents =
       await this.topoRepository.getAllTopoInventoryItemEvents();
 
     const groupedTopoEvents = groupBy(topoEvents, (e) => e.topoId);
 
-    return topos.map((topo) => ({
-      id: topo.id,
-      authors: topo.authors,
-      condition: topo.condition,
-      countries: topo.countries,
-      placeInLibrary: topo.placeInLibrary,
-      tags: topo.tags,
-      title: topo.title,
-      typesOfClimbing: topo.typesOfClimbing,
-      yearPublished: topo.yearPublished,
-      amount: foldInventoryItemEvents(
-        topo.initialAmount,
-        groupedTopoEvents[topo.id] ?? [],
-      ),
-    }));
+    return topos
+      .map((topo) => ({
+        id: topo.id,
+        authors: topo.authors,
+        condition: topo.condition,
+        countries: topo.countries,
+        placeInLibrary: topo.placeInLibrary,
+        tags: topo.tags,
+        title: topo.title,
+        typesOfClimbing: topo.typesOfClimbing,
+        yearPublished: topo.yearPublished,
+        amount: foldInventoryItemEvents(
+          topo.initialAmount,
+          groupedTopoEvents[topo.id] ?? [],
+        ),
+      }))
+      .filter((topo) => includeOutOfStock || topo.amount > 0);
   };
 
   readonly getTopos = async (): Promise<TopoListItem[]> => {

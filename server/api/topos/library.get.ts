@@ -1,27 +1,12 @@
 import luakEventHandler from '#server/luakEventHandler';
 import { serverSupabaseUser } from '#supabase/server';
-import type { H3Event } from '#build/types/nitro-imports';
-import type { SupabaseClient } from '@supabase/supabase-js';
+import type { TopoLibraryItem } from '#shared/api/rest/topo';
 
 export default luakEventHandler(
-  async ({ topoService, supabase }, event): Promise<TopoLibraryItem[]> => {
-    const isBoard = await _isBoard({ event, supabase });
-    const topos = await topoService().getTopoLibrary();
-    if (isBoard) return topos;
-    else return topos.filter((topo) => topo.amount > 0);
+  async ({ topoService, userRepo }, event): Promise<TopoLibraryItem[]> => {
+    const user = await serverSupabaseUser(event);
+    const isBoard =
+      user === null ? false : await userRepo().isBoardMember(user.sub);
+    return topoService().getTopoLibrary({ includeOutOfStock: isBoard });
   },
 );
-
-const _isBoard = async (args: {
-  event: H3Event;
-  supabase: SupabaseClient<Database>;
-}): Promise<boolean> => {
-  const user = await serverSupabaseUser(args.event);
-  if (user === null) return false;
-  const { data } = await args.supabase
-    .from('BoardMembers')
-    .select('user_id')
-    .eq('user_id', user.sub)
-    .throwOnError();
-  return data.length > 0;
-};
