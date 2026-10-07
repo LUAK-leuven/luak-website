@@ -1,13 +1,8 @@
-import type { TopoDetails } from '#shared/api/rest/topo';
-import type { TopoLibraryItem } from '#shared/types/topos';
-
-export type TopoListItem = {
-  id: TopoId;
-  title: string;
-  totalAmount: number;
-  availableAmount: number;
-  yearPublished: number | null;
-};
+import type {
+  TopoDetails,
+  TopoLibraryItem,
+  TopoListItem,
+} from '#server/domain/topo/topo';
 
 export interface TopoService {
   getDetails(topoId: TopoId): Promise<TopoDetails>;

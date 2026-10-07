@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import type { TopoRepository } from '#server/domain/topo/repository';
+import type { TopoRecord } from '#server/domain/topo/topo';
 import type { GearDao } from '#server/repository/gear';
 import type { RentalDao } from '#server/repository/rentals';
 import { TopoServiceImpl } from '#server/service/topo';
@@ -22,7 +23,9 @@ describe('TopoService', () => {
           year_published: 2020,
           totalAmount: 3,
         }),
-    } satisfies Pick<TopoRepository, 'getDetails'>;
+    } satisfies Pick<TopoRepository, 'getDetails'> satisfies {
+      getDetails: () => Promise<TopoRecord>;
+    };
     const events = [
       {
         eventName: 'ItemLostEvent' as const,
