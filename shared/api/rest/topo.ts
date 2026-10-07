@@ -1,6 +1,9 @@
 import type { TopoId } from '#shared/types/gear';
 import type { RentalId } from '#shared/types/rental';
 
+export type TopoCondition =
+  'as_good_as_new' | 'good' | 'used' | 'damaged' | 'falling_appart' | null;
+
 export type TopoItemLostEvent = {
   eventName: 'ItemLostEvent';
   rentalId?: RentalId | undefined;
@@ -20,7 +23,7 @@ export type TopoDetails = {
   id: TopoId;
   title: string;
   authors: string[];
-  condition: Database['public']['Enums']['topo_condition'] | null;
+  condition: TopoCondition;
   countries: string[];
   typesOfClimbing: string[];
   details: string | undefined;

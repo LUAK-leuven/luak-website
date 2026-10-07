@@ -1,3 +1,5 @@
+import type { TopoCondition } from '#shared/api/rest/topo';
+
 export type TopoLibraryItem = {
   id: TopoId;
   authors: string[];
@@ -10,6 +12,3 @@ export type TopoLibraryItem = {
   yearPublished: number | null;
   amount: number;
 };
-
-type TopoCondition =
-  'as_good_as_new' | 'good' | 'used' | 'damaged' | 'falling_appart' | null;

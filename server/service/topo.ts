@@ -2,9 +2,12 @@ import type { TopoRepository } from '#server/domain/topo/repository';
 import type { GearDao } from '#server/repository/gear';
 import { foldInventoryItemEvents } from '~~/server/domain/inventory/InventoryItem';
 import type { RentalDao } from '#server/repository/rentals';
-import type { TopoListItem, TopoService } from '#server/domain/topo/service';
-import type { TopoDetails } from '#shared/api/rest/topo';
-import type { TopoLibraryItem } from '#shared/types/topos';
+import type { TopoService } from '#server/domain/topo/service';
+import type {
+  TopoDetails,
+  TopoLibraryItem,
+  TopoListItem,
+} from '#server/domain/topo/topo';
 
 export class TopoServiceImpl implements TopoService {
   constructor(
