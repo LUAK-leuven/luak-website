@@ -1,10 +1,17 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { parseEvent } from '~~/server/domain/inventory/ItemEvent';
+import { parseEvent } from '#server/domain/inventory/ItemEvent';
+import type {
+  TopoInventoryItemEvent,
+  TopoLibraryRecord,
+  TopoRecord,
+  TopoRepository,
+  TopoSummary,
+} from '#server/domain/topo/repository';
 
-export class TopoDao {
+export class SupabaseTopoRepository implements TopoRepository {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
 
-  readonly getDetails = async (topoId: TopoId) => {
+  async getDetails(topoId: TopoId): Promise<TopoRecord> {
     const { data: topo } = await this.supabaseClient
       .from('Topos')
       .select('*')
@@ -26,9 +33,9 @@ export class TopoDao {
       types_of_climbing: topo.types_of_climbing,
       year_published: topo.year_published,
     };
-  };
+  }
 
-  readonly getTopoLibrary = async () => {
+  async getTopoLibrary(): Promise<TopoLibraryRecord[]> {
     const { data } = await this.supabaseClient
       .from('Topos')
       .select(
@@ -48,9 +55,9 @@ export class TopoDao {
       yearPublished: topo.year_published,
       initialAmount: topo.amount,
     }));
-  };
+  }
 
-  readonly getTopos = async () => {
+  async getTopos(): Promise<TopoSummary[]> {
     const { data } = await this.supabaseClient
       .from('Topos')
       .select('id, title, amount, year_published')
@@ -62,22 +69,19 @@ export class TopoDao {
       initialAmount: topo.amount,
       yearPublished: topo.year_published,
     }));
-  };
+  }
 
-  readonly getAllTopoInventoryItemEvents = async () => {
+  async getAllTopoInventoryItemEvents(): Promise<TopoInventoryItemEvent[]> {
     const { data } = await this.supabaseClient
       .from('InventoryItemEvents')
       .select('*')
       .eq('item_type', 'topo')
       .throwOnError();
 
-    return data.map((it) => {
-      const parsedEvent = parseEvent(it.event);
-      return {
-        topoId: it.item_id as TopoId,
-        occurredOn: it.occured_on,
-        ...parsedEvent,
-      };
-    });
-  };
+    return data.map((it) => ({
+      topoId: it.item_id as TopoId,
+      occurredOn: it.occured_on,
+      ...parseEvent(it.event),
+    }));
+  }
 }

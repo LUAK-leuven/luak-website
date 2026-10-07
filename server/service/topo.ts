@@ -1,16 +1,19 @@
-import type { TopoDao } from '#server/repository/topos';
+import type { TopoRepository } from '#server/domain/topo/repository';
 import type { GearDao } from '#server/repository/gear';
 import { foldInventoryItemEvents } from '~~/server/domain/inventory/InventoryItem';
 import type { RentalDao } from '#server/repository/rentals';
+import type { TopoListItem, TopoService } from '#server/domain/topo/service';
+import type { TopoDetails } from '#shared/api/rest/topo';
+import type { TopoLibraryItem } from '#shared/types/topos';
 
-export class TopoService {
+export class TopoServiceImpl implements TopoService {
   constructor(
-    private readonly topoRepository: TopoDao,
+    private readonly topoRepository: TopoRepository,
     private readonly gearRepository: GearDao,
     private readonly rentalRepository: RentalDao,
   ) {}
 
-  readonly getDetails = async (topoId: TopoId) => {
+  readonly getDetails = async (topoId: TopoId): Promise<TopoDetails> => {
     const topoDetails = await this.topoRepository.getDetails(topoId);
 
     const topoEvents = await this.gearRepository.getInventoryItemEvents({
@@ -39,7 +42,7 @@ export class TopoService {
     };
   };
 
-  readonly getTopoLibrary = async () => {
+  readonly getTopoLibrary = async (): Promise<TopoLibraryItem[]> => {
     const topos = await this.topoRepository.getTopoLibrary();
     const topoEvents =
       await this.topoRepository.getAllTopoInventoryItemEvents();
@@ -63,7 +66,7 @@ export class TopoService {
     }));
   };
 
-  readonly getTopos = async () => {
+  readonly getTopos = async (): Promise<TopoListItem[]> => {
     const topos = await this.topoRepository.getTopos();
     const events = await this.topoRepository.getAllTopoInventoryItemEvents();
     const groupedTopoEvents = groupBy(events, (e) => e.topoId);
