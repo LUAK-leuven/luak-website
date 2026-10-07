@@ -3563,10 +3563,10 @@
     path-browserify "^1.0.1"
     picomatch "^4.0.2"
 
-"@vue/language-core@3.3.10":
-  version "3.3.10"
-  resolved "https://registry.yarnpkg.com/@vue/language-core/-/language-core-3.3.10.tgz#8542b6906fd7235d5555869881c7a5384566f077"
-  integrity sha512-CR7ByBbgPHqhxrioKPOcZBqttaozzLNwtkCzXQ+uF8gLPHnUe03srPnGpdtHD3zp+bq5iyVkZ1WNx7W564RPwg==
+"@vue/language-core@3.3.12":
+  version "3.3.12"
+  resolved "https://registry.yarnpkg.com/@vue/language-core/-/language-core-3.3.12.tgz#76b758aa6abb5c61cd03647ba8e403a4aae5c358"
+  integrity sha512-k7uIKR0n4CBidk233y7cac9osnDQ5WRidTl6nsrNvpZ3nf8cx9iJxRVsRzVsoPRHbowT/iKgGMTS9RGov3jeIA==
   dependencies:
     "@volar/language-core" "2.4.28"
     "@vue/compiler-dom" "^3.5.0"
@@ -11723,13 +11723,13 @@ vue-router@^5.2.0:
     unplugin-utils "^0.3.2"
     yaml "^2.9.0"
 
-vue-tsc@^3.3.10:
-  version "3.3.10"
-  resolved "https://registry.yarnpkg.com/vue-tsc/-/vue-tsc-3.3.10.tgz#ca13bc4baee4aea6cd355be3c1e1ea4f0f5db23b"
-  integrity sha512-YaDVxcW+CGtaOt3pZahMG5jYPx0hsUTxyEoPOTSMebcGUXP9lIBabQ14vfKMORb2CqqK5CxsNo/d1d+4IQwiKg==
+vue-tsc@^3.3.12:
+  version "3.3.12"
+  resolved "https://registry.yarnpkg.com/vue-tsc/-/vue-tsc-3.3.12.tgz#2379367fba0430ca959f32457f1476c2f488561c"
+  integrity sha512-kbpaz18O9jPVkXVHD1BEjpUXM6WhXSu+62L1sGGr6Wbzd8GbvkBQWjoj3KZ/C0aq2MZllce7UdtWzwCIYsBMGA==
   dependencies:
     "@volar/typescript" "2.4.28"
-    "@vue/language-core" "3.3.10"
+    "@vue/language-core" "3.3.12"
 
 vue@^3.5.40, vue@^3.5.41, vue@^3.5.42:
   version "3.5.42"
