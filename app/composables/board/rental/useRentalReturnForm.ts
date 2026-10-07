@@ -5,6 +5,7 @@ import {
   bool as yupBool,
 } from 'yup';
 import type { RentalDetails } from '~/model/Rental';
+import type { TopoId } from '#shared/api/rest/topo';
 
 type ItemId = { id: GearItemId; type: 'gear' } | { id: TopoId; type: 'topo' };
 

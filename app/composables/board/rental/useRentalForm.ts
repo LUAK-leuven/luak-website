@@ -1,5 +1,6 @@
 import * as yup from 'yup';
 import type { RentalItem } from '~~/shared/types/board/form/RentalItem';
+import type { TopoId } from '#shared/api/rest/topo';
 
 type RentalFormState = {
   memberId: UserId | 'non-user';

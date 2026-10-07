@@ -1,3 +1,5 @@
+import type { TopoId } from '#shared/api/rest/topo';
+
 export type RentalId = EntityId<'rental'>;
 
 export type PaymentMethod = Enums<'payment_method'>;

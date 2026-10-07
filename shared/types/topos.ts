@@ -1,4 +1,4 @@
-import type { TopoCondition } from '#shared/api/rest/topo';
+import type { TopoCondition, TopoId } from '#shared/api/rest/topo';
 
 export type TopoLibraryItem = {
   id: TopoId;

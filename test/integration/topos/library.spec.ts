@@ -1,7 +1,7 @@
 import { beforeAll, expect, test } from 'vitest';
 import { testServiceBuilder } from '#test/testServices';
 import type { TopoLibraryItem } from '#shared/types/topos';
-import type { TopoId } from '#shared/types/gear';
+import type { TopoId } from '#shared/api/rest/topo';
 
 const $fetch = testServiceBuilder().serverTestService().fetch;
 

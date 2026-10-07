@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import type { TopoRepository } from '#server/domain/topo/repository';
-import type { TopoRecord } from '#server/domain/topo/topo';
+import type { TopoId, TopoRecord } from '#server/domain/topo/topo';
 import type { GearDao } from '#server/repository/gear';
 import type { RentalDao } from '#server/repository/rentals';
 import { TopoServiceImpl } from '#server/service/topo';
