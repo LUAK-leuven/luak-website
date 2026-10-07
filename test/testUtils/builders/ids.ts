@@ -1,7 +1,4 @@
-import type {
-  GearInventoryId,
-  GearItemId,
-} from '#shared/api/rest/gear';
+import type { GearInventoryId, GearItemId } from '#shared/api/rest/gear';
 import type { TopoId } from '#shared/api/rest/topo';
 import type { RentalId } from '#shared/types/rental';
 
