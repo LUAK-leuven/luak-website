@@ -13,3 +13,5 @@ The website is also used by the board to keep track of rented gear.
 ## Key Rules for AI Agents
 
 - Reply with concise answers. Never reply with more than 3000 characters.
+- Read [`docs/ai-agent-architecture.md`](docs/ai-agent-architecture.md) before changing data access or business logic.
+- Keep business logic and non-trivial Supabase access in Nitro; use direct frontend Supabase calls only for explicitly simple, business-rule-free interactions.
