@@ -6,6 +6,7 @@ import type {
   TopoLibraryRecord,
   TopoRecord,
   TopoSummary,
+  TopoId,
 } from '#server/domain/topo/topo';
 import type { TopoRepository } from '#server/domain/topo/repository';
 import type { Database } from '#shared/types/database.types';

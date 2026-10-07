@@ -3,6 +3,7 @@ import type {
   TopoLibraryRecord,
   TopoRecord,
   TopoSummary,
+  TopoId,
 } from '#server/domain/topo/topo';
 
 export interface TopoRepository {

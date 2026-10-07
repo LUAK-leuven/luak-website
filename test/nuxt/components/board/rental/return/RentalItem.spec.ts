@@ -2,6 +2,7 @@ import { describe, expect, test } from 'vitest';
 import { mountSuspended } from '@nuxt/test-utils/runtime';
 import RentalItem from '~/components/board/rental/return/RentalItem.vue';
 import { RentalTopoItem } from '~/model/Rental';
+import type { TopoId } from '#shared/api/rest/topo';
 
 describe('RentalItem', () => {
   test.each([

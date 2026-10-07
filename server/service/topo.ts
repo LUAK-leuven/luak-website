@@ -7,6 +7,7 @@ import type {
   TopoDetails,
   TopoLibraryItem,
   TopoListItem,
+  TopoId,
 } from '#server/domain/topo/topo';
 
 export class TopoServiceImpl implements TopoService {

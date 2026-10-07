@@ -1,7 +1,6 @@
 import { describe, expect, test } from 'vitest';
-import type { TopoDetails } from '#shared/api/rest/topo';
+import type { TopoDetails, TopoId } from '#shared/api/rest/topo';
 import type { RentalId } from '#shared/types/rental';
-import type { TopoId } from '#shared/types/gear';
 
 describe('TopoDetails DTO', () => {
   test('describes topo details, inventory events, and rentals', () => {

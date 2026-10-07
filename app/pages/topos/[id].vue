@@ -3,6 +3,7 @@
   import RentalsForItem from '~/components/board/inventory/RentalsForItem.vue';
   import BackButton from '~/components/shared/BackButton.vue';
   import TopoCondition from '~/components/topoLibrary/TopoCondition.vue';
+  import type { TopoId } from '#shared/api/rest/topo';
 
   definePageMeta({ middleware: 'active-member-guard' });
 

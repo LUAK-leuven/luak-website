@@ -1,5 +1,7 @@
-import type { TopoId } from '#shared/types/gear';
+import type { EntityId } from '#shared/types/ddd';
 import type { RentalId } from '#shared/types/rental';
+
+export type TopoId = EntityId<'topo'>;
 
 export type TopoCondition =
   'as_good_as_new' | 'good' | 'used' | 'damaged' | 'falling_appart' | null;

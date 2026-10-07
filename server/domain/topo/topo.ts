@@ -2,9 +2,11 @@ import type { ItemEvent } from '#server/domain/inventory/ItemEvent';
 import type {
   TopoCondition,
   TopoDetails as TopoDetailsDto,
+  TopoId,
 } from '#shared/api/rest/topo';
 
 export type { TopoCondition } from '#shared/api/rest/topo';
+export type { TopoId } from '#shared/api/rest/topo';
 
 export type TopoDetails = TopoDetailsDto;
 

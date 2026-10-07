@@ -5,7 +5,6 @@ import type { Date } from './common';
 
 export type GearItemId = EntityId<'gearItem'>;
 export type GearInventoryId = EntityId<'gearInventory'>;
-export type TopoId = EntityId<'topo'>;
 
 export type GearInventorySummary = {
   id: GearItemId;
