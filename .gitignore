@@ -36,3 +36,4 @@ test/e2e/.auth/
 apm_modules/
 .agents/
 .opencode/
+apm.lock.yaml
