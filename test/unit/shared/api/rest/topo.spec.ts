@@ -1,11 +1,13 @@
 import { describe, expect, test } from 'vitest';
-import type { TopoDetails, TopoId } from '#shared/api/rest/topo';
+import type { TopoDetails } from '#shared/api/rest/topo';
 import type { RentalId } from '#shared/types/rental';
+import { aRandomTopoId } from '~~/test/testUtils/builders/ids';
 
 describe('TopoDetails DTO', () => {
   test('describes topo details, inventory events, and rentals', () => {
+    const topoId = aRandomTopoId();
     const details: TopoDetails = {
-      id: 'topo-id' as TopoId,
+      id: topoId,
       title: 'Topo',
       authors: ['Author'],
       condition: null,

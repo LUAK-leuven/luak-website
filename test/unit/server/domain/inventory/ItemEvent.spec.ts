@@ -4,7 +4,7 @@ import {
   itemLostEvent,
   parseEvent,
 } from '#server/domain/inventory/ItemEvent';
-import type { RentalId } from '#shared/types/rental';
+import { aRandomRentalId } from '~~/test/testUtils/builders/ids';
 
 describe('parseEvent', () => {
   it('parses a minimal item lost event', () => {
@@ -20,15 +20,17 @@ describe('parseEvent', () => {
   });
 
   it('parses an item lost event with a rental', () => {
+    const rentalId = aRandomRentalId();
+
     expect(
       parseEvent({
         eventName: 'ItemLostEvent',
-        rentalId: '00000000-0000-0000-0000-000000000000',
+        rentalId,
         lostAmount: 2,
       }),
     ).toEqual({
       eventName: 'ItemLostEvent',
-      rentalId: '00000000-0000-0000-0000-000000000000',
+      rentalId,
       lostAmount: 2,
     });
   });
@@ -60,11 +62,11 @@ describe('parseEvent', () => {
 
 describe('item event factories', () => {
   it('creates an item lost event', () => {
-    expect(
-      itemLostEvent('00000000-0000-0000-0000-000000000000' as RentalId, 2),
-    ).toEqual({
+    const rentalId = aRandomRentalId();
+
+    expect(itemLostEvent(rentalId, 2)).toEqual({
       eventName: 'ItemLostEvent',
-      rentalId: '00000000-0000-0000-0000-000000000000',
+      rentalId,
       lostAmount: 2,
     });
   });
