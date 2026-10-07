@@ -5,6 +5,14 @@ model: github-copilot/gpt-5.6-luna
 tools:
   read: true
   edit: true
+  grep: true
+  glob: true
+  "head *": true
+  "tail *": true
+  "yarn typecheck *": true
+  "yarn lint *": true
+  "yarn test *": true
+  "yarn prettier *": true
 ---
 
 ## Role
