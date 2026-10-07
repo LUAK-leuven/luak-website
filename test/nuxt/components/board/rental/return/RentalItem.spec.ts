@@ -2,7 +2,10 @@ import { describe, expect, test } from 'vitest';
 import { mountSuspended } from '@nuxt/test-utils/runtime';
 import RentalItem from '~/components/board/rental/return/RentalItem.vue';
 import { RentalTopoItem } from '~/model/Rental';
-import type { TopoId } from '#shared/api/rest/topo';
+import {
+  aRandomRentalId,
+  aRandomTopoId,
+} from '~~/test/testUtils/builders/ids';
 
 describe('RentalItem', () => {
   test.each([
@@ -22,9 +25,9 @@ describe('RentalItem', () => {
     ) => {
       const wrapper = await mountSuspended(RentalItem, {
         props: {
-          rentalId: crypto.randomUUID() as RentalId,
+          rentalId: aRandomRentalId(),
           item: new RentalTopoItem({
-            id: crypto.randomUUID() as TopoId,
+            id: aRandomTopoId(),
             name: 'quickdraw',
             rentedAmount,
             returnedAmount,
@@ -50,9 +53,9 @@ describe('RentalItem', () => {
   test('clearing the value does not emit updateReturnedAmount', async () => {
     const wrapper = await mountSuspended(RentalItem, {
       props: {
-        rentalId: crypto.randomUUID() as RentalId,
+        rentalId: aRandomRentalId(),
         item: new RentalTopoItem({
-          id: crypto.randomUUID() as TopoId,
+          id: aRandomTopoId(),
           name: 'quickdraw',
           rentedAmount: 1,
           returnedAmount: 0,

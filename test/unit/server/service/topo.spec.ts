@@ -8,13 +8,15 @@ import type {
 import type { GearDao } from '#server/repository/gear';
 import type { RentalDao } from '#server/repository/rentals';
 import { TopoServiceImpl } from '#server/service/topo';
+import { aRandomTopoId } from '~~/test/testUtils/builders/ids';
 
 describe('TopoService', () => {
   test('maps topo details and folds inventory events', async () => {
+    const topoId = aRandomTopoId();
     const topoRepository = {
       getDetails: () =>
         Promise.resolve({
-          id: 'topo-id' as TopoId,
+          id: topoId,
           title: 'Topo',
           authors: ['Author'],
           condition: null,
@@ -53,10 +55,10 @@ describe('TopoService', () => {
       topoRepository as unknown as TopoRepository,
       gearRepository as unknown as GearDao,
       rentalRepository as unknown as RentalDao,
-    ).getDetails('topo-id' as TopoId);
+    ).getDetails(topoId);
 
     expect(details).toMatchObject({
-      id: 'topo-id',
+      id: topoId,
       placeInLibrary: 'A1',
       typesOfClimbing: ['sport'],
       yearPublished: 2020,

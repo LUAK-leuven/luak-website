@@ -1,8 +1,10 @@
 import { describe, expect, test } from 'vitest';
 import { RentalGearItem, RentalSummary } from '~/model/Rental';
-import type { GearItemId } from '#shared/api/rest/gear';
-import type { RentalId } from '#shared/types/rental';
 import { randomBool, randomInt, randomOf } from '#shared/utils/utils';
+import {
+  aRandomGearItemId,
+  aRandomRentalId,
+} from '~~/test/testUtils/builders/ids';
 
 describe('Rental status', () => {
   test('"returned" when all items are returned and deposit is returned', () => {
@@ -36,7 +38,7 @@ type RentalSummaryArgs = ConstructorParameters<typeof RentalSummary>[0];
 
 const aRentalSummary = (args: Partial<RentalSummaryArgs>): RentalSummary => {
   const defaultArgs: RentalSummaryArgs = {
-    id: crypto.randomUUID() as RentalId,
+    id: aRandomRentalId(),
     gear: [],
     topos: [],
     dateBorrow: '2024-01-01',
@@ -65,7 +67,7 @@ const aRentalGearItem = (
   const lostAmount = args.lostAmount === undefined ? 0 : args.lostAmount;
 
   return new RentalGearItem({
-    id: args.id ?? (crypto.randomUUID() as GearItemId),
+    id: args.id ?? aRandomGearItemId(),
     name: args.name ?? 'Gear Item',
     rentedAmount,
     returnedAmount,
