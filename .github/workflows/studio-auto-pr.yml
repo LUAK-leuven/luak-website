@@ -24,8 +24,8 @@ jobs:
         id: cpr
         run: |
           gh pr create \
-            --base master \
-            --head "${{ github.ref_name }}" \
+            --base "master" \
+            --head "studio" \
             --title "Update content" \
             --body "Automatically generated PR for changes made in Nuxt Studio"
         env:
@@ -37,6 +37,6 @@ jobs:
           gh pr merge \
           --auto \
           --merge \
-          "${{ github.ref_name }}"
+          "studio"
         env:
           GH_TOKEN: ${{ secrets.LUAK_PR_GITHUB_TOKEN }}
