@@ -4,7 +4,7 @@ import { randomBool, randomInt, randomOf } from '#shared/utils/utils';
 import {
   aRandomGearItemId,
   aRandomRentalId,
-} from '~~/test/testUtils/builders/ids';
+} from '#test/builders/ids';
 
 describe('Rental status', () => {
   test('"returned" when all items are returned and deposit is returned', () => {
