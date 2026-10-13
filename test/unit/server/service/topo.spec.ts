@@ -8,7 +8,7 @@ import type {
 import type { GearDao } from '#server/repository/gear';
 import type { RentalDao } from '#server/repository/rentals';
 import { TopoServiceImpl } from '#server/service/topo';
-import { aRandomTopoId } from '~~/test/testUtils/builders/ids';
+import { aRandomTopoId } from '#test/builders/ids';
 
 describe('TopoService', () => {
   test('maps topo details and folds inventory events', async () => {

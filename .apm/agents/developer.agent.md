@@ -34,4 +34,3 @@ If the given task is not a single, small, well-defined step — e.g. it bundles 
 - Reject tasks that are too large or ambiguous instead of guessing how to split them yourself.
 - Keep your code clean and maintainable.
 - Write tests for your changes whenever applicable.
-- When writing tests, load the `write-tests` skill.

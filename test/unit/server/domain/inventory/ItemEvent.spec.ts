@@ -4,7 +4,7 @@ import {
   itemLostEvent,
   parseEvent,
 } from '#server/domain/inventory/ItemEvent';
-import { aRandomRentalId } from '~~/test/testUtils/builders/ids';
+import { aRandomRentalId } from '#test/builders/ids';
 
 describe('parseEvent', () => {
   it('parses a minimal item lost event', () => {
