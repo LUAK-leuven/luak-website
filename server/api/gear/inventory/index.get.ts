@@ -1,5 +1,5 @@
 import luakEventHandler from '#server/luakEventHandler';
 
-export default luakEventHandler(async ({ gearService }) => {
-  return await gearService().getInventorySummary();
+export default luakEventHandler(async ({ inventoryService }) => {
+  return await inventoryService().getInventorySummary();
 });

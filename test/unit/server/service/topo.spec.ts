@@ -5,8 +5,8 @@ import type {
   TopoLibraryRecord,
   TopoRecord,
 } from '#server/domain/topo/topo';
-import type { GearDao } from '#server/repository/gear';
-import type { RentalDao } from '#server/repository/rentals';
+import type { InventoryRepository } from '#server/domain/inventory/repository';
+import type { RentalRepository } from '#server/domain/rental/repository';
 import { TopoServiceImpl } from '#server/service/topo';
 import { aRandomTopoId } from '#test/builders/ids';
 
@@ -44,17 +44,17 @@ describe('TopoService', () => {
         occurredOn: '2026-01-02',
       },
     ];
-    const gearRepository = {
+    const inventoryRepository = {
       getInventoryItemEvents: () => Promise.resolve(events),
-    } satisfies Pick<GearDao, 'getInventoryItemEvents'>;
+    } satisfies Pick<InventoryRepository, 'getInventoryItemEvents'>;
     const rentalRepository = {
       getRentalsForTopo: () => Promise.resolve([]),
-    } satisfies Pick<RentalDao, 'getRentalsForTopo'>;
+    } satisfies Pick<RentalRepository, 'getRentalsForTopo'>;
 
     const details = await new TopoServiceImpl(
       topoRepository as unknown as TopoRepository,
-      gearRepository as unknown as GearDao,
-      rentalRepository as unknown as RentalDao,
+      inventoryRepository as unknown as InventoryRepository,
+      rentalRepository as unknown as RentalRepository,
     ).getDetails(topoId);
 
     expect(details).toMatchObject({
@@ -106,8 +106,8 @@ describe('TopoService', () => {
 
     const topos = await new TopoServiceImpl(
       topoRepository as unknown as TopoRepository,
-      {} as GearDao,
-      {} as RentalDao,
+      {} as InventoryRepository,
+      {} as RentalRepository,
     ).getTopoLibrary({ includeOutOfStock: false });
 
     expect(topos.map((topo) => topo.id)).toEqual(['in-stock']);

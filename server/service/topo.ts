@@ -1,7 +1,7 @@
 import type { TopoRepository } from '#server/domain/topo/repository';
-import type { GearDao } from '#server/repository/gear';
+import type { InventoryRepository } from '#server/domain/inventory/repository';
 import { foldInventoryItemEvents } from '~~/server/domain/inventory/InventoryItem';
-import type { RentalDao } from '#server/repository/rentals';
+import type { RentalRepository } from '#server/domain/rental/repository';
 import type { TopoService } from '#server/domain/topo/service';
 import { groupBy, sumOf } from '#shared/utils/utils';
 import type {
@@ -14,14 +14,14 @@ import type {
 export class TopoServiceImpl implements TopoService {
   constructor(
     private readonly topoRepository: TopoRepository,
-    private readonly gearRepository: GearDao,
-    private readonly rentalRepository: RentalDao,
+    private readonly inventoryRepository: InventoryRepository,
+    private readonly rentalRepository: RentalRepository,
   ) {}
 
   readonly getDetails = async (topoId: TopoId): Promise<TopoDetails> => {
     const topoDetails = await this.topoRepository.getDetails(topoId);
 
-    const topoEvents = await this.gearRepository.getInventoryItemEvents({
+    const topoEvents = await this.inventoryRepository.getInventoryItemEvents({
       itemType: 'topo',
       itemId: topoId,
     });

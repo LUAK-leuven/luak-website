@@ -7,7 +7,7 @@ const gearItemId = zodObject({
   id: zodUuid() as unknown as ZodType<GearItemId>,
 });
 
-export default luakEventHandler(async ({ gearService }, event) => {
+export default luakEventHandler(async ({ inventoryService }, event) => {
   const { data, success, error } = await getValidatedRouterParams(
     event,
     (data) => gearItemId.safeParse(data),
@@ -20,5 +20,5 @@ export default luakEventHandler(async ({ gearService }, event) => {
       cause: error,
     });
 
-  return await gearService().getDetails(data.id);
+  return await inventoryService().getDetails(data.id);
 });
