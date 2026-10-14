@@ -56,7 +56,7 @@ GET   /api/members
 
 ## Per-domain layering
 
-Each domain (e.g. `topo`, `gear`, `rental`) follows this structure, modeled after the `topo` migration:
+Each domain (e.g. `topo`, `inventory`, `rental`) follows this structure, modeled after the `topo` migration:
 
 - `server/domain/<domain>/<domain>.ts` — domain types and classes (e.g. `Topo`, `TopoCondition`). Pure: no imports from Supabase, adapters, `server/service`, or Nuxt/Nitro. The only allowed exception is types from `shared/api/rest/*`.
 - `server/domain/<domain>/repository.ts` — the repository interface only (e.g. `TopoRepository`). Import types from `./<domain>.ts`; do not declare types here.
