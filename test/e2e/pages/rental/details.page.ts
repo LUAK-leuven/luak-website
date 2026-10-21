@@ -11,7 +11,7 @@ export class RentalDetailsPage {
   private readonly page: Page;
 
   static readonly urlRegex = new RegExp(`.+\\/board\\/rentals\\/${uuidRegex}`);
-  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+
   readonly path = (rentalId: RentalId) => `/board/rentals/${rentalId}/`;
 
   constructor(page: Page) {

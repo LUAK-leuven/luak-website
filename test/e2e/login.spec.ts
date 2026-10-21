@@ -1,8 +1,9 @@
 import { expect } from '@playwright/test';
 import { LoginPage } from '#test/e2e/pages/login.page';
-import { generatedUserTest, navigateTo, test } from '#test/e2e/fixtures';
+import { generatedUserTest, login, navigateTo, test } from '#test/e2e/fixtures';
 import { testUsers } from '#test/TestUser';
 import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
+import { ProfileSettingsPage } from '#test/e2e/pages/profile/settings.page';
 
 generatedUserTest(
   'Login & logout — happy path',
@@ -19,6 +20,38 @@ generatedUserTest(
 
     await profilePage.logout();
     await expect(page.getByTestId('nav.login').first()).toBeVisible();
+  },
+);
+
+generatedUserTest(
+  'Log out — keeps the session of the same user on another device',
+  async ({ page, browser, generatedUser }) => {
+    const otherDeviceContext = await browser.newContext();
+    try {
+      const otherDevicePage = await otherDeviceContext.newPage();
+      await login(page, generatedUser);
+      await login(otherDevicePage, generatedUser);
+
+      const profilePage = new ProfileOverviewPage(page);
+      await profilePage.logout();
+
+      await otherDevicePage.goto(ProfileSettingsPage.path);
+      await otherDevicePage.waitForLoadState('networkidle');
+      await expect(otherDevicePage).toHaveURL(
+        new RegExp(`${ProfileSettingsPage.path}$`),
+      );
+
+      // A reload only reads the locally stored session. Changing the password is validated by the auth server, so it fails if the session was revoked.
+      const otherDeviceSettings = new ProfileSettingsPage(otherDevicePage);
+      await otherDeviceSettings.newPasswordInput.fill('NewPassword123!');
+      await otherDeviceSettings.confirmPasswordInput.fill('NewPassword123!');
+      await otherDeviceSettings.changePasswordButton.click();
+      await expect(otherDevicePage.getByTestId('toast').first()).toHaveText(
+        /Password changed successfully\./,
+      );
+    } finally {
+      await otherDeviceContext.close();
+    }
   },
 );
 
