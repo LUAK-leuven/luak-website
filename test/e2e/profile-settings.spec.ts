@@ -4,6 +4,7 @@ import {
   authStateFile,
   login,
   navigateTo,
+  generatedUserTest,
   randomUserTest,
   test,
 } from '#test/e2e/fixtures';
@@ -41,34 +42,34 @@ randomUserTest('Can change user information', async ({ page, user }) => {
   await testUserService.resetTestUserInfo(user);
 });
 
-randomUserTest(
+generatedUserTest(
   'Can change password via settings',
-  async ({ page, context, user }) => {
-    const profileSettingsPage = await ProfileSettingsPage.navigate(page);
+  async ({ luakPage, generatedUser }) => {
+    await luakPage.login(generatedUser);
+
+    const profileSettingsPage = await luakPage.toMySettings();
 
     await profileSettingsPage.newPasswordInput.fill('NewPassword123!');
     await profileSettingsPage.confirmPasswordInput.fill('NewPassword123!');
 
     await profileSettingsPage.changePasswordButton.click();
 
+    await expect(luakPage.toastMessage).toHaveText(
+      /Password changed successfully\./,
+    );
     await expect(profileSettingsPage.changePasswordButton).toHaveText('check');
 
-    const profilePage = await ProfileOverviewPage.navigate(page);
+    const profilePage = await luakPage.toMyProfile();
     await profilePage.logout();
 
-    await login(
-      page,
-      // eslint-disable-next-line @typescript-eslint/no-misused-spread
-      new TestUser({ ...testUsers[user], password: 'NewPassword123!' }),
+    await luakPage.login(
+      new TestUser({
+        firstName: generatedUser.firstName,
+        lastName: generatedUser.lastName,
+        email: generatedUser.email,
+        password: 'NewPassword123!',
+      }),
     );
-
-    // Reset auth storage state because changing the passord resets the aut session and hence breaks the auth state for all tests that use the same user.
-    await profilePage.logout();
-    await testUserService.resetTestUserPassword(user);
-    await login(page, testUsers[user]);
-    await context.storageState({
-      path: authStateFile(user),
-    });
   },
 );
 

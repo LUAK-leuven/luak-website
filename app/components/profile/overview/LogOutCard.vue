@@ -4,7 +4,7 @@
 
   const supabase = useSupabaseClient();
   const logout = async () => {
-    await supabase.auth.signOut();
+    await supabase.auth.signOut({ scope: 'local' });
     return navigateTo({ name: 'login' });
   };
   const user = useSupabaseUser();
