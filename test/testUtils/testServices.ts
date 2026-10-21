@@ -42,5 +42,11 @@ export const testServiceBuilder = useSingleton(() => {
   const mailpitService = useSingleton(
     () => new MailpitService('http://localhost:54324'),
   );
-  return { testDao, userTestService, serverTestService, mailpitService };
+  return {
+    supabase,
+    testDao,
+    userTestService,
+    serverTestService,
+    mailpitService,
+  };
 });

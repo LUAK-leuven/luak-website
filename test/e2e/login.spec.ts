@@ -1,23 +1,26 @@
 import { expect } from '@playwright/test';
 import { LoginPage } from '#test/e2e/pages/login.page';
-import { navigateTo, test } from '#test/e2e/fixtures';
+import { generatedUserTest, navigateTo, test } from '#test/e2e/fixtures';
 import { testUsers } from '#test/TestUser';
 import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
 
-test('Login & logout — happy path', async ({ page }) => {
-  const loginPage = await LoginPage.navigate(page);
-  const profilePage = await loginPage.loginAsserted(
-    testUsers.unpaidMembership.email,
-    testUsers.unpaidMembership.password,
-  );
-  await Promise.all([
-    expect(page).toHaveURL(ProfileOverviewPage.path),
-    expect(page.getByTestId('nav.profile').first()).toBeVisible(),
-  ]);
+generatedUserTest(
+  'Login & logout — happy path',
+  async ({ page, generatedUser }) => {
+    const loginPage = await LoginPage.navigate(page);
+    const profilePage = await loginPage.loginAsserted(
+      generatedUser.email,
+      generatedUser.password,
+    );
+    await Promise.all([
+      expect(page).toHaveURL(ProfileOverviewPage.path),
+      expect(page.getByTestId('nav.profile').first()).toBeVisible(),
+    ]);
 
-  await profilePage.logout();
-  await expect(page.getByTestId('nav.login').first()).toBeVisible();
-});
+    await profilePage.logout();
+    await expect(page.getByTestId('nav.login').first()).toBeVisible();
+  },
+);
 
 test('Login — wrong email shows "invalid login credentials" on password field', async ({
   page,

@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 import { LoginPage } from '#test/e2e/pages/login.page';
 import { testServiceBuilder } from '#test/testServices';
-import { testUsers, type TestUser, type TestUserKey } from '#test/TestUser';
+import { testUsers, TestUser, type TestUserKey } from '#test/TestUser';
 import { test as base, expect } from '@playwright/test';
 import { randomOf } from '#shared/utils/utils';
 import { AppPage } from '#test/e2e/pages/app.page';
@@ -33,6 +33,29 @@ export const randomUserTest = test.extend<{
   },
   storageState: async ({ user }, use) => {
     await use(authStateFile(user));
+  },
+});
+
+export const generatedUserTest = test.extend<{
+  generatedUser: TestUser;
+}>({
+  // eslint-disable-next-line no-empty-pattern
+  generatedUser: async ({}, use) => {
+    const userTestService = testServiceBuilder().userTestService();
+    const user = new TestUser({
+      firstName: 'Generated',
+      lastName: 'User',
+      email: `generated_${crypto.randomUUID()}@test.com`,
+    });
+
+    await userTestService.createUser(user);
+    try {
+      await use(user);
+    } finally {
+      await userTestService.deleteUser(user).catch((error: unknown) => {
+        console.warn(`Could not delete generated user ${user.email}:`, error);
+      });
+    }
   },
 });
 

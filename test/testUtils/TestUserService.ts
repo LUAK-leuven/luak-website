@@ -1,6 +1,11 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '#shared/types/database.types';
-import { testUserKeys, testUsers, type TestUserKey } from '#test/TestUser';
+import {
+  testUserKeys,
+  testUsers,
+  type TestUser,
+  type TestUserKey,
+} from '#test/TestUser';
 import dayjs from 'dayjs';
 import { getCurrentMembershipYear } from '~/model/Membership';
 
@@ -109,7 +114,7 @@ export class TestUserService {
     });
     if (error)
       throw new Error(`Error signing in user ${email}:`, { cause: error });
-    const { error: err } = await this.supabase.auth.signOut();
+    const { error: err } = await this.supabase.auth.signOut({ scope: 'local' });
     if (err)
       throw new Error(`Error signing out user ${email}:`, { cause: err });
 
@@ -160,7 +165,22 @@ export class TestUserService {
   };
 
   private readonly createTestUser = async (testUser: TestUserKey) => {
-    const { email, password, firstName, lastName } = testUsers[testUser];
+    const userId = await this.createUser(testUsers[testUser]);
+
+    if (testUser === 'boardMember') {
+      await this.supabase
+        .from('BoardMembers')
+        .insert({
+          user_id: userId,
+        })
+        .throwOnError();
+    }
+
+    return userId;
+  };
+
+  readonly createUser = async (testUser: TestUser) => {
+    const { email, password, firstName, lastName } = testUser;
 
     const { error, data } = await this.supabase.auth.admin.createUser({
       email: email,
@@ -184,16 +204,24 @@ export class TestUserService {
       })
       .throwOnError();
 
-    if (testUser === 'boardMember') {
-      await this.supabase
-        .from('BoardMembers')
-        .insert({
-          user_id: userId,
-        })
-        .throwOnError();
-    }
-
     return userId;
+  };
+
+  readonly deleteUser = async (testUser: TestUser) => {
+    const { data } = await this.supabase
+      .from('Users')
+      .select('id')
+      .eq('email', testUser.email)
+      .single()
+      .throwOnError();
+
+    await this.supabase.from('Users').delete().eq('id', data.id).throwOnError();
+
+    const { error } = await this.supabase.auth.admin.deleteUser(data.id);
+    if (error)
+      throw new Error(`Error deleting user with email ${testUser.email}:`, {
+        cause: error,
+      });
   };
 
   private readonly deleteAllUsers = async () => {
