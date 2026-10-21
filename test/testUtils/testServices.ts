@@ -6,7 +6,7 @@ import { TestUserService } from '#test/TestUserService';
 import { ServerTestService } from '#test/fetch';
 import { MailpitService } from '#test/testUtils/MailpitService';
 
-const getSupabaseClientForTests = () => {
+export const createSupabaseClientForTests = () => {
   if (
     !process.env.NUXT_PUBLIC_SUPABASE_URL ||
     !process.env.NUXT_SUPABASE_SECRET_KEY
@@ -32,7 +32,7 @@ const useSingleton = <T>(create: () => T) => {
 };
 
 export const testServiceBuilder = useSingleton(() => {
-  const supabase = useSingleton(() => getSupabaseClientForTests());
+  const supabase = useSingleton(() => createSupabaseClientForTests());
 
   const testDao = useSingleton(() => new TestDao(supabase()));
   const userTestService = useSingleton(() => new TestUserService(supabase()));
