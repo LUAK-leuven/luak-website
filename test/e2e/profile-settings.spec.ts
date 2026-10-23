@@ -8,6 +8,7 @@ import {
   randomUserTest,
   test,
 } from '#test/e2e/fixtures';
+import { LoginPage } from '#test/e2e/pages/login.page';
 import { ProfileSettingsPage } from '#test/e2e/pages/profile/settings.page';
 import { testServiceBuilder } from '#test/testServices';
 import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
@@ -70,6 +71,28 @@ generatedUserTest(
         password: 'NewPassword123!',
       }),
     );
+  },
+);
+
+generatedUserTest(
+  'Change password with a revoked session redirects to login and back after logging in again',
+  async ({ page, luakPage, generatedUser }) => {
+    await luakPage.login(generatedUser);
+    const profileSettingsPage = await luakPage.toMySettings();
+    await testUserService.revokeAllSessions(generatedUser);
+
+    await profileSettingsPage.newPasswordInput.fill('NewPassword123!');
+    await profileSettingsPage.confirmPasswordInput.fill('NewPassword123!');
+    await profileSettingsPage.changePasswordButton.click();
+
+    await expect(page).toHaveURL(`/login?redirect=${ProfileSettingsPage.path}`);
+    await expect(luakPage.toastMessage).toHaveText(
+      /Your session has expired\. Please log in again\./,
+    );
+
+    const loginPage = new LoginPage(page);
+    await loginPage.login(generatedUser.email, generatedUser.password);
+    await page.waitForURL(ProfileSettingsPage.path);
   },
 );
 

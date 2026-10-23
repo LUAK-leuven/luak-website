@@ -7,6 +7,7 @@
   const user = useSupabaseUser();
   const supabase = useSupabaseClient();
   const { show: showToast } = useToast();
+  const sessionExpiredHandler = useSessionExpiredHandler();
 
   const isChangedSuccessfull = ref(false);
 
@@ -27,6 +28,7 @@
     const { error } = await supabase.auth.updateUser({
       password: submitted.password,
     });
+    if (await sessionExpiredHandler.handle(error)) return;
     if (error) {
       showToast('error', error.message);
     } else {

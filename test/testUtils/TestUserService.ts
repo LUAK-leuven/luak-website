@@ -121,6 +121,23 @@ export class TestUserService {
     return data.session;
   };
 
+  readonly revokeAllSessions = async (testUser: TestUser) => {
+    const { error: signInError } = await this.supabase.auth.signInWithPassword({
+      email: testUser.email,
+      password: testUser.password,
+    });
+    if (signInError)
+      throw new Error(`Error signing in user ${testUser.email}:`, {
+        cause: signInError,
+      });
+
+    const { error } = await this.supabase.auth.signOut({ scope: 'global' });
+    if (error)
+      throw new Error(`Error revoking sessions of user ${testUser.email}:`, {
+        cause: error,
+      });
+  };
+
   private readonly createMemberships = async (testUser: TestUserKey) => {
     const userId = await this.getTestUserId(testUser);
 
