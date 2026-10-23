@@ -10,11 +10,16 @@ export function useSessionExpiredHandler() {
   const { show } = useToast();
 
   const handle = async (error: AuthError | null): Promise<boolean> => {
-    if (!isSessionGoneError(error)) {
+    if (error === null || !isSessionGoneError(error)) {
       return false;
     }
 
-    await supabase.auth.signOut({ scope: 'local' });
+    try {
+      await supabase.auth.signOut({ scope: 'local' });
+    } catch {
+      // A failed local sign-out must not block the redirect and toast.
+    }
+
     show('error', SESSION_EXPIRED_MESSAGE);
     await navigateTo({ name: 'login', query: { redirect: route.fullPath } });
 
