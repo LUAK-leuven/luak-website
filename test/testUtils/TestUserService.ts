@@ -52,11 +52,11 @@ export class TestUserService {
     }
   };
 
-  readonly getUserInfo = async (testUser: TestUserKey) => {
+  readonly getUserInfo = async (email: string) => {
     const { data } = await this.supabase
       .from('Users')
       .select('*')
-      .eq('email', testUsers[testUser].email)
+      .eq('email', email)
       .single()
       .throwOnError();
 
@@ -105,7 +105,9 @@ export class TestUserService {
       .throwOnError();
     console.log(`user - ${testUser} - ${email}`, user);
     if (user === null) {
-      await this.createTestUser(testUser);
+      await this.createTestUser(testUser).catch((error: unknown) => {
+        console.warn(`Could not create test user ${testUser}:`, error);
+      });
     }
 
     const { data, error } = await this.supabase.auth.signInWithPassword({
