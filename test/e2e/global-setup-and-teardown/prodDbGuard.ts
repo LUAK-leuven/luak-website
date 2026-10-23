@@ -1,5 +1,6 @@
 import { request } from '@playwright/test';
 import { validateSupabaseUrl } from '#test/validateSupabaseUrl';
+import { warmUpDevServer } from '#test/e2e/global-setup-and-teardown/warmUpDevServer';
 
 export default async function () {
   const ctx = await request.newContext({ baseURL: process.env.BASE_URL! });
@@ -29,7 +30,5 @@ export default async function () {
 
   validateSupabaseUrl(supabaseUrl);
 
-  // wait for nuxt server to be ready
-  const routes = ['/', '/login', '/profile/overview', '/board/rentals/form'];
-  await Promise.all(routes.map((r) => fetch(new URL(r, process.env.BASE_URL))));
+  await warmUpDevServer(process.env.BASE_URL!);
 }

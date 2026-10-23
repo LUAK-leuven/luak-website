@@ -145,7 +145,7 @@ The e2e suite is flaky on CI for two reasons described in `research.md`. First, 
 - A first visit to `/login` in a test afterwards triggers no extra page reload.
 - The setup login (`LoginPage.login`) waits until the form is interactive before filling, and no longer relies on the extended 7 s fill timeout to hide slow starts.
 - Warm-up failures are reported with a clear message and do not hide real test failures. If the dev server is not reachable, the existing guard behaviour still applies.
-- CI (`.github/workflows/ci.yml`) needs no change beyond what the warm-up does by itself. If it does need one, describe it in the pull request.
+- CI (`.github/workflows/ci.yml`) needs no change beyond what the warm-up does by itself.
 
 **Notes**: this is the unconfirmed cause (Cause B in `research.md`). If the failure still occurs after this step, capture traces for the setup project and re-investigate rather than adding further waits.
 
