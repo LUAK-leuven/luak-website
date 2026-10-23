@@ -1,6 +1,3 @@
-import type { AuthError } from '@supabase/supabase-js';
-import { isSessionGoneError } from '~/utils/isSessionGoneError';
-
 const SESSION_EXPIRED_MESSAGE =
   'Your session has expired. Please log in again.';
 
@@ -9,16 +6,15 @@ export function useSessionExpiredHandler() {
   const route = useRoute();
   const { show } = useToast();
 
-  const handle = async (error: AuthError | null): Promise<boolean> => {
-    if (!isSessionGoneError(error)) {
-      return false;
+  const handle = async (): Promise<void> => {
+    try {
+      await supabase.auth.signOut({ scope: 'local' });
+    } catch {
+      // A failed local sign-out must not block the redirect and toast.
     }
 
-    await supabase.auth.signOut({ scope: 'local' });
     show('error', SESSION_EXPIRED_MESSAGE);
     await navigateTo({ name: 'login', query: { redirect: route.fullPath } });
-
-    return true;
   };
 
   return { handle };

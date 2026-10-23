@@ -7,6 +7,7 @@
 
   const supabase = useSupabaseClient();
   const user = useSupabaseUser();
+  const { handle: handleSessionExpired } = useSessionExpiredHandler();
 
   // TODO: error handling
   const { data: userData } = await useAsyncData('userData', async () => {
@@ -41,7 +42,10 @@
     initialValues: initialValues,
   });
   const onSubmit = handleSubmit(async (submitted) => {
-    if (!user.value) throw createError({ statusCode: 401 });
+    if (!user.value) {
+      await handleSessionExpired();
+      return;
+    }
     const { error } = await supabase
       .from('Users')
       // @ts-expect-error again typescript's exact optional check being to strict for external libraries

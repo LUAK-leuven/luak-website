@@ -52,11 +52,11 @@ export class TestUserService {
     }
   };
 
-  readonly getUserInfo = async (testUser: TestUserKey) => {
+  readonly getUserInfo = async (email: string) => {
     const { data } = await this.supabase
       .from('Users')
       .select('*')
-      .eq('email', testUsers[testUser].email)
+      .eq('email', email)
       .single()
       .throwOnError();
 
@@ -105,7 +105,9 @@ export class TestUserService {
       .throwOnError();
     console.log(`user - ${testUser} - ${email}`, user);
     if (user === null) {
-      await this.createTestUser(testUser);
+      await this.createTestUser(testUser).catch((error: unknown) => {
+        console.warn(`Could not create test user ${testUser}:`, error);
+      });
     }
 
     const { data, error } = await this.supabase.auth.signInWithPassword({
@@ -119,6 +121,23 @@ export class TestUserService {
       throw new Error(`Error signing out user ${email}:`, { cause: err });
 
     return data.session;
+  };
+
+  readonly revokeAllSessions = async (testUser: TestUser) => {
+    const { error: signInError } = await this.supabase.auth.signInWithPassword({
+      email: testUser.email,
+      password: testUser.password,
+    });
+    if (signInError)
+      throw new Error(`Error signing in user ${testUser.email}:`, {
+        cause: signInError,
+      });
+
+    const { error } = await this.supabase.auth.signOut({ scope: 'global' });
+    if (error)
+      throw new Error(`Error revoking sessions of user ${testUser.email}:`, {
+        cause: error,
+      });
   };
 
   private readonly createMemberships = async (testUser: TestUserKey) => {

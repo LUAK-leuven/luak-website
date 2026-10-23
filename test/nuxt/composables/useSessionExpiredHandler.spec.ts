@@ -5,7 +5,6 @@ import { useSessionExpiredHandler } from '~/composables/useSessionExpiredHandler
 
 const SESSION_EXPIRED_MESSAGE =
   'Your session has expired. Please log in again.';
-const RAW_SUPABASE_MESSAGE = 'Auth session missing!';
 
 const { signOut, navigateToMock, route } = vi.hoisted(() => ({
   signOut: vi.fn(),
@@ -16,9 +15,6 @@ const { signOut, navigateToMock, route } = vi.hoisted(() => ({
 mockNuxtImport('useSupabaseClient', () => () => ({ auth: { signOut } }));
 mockNuxtImport('useRoute', () => () => route);
 mockNuxtImport('navigateTo', () => navigateToMock);
-
-const sessionNotFoundError = () =>
-  new AuthApiError(RAW_SUPABASE_MESSAGE, 403, 'session_not_found');
 
 beforeEach(() => {
   vi.useFakeTimers();
@@ -32,24 +28,18 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-test('useSessionExpiredHandler reports a session_not_found error as handled', async () => {
+test('useSessionExpiredHandler signs out with local scope once', async () => {
   const { handle } = useSessionExpiredHandler();
 
-  await expect(handle(sessionNotFoundError())).resolves.toBe(true);
-});
-
-test('useSessionExpiredHandler signs out with local scope on session_not_found', async () => {
-  const { handle } = useSessionExpiredHandler();
-
-  await handle(sessionNotFoundError());
+  await handle();
 
   expect(signOut).toHaveBeenCalledExactlyOnceWith({ scope: 'local' });
 });
 
-test('useSessionExpiredHandler redirects to login with the current full path on session_not_found', async () => {
+test('useSessionExpiredHandler redirects to login with the current full path', async () => {
   const { handle } = useSessionExpiredHandler();
 
-  await handle(sessionNotFoundError());
+  await handle();
 
   expect(navigateToMock).toHaveBeenCalledExactlyOnceWith({
     name: 'login',
@@ -57,21 +47,74 @@ test('useSessionExpiredHandler redirects to login with the current full path on 
   });
 });
 
-test('useSessionExpiredHandler shows exactly one error toast on session_not_found', async () => {
+test('useSessionExpiredHandler shows exactly one error toast', async () => {
   const { handle } = useSessionExpiredHandler();
   const { toasts } = useToast();
 
-  await handle(sessionNotFoundError());
+  await handle();
 
   expect(toasts.value).toHaveLength(1);
   expect(toasts.value[0]?.type).toBe('error');
 });
 
-test('useSessionExpiredHandler shows the session expired message instead of the Supabase message', async () => {
+test('useSessionExpiredHandler shows the session expired message', async () => {
   const { handle } = useSessionExpiredHandler();
   const { toasts } = useToast();
 
-  await handle(sessionNotFoundError());
+  await handle();
 
   expect(toasts.value[0]?.message).toBe(SESSION_EXPIRED_MESSAGE);
 });
+
+const localSignOutFailures: [string, () => void][] = [
+  [
+    'an error result',
+    () =>
+      signOut.mockResolvedValue({
+        error: new AuthApiError(
+          'Something went wrong',
+          500,
+          'unexpected_failure',
+        ),
+      }),
+  ],
+  [
+    'a thrown error',
+    () =>
+      signOut.mockRejectedValue(
+        new AuthApiError('Something went wrong', 500, 'unexpected_failure'),
+      ),
+  ],
+];
+
+test.each(localSignOutFailures)(
+  'useSessionExpiredHandler still redirects to login when local sign-out fails with %s',
+  async (_name, failSignOut) => {
+    failSignOut();
+    const { handle } = useSessionExpiredHandler();
+
+    await handle();
+
+    expect(navigateToMock).toHaveBeenCalledExactlyOnceWith({
+      name: 'login',
+      query: { redirect: route.fullPath },
+    });
+  },
+);
+
+test.each(localSignOutFailures)(
+  'useSessionExpiredHandler still shows exactly one session expired toast when local sign-out fails with %s',
+  async (_name, failSignOut) => {
+    failSignOut();
+    const { handle } = useSessionExpiredHandler();
+    const { toasts } = useToast();
+
+    await handle();
+
+    expect(toasts.value).toHaveLength(1);
+    expect(toasts.value[0]).toMatchObject({
+      type: 'error',
+      message: SESSION_EXPIRED_MESSAGE,
+    });
+  },
+);

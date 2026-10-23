@@ -1,12 +1,14 @@
 <script lang="ts" setup>
   import * as yup from 'yup';
   import { yup_password } from '~/utils/yup';
+  import { isSessionGoneError } from '~/utils/isSessionGoneError';
   import TextField from '~/components/input/TextField.vue';
   import Button from '~/components/shared/Button.vue';
 
   const user = useSupabaseUser();
   const supabase = useSupabaseClient();
   const { show: showToast } = useToast();
+  const sessionExpiredHandler = useSessionExpiredHandler();
 
   const isChangedSuccessfull = ref(false);
 
@@ -27,6 +29,10 @@
     const { error } = await supabase.auth.updateUser({
       password: submitted.password,
     });
+    if (error && isSessionGoneError(error)) {
+      await sessionExpiredHandler.handle();
+      return;
+    }
     if (error) {
       showToast('error', error.message);
     } else {

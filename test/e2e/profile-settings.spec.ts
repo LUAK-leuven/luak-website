@@ -8,6 +8,7 @@ import {
   randomUserTest,
   test,
 } from '#test/e2e/fixtures';
+import { LoginPage } from '#test/e2e/pages/login.page';
 import { ProfileSettingsPage } from '#test/e2e/pages/profile/settings.page';
 import { testServiceBuilder } from '#test/testServices';
 import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
@@ -32,7 +33,7 @@ randomUserTest('Can change user information', async ({ page, user }) => {
   await expect(profileSettingsPage.changeInfoButton).toHaveText('check');
   await sleep(200);
 
-  const userInfo = await testUserService.getUserInfo(user);
+  const userInfo = await testUserService.getUserInfo(testUsers[user].email);
   expect(userInfo.firstName).toBe('NewFirstName');
   expect(userInfo.lastName).toBe('NewLastName');
   expect(userInfo.phoneNumber).toBe('+1234567890');
@@ -70,6 +71,47 @@ generatedUserTest(
         password: 'NewPassword123!',
       }),
     );
+  },
+);
+
+generatedUserTest(
+  'Change password with a revoked session redirects to login and back after logging in again',
+  async ({ page, luakPage, generatedUser }) => {
+    await luakPage.login(generatedUser);
+    const profileSettingsPage = await luakPage.toMySettings();
+    await testUserService.revokeAllSessions(generatedUser);
+
+    await profileSettingsPage.newPasswordInput.fill('NewPassword123!');
+    await profileSettingsPage.confirmPasswordInput.fill('NewPassword123!');
+    await profileSettingsPage.changePasswordButton.click();
+
+    await expect(page).toHaveURL(`/login?redirect=${ProfileSettingsPage.path}`);
+    await expect(luakPage.toastMessage).toHaveText(
+      /Your session has expired\. Please log in again\./,
+    );
+
+    const loginPage = new LoginPage(page);
+    await loginPage.login(generatedUser.email, generatedUser.password);
+    await page.waitForURL(ProfileSettingsPage.path);
+  },
+);
+
+generatedUserTest(
+  'Change info with a revoked session saves silently and stays on settings',
+  async ({ page, luakPage, generatedUser }) => {
+    await luakPage.login(generatedUser);
+    const profileSettingsPage = await luakPage.toMySettings();
+    await testUserService.revokeAllSessions(generatedUser);
+
+    await profileSettingsPage.firstNameInput.fill('NewFirstName');
+    await profileSettingsPage.changeInfoButton.click();
+
+    // Not a redirect: the info update only needs a valid, unexpired access token at the database layer, which the revoked session still has locally, so it succeeds without the app noticing the session is gone.
+    await expect(page).toHaveURL(ProfileSettingsPage.path);
+    await expect(profileSettingsPage.changeInfoButton).toHaveText('check');
+
+    const userInfo = await testUserService.getUserInfo(generatedUser.email);
+    expect(userInfo.firstName).toBe('NewFirstName');
   },
 );
 
