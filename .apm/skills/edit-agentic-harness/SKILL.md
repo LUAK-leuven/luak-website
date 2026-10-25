@@ -1,6 +1,6 @@
 ---
 name: edit-agentic-harness
-description: Use when editing the agentic harness
+description: Use when editing the agentic harness (agents, skills, etc.)
 ---
 
 This project uses apm (Agentic Project Manager) to manage and edit the agentic harness.
