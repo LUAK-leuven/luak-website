@@ -7,10 +7,10 @@ import {
   type GearInventorySummaryRecord,
   type GearItemRecord,
   type InventoryItemId,
-  type InventoryItemEventWithDate,
 } from '#server/domain/inventory/InventoryItem';
 import { parseEvent } from '#server/domain/inventory/ItemEvent';
 import type { InventoryRepository } from '#server/domain/inventory/repository';
+import type { InventoryItemEvent } from '#shared/api/rest/inventory';
 
 export class SupabaseInventoryRepository implements InventoryRepository {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
@@ -72,7 +72,7 @@ export class SupabaseInventoryRepository implements InventoryRepository {
 
   async getInventoryItemEvents(
     args: InventoryItemId,
-  ): Promise<InventoryItemEventWithDate[]> {
+  ): Promise<InventoryItemEvent[]> {
     const { data } = await this.supabaseClient
       .from('InventoryItemEvents')
       .select('*')

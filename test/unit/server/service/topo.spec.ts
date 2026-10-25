@@ -9,6 +9,18 @@ import type { InventoryRepository } from '#server/domain/inventory/repository';
 import type { RentalRepository } from '#server/domain/rental/repository';
 import { TopoServiceImpl } from '#server/service/topo';
 import { aRandomTopoId } from '#test/builders/ids';
+import {
+  initialAmount,
+  yearPublished,
+  type Author,
+  type ClimbingType,
+  type Country,
+  type Details,
+  type Language,
+  type PlaceInLibrary,
+  type Tag,
+  type Title,
+} from '#shared/api/rest/topo';
 
 describe('TopoService', () => {
   test('maps topo details and folds inventory events', async () => {
@@ -17,17 +29,17 @@ describe('TopoService', () => {
       getDetails: () =>
         Promise.resolve({
           id: topoId,
-          title: 'Topo',
-          authors: ['Author'],
-          condition: null,
-          countries: ['Norway'],
-          details: 'Details',
-          languages: ['English'],
-          place_in_library: 'A1',
-          tags: ['guidebook'],
-          types_of_climbing: ['sport'],
-          year_published: 2020,
-          totalAmount: 3,
+          title: 'Topo' as Title,
+          authors: ['Author' as Author],
+          condition: undefined,
+          countries: ['Norway' as Country],
+          details: 'Details' as Details,
+          languages: ['English' as Language],
+          place_in_library: 'A1' as PlaceInLibrary,
+          tags: ['guidebook' as Tag],
+          types_of_climbing: ['sport' as ClimbingType],
+          year_published: yearPublished(2020),
+          totalAmount: initialAmount(3),
         }),
     } satisfies Pick<TopoRepository, 'getDetails'> satisfies {
       getDetails: () => Promise<TopoRecord>;
@@ -76,26 +88,26 @@ describe('TopoService', () => {
           {
             id: 'in-stock' as TopoId,
             authors: [],
-            condition: null,
+            condition: undefined,
             countries: [],
-            placeInLibrary: 'A1',
+            placeInLibrary: 'A1' as PlaceInLibrary,
             tags: [],
-            title: 'In stock',
+            title: 'In stock' as Title,
             typesOfClimbing: [],
-            yearPublished: null,
-            initialAmount: 1,
+            yearPublished: undefined,
+            initialAmount: initialAmount(1),
           },
           {
             id: 'out-of-stock' as TopoId,
             authors: [],
-            condition: null,
+            condition: undefined,
             countries: [],
-            placeInLibrary: 'A2',
+            placeInLibrary: 'A2' as PlaceInLibrary,
             tags: [],
-            title: 'Out of stock',
+            title: 'Out of stock' as Title,
             typesOfClimbing: [],
-            yearPublished: null,
-            initialAmount: 0,
+            yearPublished: undefined,
+            initialAmount: initialAmount(0),
           },
         ] satisfies TopoLibraryRecord[]),
       getAllTopoInventoryItemEvents: () => Promise.resolve([]),

@@ -10,6 +10,19 @@ import type {
 } from '#server/domain/topo/topo';
 import type { TopoRepository } from '#server/domain/topo/repository';
 import type { Database } from '#shared/types/database.types';
+import {
+  type Details,
+  initialAmount,
+  yearPublished,
+  type Author,
+  type ClimbingType,
+  type Country,
+  type Language,
+  type PlaceInLibrary,
+  type Tag,
+  type Title,
+} from '#shared/api/rest/topo';
+import type { Date } from '#shared/types/common';
 
 export class SupabaseTopoRepository implements TopoRepository {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
@@ -23,18 +36,21 @@ export class SupabaseTopoRepository implements TopoRepository {
       .throwOnError();
 
     return {
-      totalAmount: topo.amount,
-      authors: topo.authors,
+      totalAmount: initialAmount(topo.amount),
+      authors: topo.authors as Author[],
       condition: mapTopoCondition(topo.condition),
-      countries: topo.countries,
-      details: topo.details ?? undefined,
+      countries: topo.countries as Country[],
+      details: (topo.details ?? undefined) as Details | undefined,
       id: topo.id as TopoId,
-      languages: topo.languages,
-      place_in_library: topo.place_in_library,
-      tags: topo.tags.map((it) => it.trimStart()),
-      title: topo.title,
-      types_of_climbing: topo.types_of_climbing,
-      year_published: topo.year_published,
+      languages: topo.languages as Language[],
+      place_in_library: topo.place_in_library as PlaceInLibrary,
+      tags: topo.tags.map((it) => it.trimStart()) as Tag[],
+      title: topo.title as Title,
+      types_of_climbing: topo.types_of_climbing as ClimbingType[],
+      year_published:
+        topo.year_published === null
+          ? undefined
+          : yearPublished(topo.year_published),
     };
   }
 
@@ -48,15 +64,18 @@ export class SupabaseTopoRepository implements TopoRepository {
 
     return data.map((topo) => ({
       id: topo.id as TopoId,
-      authors: topo.authors,
+      authors: topo.authors as Author[],
       condition: mapTopoCondition(topo.condition),
-      countries: topo.countries,
-      placeInLibrary: topo.place_in_library,
-      tags: topo.tags,
-      title: topo.title,
-      typesOfClimbing: topo.types_of_climbing,
-      yearPublished: topo.year_published,
-      initialAmount: topo.amount,
+      countries: topo.countries as Country[],
+      placeInLibrary: topo.place_in_library as PlaceInLibrary,
+      tags: topo.tags as Tag[],
+      title: topo.title as Title,
+      typesOfClimbing: topo.types_of_climbing as ClimbingType[],
+      yearPublished:
+        topo.year_published === null
+          ? undefined
+          : yearPublished(topo.year_published),
+      initialAmount: initialAmount(topo.amount),
     }));
   }
 
@@ -68,9 +87,12 @@ export class SupabaseTopoRepository implements TopoRepository {
 
     return data.map((topo) => ({
       id: topo.id as TopoId,
-      title: topo.title,
-      initialAmount: topo.amount,
-      yearPublished: topo.year_published,
+      title: topo.title as Title,
+      initialAmount: initialAmount(topo.amount),
+      yearPublished:
+        topo.year_published === null
+          ? undefined
+          : yearPublished(topo.year_published),
     }));
   }
 
@@ -83,7 +105,7 @@ export class SupabaseTopoRepository implements TopoRepository {
 
     return data.map((it) => ({
       topoId: it.item_id as TopoId,
-      occurredOn: it.occured_on,
+      occurredOn: it.occured_on as Date,
       ...parseEvent(it.event),
     }));
   }
@@ -94,6 +116,7 @@ export function mapTopoCondition(
 ): TopoCondition {
   switch (condition) {
     case null:
+      return undefined;
     case 'as_good_as_new':
     case 'good':
     case 'used':

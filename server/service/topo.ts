@@ -1,6 +1,6 @@
 import type { TopoRepository } from '#server/domain/topo/repository';
 import type { InventoryRepository } from '#server/domain/inventory/repository';
-import { foldInventoryItemEvents } from '~~/server/domain/inventory/InventoryItem';
+import { foldInventoryItemEvents } from '#server/domain/inventory/InventoryItem';
 import type { RentalRepository } from '#server/domain/rental/repository';
 import type { TopoService } from '#server/domain/topo/service';
 import { groupBy, sumOf } from '#shared/utils/utils';
@@ -10,6 +10,7 @@ import type {
   TopoListItem,
   TopoId,
 } from '#server/domain/topo/topo';
+import { availableAmount } from '#shared/api/rest/topo';
 
 export class TopoServiceImpl implements TopoService {
   constructor(
@@ -87,7 +88,7 @@ export class TopoServiceImpl implements TopoService {
 
     return topos
       .map((topo) => {
-        const totalAmount = foldInventoryItemEvents(
+        const totalAmount_ = foldInventoryItemEvents(
           topo.initialAmount,
           groupedTopoEvents[topo.id] ?? [],
         );
@@ -98,8 +99,8 @@ export class TopoServiceImpl implements TopoService {
         return {
           id: topo.id,
           title: topo.title,
-          totalAmount,
-          availableAmount: totalAmount - rentedAmount,
+          totalAmount: totalAmount_,
+          availableAmount: availableAmount(totalAmount_ - rentedAmount),
           yearPublished: topo.yearPublished,
         };
       })

@@ -1,6 +1,11 @@
 import type { ItemEvent } from '#server/domain/inventory/ItemEvent';
-import type { TopoId } from '#shared/api/rest/topo';
+import {
+  totalAmount,
+  type TopoId,
+  type TotalAmount,
+} from '#shared/api/rest/topo';
 import type { GearInventoryId, GearItemId } from '#shared/api/rest/gear';
+import type { InventoryItemEvent } from '~~/shared/api/rest/inventory';
 
 export type InventoryItemId =
   | {
@@ -12,7 +17,6 @@ export type InventoryItemId =
       itemType: 'gear';
     };
 
-export type InventoryItemEventWithDate = ItemEvent & { occurredOn: string };
 export type GearInventorySummaryRecord = {
   gearItemId: GearItemId;
   productionDate: string | undefined;
@@ -26,7 +30,7 @@ export type GearInventoryRecord = {
   initialAmount: number;
   totalAmount: number;
   details: string;
-  events: InventoryItemEventWithDate[];
+  events: InventoryItemEvent[];
 };
 export type GearItemRecord = {
   id: GearItemId;
@@ -38,13 +42,15 @@ export type GearItemRecord = {
 export const foldInventoryItemEvents = (
   initialAmount: number,
   events: ItemEvent[],
-) => {
-  return events.reduce((acc, event) => {
-    switch (event.eventName) {
-      case 'ItemLostEvent':
-        return acc - event.lostAmount;
-      case 'ItemArchivedEvent':
-        return acc - event.amount;
-    }
-  }, initialAmount);
+): TotalAmount => {
+  return totalAmount(
+    events.reduce((acc, event) => {
+      switch (event.eventName) {
+        case 'ItemLostEvent':
+          return acc - event.lostAmount;
+        case 'ItemArchivedEvent':
+          return acc - event.amount;
+      }
+    }, initialAmount),
+  );
 };

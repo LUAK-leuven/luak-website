@@ -1,10 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { RentalGearItem, RentalSummary } from '~/model/Rental';
 import { randomBool, randomInt, randomOf } from '#shared/utils/utils';
-import {
-  aRandomGearItemId,
-  aRandomRentalId,
-} from '#test/builders/ids';
+import { aRandomGearItemId, aRandomRentalId } from '#test/builders/ids';
 
 describe('Rental status', () => {
   test('"returned" when all items are returned and deposit is returned', () => {

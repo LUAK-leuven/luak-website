@@ -89,7 +89,10 @@ export default defineNuxtConfig({
     typeCheck: true,
     strict: true,
     tsConfig: {
-      compilerOptions: tsCompilerOptions,
+      compilerOptions: {
+        paths: { '#test/*': ['../test/*', '../test/testUtils/*'] },
+        ...tsCompilerOptions,
+      },
       vueCompilerOptions: {
         strictTemplates: true,
         dataAttributes: ['data-testId', 'data-tip'],

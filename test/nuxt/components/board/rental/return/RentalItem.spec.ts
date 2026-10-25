@@ -2,10 +2,7 @@ import { describe, expect, test } from 'vitest';
 import { mountSuspended } from '@nuxt/test-utils/runtime';
 import RentalItem from '~/components/board/rental/return/RentalItem.vue';
 import { RentalTopoItem } from '~/model/Rental';
-import {
-  aRandomRentalId,
-  aRandomTopoId,
-} from '~~/test/testUtils/builders/ids';
+import { aRandomRentalId, aRandomTopoId } from '#test/builders/ids';
 
 describe('RentalItem', () => {
   test.each([

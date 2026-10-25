@@ -1,6 +1,5 @@
 <script setup lang="ts">
-  type TopoCondition =
-    Database['public']['Tables']['Topos']['Row']['condition'];
+  import type { TopoCondition } from '#shared/api/rest/topo';
 
   defineProps<{
     topoCondition: TopoCondition;

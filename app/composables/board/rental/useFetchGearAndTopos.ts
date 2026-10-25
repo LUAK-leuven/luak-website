@@ -11,7 +11,7 @@ export const useFetchGearAndTopos = () => {
   const allTopos = computed(() =>
     allTopos_.value?.map((topo) => {
       const name =
-        topo.yearPublished === null
+        topo.yearPublished === undefined
           ? topo.title
           : `${topo.title} (${topo.yearPublished.toFixed()})`;
       return {
