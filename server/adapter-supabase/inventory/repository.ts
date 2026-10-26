@@ -1,6 +1,10 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '#shared/types/database.types';
-import type { GearInventoryId, GearItemId } from '#shared/api/rest/gear';
+import {
+  createGearName,
+  type GearInventoryId,
+  type GearItemId,
+} from '#shared/api/rest/gear';
 import {
   foldInventoryItemEvents,
   type GearInventoryRecord,
@@ -121,7 +125,7 @@ const mapGearItem = (item: {
   deposit_fee: number;
 }): GearItemRecord => ({
   id: item.id as GearItemId,
-  name: item.name,
+  name: createGearName(item.name),
   lifespan: item.lifespan,
   depositFee: item.deposit_fee,
 });

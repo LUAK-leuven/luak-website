@@ -5,10 +5,10 @@
 
   watch(
     user,
-    () => {
+    async () => {
       if (user.value) {
         const path = redirectInfo.pluck();
-        return navigateTo(path || '/profile/overview');
+        await navigateTo(path || '/profile/overview');
       }
     },
     { immediate: true },

@@ -8,7 +8,7 @@ export type GearInventoryId = EntityId<'gearInventory'>;
 
 export type GearInventorySummary = {
   id: GearItemId;
-  name: string;
+  name: GearName;
   totalAmount: number;
   availableAmount: number;
   earliestRetirementDate: RetirementDate;
@@ -17,7 +17,7 @@ export type GearInventorySummary = {
 
 export type GearInventoryDetails = {
   id: GearItemId;
-  name: string;
+  name: GearName;
   lifespan: number;
   depositFee: number;
   totalAmount: number;
@@ -38,5 +38,8 @@ export type GearInventoryDetails = {
     memberName: string;
   }[];
 };
+
+export type GearName = string & { readonly __brand_gear_name: unique symbol };
+export const createGearName = (value: string): GearName => value as GearName;
 
 export type RetirementDate = Date | 'missing info' | 'infinite';

@@ -2,7 +2,7 @@ import { authStateFile, cleanDatabase, test } from '#test/e2e/fixtures';
 import { testServiceBuilder } from '#test/testServices';
 import { itemArchivedEvent } from '#server/domain/inventory/ItemEvent';
 import type { GearInventoryId } from '#shared/api/rest/gear';
-import type { TopoId } from '#shared/api/rest/topo';
+import { createTopoId } from '#shared/api/rest/topo';
 import { GearInventoryPage } from '#test/e2e/pages/gear/inventory.page';
 import { expect } from '@playwright/test';
 import { RentalFormPage } from '#test/e2e/pages/rental/form.page';
@@ -57,7 +57,7 @@ test.describe('lost gear form', () => {
   });
 
   test('topo - amounts are correct', async ({ page }) => {
-    const topoId = '539bca6e-417e-44b3-8e6a-fecf223b49a2' as TopoId;
+    const topoId = createTopoId('539bca6e-417e-44b3-8e6a-fecf223b49a2');
     const topoDetailsPage = await TopoDetailsPage.navigate(page, topoId);
     await expect(topoDetailsPage.amount).toHaveText('2 / 2');
 

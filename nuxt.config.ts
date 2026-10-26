@@ -4,6 +4,7 @@ const tsCompilerOptions: CompilerOptions = {
   noFallthroughCasesInSwitch: true,
   exactOptionalPropertyTypes: true,
   noUncheckedSideEffectImports: true,
+  noImplicitReturns: true,
 };
 
 export default defineNuxtConfig({

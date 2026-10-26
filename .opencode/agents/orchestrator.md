@@ -4,7 +4,8 @@ description: Orchestrates various tasks and agents within the system.
 permission:
   edit: deny
   bash: deny
-  tool: allow
+  skill: allow
+  task: allow
   "*": ask
 ---
 

@@ -5,15 +5,15 @@
     options: Country[];
     placeholder: string;
   }>();
-  const selected = defineModel<Country[]>({ default: () => [] as Country[] });
+  const selected = defineModel<Country[]>({ default: () => [] });
 
   const filteredOptions = (searchTerm: string | undefined) =>
     props.options
       .filter((it) => !selected.value.includes(it))
       .filter((it) => search(it, searchTerm));
 
-  const addSelection = (value: string) => {
-    selected.value = [...selected.value, value as Country];
+  const addSelection = (value: Country) => {
+    selected.value = [...selected.value, value];
   };
   const removeSelection = (value: Country) => {
     selected.value = selected.value.filter((it) => it !== value);

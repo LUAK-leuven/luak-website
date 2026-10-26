@@ -1,11 +1,11 @@
 import { beforeAll, expect, test } from 'vitest';
 import { testServiceBuilder } from '#test/testServices';
-import type { TopoId, TopoLibraryItem } from '#shared/api/rest/topo';
+import { createTopoId, type TopoLibraryItem } from '#shared/api/rest/topo';
 
 const $fetch = testServiceBuilder().serverTestService().fetch;
 
-const idTopoFlone = '539bca6e-417e-44b3-8e6a-fecf223b49a2' as TopoId;
-const idTopoAilefroide = '184c489c-bee4-4a09-87d1-2b711e2a1248' as TopoId;
+const idTopoFlone = createTopoId('539bca6e-417e-44b3-8e6a-fecf223b49a2');
+const idTopoAilefroide = createTopoId('184c489c-bee4-4a09-87d1-2b711e2a1248');
 
 beforeAll(async () => {
   const { testDao } = testServiceBuilder();

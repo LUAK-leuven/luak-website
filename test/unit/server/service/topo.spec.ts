@@ -1,25 +1,22 @@
 import { describe, expect, test } from 'vitest';
 import type { TopoRepository } from '#server/domain/topo/repository';
-import type {
-  TopoId,
-  TopoLibraryRecord,
-  TopoRecord,
-} from '#server/domain/topo/topo';
+import type { TopoLibraryRecord, TopoRecord } from '#server/domain/topo/topo';
 import type { InventoryRepository } from '#server/domain/inventory/repository';
 import type { RentalRepository } from '#server/domain/rental/repository';
 import { TopoServiceImpl } from '#server/service/topo';
 import { aRandomTopoId } from '#test/builders/ids';
 import {
-  initialAmount,
-  yearPublished,
-  type Author,
-  type ClimbingType,
-  type Country,
-  type Details,
-  type Language,
-  type PlaceInLibrary,
-  type Tag,
-  type Title,
+  createAuthor,
+  createClimbingType,
+  createCountry,
+  createDetails,
+  createInitialAmount,
+  createLanguage,
+  createPlaceInLibrary,
+  createTag,
+  createTitle,
+  createTopoId,
+  createYearPublished,
 } from '#shared/api/rest/topo';
 
 describe('TopoService', () => {
@@ -29,17 +26,17 @@ describe('TopoService', () => {
       getDetails: () =>
         Promise.resolve({
           id: topoId,
-          title: 'Topo' as Title,
-          authors: ['Author' as Author],
+          title: createTitle('Topo'),
+          authors: [createAuthor('Author')],
           condition: undefined,
-          countries: ['Norway' as Country],
-          details: 'Details' as Details,
-          languages: ['English' as Language],
-          place_in_library: 'A1' as PlaceInLibrary,
-          tags: ['guidebook' as Tag],
-          types_of_climbing: ['sport' as ClimbingType],
-          year_published: yearPublished(2020),
-          totalAmount: initialAmount(3),
+          countries: [createCountry('Norway')],
+          details: createDetails('Details'),
+          languages: [createLanguage('English')],
+          place_in_library: createPlaceInLibrary('A1'),
+          tags: [createTag('guidebook')],
+          types_of_climbing: [createClimbingType('sport')],
+          year_published: createYearPublished(2020),
+          totalAmount: createInitialAmount(3),
         }),
     } satisfies Pick<TopoRepository, 'getDetails'> satisfies {
       getDetails: () => Promise<TopoRecord>;
@@ -86,28 +83,28 @@ describe('TopoService', () => {
       getTopoLibrary: () =>
         Promise.resolve([
           {
-            id: 'in-stock' as TopoId,
+            id: createTopoId('in-stock'),
             authors: [],
             condition: undefined,
             countries: [],
-            placeInLibrary: 'A1' as PlaceInLibrary,
+            placeInLibrary: createPlaceInLibrary('A1'),
             tags: [],
-            title: 'In stock' as Title,
+            title: createTitle('In stock'),
             typesOfClimbing: [],
             yearPublished: undefined,
-            initialAmount: initialAmount(1),
+            initialAmount: createInitialAmount(1),
           },
           {
-            id: 'out-of-stock' as TopoId,
+            id: createTopoId('out-of-stock'),
             authors: [],
             condition: undefined,
             countries: [],
-            placeInLibrary: 'A2' as PlaceInLibrary,
+            placeInLibrary: createPlaceInLibrary('A2'),
             tags: [],
-            title: 'Out of stock' as Title,
+            title: createTitle('Out of stock'),
             typesOfClimbing: [],
             yearPublished: undefined,
-            initialAmount: initialAmount(0),
+            initialAmount: createInitialAmount(0),
           },
         ] satisfies TopoLibraryRecord[]),
       getAllTopoInventoryItemEvents: () => Promise.resolve([]),

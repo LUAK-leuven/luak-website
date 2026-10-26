@@ -11,16 +11,17 @@ import type {
 import type { TopoRepository } from '#server/domain/topo/repository';
 import type { Database } from '#shared/types/database.types';
 import {
-  type Details,
-  initialAmount,
-  yearPublished,
-  type Author,
-  type ClimbingType,
-  type Country,
-  type Language,
-  type PlaceInLibrary,
-  type Tag,
-  type Title,
+  createInitialAmount,
+  createYearPublished,
+  createAuthor,
+  createCountry,
+  createDetails,
+  createTopoId,
+  createLanguage,
+  createPlaceInLibrary,
+  createTag,
+  createTitle,
+  createClimbingType,
 } from '#shared/api/rest/topo';
 import type { Date } from '#shared/types/common';
 
@@ -36,21 +37,23 @@ export class SupabaseTopoRepository implements TopoRepository {
       .throwOnError();
 
     return {
-      totalAmount: initialAmount(topo.amount),
-      authors: topo.authors as Author[],
+      totalAmount: createInitialAmount(topo.amount),
+      authors: topo.authors.map((it) => createAuthor(it)),
       condition: mapTopoCondition(topo.condition),
-      countries: topo.countries as Country[],
-      details: (topo.details ?? undefined) as Details | undefined,
-      id: topo.id as TopoId,
-      languages: topo.languages as Language[],
-      place_in_library: topo.place_in_library as PlaceInLibrary,
-      tags: topo.tags.map((it) => it.trimStart()) as Tag[],
-      title: topo.title as Title,
-      types_of_climbing: topo.types_of_climbing as ClimbingType[],
+      countries: topo.countries.map((it) => createCountry(it)),
+      details: topo.details === null ? undefined : createDetails(topo.details),
+      id: createTopoId(topo.id),
+      languages: topo.languages.map((it) => createLanguage(it)),
+      place_in_library: createPlaceInLibrary(topo.place_in_library),
+      tags: topo.tags.map((it) => createTag(it.trim())),
+      title: createTitle(topo.title),
+      types_of_climbing: topo.types_of_climbing.map((it) =>
+        createClimbingType(it),
+      ),
       year_published:
         topo.year_published === null
           ? undefined
-          : yearPublished(topo.year_published),
+          : createYearPublished(topo.year_published),
     };
   }
 
@@ -63,19 +66,21 @@ export class SupabaseTopoRepository implements TopoRepository {
       .throwOnError();
 
     return data.map((topo) => ({
-      id: topo.id as TopoId,
-      authors: topo.authors as Author[],
+      id: createTopoId(topo.id),
+      authors: topo.authors.map((it) => createAuthor(it)),
       condition: mapTopoCondition(topo.condition),
-      countries: topo.countries as Country[],
-      placeInLibrary: topo.place_in_library as PlaceInLibrary,
-      tags: topo.tags as Tag[],
-      title: topo.title as Title,
-      typesOfClimbing: topo.types_of_climbing as ClimbingType[],
+      countries: topo.countries.map((it) => createCountry(it)),
+      placeInLibrary: createPlaceInLibrary(topo.place_in_library),
+      tags: topo.tags.map((it) => createTag(it.trim())),
+      title: createTitle(topo.title),
+      typesOfClimbing: topo.types_of_climbing.map((it) =>
+        createClimbingType(it),
+      ),
       yearPublished:
         topo.year_published === null
           ? undefined
-          : yearPublished(topo.year_published),
-      initialAmount: initialAmount(topo.amount),
+          : createYearPublished(topo.year_published),
+      initialAmount: createInitialAmount(topo.amount),
     }));
   }
 
@@ -86,13 +91,13 @@ export class SupabaseTopoRepository implements TopoRepository {
       .throwOnError();
 
     return data.map((topo) => ({
-      id: topo.id as TopoId,
-      title: topo.title as Title,
-      initialAmount: initialAmount(topo.amount),
+      id: createTopoId(topo.id),
+      title: createTitle(topo.title),
+      initialAmount: createInitialAmount(topo.amount),
       yearPublished:
         topo.year_published === null
           ? undefined
-          : yearPublished(topo.year_published),
+          : createYearPublished(topo.year_published),
     }));
   }
 
@@ -104,7 +109,7 @@ export class SupabaseTopoRepository implements TopoRepository {
       .throwOnError();
 
     return data.map((it) => ({
-      topoId: it.item_id as TopoId,
+      topoId: createTopoId(it.item_id),
       occurredOn: it.occured_on as Date,
       ...parseEvent(it.event),
     }));

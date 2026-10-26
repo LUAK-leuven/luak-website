@@ -11,8 +11,14 @@ permission:
     "tail *": allow
     "yarn typecheck *": allow
     "yarn lint *": allow
-    "yarn test *": allow
+    "yarn test*": allow
     "yarn prettier *": allow
+    "yarn vitest *": allow
+    "yarn playwright *": allow
+    "npx *": deny
+    "npm *": deny
+    "git status *": allow
+    "git diff *": allow
   edit:
     "package.json": ask
     "yarn.lock": ask

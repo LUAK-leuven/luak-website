@@ -9,7 +9,7 @@ import {
 import { getFullName } from './userService';
 import { object as zodObject, string as zodString } from 'zod';
 import type { GearItemId } from '#shared/api/rest/gear';
-import type { TopoId } from '#shared/api/rest/topo';
+import { createTopoId } from '#shared/api/rest/topo';
 
 export class RentalService {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
@@ -337,7 +337,7 @@ const topoItemFromDb = (topo: {
   Topos: { title: string; year_published?: number | null };
 }) =>
   new RentalTopoItem({
-    id: topo.topo_id as TopoId,
+    id: createTopoId(topo.topo_id),
     name: topo.Topos.title,
     rentedAmount: topo.rented_amount,
     returnedAmount: topo.returned_amount,

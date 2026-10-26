@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { GearItemId } from '#shared/api/rest/gear';
-import type { TopoId } from '#shared/api/rest/topo';
+import { createTopoId, type TopoId } from '#shared/api/rest/topo';
 import type { RentalId } from '#shared/types/rental';
 import type { Database } from '#shared/types/database.types';
 import type { RentalRepository } from '#server/domain/rental/repository';
@@ -32,7 +32,7 @@ export class SupabaseRentalRepository implements RentalRepository {
       .throwOnError();
 
     return data.map((x) => ({
-      topoId: x.topo_id as TopoId,
+      topoId: createTopoId(x.topo_id),
       rentedAmount: x.rented_amount - x.returned_amount - x.lost_amount,
     }));
   }
