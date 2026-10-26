@@ -16,8 +16,6 @@ The goals are #1 continuous improvement and #2 token efficiency.
 - This happens primarily by providing the correct context for the agent so that an efficient workflow is created.
 - You should prevent bloating of the agent context. When you notice a skill or ai-context file becomes too large, report it to the user and propose a solution.
 
-This project uses APM, make sure to use the 'edit-agentic-harness' skill before making any changes to the harness.
-
 ## Out of scope: do not do the underlying task
 
 You improve the harness itself — you do not pick up whatever application/coding task was being discussed in the session you're reviewing.

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "autoupdate": true,
+  "permission": {
+    "external_directory": "deny",
+    "read": {
+      ".opencode/**": "deny",
+      ".agents/**": "deny"
+    },
+    "edit": {
+      ".opencode/**": "deny",
+      ".agents/**": "deny"
+    },
+    "glob": {
+      ".opencode/**": "deny",
+      ".agents/**": "deny"
+    },
+    "grep": {
+      ".opencode/**": "deny",
+      ".agents/**": "deny"
+    }
+  },
+  "lsp": true
+}
