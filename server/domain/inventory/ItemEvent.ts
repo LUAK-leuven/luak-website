@@ -1,5 +1,8 @@
 import { object, literal, number, discriminatedUnion, uuid } from 'zod';
 import type { infer as Infer, ZodType } from 'zod';
+import type { ItemEvent } from '#shared/api/rest/inventory';
+
+export type { ItemEvent } from '#shared/api/rest/inventory';
 
 const itemLostEventSchema = object({
   eventName: literal('ItemLostEvent'),
@@ -31,7 +34,11 @@ const itemEventSchema = discriminatedUnion('eventName', [
   itemArchivedEventSchema,
 ]);
 
-export type ItemEvent = Infer<typeof itemEventSchema>;
+type SchemaItemEvent = Infer<typeof itemEventSchema>;
+type Assert<T extends true> = T;
+type _SchemaOutputIsCompatible = Assert<
+  SchemaItemEvent extends ItemEvent ? true : false
+>;
 
 export const parseEvent = (jsonEvent: unknown): ItemEvent => {
   return itemEventSchema.parse(jsonEvent);

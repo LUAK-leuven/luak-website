@@ -1,7 +1,0 @@
-- [project structure](./project-structure.md): where to find files and where they should belong
-- [tech stack](./tech-stack.md)
-- [code style](./code-style.md): Coding conventions — read before writing or editing any code
-- [glossary](./glossary.md)
-- [testing](./testing.md): guidelines for writing good tests
-- [delivery](./delivery.md): every plan step must be deliverable — how to find consumers and handle breakage a plan didn't anticipate
-- [guardrail gaps](./guardrail-gaps.md): read this whenever a bug wasn't caught by typecheck/lint/tests, close that gap — applies to any bug fix, not just plan steps

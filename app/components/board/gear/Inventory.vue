@@ -5,6 +5,8 @@
   import ItemHistory from '~/components/board/inventory/ItemHistory.vue';
   import RetirementDate from '~/components/board/gear/retirementDate.vue';
   import InventoryTableItem from '~/components/board/gear/inventoryTableItem.vue';
+  import type { GearInventoryDetails } from '#shared/api/rest/gear';
+  import type { InitialAmount } from '#shared/api/rest/topo';
 
   const props = defineProps<{
     hasInfiniteLifespan: boolean;
@@ -117,7 +119,7 @@
             :purchase-date="
               displayPurchaseDate({ purchaseDate, productionDate })
             "
-            :initial-amount="initialAmount" />
+            :initial-amount="initialAmount as InitialAmount" />
         </InventoryTableItem>
       </div>
     </div>

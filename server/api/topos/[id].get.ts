@@ -1,6 +1,7 @@
 import { object as zodObject, uuid as zodUuid } from 'zod';
 import type { ZodType } from 'zod';
 import luakEventHandler from '#server/luakEventHandler';
+import type { TopoId } from '#shared/api/rest/topo';
 
 const lostTopo = zodObject({
   id: zodUuid() as unknown as ZodType<TopoId>,

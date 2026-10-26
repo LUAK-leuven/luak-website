@@ -1,19 +1,28 @@
-import type { TopoDao } from '#server/repository/topos';
-import type { GearDao } from '#server/repository/gear';
-import { foldInventoryItemEvents } from '~~/server/domain/inventory/InventoryItem';
-import type { RentalDao } from '#server/repository/rentals';
+import type { TopoRepository } from '#server/domain/topo/repository';
+import type { InventoryRepository } from '#server/domain/inventory/repository';
+import { foldInventoryItemEvents } from '#server/domain/inventory/InventoryItem';
+import type { RentalRepository } from '#server/domain/rental/repository';
+import type { TopoService } from '#server/domain/topo/service';
+import { groupBy, sumOf } from '#shared/utils/utils';
+import type {
+  TopoDetails,
+  TopoLibraryItem,
+  TopoListItem,
+  TopoId,
+} from '#server/domain/topo/topo';
+import { availableAmount } from '#shared/api/rest/topo';
 
-export class TopoService {
+export class TopoServiceImpl implements TopoService {
   constructor(
-    private readonly topoRepository: TopoDao,
-    private readonly gearRepository: GearDao,
-    private readonly rentalRepository: RentalDao,
+    private readonly topoRepository: TopoRepository,
+    private readonly inventoryRepository: InventoryRepository,
+    private readonly rentalRepository: RentalRepository,
   ) {}
 
-  readonly getDetails = async (topoId: TopoId) => {
+  readonly getDetails = async (topoId: TopoId): Promise<TopoDetails> => {
     const topoDetails = await this.topoRepository.getDetails(topoId);
 
-    const topoEvents = await this.gearRepository.getInventoryItemEvents({
+    const topoEvents = await this.inventoryRepository.getInventoryItemEvents({
       itemType: 'topo',
       itemId: topoId,
     });
@@ -39,31 +48,37 @@ export class TopoService {
     };
   };
 
-  readonly getTopoLibrary = async () => {
+  readonly getTopoLibrary = async ({
+    includeOutOfStock,
+  }: {
+    includeOutOfStock: boolean;
+  }): Promise<TopoLibraryItem[]> => {
     const topos = await this.topoRepository.getTopoLibrary();
     const topoEvents =
       await this.topoRepository.getAllTopoInventoryItemEvents();
 
     const groupedTopoEvents = groupBy(topoEvents, (e) => e.topoId);
 
-    return topos.map((topo) => ({
-      id: topo.id,
-      authors: topo.authors,
-      condition: topo.condition,
-      countries: topo.countries,
-      placeInLibrary: topo.placeInLibrary,
-      tags: topo.tags,
-      title: topo.title,
-      typesOfClimbing: topo.typesOfClimbing,
-      yearPublished: topo.yearPublished,
-      amount: foldInventoryItemEvents(
-        topo.initialAmount,
-        groupedTopoEvents[topo.id] ?? [],
-      ),
-    }));
+    return topos
+      .map((topo) => ({
+        id: topo.id,
+        authors: topo.authors,
+        condition: topo.condition,
+        countries: topo.countries,
+        placeInLibrary: topo.placeInLibrary,
+        tags: topo.tags,
+        title: topo.title,
+        typesOfClimbing: topo.typesOfClimbing,
+        yearPublished: topo.yearPublished,
+        amount: foldInventoryItemEvents(
+          topo.initialAmount,
+          groupedTopoEvents[topo.id] ?? [],
+        ),
+      }))
+      .filter((topo) => includeOutOfStock || topo.amount > 0);
   };
 
-  readonly getTopos = async () => {
+  readonly getTopos = async (): Promise<TopoListItem[]> => {
     const topos = await this.topoRepository.getTopos();
     const events = await this.topoRepository.getAllTopoInventoryItemEvents();
     const groupedTopoEvents = groupBy(events, (e) => e.topoId);
@@ -73,7 +88,7 @@ export class TopoService {
 
     return topos
       .map((topo) => {
-        const totalAmount = foldInventoryItemEvents(
+        const totalAmount_ = foldInventoryItemEvents(
           topo.initialAmount,
           groupedTopoEvents[topo.id] ?? [],
         );
@@ -84,8 +99,8 @@ export class TopoService {
         return {
           id: topo.id,
           title: topo.title,
-          totalAmount,
-          availableAmount: totalAmount - rentedAmount,
+          totalAmount: totalAmount_,
+          availableAmount: availableAmount(totalAmount_ - rentedAmount),
           yearPublished: topo.yearPublished,
         };
       })

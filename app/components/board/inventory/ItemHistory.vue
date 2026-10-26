@@ -1,11 +1,12 @@
 <script setup lang="ts">
   import dayjs from 'dayjs';
-  import type { ItemEvent } from '~~/server/domain/inventory/ItemEvent';
+  import type { ItemEvent } from '#server/domain/inventory/ItemEvent';
+  import type { InitialAmount } from '#shared/api/rest/topo';
 
   defineProps<{
     events: (ItemEvent & { occurredOn: string })[];
     purchaseDate: string;
-    initialAmount: number;
+    initialAmount: InitialAmount;
   }>();
 
   const formatDate = (date: string) => {

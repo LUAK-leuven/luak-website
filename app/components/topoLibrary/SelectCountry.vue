@@ -1,9 +1,11 @@
 <script setup lang="ts">
+  import type { Country } from '#shared/api/rest/topo';
+
   const props = defineProps<{
-    options: string[];
+    options: Country[];
     placeholder: string;
   }>();
-  const selected = defineModel<string[]>({ default: () => [] as string[] });
+  const selected = defineModel<Country[]>({ default: () => [] as Country[] });
 
   const filteredOptions = (searchTerm: string | undefined) =>
     props.options
@@ -11,9 +13,9 @@
       .filter((it) => search(it, searchTerm));
 
   const addSelection = (value: string) => {
-    selected.value = [...selected.value, value];
+    selected.value = [...selected.value, value as Country];
   };
-  const removeSelection = (value: string) => {
+  const removeSelection = (value: Country) => {
     selected.value = selected.value.filter((it) => it !== value);
   };
 </script>

@@ -6,6 +6,8 @@
   import TopoItem from '~/components/board/lost-gear/TopoItem.vue';
   import GearItem from '~/components/board/lost-gear/GearItem.vue';
   import BackButton from '~/components/shared/BackButton.vue';
+  import type { GearItemId } from '#shared/api/rest/gear';
+  import type { TopoId } from '#shared/api/rest/topo';
 
   const route = useRoute('board-lost-gear');
   const rentalId = computed(

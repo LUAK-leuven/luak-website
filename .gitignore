@@ -31,6 +31,9 @@ logs
 /playwright-report/
 test/e2e/.auth/
 
-# Agentic dev dependencies
+
+# APM dependencies
+apm_modules/
+.agents/
 .opencode/
-.claude/
+apm.lock.yaml

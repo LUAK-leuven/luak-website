@@ -8,6 +8,8 @@ import {
 } from '~/model/Rental';
 import { getFullName } from './userService';
 import { object as zodObject, string as zodString } from 'zod';
+import type { GearItemId } from '#shared/api/rest/gear';
+import type { TopoId } from '#shared/api/rest/topo';
 
 export class RentalService {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}

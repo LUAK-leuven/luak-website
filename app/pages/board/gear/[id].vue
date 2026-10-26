@@ -2,6 +2,7 @@
   import RentalsForItem from '~/components/board/inventory/RentalsForItem.vue';
   import Inventory from '~/components/board/gear/Inventory.vue';
   import DetailsPage from '~/components/pages/DetailsPage.vue';
+  import type { GearInventoryDetails, GearItemId } from '#shared/api/rest/gear';
 
   const gearItemId = useRoute('board-gear-id').params.id as GearItemId;
 

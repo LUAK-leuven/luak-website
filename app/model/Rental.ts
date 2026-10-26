@@ -1,5 +1,7 @@
 import dayjs from 'dayjs';
 import { DomainValidationException } from './DomainValidationException';
+import type { GearItemId } from '#shared/api/rest/gear';
+import type { TopoId } from '#shared/api/rest/topo';
 
 abstract class RentalBase {
   readonly id: RentalId;

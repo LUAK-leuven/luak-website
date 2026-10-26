@@ -3,6 +3,7 @@
   import RentalsForItem from '~/components/board/inventory/RentalsForItem.vue';
   import BackButton from '~/components/shared/BackButton.vue';
   import TopoCondition from '~/components/topoLibrary/TopoCondition.vue';
+  import type { TopoDetails, TopoId } from '#shared/api/rest/topo';
 
   definePageMeta({ middleware: 'active-member-guard' });
 
@@ -10,9 +11,12 @@
   const isBoard = computed(() => luakUser.value.permissions.boardSection);
 
   const topoId = useRoute('topos-id').params.id as TopoId;
-  const { data, pending, error } = await useLazyFetch(`/api/topos/${topoId}`, {
-    method: 'get',
-  });
+  const { data, pending, error } = await useLazyFetch<TopoDetails>(
+    `/api/topos/${topoId}`,
+    {
+      method: 'get',
+    },
+  );
 
   const availableAmount = computed(() => {
     if (data.value === undefined) return -1;

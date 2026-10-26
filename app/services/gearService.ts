@@ -1,4 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
+import type { GearItemId } from '#shared/api/rest/gear';
 
 export class GearService {
   constructor(

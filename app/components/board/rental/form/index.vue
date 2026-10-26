@@ -4,6 +4,8 @@
   import { useToast } from '~/composables/useToast';
   import { useRentalForm } from '~/composables/board/rental/useRentalForm';
   import DepositFeeField from './DepositFeeField.vue';
+  import type { GearItemId } from '#shared/api/rest/gear';
+  import type { TopoId } from '#shared/api/rest/topo';
 
   const props = defineProps<{
     boardMemberName: string;
