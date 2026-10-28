@@ -1,12 +1,13 @@
-import { object, literal, number, discriminatedUnion, uuid } from 'zod';
-import type { infer as Infer, ZodType } from 'zod';
+import { object, literal, number, discriminatedUnion } from 'zod';
+import type { infer as Infer } from 'zod';
 import type { ItemEvent } from '#shared/api/rest/inventory';
+import { type RentalId, rentalIdSchema } from '#shared/api/rest/rental';
 
 export type { ItemEvent } from '#shared/api/rest/inventory';
 
 const itemLostEventSchema = object({
   eventName: literal('ItemLostEvent'),
-  rentalId: (uuid() as unknown as ZodType<RentalId>).optional(),
+  rentalId: rentalIdSchema.optional(),
   lostAmount: number().min(1),
 });
 export const itemLostEvent = (

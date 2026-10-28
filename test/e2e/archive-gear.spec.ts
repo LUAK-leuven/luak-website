@@ -1,7 +1,7 @@
 import { authStateFile, cleanDatabase, test } from '#test/e2e/fixtures';
 import { testServiceBuilder } from '#test/testServices';
 import { itemArchivedEvent } from '#server/domain/inventory/ItemEvent';
-import type { GearInventoryId } from '#shared/api/rest/gear';
+import { createGearInventoryId } from '#shared/api/rest/gear';
 import { createTopoId } from '#shared/api/rest/topo';
 import { GearInventoryPage } from '#test/e2e/pages/gear/inventory.page';
 import { expect } from '@playwright/test';
@@ -25,14 +25,14 @@ test.describe('lost gear form', () => {
     await testDao.addInventoryItemEvent({
       itemId: {
         // TODO: find a better solution iso reusing the hardcoded ID from seed.sql
-        itemId: '3d7a2a9a-8a8a-456c-997e-8533427f6ed1' as GearInventoryId,
+        itemId: createGearInventoryId('3d7a2a9a-8a8a-456c-997e-8533427f6ed1'),
         itemType: 'gear',
       },
       event: itemArchivedEvent(4),
     });
     await testDao.addInventoryItemEvent({
       itemId: {
-        itemId: '49f1b67b-5289-4056-a43a-c9ad248ad883' as GearInventoryId,
+        itemId: createGearInventoryId('49f1b67b-5289-4056-a43a-c9ad248ad883'),
         itemType: 'gear',
       },
       event: itemArchivedEvent(2),

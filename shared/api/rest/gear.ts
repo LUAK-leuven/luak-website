@@ -5,13 +5,21 @@ import {
   union as zodUnion,
 } from 'zod';
 
-import type { EntityId } from '#shared/types/ddd';
 import { dateSchema } from '#shared/types/common';
-import type { RentalId } from '#shared/types/rental';
-import type { InventoryItemEvent } from './inventory';
+import type { InventoryItemEvent } from '#shared/api/rest/inventory';
+import type { RentalId } from '#shared/api/rest/rental';
 
-export type GearItemId = EntityId<'gearItem'>;
-export type GearInventoryId = EntityId<'gearInventory'>;
+declare const gearItemIdBrand: unique symbol;
+export const gearItemIdSchema = entityIdSchema(gearItemIdBrand);
+export type GearItemId = ZodInfer<typeof gearItemIdSchema>;
+export const createGearItemId = (value: string) =>
+  gearItemIdSchema.parse(value);
+
+declare const gearInventoryIdBrand: unique symbol;
+const gearInventoryIdSchema = entityIdSchema(gearInventoryIdBrand);
+export type GearInventoryId = ZodInfer<typeof gearInventoryIdSchema>;
+export const createGearInventoryId = (value: string) =>
+  gearInventoryIdSchema.parse(value);
 
 export type GearInventorySummary = {
   id: GearItemId;

@@ -1,7 +1,7 @@
 import { type infer as ZodInfer, string as zodString } from 'zod';
 
 import { entityIdSchema } from '#shared/types/ddd';
-import type { RentalId } from '#shared/types/rental';
+import type { RentalId } from '#shared/api/rest/rental';
 import type { InventoryItemEvent } from '#shared/api/rest/inventory';
 import { amountSchema, yearSchema } from '#shared/types/common';
 

@@ -93,7 +93,7 @@ export const min = <T>(
 
 export const uuidRegex = `[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}`;
 
-export const randomOf = <T>(arr: T[]): T =>
+export const randomOf = <T>(arr: readonly T[]): T =>
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   arr[Math.floor(Math.random() * arr.length)]!;
 

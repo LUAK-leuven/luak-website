@@ -2,9 +2,12 @@
   import RentalsForItem from '~/components/board/inventory/RentalsForItem.vue';
   import Inventory from '~/components/board/gear/Inventory.vue';
   import DetailsPage from '~/components/pages/DetailsPage.vue';
-  import type { GearInventoryDetails, GearItemId } from '#shared/api/rest/gear';
+  import {
+    createGearItemId,
+    type GearInventoryDetails,
+  } from '#shared/api/rest/gear';
 
-  const gearItemId = useRoute('board-gear-id').params.id as GearItemId;
+  const gearItemId = createGearItemId(useRoute('board-gear-id').params.id);
 
   const { data, pending, error } = useLazyFetch(
     () => `/api/gear/inventory/${gearItemId}`,
@@ -14,7 +17,7 @@
     },
   );
 
-  const dipslayLifespan = (lifespan: number): string => {
+  const displayLifespan = (lifespan: number): string => {
     if (lifespan === 0) return '-';
     return `${lifespan.toFixed()} years`;
   };
@@ -33,7 +36,7 @@
         Available: {{ gearItems.availableAmount }} /
         {{ gearItems.totalAmount }}
       </span>
-      <span> Lifespan: {{ dipslayLifespan(gearItems.lifespan) }} </span>
+      <span> Lifespan: {{ displayLifespan(gearItems.lifespan) }} </span>
       <span>Deposit fee: {{ (gearItems.depositFee / 100).toFixed(2) }} €</span>
     </div>
 

@@ -49,6 +49,7 @@
       }))
       .concat(
         objectEntries(props.compositeItems).map(([name, items]) => ({
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
           id: name as T,
           name: name,
           availableAmount: computeAvailableAmountForCompositeItem(items),

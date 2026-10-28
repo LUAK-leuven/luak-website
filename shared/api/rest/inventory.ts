@@ -1,4 +1,4 @@
-import type { RentalId } from '#shared/types/rental';
+import type { RentalId } from '#shared/api/rest/rental';
 
 export type ItemLostEvent = {
   eventName: 'ItemLostEvent';
