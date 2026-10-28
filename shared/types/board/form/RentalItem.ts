@@ -1,4 +1,4 @@
-export type RentalItem<T extends EntityId<unknown>> = {
+export type RentalItem<T extends EntityId> = {
   id: T;
   name: string;
   totalAmount: number;

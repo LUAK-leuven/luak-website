@@ -36,13 +36,8 @@ export default withNuxt(
       'vue/html-self-closing': 'off',
       'vue/no-multiple-template-root': 'off',
       '@typescript-eslint/no-non-null-assertion': 'warn',
-      '@typescript-eslint/no-require-imports': 'error',
-      '@typescript-eslint/consistent-type-assertions': [
-        'warn',
-        {
-          assertionStyle: 'never',
-        },
-      ],
+      '@typescript-eslint/consistent-type-assertions': 'error',
+      '@typescript-eslint/no-unsafe-type-assertion': 'error',
     },
   },
 );

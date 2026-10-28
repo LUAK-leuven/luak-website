@@ -1,5 +1,12 @@
+import {
+  string as zodString,
+  type infer as ZodInfer,
+  literal as zodLiteral,
+  union as zodUnion,
+} from 'zod';
+
 import type { EntityId } from '#shared/types/ddd';
-import type { Date } from '#shared/types/common';
+import { dateSchema } from '#shared/types/common';
 import type { RentalId } from '#shared/types/rental';
 import type { InventoryItemEvent } from './inventory';
 
@@ -39,7 +46,18 @@ export type GearInventoryDetails = {
   }[];
 };
 
-export type GearName = string & { readonly __brand_gear_name: unique symbol };
-export const createGearName = (value: string): GearName => value as GearName;
+declare const gearNameBrand: unique symbol;
+const gearNameSchema = zodString().nonempty().brand(gearNameBrand);
+export type GearName = ZodInfer<typeof gearNameSchema>;
+export const createGearName = (value: string): GearName =>
+  gearNameSchema.parse(value);
 
-export type RetirementDate = Date | 'missing info' | 'infinite';
+declare const retirementDateBrand: unique symbol;
+const retirementDateSchema = zodUnion([
+  dateSchema,
+  zodLiteral('missing info'),
+  zodLiteral('infinite'),
+]).brand(retirementDateBrand);
+export type RetirementDate = ZodInfer<typeof retirementDateSchema>;
+export const createRetirementDate = (value: string): RetirementDate =>
+  retirementDateSchema.parse(value);

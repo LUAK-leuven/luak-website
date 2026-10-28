@@ -23,7 +23,7 @@ import {
   createTitle,
   createClimbingType,
 } from '#shared/api/rest/topo';
-import type { Date } from '#shared/types/common';
+import { createDate } from '#shared/types/common';
 
 export class SupabaseTopoRepository implements TopoRepository {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
@@ -110,7 +110,7 @@ export class SupabaseTopoRepository implements TopoRepository {
 
     return data.map((it) => ({
       topoId: createTopoId(it.item_id),
-      occurredOn: it.occured_on as Date,
+      occurredOn: createDate(it.occured_on),
       ...parseEvent(it.event),
     }));
   }

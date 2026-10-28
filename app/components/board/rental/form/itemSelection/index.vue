@@ -1,6 +1,6 @@
-<script lang="ts" setup generic="T extends EntityId<unknown>">
+<script lang="ts" setup generic="T extends EntityId">
   import { objectEntries } from '@vueuse/core';
-  import type { RentalItem } from '~~/shared/types/board/form/RentalItem';
+  import type { RentalItem } from '#shared/types/board/form/RentalItem';
 
   const props = withDefaults(
     defineProps<{
@@ -19,19 +19,19 @@
   }>();
 
   const selectedItems = computed(() =>
-    objectEntries(props.selectedItems)
-      .filter(([, amount]) => amount !== undefined)
-      .map(([id, amount]) => {
-        const item = getBy(props.allItems, 'id', id);
-        return {
-          id: id,
-          name: item.name,
-          selectedAmount: amount as number,
-          availableAmount: item.availableAmount,
-          totalAmount: item.totalAmount,
-          depositFee: item.depositFee,
-        };
-      }),
+    objectEntries(props.selectedItems).flatMap(([id, amount]) => {
+      if (amount === undefined) return [];
+
+      const item = getBy(props.allItems, 'id', id);
+      return {
+        id: id,
+        name: item.name,
+        selectedAmount: amount,
+        availableAmount: item.availableAmount,
+        totalAmount: item.totalAmount,
+        depositFee: item.depositFee,
+      };
+    }),
   );
 
   const availableItems = computed(() =>

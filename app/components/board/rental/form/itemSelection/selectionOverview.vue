@@ -1,4 +1,4 @@
-<script lang="ts" setup generic="T extends EntityId<unknown>">
+<script lang="ts" setup generic="T extends EntityId">
   import InputNumber from '~/components/input/NumberCompact.vue';
 
   defineProps<{

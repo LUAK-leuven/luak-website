@@ -20,7 +20,7 @@
 
   const { bouncing, triggerBounce } = useBounce();
 
-  function mapFormRentedItems<T extends EntityId<unknown>>(
+  function mapFormRentedItems<T extends EntityId>(
     formReturnedItems: Record<T, number>,
     rentalRentedItems: RentalItemModel[],
   ) {

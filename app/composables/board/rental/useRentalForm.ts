@@ -21,7 +21,7 @@ type RentalFormState = {
   comments: string | undefined;
 };
 
-function selectionFrom<T extends EntityId<unknown>>(
+function selectionFrom<T extends EntityId>(
   selection: { id: T; name: string; totalAmount: number }[],
 ) {
   return (
