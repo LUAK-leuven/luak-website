@@ -6,6 +6,7 @@ import {
   getMembershipStatus,
   Membership,
 } from '~/model/Membership';
+import { createUserId, type UserId } from '#shared/api/rest/user';
 
 export class UserService {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
@@ -46,7 +47,7 @@ export class UserService {
         (membership) => membership?.isActive() ?? false,
       );
       return {
-        id: user.id as UserId,
+        id: createUserId(user.id),
         email: user.email,
         firstName: user.first_name,
         lastName: user.last_name,
@@ -86,7 +87,7 @@ export class UserService {
       .throwOnError();
 
     return {
-      id: data.id as UserId,
+      id: createUserId(data.id),
       firstName: data.first_name,
       lastName: data.last_name,
       fullName: data.first_name + ' ' + data.last_name,

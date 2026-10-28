@@ -2,6 +2,7 @@ import * as yup from 'yup';
 import type { RentalItem } from '~~/shared/types/board/form/RentalItem';
 import type { GearItemId } from '#shared/api/rest/gear';
 import type { TopoId } from '#shared/api/rest/topo';
+import type { UserId } from '#shared/api/rest/user';
 
 type RentalFormState = {
   memberId: UserId | 'non-user';

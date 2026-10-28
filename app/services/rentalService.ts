@@ -11,6 +11,7 @@ import { object as zodObject, string as zodString } from 'zod';
 import { createGearItemId } from '#shared/api/rest/gear';
 import { createTopoId } from '#shared/api/rest/topo';
 import { createRentalId, type RentalId } from '#shared/api/rest/rental';
+import { createUserId, type UserId } from '#shared/api/rest/user';
 
 export class RentalService {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
@@ -261,7 +262,7 @@ export const rentalDetailsFromDb = (args: RentalDetailsVo): RentalDetails => {
     boardMember: args.board_member ? getFullName(args.board_member) : '',
     paymentMethod: args.payment_method,
     comments: args.comments ?? '',
-    memberId: args.member?.id as UserId | undefined,
+    memberId: args.member === null ? undefined : createUserId(args.member.id),
   });
 };
 

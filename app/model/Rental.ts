@@ -3,6 +3,7 @@ import { DomainValidationException } from '~/model/DomainValidationException';
 import type { GearItemId } from '#shared/api/rest/gear';
 import type { TopoId } from '#shared/api/rest/topo';
 import type { RentalId } from '#shared/api/rest/rental';
+import type { UserId } from '#shared/api/rest/user';
 
 abstract class RentalBase {
   readonly id: RentalId;
