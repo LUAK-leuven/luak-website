@@ -9,8 +9,8 @@ export type ToastItem = {
   progress: number;
 };
 
-declare const toastIdBrand: unique symbol;
-const toastIdSchema = entityIdSchema(toastIdBrand);
+declare const _toastIdBrand: unique symbol;
+const toastIdSchema = entityIdSchema<typeof _toastIdBrand>();
 type ToastId = ZodInfer<typeof toastIdSchema>;
 const createToastId = (value: string) => toastIdSchema.parse(value);
 

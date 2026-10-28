@@ -23,7 +23,7 @@ import {
   createTitle,
   createClimbingType,
 } from '#shared/api/rest/topo';
-import { createDate } from '#shared/types/common';
+import { createDateTime } from '#shared/types/common';
 
 export class SupabaseTopoRepository implements TopoRepository {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
@@ -41,7 +41,10 @@ export class SupabaseTopoRepository implements TopoRepository {
       authors: topo.authors.map((it) => createAuthor(it)),
       condition: mapTopoCondition(topo.condition),
       countries: topo.countries.map((it) => createCountry(it)),
-      details: topo.details === null ? undefined : createDetails(topo.details),
+      details:
+        topo.details === null || topo.details.trim() === ''
+          ? undefined
+          : createDetails(topo.details),
       id: createTopoId(topo.id),
       languages: topo.languages.map((it) => createLanguage(it)),
       place_in_library: createPlaceInLibrary(topo.place_in_library),
@@ -110,7 +113,7 @@ export class SupabaseTopoRepository implements TopoRepository {
 
     return data.map((it) => ({
       topoId: createTopoId(it.item_id),
-      occurredOn: createDate(it.occured_on),
+      occurredOn: createDateTime(it.occured_on),
       ...parseEvent(it.event),
     }));
   }

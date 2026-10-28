@@ -8,15 +8,16 @@ import {
 import { dateSchema } from '#shared/types/common';
 import type { InventoryItemEvent } from '#shared/api/rest/inventory';
 import type { RentalId } from '#shared/api/rest/rental';
+import { entityIdSchema } from '#shared/types/ddd';
 
-declare const gearItemIdBrand: unique symbol;
-export const gearItemIdSchema = entityIdSchema(gearItemIdBrand);
+declare const _gearItemIdBrand: unique symbol;
+export const gearItemIdSchema = entityIdSchema<typeof _gearItemIdBrand>();
 export type GearItemId = ZodInfer<typeof gearItemIdSchema>;
 export const createGearItemId = (value: string) =>
   gearItemIdSchema.parse(value);
 
-declare const gearInventoryIdBrand: unique symbol;
-const gearInventoryIdSchema = entityIdSchema(gearInventoryIdBrand);
+declare const _gearInventoryIdBrand: unique symbol;
+const gearInventoryIdSchema = entityIdSchema<typeof _gearInventoryIdBrand>();
 export type GearInventoryId = ZodInfer<typeof gearInventoryIdSchema>;
 export const createGearInventoryId = (value: string) =>
   gearInventoryIdSchema.parse(value);
@@ -54,18 +55,18 @@ export type GearInventoryDetails = {
   }[];
 };
 
-declare const gearNameBrand: unique symbol;
-const gearNameSchema = zodString().nonempty().brand(gearNameBrand);
+declare const _gearNameBrand: unique symbol;
+const gearNameSchema = zodString().nonempty().brand<typeof _gearNameBrand>();
 export type GearName = ZodInfer<typeof gearNameSchema>;
 export const createGearName = (value: string): GearName =>
   gearNameSchema.parse(value);
 
-declare const retirementDateBrand: unique symbol;
+declare const _retirementDateBrand: unique symbol;
 const retirementDateSchema = zodUnion([
   dateSchema,
   zodLiteral('missing info'),
   zodLiteral('infinite'),
-]).brand(retirementDateBrand);
+]).brand<typeof _retirementDateBrand>();
 export type RetirementDate = ZodInfer<typeof retirementDateSchema>;
 export const createRetirementDate = (value: string): RetirementDate =>
   retirementDateSchema.parse(value);

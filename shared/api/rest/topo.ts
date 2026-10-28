@@ -5,8 +5,8 @@ import type { RentalId } from '#shared/api/rest/rental';
 import type { InventoryItemEvent } from '#shared/api/rest/inventory';
 import { amountSchema, yearSchema } from '#shared/types/common';
 
-declare const topoIdBrand: unique symbol;
-const topoIdSchema = entityIdSchema(topoIdBrand);
+declare const _topoIdBrand: unique symbol;
+const topoIdSchema = entityIdSchema<typeof _topoIdBrand>();
 export type TopoId = ZodInfer<typeof topoIdSchema>;
 export const createTopoId = (value: string): TopoId =>
   topoIdSchema.parse(value);
@@ -56,72 +56,77 @@ export type TopoListItem = {
 
 export type TopoEvent = InventoryItemEvent;
 
-declare const titleBrand: unique symbol;
-const titleSchema = zodString().nonempty().brand(titleBrand);
+declare const _titleBrand: unique symbol;
+const titleSchema = zodString().nonempty().brand<typeof _titleBrand>();
 export type Title = ZodInfer<typeof titleSchema>;
 export const createTitle = (value: string): Title => titleSchema.parse(value);
 
-declare const authorBrand: unique symbol;
-const authorSchema = zodString().nonempty().brand(authorBrand);
+declare const _authorBrand: unique symbol;
+const authorSchema = zodString().nonempty().brand<typeof _authorBrand>();
 export type Author = ZodInfer<typeof authorSchema>;
 export const createAuthor = (value: string): Author =>
   authorSchema.parse(value);
 
-declare const countryBrand: unique symbol;
-const countrySchema = zodString().nonempty().brand(countryBrand);
+declare const _countryBrand: unique symbol;
+const countrySchema = zodString().nonempty().brand<typeof _countryBrand>();
 export type Country = ZodInfer<typeof countrySchema>;
 export const createCountry = (value: string): Country =>
   countrySchema.parse(value);
 
-declare const languageBrand: unique symbol;
-const languageSchema = zodString().nonempty().brand(languageBrand);
+declare const _languageBrand: unique symbol;
+const languageSchema = zodString().nonempty().brand<typeof _languageBrand>();
 export type Language = ZodInfer<typeof languageSchema>;
 export const createLanguage = (value: string): Language =>
   languageSchema.parse(value);
 
-declare const climbingTypeBrand: unique symbol;
-const climbingTypeSchema = zodString().nonempty().brand(climbingTypeBrand);
+declare const _climbingTypeBrand: unique symbol;
+const climbingTypeSchema = zodString()
+  .nonempty()
+  .brand<typeof _climbingTypeBrand>();
 export type ClimbingType = ZodInfer<typeof climbingTypeSchema>;
 export const createClimbingType = (value: string): ClimbingType =>
   climbingTypeSchema.parse(value);
 
-declare const placeInLibraryBrand: unique symbol;
-const placeInLibrarySchema = zodString().nonempty().brand(placeInLibraryBrand);
+declare const _placeInLibraryBrand: unique symbol;
+const placeInLibrarySchema = zodString()
+  .nonempty()
+  .brand<typeof _placeInLibraryBrand>();
 export type PlaceInLibrary = ZodInfer<typeof placeInLibrarySchema>;
 export const createPlaceInLibrary = (value: string): PlaceInLibrary =>
   placeInLibrarySchema.parse(value);
 
-declare const tagBrand: unique symbol;
-const tagSchema = zodString().nonempty().brand(tagBrand);
+declare const _tagBrand: unique symbol;
+const tagSchema = zodString().nonempty().brand<typeof _tagBrand>();
 export type Tag = ZodInfer<typeof tagSchema>;
 export const createTag = (value: string): Tag => tagSchema.parse(value);
 
-declare const detailsBrand: unique symbol;
-const detailsSchema = zodString().nonempty().brand(detailsBrand);
+declare const _detailsBrand: unique symbol;
+const detailsSchema = zodString().nonempty().brand<typeof _detailsBrand>();
 export type Details = ZodInfer<typeof detailsSchema>;
 export const createDetails = (value: string): Details =>
   detailsSchema.parse(value);
 
-declare const initialAmountBrand: unique symbol;
-const initialAmountSchema = amountSchema.brand(initialAmountBrand);
+declare const _initialAmountBrand: unique symbol;
+const initialAmountSchema = amountSchema.brand<typeof _initialAmountBrand>();
 export type InitialAmount = ZodInfer<typeof initialAmountSchema>;
 export const createInitialAmount = (n: number): InitialAmount =>
   initialAmountSchema.parse(n);
 
-declare const totalAmountBrand: unique symbol;
-const totalAmountSchema = amountSchema.brand(totalAmountBrand);
+declare const _totalAmountBrand: unique symbol;
+const totalAmountSchema = amountSchema.brand<typeof _totalAmountBrand>();
 export type TotalAmount = ZodInfer<typeof totalAmountSchema>;
 export const createTotalAmount = (n: number): TotalAmount =>
   totalAmountSchema.parse(n);
 
-declare const availableAmountBrand: unique symbol;
-const availableAmountSchema = amountSchema.brand(availableAmountBrand);
+declare const _availableAmountBrand: unique symbol;
+const availableAmountSchema =
+  amountSchema.brand<typeof _availableAmountBrand>();
 export type AvailableAmount = ZodInfer<typeof availableAmountSchema>;
 export const createAvailableAmount = (n: number): AvailableAmount =>
   availableAmountSchema.parse(n);
 
-declare const yearPublishedBrand: unique symbol;
-const yearPublishedSchema = yearSchema.brand(yearPublishedBrand);
+declare const _yearPublishedBrand: unique symbol;
+const yearPublishedSchema = yearSchema.brand<typeof _yearPublishedBrand>();
 export type YearPublished = ZodInfer<typeof yearPublishedSchema>;
 export const createYearPublished = (n: number): YearPublished =>
   yearPublishedSchema.parse(n);

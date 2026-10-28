@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { expect, test } from 'vitest';
 import {
   itemArchivedEvent,
   itemLostEvent,
@@ -6,8 +6,8 @@ import {
 } from '#server/domain/inventory/ItemEvent';
 import { aRandomRentalId } from '#test/builders/ids';
 
-describe('parseEvent', () => {
-  it('parses a minimal item lost event', () => {
+test.describe('parseEvent', () => {
+  test('parses a minimal item lost event', () => {
     expect(
       parseEvent({
         eventName: 'ItemLostEvent',
@@ -19,7 +19,7 @@ describe('parseEvent', () => {
     });
   });
 
-  it('parses an item lost event with a rental', () => {
+  test('parses an item lost event with a rental', () => {
     const rentalId = aRandomRentalId();
 
     expect(
@@ -35,14 +35,14 @@ describe('parseEvent', () => {
     });
   });
 
-  it('parses an item archived event', () => {
+  test('parses an item archived event', () => {
     expect(parseEvent({ eventName: 'ItemArchivedEvent', amount: 1 })).toEqual({
       eventName: 'ItemArchivedEvent',
       amount: 1,
     });
   });
 
-  it.each([
+  test.each([
     ['unknown event name', { eventName: 'UnknownEvent', lostAmount: 1 }],
     ['missing lost amount', { eventName: 'ItemLostEvent' }],
     ['zero lost amount', { eventName: 'ItemLostEvent', lostAmount: 0 }],
@@ -55,13 +55,13 @@ describe('parseEvent', () => {
     expect(() => parseEvent(input)).toThrow();
   });
 
-  it('throws for non-object input', () => {
+  test('throws for non-object input', () => {
     expect(() => parseEvent(null)).toThrow();
   });
 });
 
-describe('item event factories', () => {
-  it('creates an item lost event', () => {
+test.describe('item event factories', () => {
+  test('creates an item lost event', () => {
     const rentalId = aRandomRentalId();
 
     expect(itemLostEvent(rentalId, 2)).toEqual({
@@ -71,7 +71,7 @@ describe('item event factories', () => {
     });
   });
 
-  it('creates an item archived event', () => {
+  test('creates an item archived event', () => {
     expect(itemArchivedEvent(2)).toEqual({
       eventName: 'ItemArchivedEvent',
       amount: 2,

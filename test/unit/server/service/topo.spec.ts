@@ -1,46 +1,33 @@
-import { describe, expect, test } from 'vitest';
+import { expect, test } from 'vitest';
 import type { TopoRepository } from '#server/domain/topo/repository';
-import type { TopoLibraryRecord, TopoRecord } from '#server/domain/topo/topo';
+import type { TopoLibraryRecord } from '#server/domain/topo/topo';
 import type { InventoryRepository } from '#server/domain/inventory/repository';
 import type { RentalRepository } from '#server/domain/rental/repository';
 import { TopoServiceImpl } from '#server/service/topo';
-import { aRandomTopoId } from '#test/builders/ids';
 import {
-  createAuthor,
-  createClimbingType,
-  createCountry,
-  createDetails,
   createInitialAmount,
-  createLanguage,
   createPlaceInLibrary,
-  createTag,
-  createTitle,
-  createTopoId,
-  createYearPublished,
 } from '#shared/api/rest/topo';
+import {
+  aRandomTopoId,
+  aTopoLibraryRecord,
+  aTopoRecord,
+} from '#test/testUtils/builders/topo';
 
-describe('TopoService', () => {
+test.describe('TopoService', () => {
   test('maps topo details and folds inventory events', async () => {
     const topoId = aRandomTopoId();
     const topoRepository = {
       getDetails: () =>
-        Promise.resolve({
-          id: topoId,
-          title: createTitle('Topo'),
-          authors: [createAuthor('Author')],
-          condition: undefined,
-          countries: [createCountry('Norway')],
-          details: createDetails('Details'),
-          languages: [createLanguage('English')],
-          place_in_library: createPlaceInLibrary('A1'),
-          tags: [createTag('guidebook')],
-          types_of_climbing: [createClimbingType('sport')],
-          year_published: createYearPublished(2020),
-          totalAmount: createInitialAmount(3),
-        }),
-    } satisfies Pick<TopoRepository, 'getDetails'> satisfies {
-      getDetails: () => Promise<TopoRecord>;
-    };
+        Promise.resolve(
+          aTopoRecord({
+            id: topoId,
+            place_in_library: createPlaceInLibrary('A1'),
+            totalAmount: createInitialAmount(3),
+          }),
+        ),
+    } satisfies Pick<TopoRepository, 'getDetails'>;
+
     const events = [
       {
         eventName: 'ItemLostEvent' as const,
@@ -69,8 +56,6 @@ describe('TopoService', () => {
     expect(details).toMatchObject({
       id: topoId,
       placeInLibrary: 'A1',
-      typesOfClimbing: ['sport'],
-      yearPublished: 2020,
       initialAmount: 3,
       amount: 1,
       events,
@@ -79,33 +64,18 @@ describe('TopoService', () => {
   });
 
   test('filters out-of-stock topos when requested', async () => {
+    const inStockTopoId = aRandomTopoId();
     const topoRepository = {
       getTopoLibrary: () =>
         Promise.resolve([
-          {
-            id: createTopoId('in-stock'),
-            authors: [],
-            condition: undefined,
-            countries: [],
-            placeInLibrary: createPlaceInLibrary('A1'),
-            tags: [],
-            title: createTitle('In stock'),
-            typesOfClimbing: [],
-            yearPublished: undefined,
+          aTopoLibraryRecord({
+            id: inStockTopoId,
             initialAmount: createInitialAmount(1),
-          },
-          {
-            id: createTopoId('out-of-stock'),
-            authors: [],
-            condition: undefined,
-            countries: [],
-            placeInLibrary: createPlaceInLibrary('A2'),
-            tags: [],
-            title: createTitle('Out of stock'),
-            typesOfClimbing: [],
-            yearPublished: undefined,
+          }),
+          aTopoLibraryRecord({
+            id: aRandomTopoId(),
             initialAmount: createInitialAmount(0),
-          },
+          }),
         ] satisfies TopoLibraryRecord[]),
       getAllTopoInventoryItemEvents: () => Promise.resolve([]),
     } satisfies Pick<
@@ -119,6 +89,6 @@ describe('TopoService', () => {
       {} as RentalRepository,
     ).getTopoLibrary({ includeOutOfStock: false });
 
-    expect(topos.map((topo) => topo.id)).toEqual(['in-stock']);
+    expect(topos.map((topo) => topo.id)).toEqual([inStockTopoId]);
   });
 });

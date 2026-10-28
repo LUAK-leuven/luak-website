@@ -29,7 +29,6 @@ permission:
     "tsconfig*.json": ask
     "*": allow
   skill: allow
-  "*": ask
 ---
 
 ## Role
