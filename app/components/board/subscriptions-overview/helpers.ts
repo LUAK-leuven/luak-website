@@ -24,7 +24,6 @@ export const formatKbfUiaaStatus = (
   return statusMap[status] || status;
 };
 
-// CSV headers mapping
 export const csvHeaders = {
   Name: 'name',
   Email: 'email',
@@ -34,4 +33,4 @@ export const csvHeaders = {
   Sportscard: 'sportscard',
   KBFStatus: 'kbf_uiaa_member',
   SubscriptionDate: 'created_at',
-};
+} as const;

@@ -28,16 +28,13 @@ export const single = <T>(array: T[]): T => {
 export const groupBy = <T, K extends keyof any>(
   arr: T[],
   getKey: (i: T) => K,
-): Record<K, T[] | undefined> => {
-  return arr.reduce(
-    (groups, item) => {
-      const key = getKey(item);
-      if (!groups[key]) groups[key] = [];
-      groups[key].push(item);
-      return groups;
-    },
-    {} as Record<K, T[] | undefined>,
-  );
+): Partial<Record<K, T[]>> => {
+  const groups: Partial<Record<K, T[]>> = {};
+  for (const item of arr) {
+    const key = getKey(item);
+    (groups[key] ??= []).push(item);
+  }
+  return groups;
 };
 
 export const getBy = <T extends Record<K, V>, K extends keyof T, V>(
@@ -89,6 +86,13 @@ export const min = <T>(
     if (minVal === null) return it;
     return predicate(minVal, it) ? minVal : it;
   }, null);
+};
+
+export const entries = <K extends PropertyKey, V>(
+  object: Record<K, V>,
+): [K, V][] => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+  return Object.entries(object) as [K, V][];
 };
 
 export const uuidRegex = `[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}`;

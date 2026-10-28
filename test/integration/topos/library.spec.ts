@@ -35,20 +35,20 @@ beforeAll(async () => {
 });
 
 test('Does not return topos with total amount 0 for non-board members', async () => {
-  const library = (await $fetch(
+  const library = await $fetch<TopoLibraryItem[]>(
     '/api/topos/library',
     'paidMembership',
-  )) as TopoLibraryItem[];
+  );
 
   expect(library).toHaveLength(1);
   expect(library[0]!.amount).toBe(1);
 });
 
 test('Also returns topos with total amount 0 for board members', async () => {
-  const library = (await $fetch(
+  const library = await $fetch<TopoLibraryItem[]>(
     '/api/topos/library',
     'boardMember',
-  )) as TopoLibraryItem[];
+  );
 
   expect(library).toHaveLength(2);
   expect(library.find((topo) => topo.id === idTopoAilefroide)!.amount).toBe(0);

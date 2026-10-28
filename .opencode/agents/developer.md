@@ -10,7 +10,7 @@ permission:
     "head *": allow
     "tail *": allow
     "yarn typecheck *": allow
-    "yarn lint *": allow
+    "yarn lint*": allow
     "yarn test*": allow
     "yarn prettier *": allow
     "yarn vitest *": allow

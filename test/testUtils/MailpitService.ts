@@ -1,68 +1,80 @@
 import dayjs from 'dayjs';
-import type { EntityId } from '#shared/types/ddd';
+import {
+  array as zodArray,
+  boolean as zodBoolean,
+  number as zodNumber,
+  object as zodObject,
+  string as zodString,
+  unknown as zodUnknown,
+  type infer as ZodInfer,
+} from 'zod';
 import { sleep } from '#shared/utils/utils';
 
-type Recipient = {
-  Name: string;
-  Address: string;
-};
+const messageIdSchema = zodString().brand<'MessageId'>();
+type MessageId = ZodInfer<typeof messageIdSchema>;
 
-type MessageId = EntityId<'MailpitMessage'>;
+const recipientSchema = zodObject({ Name: zodString(), Address: zodString() });
+const optionalRecipientArraySchema = zodArray(recipientSchema)
+  .nullable()
+  .transform((val) => val ?? []);
 
-type MessageSummary = {
-  ID: MessageId;
-  MessageID: string;
-  Read: boolean;
-  From: Recipient;
-  To: Recipient[];
-  Cc: Recipient[];
-  Bcc: Recipient[];
-  ReplyTo: Recipient[];
-  Subject: string;
-  Created: string;
-  Tags: unknown[];
-  Size: number;
-  Attachments: number;
-  Snippet: string;
-};
+const messageSummarySchema = zodObject({
+  ID: messageIdSchema,
+  MessageID: zodString(),
+  Read: zodBoolean(),
+  From: recipientSchema,
+  To: zodArray(recipientSchema),
+  Cc: optionalRecipientArraySchema,
+  Bcc: optionalRecipientArraySchema,
+  ReplyTo: zodArray(recipientSchema),
+  Subject: zodString(),
+  Created: zodString(),
+  Tags: zodArray(zodUnknown()),
+  Size: zodNumber(),
+  Attachments: zodNumber(),
+  Snippet: zodString(),
+});
+type MessageSummary = ZodInfer<typeof messageSummarySchema>;
 
-type Message = {
-  ID: MessageId;
-  MessageID: string;
-  From: Recipient;
-  To: Recipient[];
-  Cc: Recipient[];
-  Bcc: Recipient[];
-  ReplyTo: Recipient[];
-  ReturnPath: string;
-  Subject: string;
-  ListUnsubscribe: {
-    Header: string;
-    Links: unknown;
-    Errors: string;
-    HeaderPost: string;
-  };
-  Date: string;
-  Tags: unknown[];
-  Text: string;
-  HTML: string;
-  Size: number;
-  Inline: unknown[];
-  Attachments: unknown[];
-};
+const messageSchema = zodObject({
+  ID: messageIdSchema,
+  MessageID: zodString(),
+  From: recipientSchema,
+  To: zodArray(recipientSchema),
+  Cc: optionalRecipientArraySchema,
+  Bcc: optionalRecipientArraySchema,
+  ReplyTo: zodArray(recipientSchema),
+  ReturnPath: zodString(),
+  Subject: zodString(),
+  ListUnsubscribe: zodObject({
+    Header: zodString(),
+    Links: zodUnknown(),
+    Errors: zodString(),
+    HeaderPost: zodString(),
+  }),
+  Date: zodString(),
+  Tags: zodArray(zodUnknown()),
+  Text: zodString(),
+  HTML: zodString(),
+  Size: zodNumber(),
+  Inline: zodArray(zodUnknown()),
+  Attachments: zodArray(zodUnknown()),
+});
 
 export class MailpitService {
   constructor(private readonly baseUrl: string) {}
 
   readonly getAllMessages = async () => {
     const response = await fetch(`${this.baseUrl}/api/v1/messages`);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    return (await response.json()).messages as MessageSummary[];
+    const body = zodObject({ messages: zodArray(messageSummarySchema) }).parse(
+      await response.json(),
+    );
+    return body.messages;
   };
 
   readonly getMessage = async (id: MessageId) => {
     const response = await fetch(`${this.baseUrl}/api/v1/message/${id}`);
-    return (await response.json()) as Message;
+    return messageSchema.parse(await response.json());
   };
 
   readonly waitForEmail = async (

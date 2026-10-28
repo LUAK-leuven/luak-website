@@ -9,11 +9,10 @@
 
   const gearItemId = createGearItemId(useRoute('board-gear-id').params.id);
 
-  const { data, pending, error } = useLazyFetch(
+  const { data, pending, error } = useLazyFetch<GearInventoryDetails>(
     () => `/api/gear/inventory/${gearItemId}`,
     {
       method: 'get',
-      transform: (x) => x as GearInventoryDetails,
     },
   );
 

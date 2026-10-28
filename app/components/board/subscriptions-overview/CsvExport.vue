@@ -24,9 +24,7 @@
     const csvData = [
       Object.keys(csvHeaders),
       ...props.data.map((row) =>
-        Object.values(csvHeaders).map(
-          (header) => row[header as keyof typeof row] || '',
-        ),
+        Object.values(csvHeaders).map((header) => row[header] || ''),
       ),
     ];
 

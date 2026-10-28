@@ -52,10 +52,12 @@
   });
 
   onMounted(() => {
-    if (route.query.error) {
+    const error = route.query.error;
+    if (typeof error === 'string' && error) {
+      const description = route.query.error_description;
       authError.value = {
-        error: route.query.error as string,
-        description: route.query.error_description as string,
+        error,
+        description: typeof description === 'string' ? description : '',
       };
     } else if (!route.query.code) {
       authError.value = {

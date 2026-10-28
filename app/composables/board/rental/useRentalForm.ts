@@ -3,6 +3,7 @@ import type { RentalItem } from '~~/shared/types/board/form/RentalItem';
 import type { GearItemId } from '#shared/api/rest/gear';
 import type { TopoId } from '#shared/api/rest/topo';
 import type { UserId } from '#shared/api/rest/user';
+import { entries } from '#shared/utils/utils';
 
 type RentalFormState = {
   memberId: UserId | 'non-user';
@@ -28,11 +29,11 @@ function selectionFrom<T extends EntityId>(
   return (
     yup
       .object<Record<T, number>, Record<T, yup.NumberSchema<number>>>()
-      .default(() => ({}) as Record<T, number>)
+      .default(() => ({}))
       .required()
       // @ts-expect-error: I can't get the types to match, but it works
       .test(function (items: Record<T, number>) {
-        for (const [id, amount] of Object.entries(items) as [T, number][]) {
+        for (const [id, amount] of entries(items)) {
           const item = selection.find((x) => x.id === id);
           if (item === undefined) {
             console.warn(

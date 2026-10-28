@@ -2,10 +2,7 @@
   import TextField from '~/components/input/TextField.vue';
   import RentalItem from '~/components/board/rental/return/RentalItem.vue';
   import { useRentalReturnForm } from '~/composables/board/rental/useRentalReturnForm';
-  import type {
-    RentalDetails,
-    RentalItem as RentalItemModel,
-  } from '~/model/Rental';
+  import type { RentalDetails } from '~/model/Rental';
 
   const props = defineProps<{
     rental: RentalDetails;
@@ -21,14 +18,22 @@
   const { bouncing, triggerBounce } = useBounce();
 
   function mapFormRentedItems<T extends EntityId>(
-    formReturnedItems: Record<T, number>,
-    rentalRentedItems: RentalItemModel[],
-  ) {
-    return Object.entries<number>(formReturnedItems).filter(
-      ([id, returnedAmount]) =>
-        rentalRentedItems.find((it) => it.itemId.id === id)!.returnedAmount !==
-        returnedAmount,
-    ) as [T, number][];
+    formReturnedItems: Partial<Record<T, number>>,
+    rentalRentedItems: { itemId: { id: T }; returnedAmount: number }[],
+  ): [T, number][] {
+    const updatedItems: [T, number][] = [];
+
+    for (const rentalItem of rentalRentedItems) {
+      const { id } = rentalItem.itemId;
+      if (!(id in formReturnedItems) || formReturnedItems[id] === undefined)
+        continue;
+      const returnedAmount = formReturnedItems[id];
+      if (rentalItem.returnedAmount !== returnedAmount) {
+        updatedItems.push([id, returnedAmount]);
+      }
+    }
+
+    return updatedItems;
   }
 
   const save = async () => {

@@ -7,7 +7,6 @@ permission:
   edit: deny
   skill:
     "review-code-quality": allow
-    "*": ask
 ---
 
 You are a reviewer. You verify a set of changes; you never modify files.

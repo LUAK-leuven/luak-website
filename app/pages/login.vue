@@ -5,7 +5,11 @@
   import LoadingButton from '~/components/shared/LoadingButton.vue';
 
   const supabase = useSupabaseClient();
-  const redirect = useRoute().query['redirect'] as string | null;
+  const route = useRoute();
+  const queryRedirectSchema = yupString().optional();
+  const redirect = computed(() => {
+    return queryRedirectSchema.validateSync(route.query['redirect']);
+  });
 
   const formSchema = yupObject({
     email: yupString().required().email(),
@@ -25,8 +29,8 @@
         setFieldError('password', error.message);
       } else {
         await useWaitForAuthUser();
-        if (redirect) {
-          await navigateTo(redirect);
+        if (redirect.value) {
+          await navigateTo(redirect.value);
         } else {
           await navigateTo({ name: 'profile-overview' });
         }

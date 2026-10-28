@@ -91,10 +91,19 @@ const getMemberName = (rental: {
 
   if (rental.contact_info) {
     try {
-      const contact = JSON.parse(rental.contact_info) as { fullName?: string };
-      if (contact.fullName) return contact.fullName;
-    } catch {
-      // Preserve the previous fallback for malformed historical contact data.
+      // TODO: Use proper schema validation for contact info.
+      const contact: unknown = JSON.parse(rental.contact_info);
+      if (
+        typeof contact === 'object' &&
+        contact !== null &&
+        'fullName' in contact &&
+        typeof contact.fullName === 'string' &&
+        contact.fullName
+      ) {
+        return contact.fullName;
+      }
+    } catch (e) {
+      console.error('Failed to parse contact info:', e);
     }
   }
 
