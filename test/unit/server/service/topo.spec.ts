@@ -15,6 +15,11 @@ import {
   inventoryRepositoryMock,
   rentalRepositoryMock,
 } from '#test/mocks';
+import {
+  createItemArchivedAmount,
+  createItemLostAmount,
+  type InventoryItemEvent,
+} from '#shared/api/rest/inventory';
 
 test.describe('TopoService', () => {
   test('maps topo details and folds inventory events', async () => {
@@ -30,15 +35,15 @@ test.describe('TopoService', () => {
         ),
     });
 
-    const events = [
+    const events: InventoryItemEvent[] = [
       {
         eventName: 'ItemLostEvent' as const,
-        lostAmount: 1,
+        lostAmount: createItemLostAmount(1),
         occurredOn: '2026-01-01',
       },
       {
         eventName: 'ItemArchivedEvent' as const,
-        amount: 1,
+        amount: createItemArchivedAmount(1),
         occurredOn: '2026-01-02',
       },
     ];

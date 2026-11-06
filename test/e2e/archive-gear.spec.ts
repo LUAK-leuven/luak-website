@@ -1,12 +1,12 @@
 import { authStateFile, cleanDatabase, test } from '#test/e2e/fixtures';
 import { testServiceBuilder } from '#test/testServices';
-import { itemArchivedEvent } from '#server/domain/inventory/ItemEvent';
 import { createGearInventoryId } from '#shared/api/rest/gear';
 import { createTopoId } from '#shared/api/rest/topo';
 import { GearInventoryPage } from '#test/e2e/pages/gear/inventory.page';
 import { expect } from '@playwright/test';
 import { RentalFormPage } from '#test/e2e/pages/rental/form.page';
 import { TopoDetailsPage } from '#test/e2e/pages/topos/details.page';
+import { createItemArchivedEvent } from '#shared/api/rest/inventory';
 
 test.use({ storageState: authStateFile('boardMember') });
 
@@ -28,14 +28,14 @@ test.describe('lost gear form', () => {
         itemId: createGearInventoryId('3d7a2a9a-8a8a-456c-997e-8533427f6ed1'),
         itemType: 'gear',
       },
-      event: itemArchivedEvent(4),
+      event: createItemArchivedEvent(4),
     });
     await testDao.addInventoryItemEvent({
       itemId: {
         itemId: createGearInventoryId('49f1b67b-5289-4056-a43a-c9ad248ad883'),
         itemType: 'gear',
       },
-      event: itemArchivedEvent(2),
+      event: createItemArchivedEvent(2),
     });
 
     // Inventory
@@ -68,7 +68,7 @@ test.describe('lost gear form', () => {
         itemId: topoId,
         itemType: 'topo',
       },
-      event: itemArchivedEvent(1),
+      event: createItemArchivedEvent(1),
     });
 
     // Topo details

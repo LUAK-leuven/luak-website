@@ -1,4 +1,3 @@
-import type { ItemEvent } from '#server/domain/inventory/ItemEvent';
 import {
   createTotalAmount,
   type TopoId,
@@ -9,7 +8,7 @@ import type {
   GearItemId,
   GearName,
 } from '#shared/api/rest/gear';
-import type { InventoryItemEvent } from '~~/shared/api/rest/inventory';
+import type { InventoryItemEvent, ItemEvent } from '#shared/api/rest/inventory';
 
 export type InventoryItemId =
   | {

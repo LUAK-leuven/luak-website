@@ -1,6 +1,10 @@
 import { beforeAll, expect, test } from 'vitest';
 import { testServiceBuilder } from '#test/testServices';
 import { createTopoId, type TopoLibraryItem } from '#shared/api/rest/topo';
+import {
+  createItemArchivedAmount,
+  createItemLostAmount,
+} from '#shared/api/rest/inventory';
 
 const $fetch = testServiceBuilder().serverTestService().fetch;
 
@@ -19,7 +23,7 @@ beforeAll(async () => {
     },
     event: {
       eventName: 'ItemLostEvent',
-      lostAmount: 1,
+      lostAmount: createItemLostAmount(1),
     },
   });
   await testDao().addInventoryItemEvent({
@@ -29,7 +33,7 @@ beforeAll(async () => {
     },
     event: {
       eventName: 'ItemArchivedEvent',
-      amount: 1,
+      amount: createItemArchivedAmount(1),
     },
   });
 });

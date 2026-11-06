@@ -1,4 +1,3 @@
-import type { ItemEvent } from '#server/domain/inventory/ItemEvent';
 import type {
   Author,
   ClimbingType,
@@ -17,6 +16,7 @@ import type {
   YearPublished,
 } from '#shared/api/rest/topo';
 import type { DateTime } from '#shared/types/common';
+import type { ItemEvent } from '#shared/api/rest/inventory';
 
 export type { TopoCondition } from '#shared/api/rest/topo';
 export type { TopoId } from '#shared/api/rest/topo';

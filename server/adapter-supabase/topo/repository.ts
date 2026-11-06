@@ -1,5 +1,4 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { parseEvent } from '#server/domain/inventory/ItemEvent';
 import type {
   TopoCondition,
   TopoInventoryItemEvent,
@@ -24,6 +23,7 @@ import {
   createClimbingType,
 } from '#shared/api/rest/topo';
 import { createDateTime } from '#shared/types/common';
+import { itemEventSchema } from '#shared/api/rest/inventory';
 
 export class SupabaseTopoRepository implements TopoRepository {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
@@ -114,7 +114,7 @@ export class SupabaseTopoRepository implements TopoRepository {
     return data.map((it) => ({
       topoId: createTopoId(it.item_id),
       occurredOn: createDateTime(it.occured_on),
-      ...parseEvent(it.event),
+      ...itemEventSchema.parse(it.event),
     }));
   }
 }

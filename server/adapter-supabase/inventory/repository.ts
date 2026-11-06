@@ -13,9 +13,11 @@ import {
   type GearItemRecord,
   type InventoryItemId,
 } from '#server/domain/inventory/InventoryItem';
-import { parseEvent } from '#server/domain/inventory/ItemEvent';
 import type { InventoryRepository } from '#server/domain/inventory/repository';
-import type { InventoryItemEvent } from '#shared/api/rest/inventory';
+import {
+  itemEventSchema,
+  type InventoryItemEvent,
+} from '#shared/api/rest/inventory';
 
 export class SupabaseInventoryRepository implements InventoryRepository {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
@@ -87,7 +89,7 @@ export class SupabaseInventoryRepository implements InventoryRepository {
       .throwOnError();
     return data.map((item) => ({
       occurredOn: item.occured_on,
-      ...parseEvent(item.event),
+      ...itemEventSchema.parse(item.event),
     }));
   }
 
@@ -100,7 +102,7 @@ export class SupabaseInventoryRepository implements InventoryRepository {
     return data.map((item) => ({
       gearInventoryId: createGearInventoryId(item.item_id),
       occurredOn: item.occured_on,
-      ...parseEvent(item.event),
+      ...itemEventSchema.parse(item.event),
     }));
   }
 
