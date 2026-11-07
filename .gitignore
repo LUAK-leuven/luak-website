@@ -9,7 +9,6 @@ dist
 
 # Node dependencies
 node_modules
-.tool-versions
 
 # Logs
 logs
@@ -30,10 +29,3 @@ logs
 /test-results/
 /playwright-report/
 test/e2e/.auth/
-
-
-# APM dependencies
-apm_modules/
-.agents/
-.opencode/
-apm.lock.yaml

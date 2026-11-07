@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 import { LoginPage } from '#test/e2e/pages/login.page';
 import { testServiceBuilder } from '#test/testServices';
-import { testUsers, TestUser, type TestUserKey } from '#test/TestUser';
+import { TestUser, type TestUserKey, testUserKeys } from '#test/TestUser';
 import { test as base, expect } from '@playwright/test';
 import { randomOf } from '#shared/utils/utils';
 import { AppPage } from '#test/e2e/pages/app.page';
@@ -28,7 +28,7 @@ export const randomUserTest = test.extend<{
 }>({
   // eslint-disable-next-line no-empty-pattern
   user: async ({}, use) => {
-    const user = randomOf(Object.keys(testUsers)) as TestUserKey;
+    const user = randomOf(testUserKeys);
     await use(user);
   },
   storageState: async ({ user }, use) => {

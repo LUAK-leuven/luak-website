@@ -10,6 +10,7 @@
   import GearInventorySelection from './GearInventorySelection.vue';
   import type { GearInventoryId } from '#shared/api/rest/gear';
   import type { RentalGearItem } from '~/model/Rental.js';
+  import type { RentalId } from '#shared/api/rest/rental.ts';
 
   const props = defineProps<{
     rentalId: RentalId;

@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { GearItemId } from '#shared/api/rest/gear';
+import { createGearItemId } from '#shared/api/rest/gear';
 
 export class GearService {
   constructor(
@@ -23,7 +23,7 @@ export class GearService {
     return data.map((it) => ({
       name: it.name,
       gearItemIds: it.CompositeGearItems_GearItems.map((it) => ({
-        id: it.gear_item_id as GearItemId,
+        id: createGearItemId(it.gear_item_id),
         amount: it.amount,
       })),
     }));

@@ -10,7 +10,7 @@ import type {
   TopoListItem,
   TopoId,
 } from '#server/domain/topo/topo';
-import { availableAmount } from '#shared/api/rest/topo';
+import { createAvailableAmount } from '#shared/api/rest/topo';
 
 export class TopoServiceImpl implements TopoService {
   constructor(
@@ -100,7 +100,7 @@ export class TopoServiceImpl implements TopoService {
           id: topo.id,
           title: topo.title,
           totalAmount: totalAmount_,
-          availableAmount: availableAmount(totalAmount_ - rentedAmount),
+          availableAmount: createAvailableAmount(totalAmount_ - rentedAmount),
           yearPublished: topo.yearPublished,
         };
       })

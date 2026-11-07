@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends EntityId<unknown>">
+<script setup lang="ts" generic="T extends EntityId">
   const props = defineProps<{
     availableItems: {
       id: T;

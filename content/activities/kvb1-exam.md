@@ -1,7 +1,7 @@
 ---
 title: KVB1 exam
+date: '2026-11-03'
 image: /kvb1.png
-date: 2026-11-03
 price: 2500
 ---
 
@@ -14,6 +14,6 @@ Price? - LUAK membership is compulsory to participate
 - non-student (incl. PhD candidates), KBF member: €25
 - non-student (incl. PhD candidates), non-KBF member: €29
 
-:br You can register for the exam by filling in [this form](https://docs.google.com/forms/d/e/1FAIpQLSeEJixy9kOx8mqRkK8HNmUPfphUv7kNuGthPJMUPWFA7LpB4A/viewform?usp=dialog)
+You can register for the exam by filling in [this form](https://docs.google.com/forms/d/e/1FAIpQLSeEJixy9kOx8mqRkK8HNmUPfphUv7kNuGthPJMUPWFA7LpB4A/viewform?usp=dialog)
 
-If you have any questions for us don't hesitate to contact us on: <luak.bestuur@gmail.com>
+If you have any questions for us don't hesitate to contact us on: [luak.bestuur@gmail.com](mailto:luak.bestuur@gmail.com)

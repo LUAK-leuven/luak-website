@@ -1,7 +1,7 @@
 ---
 title: Unexpected adventures on the Sialouze
 author: Hektor Letraublon
-date: 2026-07-23
+date: '2026-07-23'
 image: /stories/sialouze/IMG_1799.jpg
 teaser: Finally the weather for the coming days will get better, no more chance of thunderstorms in the afternoon. This means it is time to our make big plans for summermeet!
 ---

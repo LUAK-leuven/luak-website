@@ -15,7 +15,7 @@ A perfect night to become a member, pass by to learn more!
 
 ---
 
-Having some trouble or questions? contact us at <luak.bestuur@gmail.com> or pass by the clubhouse on a Thursday night after 20h30.
+Having some trouble or questions? contact us at [luak.bestuur@gmail.com](mailto:luak.bestuur@gmail.com) or pass by the clubhouse on a Thursday night after 20h30.
 
 ## 🧑‍🦰 What's the advantage of becoming a member?
 

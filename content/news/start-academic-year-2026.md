@@ -1,6 +1,6 @@
 ---
 title: What's up!
-date: 2026-08-18
+date: '2026-08-18'
 image: /news/PXL_20260623_051248421.jpg
 teaser: The latest LUAK news
 ---

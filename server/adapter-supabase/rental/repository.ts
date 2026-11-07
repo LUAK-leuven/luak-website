@@ -1,7 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { GearItemId } from '#shared/api/rest/gear';
-import type { TopoId } from '#shared/api/rest/topo';
-import type { RentalId } from '#shared/types/rental';
+import { createGearItemId, type GearItemId } from '#shared/api/rest/gear';
+import { createTopoId, type TopoId } from '#shared/api/rest/topo';
+import { createRentalId } from '#shared/api/rest/rental';
 import type { Database } from '#shared/types/database.types';
 import type { RentalRepository } from '#server/domain/rental/repository';
 import type {
@@ -20,7 +20,7 @@ export class SupabaseRentalRepository implements RentalRepository {
       .throwOnError();
 
     return data.map((x) => ({
-      gearItemId: x.gear_item_id as GearItemId,
+      gearItemId: createGearItemId(x.gear_item_id),
       rentedAmount: x.rented_amount - x.returned_amount - x.lost_amount,
     }));
   }
@@ -32,7 +32,7 @@ export class SupabaseRentalRepository implements RentalRepository {
       .throwOnError();
 
     return data.map((x) => ({
-      topoId: x.topo_id as TopoId,
+      topoId: createTopoId(x.topo_id),
       rentedAmount: x.rented_amount - x.returned_amount - x.lost_amount,
     }));
   }
@@ -75,7 +75,7 @@ const mapRental = (rental: {
     contact_info: string | null;
   };
 }): RentalForItem => ({
-  id: rental.Rentals.id as RentalId,
+  id: createRentalId(rental.Rentals.id),
   rentedAmount:
     rental.rented_amount - rental.returned_amount - rental.lost_amount,
   memberName: getMemberName(rental.Rentals),
@@ -91,10 +91,19 @@ const getMemberName = (rental: {
 
   if (rental.contact_info) {
     try {
-      const contact = JSON.parse(rental.contact_info) as { fullName?: string };
-      if (contact.fullName) return contact.fullName;
-    } catch {
-      // Preserve the previous fallback for malformed historical contact data.
+      // TODO: Use proper schema validation for contact info.
+      const contact: unknown = JSON.parse(rental.contact_info);
+      if (
+        typeof contact === 'object' &&
+        contact !== null &&
+        'fullName' in contact &&
+        typeof contact.fullName === 'string' &&
+        contact.fullName
+      ) {
+        return contact.fullName;
+      }
+    } catch (e) {
+      console.error('Failed to parse contact info:', e);
     }
   }
 

@@ -1,27 +1,53 @@
 import {
   object as yupObject,
   string as yupString,
-  number as yupNumber,
   bool as yupBool,
+  mixed as yupMixed,
+  type MixedSchema,
+  type AnyObject,
 } from 'yup';
 import type { RentalDetails } from '~/model/Rental';
 import type { GearItemId } from '#shared/api/rest/gear';
 import type { TopoId } from '#shared/api/rest/topo';
 
-type ItemId = { id: GearItemId; type: 'gear' } | { id: TopoId; type: 'topo' };
+type Id<T extends 'gear' | 'topo'> = T extends 'gear' ? GearItemId : TopoId;
+type RentedItemSchema<T extends 'gear' | 'topo'> = MixedSchema<
+  Partial<Record<Id<T>, number>>,
+  AnyObject,
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  {},
+  'd'
+>;
 
-function rentedItemSchema<T extends RentalItemId>(
-  rentedItems: { itemId: T; rentedAmount: number }[],
-) {
-  const x = Object.fromEntries(
-    rentedItems.map(({ itemId, rentedAmount }) => [
-      itemId.id,
-      yupNumber().required().min(0).max(rentedAmount),
-    ]),
+function rentedItemSchema(
+  rentedItems: {
+    itemId: { id: GearItemId; type: 'gear' };
+    rentedAmount: number;
+  }[],
+): RentedItemSchema<'gear'>;
+function rentedItemSchema(
+  rentedItems: {
+    itemId: { id: TopoId; type: 'topo' };
+    rentedAmount: number;
+  }[],
+): RentedItemSchema<'topo'>;
+function rentedItemSchema(
+  rentedItems: { itemId: RentalItemId; rentedAmount: number }[],
+): RentedItemSchema<'gear' | 'topo'> {
+  const schema = yupMixed<Partial<Record<RentalItemId['id'], number>>>().test(
+    'validAmounts',
+    'Invalid returned amounts',
+    (value) => {
+      if (!value) return false;
+      for (const { itemId, rentedAmount } of rentedItems) {
+        const returnedAmount = value[itemId.id];
+        if (returnedAmount === undefined) return false;
+        if (returnedAmount < 0 || returnedAmount > rentedAmount) return false;
+      }
+      return true;
+    },
   );
-  return yupObject(x as Record<T['id'], (typeof x)[string]>)
-    .required()
-    .default({});
+  return schema.required().default({});
 }
 
 export function useRentalReturnForm(rental: RentalDetails) {
@@ -57,7 +83,7 @@ export function useRentalReturnForm(rental: RentalDetails) {
   });
 
   const updateReturnedItem = (
-    args: ItemId & {
+    args: RentalItemId & {
       amount: number | undefined;
     },
   ) => {

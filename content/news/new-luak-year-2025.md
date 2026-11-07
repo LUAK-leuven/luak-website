@@ -1,6 +1,6 @@
 ---
 title: Start Academic year 25-26
-date: 2025-08-29
+date: '2025-08-29'
 image: /news/zomer-2025-71.jpg
 ---
 

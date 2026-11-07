@@ -1,8 +1,7 @@
 ---
 title: A first ascent that shouldn’t have been
 author: Ward Lorenz
-date: 2021-10-13
-description: Summer meet 2021 – location La Bérarde
+date: '2021-10-13'
 image: /stories/DSC04260-min-600x400.JPG
 ---
 
@@ -43,7 +42,7 @@ images:
   - src: /stories/DSC04260-min-600x400.JPG
     caption: Stunning evening sunrays, making our approach very enjoyable
   - src: /stories/DSC04262-min-600x400.JPG
-    caption: "Arrival at cirque du soreiller. The crazy spire is the famous aiguille dibona. The wall on its right: aiguille orientale du soreiller"
+    caption: 'Arrival at cirque du soreiller. The crazy spire is the famous aiguille dibona. The wall on its right: aiguille orientale du soreiller'
 ---
 ::
 

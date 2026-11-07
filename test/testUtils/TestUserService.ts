@@ -39,7 +39,7 @@ export class TestUserService {
       .neq('id', '00000000-0000-0000-0000-000000000000')
       .throwOnError();
 
-    for (const testUser of Object.keys(testUsers) as TestUserKey[]) {
+    for (const testUser of testUserKeys) {
       await this.createMemberships(testUser);
     }
   };

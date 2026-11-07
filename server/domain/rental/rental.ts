@@ -1,6 +1,6 @@
 import type { GearItemId } from '#shared/api/rest/gear';
 import type { TopoId } from '#shared/api/rest/topo';
-import type { RentalId } from '#shared/types/rental';
+import type { RentalId } from '#shared/api/rest/rental';
 
 export type RentedGearAmount = {
   gearItemId: GearItemId;

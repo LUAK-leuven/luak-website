@@ -1,11 +1,14 @@
-import type { ItemEvent } from '#server/domain/inventory/ItemEvent';
 import {
-  totalAmount,
+  createTotalAmount,
   type TopoId,
   type TotalAmount,
 } from '#shared/api/rest/topo';
-import type { GearInventoryId, GearItemId } from '#shared/api/rest/gear';
-import type { InventoryItemEvent } from '~~/shared/api/rest/inventory';
+import type {
+  GearInventoryId,
+  GearItemId,
+  GearName,
+} from '#shared/api/rest/gear';
+import type { InventoryItemEvent, ItemEvent } from '#shared/api/rest/inventory';
 
 export type InventoryItemId =
   | {
@@ -34,7 +37,7 @@ export type GearInventoryRecord = {
 };
 export type GearItemRecord = {
   id: GearItemId;
-  name: string;
+  name: GearName;
   lifespan: number;
   depositFee: number;
 };
@@ -43,7 +46,7 @@ export const foldInventoryItemEvents = (
   initialAmount: number,
   events: ItemEvent[],
 ): TotalAmount => {
-  return totalAmount(
+  return createTotalAmount(
     events.reduce((acc, event) => {
       switch (event.eventName) {
         case 'ItemLostEvent':

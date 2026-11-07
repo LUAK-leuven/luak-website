@@ -1,17 +1,35 @@
-export type Date = `${number}-${number}-${number}`;
+import dayjs from 'dayjs';
+import {
+  number as zodNumber,
+  type infer as ZodInfer,
+  iso as zodIso,
+} from 'zod';
 
-export type Amount = number & { readonly __brand_amount: unique symbol };
-export const amount = (n: number): Amount => {
-  if (!Number.isSafeInteger(n))
-    throw new Error(`Amount must be an integer, but got ${n.toPrecision()}`);
-  if (n < 0)
-    throw new Error(`Amount must be a positive number, but got ${n.toFixed()}`);
-  return n as Amount;
+declare const _dateBrand: unique symbol;
+export const dateSchema = zodIso.date().brand<typeof _dateBrand>();
+export type Date = ZodInfer<typeof dateSchema>;
+export const createDate = (value: string): Date => dateSchema.parse(value);
+
+declare const _dateTimeBrand: unique symbol;
+const dateTimeSchema = zodIso.datetime().brand<typeof _dateTimeBrand>();
+export type DateTime = ZodInfer<typeof dateTimeSchema>;
+export const createDateTime = (value: string): DateTime => {
+  return dateTimeSchema.parse(dayjs(value).toISOString());
 };
 
-export type Year = number & { readonly __brand_year: unique symbol };
-export const year = (n: number): Year => {
-  if (!Number.isSafeInteger(n))
-    throw new Error(`Year must be an integer, but got ${n.toPrecision()}`);
-  return n as Year;
-};
+declare const _amountBrand: unique symbol;
+export const amountSchema = zodNumber()
+  .int()
+  .nonnegative()
+  .brand<typeof _amountBrand>();
+export type Amount = ZodInfer<typeof amountSchema>;
+export const amount = (value: number): Amount => amountSchema.parse(value);
+
+declare const _yearBrand: unique symbol;
+export const yearSchema = zodNumber()
+  .int()
+  .positive()
+  .max(9999)
+  .brand<typeof _yearBrand>();
+export type Year = ZodInfer<typeof yearSchema>;
+export const year = (value: number): Year => yearSchema.parse(value);

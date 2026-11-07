@@ -2,13 +2,13 @@ import dayjs from 'dayjs';
 import { groupBy, min, sumOf } from '~~/shared/utils/utils';
 import type { InventoryRepository } from '#server/domain/inventory/repository';
 import type { InventoryService } from '#server/domain/inventory/service';
-import type {
-  GearInventoryDetails,
-  GearInventorySummary,
-  GearItemId,
-  RetirementDate,
+import {
+  createRetirementDate,
+  type GearInventoryDetails,
+  type GearInventorySummary,
+  type GearItemId,
+  type RetirementDate,
 } from '#shared/api/rest/gear';
-import type { Date } from '#shared/types/common';
 import type { RentalRepository } from '#server/domain/rental/repository';
 
 export class InventoryServiceImpl implements InventoryService {
@@ -74,14 +74,16 @@ export class InventoryServiceImpl implements InventoryService {
     productionDate: string | undefined;
     lifespan: number;
   }): RetirementDate {
-    if (args.lifespan === 0) return 'infinite';
+    if (args.lifespan === 0) return createRetirementDate('infinite');
     const startDate = args.purchaseDate
       ? dayjs(args.purchaseDate)
       : args.productionDate
         ? dayjs(args.productionDate).add(1, 'year')
         : undefined;
-    if (!startDate) return 'missing info';
-    return startDate.add(args.lifespan, 'y').format('YYYY-MM-DD') as Date;
+    if (!startDate) return createRetirementDate('missing info');
+    return createRetirementDate(
+      startDate.add(args.lifespan, 'y').format('YYYY-MM-DD'),
+    );
   }
 
   private calculateEarliestRetirementDate(
@@ -91,7 +93,7 @@ export class InventoryServiceImpl implements InventoryService {
     }[],
     lifespan: number,
   ): GearInventorySummary['earliestRetirementDate'] {
-    if (lifespan === 0) return 'infinite';
+    if (lifespan === 0) return createRetirementDate('infinite');
     const dates = items.map((item) =>
       this.calculateRetirementDate({ ...item, lifespan }),
     );
@@ -100,7 +102,7 @@ export class InventoryServiceImpl implements InventoryService {
         if (a === 'infinite' || a === 'missing info') return true;
         if (b === 'infinite' || b === 'missing info') return false;
         return dayjs(a).isBefore(b);
-      }) ?? 'missing info'
+      }) ?? createRetirementDate('missing info')
     );
   }
 }

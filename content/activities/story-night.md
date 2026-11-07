@@ -1,6 +1,6 @@
 ---
 title: Story Night
-date: 2026-10-15
+date: '2026-10-15'
 image: /stories/sialouze/original-topo-unchi-maka.jpg
 price: 0
 ---

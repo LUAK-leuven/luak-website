@@ -1,10 +1,14 @@
 import { LuakUser } from '~/model/LuakUser';
 import { luakUserFromDb, UserService } from '~/services/userService';
+import { createUserId } from '#shared/api/rest/user';
 
 export function useUserService() {
   const user = useSupabaseUser();
   const supabaseClient = useSupabaseClient();
   const userService = new UserService(supabaseClient);
+  const userId = computed(() =>
+    user.value === null ? undefined : createUserId(user.value.sub),
+  );
 
   const getAllUsers = async () =>
     await useLazyAsyncData(
@@ -14,18 +18,16 @@ export function useUserService() {
 
   const getMembershipInfo = async (args?: { authRequired?: boolean }) => {
     const { data, error } = await useAsyncData(
-      `getMembershipInfo-${user.value?.sub ?? 'null'}`,
+      `getMembershipInfo-${userId.value ?? 'null'}`,
       async () => {
-        if (user.value === null)
+        if (userId.value === undefined)
           if (args?.authRequired) throw new Error('User not logged in');
           else return 'unauthenticated';
-        const userData = await userService.getLuakUser(
-          user.value.sub as UserId,
-        );
+        const userData = await userService.getLuakUser(userId.value);
         if (userData === null) return 'unauthenticated';
         return userData;
       },
-      { watch: [user], lazy: false },
+      { watch: [userId], lazy: false },
     );
     watch(error, async (value) => {
       if (value) await useNuxtApp().runWithContext(() => showError(value));
@@ -39,12 +41,12 @@ export function useUserService() {
 
   const getUserInfo = async () => {
     const { data, error } = await useAsyncData(
-      `getUserInfo-${user.value?.sub ?? 'null'}`,
+      `getUserInfo-${userId.value ?? 'null'}`,
       async () => {
-        if (user.value === null) throw new Error('User not logged in');
-        return await userService.getUserInfo(user.value.sub as UserId);
+        if (userId.value === undefined) throw new Error('User not logged in');
+        return await userService.getUserInfo(userId.value);
       },
-      { watch: [user] },
+      { watch: [userId] },
     );
     watch(error, (err) => {
       if (err) console.warn(err);

@@ -1,12 +1,12 @@
 import { authStateFile, cleanDatabase, test } from '#test/e2e/fixtures';
 import { testServiceBuilder } from '#test/testServices';
-import { itemArchivedEvent } from '#server/domain/inventory/ItemEvent';
-import type { GearInventoryId } from '#shared/api/rest/gear';
-import type { TopoId } from '#shared/api/rest/topo';
+import { createGearInventoryId } from '#shared/api/rest/gear';
+import { createTopoId } from '#shared/api/rest/topo';
 import { GearInventoryPage } from '#test/e2e/pages/gear/inventory.page';
 import { expect } from '@playwright/test';
 import { RentalFormPage } from '#test/e2e/pages/rental/form.page';
 import { TopoDetailsPage } from '#test/e2e/pages/topos/details.page';
+import { createItemArchivedEvent } from '#shared/api/rest/inventory';
 
 test.use({ storageState: authStateFile('boardMember') });
 
@@ -25,17 +25,17 @@ test.describe('lost gear form', () => {
     await testDao.addInventoryItemEvent({
       itemId: {
         // TODO: find a better solution iso reusing the hardcoded ID from seed.sql
-        itemId: '3d7a2a9a-8a8a-456c-997e-8533427f6ed1' as GearInventoryId,
+        itemId: createGearInventoryId('3d7a2a9a-8a8a-456c-997e-8533427f6ed1'),
         itemType: 'gear',
       },
-      event: itemArchivedEvent(4),
+      event: createItemArchivedEvent(4),
     });
     await testDao.addInventoryItemEvent({
       itemId: {
-        itemId: '49f1b67b-5289-4056-a43a-c9ad248ad883' as GearInventoryId,
+        itemId: createGearInventoryId('49f1b67b-5289-4056-a43a-c9ad248ad883'),
         itemType: 'gear',
       },
-      event: itemArchivedEvent(2),
+      event: createItemArchivedEvent(2),
     });
 
     // Inventory
@@ -57,7 +57,7 @@ test.describe('lost gear form', () => {
   });
 
   test('topo - amounts are correct', async ({ page }) => {
-    const topoId = '539bca6e-417e-44b3-8e6a-fecf223b49a2' as TopoId;
+    const topoId = createTopoId('539bca6e-417e-44b3-8e6a-fecf223b49a2');
     const topoDetailsPage = await TopoDetailsPage.navigate(page, topoId);
     await expect(topoDetailsPage.amount).toHaveText('2 / 2');
 
@@ -68,7 +68,7 @@ test.describe('lost gear form', () => {
         itemId: topoId,
         itemType: 'topo',
       },
-      event: itemArchivedEvent(1),
+      event: createItemArchivedEvent(1),
     });
 
     // Topo details

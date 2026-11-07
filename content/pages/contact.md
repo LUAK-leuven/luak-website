@@ -5,7 +5,7 @@ description: Some information about the board
 
 ## Contact information ☎️
 
-Email: <luak.bestuur@gmail.com> :br
+Email: [luak.bestuur@gmail.com](mailto:luak.bestuur@gmail.com)
 
 ## Our clubhouse 🏠
 

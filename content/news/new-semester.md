@@ -1,6 +1,6 @@
 ---
 title: A new semester with a whole bunch of new activities!
-date: 2025-02-14
+date: '2025-02-14'
 image: /news/Seynes_2025_flat.jpeg
 ---
 
@@ -17,6 +17,7 @@ Make sure to check out all our [activities](/activities) on the calendar!
 - Thursday 20/02: An info evening for people that are new to LUAK, don't hesitate to come and hear about who we are and what we do :)
 - Thursday 27/02: Where will the next summermeet be? On Thursday the 27th of February we organize an open meeting where we will decide where the next summermeet will be. Everyone is welcome to join and vote for their favourite destination and/or propose their own ideas for us to take into consideration.
 - In March we have several climbing trips planned. More info & registrations will follow later.
+
   - Freyr weekend: 8 & 9/03 -> not an initiation, lead climbing experience required!
   - Initiation in Hotton: 23/03 -> for beginners :), we will hang topropes.
   - Pont-à-Lesse weekend: 5 & 6/04 -> also for beginners, we'll help you with lead climbing.

@@ -6,6 +6,7 @@
   import DepositFeeField from './DepositFeeField.vue';
   import type { GearItemId } from '#shared/api/rest/gear';
   import type { TopoId } from '#shared/api/rest/topo';
+  import type { UserId } from '#shared/api/rest/user.ts';
 
   const props = defineProps<{
     boardMemberName: string;
