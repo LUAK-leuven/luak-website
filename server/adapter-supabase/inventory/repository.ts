@@ -4,6 +4,7 @@ import {
   createGearInventoryId,
   createGearItemId,
   createGearName,
+  createDetails,
   createLifeSpanInYears,
   createProductionDate,
   createPurchaseDate,
@@ -58,16 +59,7 @@ export class SupabaseInventoryRepository implements InventoryRepository {
     return data.map((item) => {
       const id = createGearInventoryId(item.id);
       const itemEvents = events[id] ?? [];
-      const initialAmount = createInitialAmount(item.amount);
-      return {
-        id,
-        productionDate: mapOptional(item.production_date, createProductionDate),
-        purchaseDate: mapOptional(item.purchase_date, createPurchaseDate),
-        initialAmount,
-        totalAmount: foldInventoryItemEvents(initialAmount, itemEvents),
-        details: item.details,
-        events: itemEvents,
-      };
+      return mapGearInventoryRecord(item, itemEvents);
     });
   }
 
@@ -129,6 +121,28 @@ export class SupabaseInventoryRepository implements InventoryRepository {
     }));
   }
 }
+
+const mapGearInventoryRecord = (
+  item: {
+    id: string;
+    production_date: string | null;
+    purchase_date: string | null;
+    amount: number;
+    details: string;
+  },
+  itemEvents: InventoryItemEvent[],
+): GearInventoryRecord => {
+  const initialAmount = createInitialAmount(item.amount);
+  return {
+    id: createGearInventoryId(item.id),
+    productionDate: mapOptional(item.production_date, createProductionDate),
+    purchaseDate: mapOptional(item.purchase_date, createPurchaseDate),
+    initialAmount,
+    totalAmount: foldInventoryItemEvents(initialAmount, itemEvents),
+    details: createDetails(item.details),
+    events: itemEvents,
+  };
+};
 
 const mapOptional = <T, V>(
   value: V | null,

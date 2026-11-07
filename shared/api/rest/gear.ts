@@ -55,7 +55,7 @@ export type GearInventoryDetails = {
     productionDate: ProductionDate | undefined;
     purchaseDate: PurchaseDate | undefined;
     retirementDate: RetirementDate;
-    details: string;
+    details: Details;
     initialAmount: InitialAmount;
     totalAmount: InventoryItemTotalAmount;
     events: InventoryItemEvent[];
@@ -66,6 +66,12 @@ export type GearInventoryDetails = {
     memberName: RentalMemberName;
   }[];
 };
+
+declare const _gearDetailsBrand: unique symbol;
+const detailsSchema = zodString().brand<typeof _gearDetailsBrand>();
+export type Details = ZodInfer<typeof detailsSchema>;
+export const createDetails = (value: string): Details =>
+  detailsSchema.parse(value);
 
 declare const _lifeSpanInYearsBrand: unique symbol;
 const lifeSpanInYearsSchema = zodUnion([

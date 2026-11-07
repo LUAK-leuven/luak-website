@@ -3,6 +3,7 @@ import type {
   GearInventoryId,
   GearItemId,
   GearName,
+  Details,
   LifeSpanInYears,
   ProductionDate,
   PurchaseDate,
@@ -38,7 +39,7 @@ export type GearInventoryRecord = {
   purchaseDate: PurchaseDate | undefined;
   initialAmount: InitialAmount;
   totalAmount: InventoryItemTotalAmount;
-  details: string;
+  details: Details;
   events: InventoryItemEvent[];
 };
 export type GearItemRecord = {

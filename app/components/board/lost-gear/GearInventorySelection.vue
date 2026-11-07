@@ -4,6 +4,7 @@
   import dayjs from 'dayjs';
   import type {
     GearInventoryId,
+    Details,
     ProductionDate,
     PurchaseDate,
     RetirementDate as RetirementDateType,
@@ -13,7 +14,7 @@
   const props = defineProps<{
     inventory: {
       id: GearInventoryId;
-      details: string;
+      details: Details;
       purchaseDate: PurchaseDate | undefined;
       productionDate: ProductionDate | undefined;
       retirementDate: RetirementDateType;
