@@ -30,7 +30,7 @@ Want to learn more about us? Don't hesitate to pass by on one of our club evenin
   :::
 
 #item3
-  :::board-member{name="Arthur Vranken" picture="/luak-logo.png" role="Graphics & Logistics"}
+  :::board-member{name="Arthur Vranken" picture="/info/board/arthur.jpeg" role="Graphics & Logistics"}
   :::
 
 #item4
@@ -46,7 +46,7 @@ Want to learn more about us? Don't hesitate to pass by on one of our club evenin
   :::
 
 #item7
-  :::board-member{name="Rosaline Snoeys" picture="/luak-logo.png" role="Logistics"}
+  :::board-member{name="Rosaline Snoeys" picture="/info/board/rosaline.jpeg" role="Logistics"}
   :::
 ::
 
