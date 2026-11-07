@@ -25,7 +25,3 @@ Ailefroide is an accessible place with a bit of everything: sport climbing, mult
 ---
 
 Want to join the summermeet? Register [here](https://docs.google.com/forms/d/e/1FAIpQLSefoKYp4tu3RnXzRbIDaIuQ2_qnFAPZ-3hf4M9GbMDooW250w/viewform?usp=dialog).
-
----
-
-test
