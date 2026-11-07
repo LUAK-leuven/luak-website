@@ -1,6 +1,6 @@
 ---
 title: Sy weekend
-date: 2026-10-24
+date: '2026-10-24'
 image: /activities/sy.jpg
 price: 0
 tag: beginner friendly

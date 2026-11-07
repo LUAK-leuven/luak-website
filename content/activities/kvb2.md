@@ -1,7 +1,7 @@
 ---
 title: KVB2 course
+date: '2026-11-13'
 image: /kvb2.png
-date: 2026-11-13
 price: 7300
 ---
 
@@ -14,6 +14,6 @@ Price? - LUAK membership is compulsory to participate
 - non-student (incl. PhD candidates), KBF member: €73
 - non-student (incl. PhD candidates), non-KBF member: €77
 
-:br You can register for the exam by filling in [this form](https://docs.google.com/forms/d/e/1FAIpQLSfb432PXgttBsmF6GP2nkrd3vpMok23n6jgR6OpcEVRwozJtQ/viewform?usp=dialog)
+You can register for the exam by filling in [this form](https://docs.google.com/forms/d/e/1FAIpQLSfb432PXgttBsmF6GP2nkrd3vpMok23n6jgR6OpcEVRwozJtQ/viewform?usp=dialog)
 
-If you have any questions for us don't hesitate to contact us on: <luak.bestuur@gmail.com>
+If you have any questions for us don't hesitate to contact us on: [luak.bestuur@gmail.com](mailto:luak.bestuur@gmail.com)

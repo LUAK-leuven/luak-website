@@ -1,6 +1,6 @@
 ---
 title: Initiation Beez
-date: 2026-10-10
+date: '2026-10-10'
 image: /activities/initiatie_beez.jpg
 price: 0
 tag: beginner friendly
@@ -14,7 +14,7 @@ Practical:
 - LUAK will provide climbing gear for you (if you already have some climbing gear, feel free to bring it).
 - The activity lasts all day long. We will leave in the morning and will be back in the evening.
 
-:br You can register during our info evening.
+You can register during our info evening.
 
 Usually the initiations are full very quickly (due to the limited amount of places and high demand). Therefore we also ask to only register if you are sure you can come, and let us know (in advance!) if you cannot make it anymore.
 

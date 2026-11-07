@@ -1,6 +1,6 @@
 ---
 title: Start Academic year 24-25
-date: 2024-08-16
+date: '2024-08-16'
 image: /news/new_academic_year_2024.jpg
 ---
 

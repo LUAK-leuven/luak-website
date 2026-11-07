@@ -20,28 +20,34 @@ Want to learn more about us? Don't hesitate to pass by on one of our club evenin
 
 ## The board 🧗‍♀
 
-::flex-box
----
-class: gap-3
-justify: justify-evenly
----
+::flex-box{justify="justify-evenly" .gap-3}
 #item1
-:board-member{name="Mo Vanstraelen" picture="/info/mo.jpg" role="President"}
+  :::board-member{name="Mo Vanstraelen" picture="/info/board/mo.jpg" role="President"}
+  :::
 
 #item2
-:board-member{name="Hektor Letraublon" picture="/info/a-wild-alpinist.jpg" role="IT"}
+  :::board-member{name="Hektor Letraublon" picture="/info/board/a-wild-alpinist.jpg" role="IT"}
+  :::
 
 #item3
-:board-member{name="Arthur Vranken" picture="/luak-logo.png" role="Graphics & Logistics"}
+  :::board-member{name="Arthur Vranken" picture="/luak-logo.png" role="Graphics & Logistics"}
+  :::
 
 #item4
-:board-member{name="Lukas Brüll" picture="/luak-logo.png" role="Planning & Logistics"}
+  :::board-member{name="Lukas Brüll" picture="/info/board/lukas.jpeg" role="Planning & Logistics"}
+  :::
 
 #item5
-:board-member{name="Hugo Fache" picture="/info/hugo.jpg" role="IT & Bar"}
+  :::board-member{name="Hugo Fache" picture="/info/board/hugo.jpg" role="IT & Bar"}
+  :::
 
 #item6
-:board-member{name="Ciska Pycke" picture="/luak-logo.png" role="Social Media"}
+  :::board-member{name="Ciska Pycke" picture="/luak-logo.png" role="Social Media"}
+  :::
+
+#item7
+  :::board-member{name="Rosaline Snoeys" picture="/luak-logo.png" role="Logistics"}
+  :::
 ::
 
 ## History
@@ -66,4 +72,5 @@ Het hek is van de dam. De volgende jaren worden we getrakteerd op soms halve boe
 
 ## Rules and regulations
 
-:include-content{content="rules-and-regulations"}
+::include-content{content="rules-and-regulations"}
+::

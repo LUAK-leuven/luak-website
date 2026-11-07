@@ -1,6 +1,6 @@
 ---
 title: Summermeet location & upcoming activities
-date: 2025-04-16
+date: '2025-04-16'
 image: /news/bergjes_met_sneeuw.jpg
 ---
 

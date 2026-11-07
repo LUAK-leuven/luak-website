@@ -39,13 +39,21 @@ ol {
     @apply underline;
     @apply break-words;
   }
+
   ol,
   ul {
     @apply pl-5;
+    @apply mb-5;
   }
+  p:has(+ ul),
+  p:has(+ ol) {
+    @apply mb-2;
+  }
+
   hr {
     @apply my-5;
   }
+
   img:not(.custom-img) {
     @apply rounded-lg;
     @apply shadow-2xl;
@@ -54,6 +62,11 @@ ol {
     @apply md:max-w-80;
     @apply md:max-h-80;
     @apply m-2;
+  }
+
+  table {
+    @apply table;
+    @apply table-zebra;
   }
 }
 

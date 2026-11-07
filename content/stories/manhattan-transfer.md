@@ -1,8 +1,7 @@
 ---
 title: Climbing on clouds
 author: Arend Ryckeboer
-date: 2025-11-04
-description: We start at the beginning, that fatefull day at the epicenter of the universe...
+date: '2025-11-04'
 image: /stories/manhattan-transfer.jpg
 teaser: We start at the beginning, that fatefull day at the epicenter of the universe...
 ---
