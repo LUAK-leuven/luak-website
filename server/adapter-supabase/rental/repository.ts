@@ -4,6 +4,7 @@ import { createTopoId, type TopoId } from '#shared/api/rest/topo';
 import {
   createRentalId,
   createOutstandingAmount,
+  createRentalMemberName,
 } from '#shared/api/rest/rental';
 import type { Database } from '#shared/types/database.types';
 import type { RentalRepository } from '#server/domain/rental/repository';
@@ -86,7 +87,7 @@ export const mapRental = (rental: {
   rentedAmount: createOutstandingAmount(
     rental.rented_amount - rental.returned_amount - rental.lost_amount,
   ),
-  memberName: getMemberName(rental.Rentals),
+  memberName: createRentalMemberName(getMemberName(rental.Rentals)),
 });
 
 const getMemberName = (rental: {

@@ -1,7 +1,11 @@
 import { type infer as ZodInfer, string as zodString } from 'zod';
 
 import { entityIdSchema } from '#shared/types/ddd';
-import type { RentalId, OutstandingAmount } from '#shared/api/rest/rental';
+import type {
+  RentalId,
+  OutstandingAmount,
+  RentalMemberName,
+} from '#shared/api/rest/rental';
 import type {
   InitialAmount,
   InventoryItemEvent,
@@ -33,7 +37,7 @@ export type TopoDetails = {
   rentals: {
     id: RentalId;
     rentedAmount: OutstandingAmount;
-    memberName: string;
+    memberName: RentalMemberName;
   }[];
 };
 
