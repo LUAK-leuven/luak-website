@@ -7,11 +7,12 @@ import type {
   RentalMemberName,
 } from '#shared/api/rest/rental';
 import type {
+  AvailableAmount,
   InitialAmount,
   InventoryItemEvent,
   TotalAmount,
 } from '#shared/api/rest/inventory';
-import { amountSchema, yearSchema } from '#shared/types/common';
+import { yearSchema } from '#shared/types/common';
 
 declare const _topoIdBrand: unique symbol;
 const topoIdSchema = entityIdSchema<typeof _topoIdBrand>();
@@ -113,13 +114,6 @@ const detailsSchema = zodString().nonempty().brand<typeof _detailsBrand>();
 export type Details = ZodInfer<typeof detailsSchema>;
 export const createDetails = (value: string): Details =>
   detailsSchema.parse(value);
-
-declare const _availableAmountBrand: unique symbol;
-const availableAmountSchema =
-  amountSchema.brand<typeof _availableAmountBrand>();
-export type AvailableAmount = ZodInfer<typeof availableAmountSchema>;
-export const createAvailableAmount = (n: number): AvailableAmount =>
-  availableAmountSchema.parse(n);
 
 declare const _yearPublishedBrand: unique symbol;
 const yearPublishedSchema = yearSchema.brand<typeof _yearPublishedBrand>();

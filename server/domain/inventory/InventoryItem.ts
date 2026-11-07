@@ -26,14 +26,14 @@ export type GearInventorySummaryRecord = {
   gearItemId: GearItemId;
   productionDate: string | undefined;
   purchaseDate: string | undefined;
-  totalAmount: number;
+  totalAmount: TotalAmount;
 };
 export type GearInventoryRecord = {
   id: GearInventoryId;
   productionDate: string | undefined;
   purchaseDate: string | undefined;
   initialAmount: InitialAmount;
-  totalAmount: number;
+  totalAmount: TotalAmount;
   details: string;
   events: InventoryItemEvent[];
 };

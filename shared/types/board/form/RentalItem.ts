@@ -1,8 +1,10 @@
+import type { AvailableAmount, TotalAmount } from '#shared/api/rest/inventory';
+
 export type RentalItem<T extends EntityId> = {
   id: T;
   name: string;
-  totalAmount: number;
-  availableAmount: number;
+  totalAmount: TotalAmount;
+  availableAmount: AvailableAmount;
   depositFee: number;
 };
 

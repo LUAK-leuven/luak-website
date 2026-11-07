@@ -7,8 +7,10 @@ import {
 
 import { dateSchema } from '#shared/types/common';
 import type {
+  AvailableAmount,
   InitialAmount,
   InventoryItemEvent,
+  TotalAmount,
 } from '#shared/api/rest/inventory';
 import type {
   RentalId,
@@ -32,8 +34,8 @@ export const createGearInventoryId = (value: string) =>
 export type GearInventorySummary = {
   id: GearItemId;
   name: GearName;
-  totalAmount: number;
-  availableAmount: number;
+  totalAmount: TotalAmount;
+  availableAmount: AvailableAmount;
   earliestRetirementDate: RetirementDate;
   depositFee: number;
 };
@@ -43,8 +45,8 @@ export type GearInventoryDetails = {
   name: GearName;
   lifespan: number;
   depositFee: number;
-  totalAmount: number;
-  availableAmount: number;
+  totalAmount: TotalAmount;
+  availableAmount: AvailableAmount;
   inventory: {
     id: GearInventoryId;
     productionDate: string | undefined;
@@ -52,7 +54,7 @@ export type GearInventoryDetails = {
     retirementDate: RetirementDate;
     details: string;
     initialAmount: InitialAmount;
-    totalAmount: number;
+    totalAmount: TotalAmount;
     events: InventoryItemEvent[];
   }[];
   rentals: {

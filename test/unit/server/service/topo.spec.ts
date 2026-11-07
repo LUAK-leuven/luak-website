@@ -18,6 +18,7 @@ import {
   createItemLostAmount,
   type InventoryItemEvent,
 } from '#shared/api/rest/inventory';
+import { createOutstandingAmount } from '#shared/api/rest/rental';
 
 test.describe('TopoService', () => {
   test('maps topo details and folds inventory events', async () => {
@@ -91,5 +92,24 @@ test.describe('TopoService', () => {
     ).getTopoLibrary({ includeOutOfStock: false });
 
     expect(topos.map((topo) => topo.id)).toEqual([inStockTopoId]);
+  });
+
+  test('allows negative availability when more topos are rented than stocked', async () => {
+    const topo = aTopoLibraryRecord({ initialAmount: createInitialAmount(1) });
+    const topos = await new TopoServiceImpl(
+      topoRepositoryMock({
+        getTopos: () => Promise.resolve([topo]),
+        getAllTopoInventoryItemEvents: () => Promise.resolve([]),
+      }),
+      inventoryRepositoryMock(),
+      rentalRepositoryMock({
+        getRentedTopoAmounts: () =>
+          Promise.resolve([
+            { topoId: topo.id, rentedAmount: createOutstandingAmount(2) },
+          ]),
+      }),
+    ).getTopos();
+
+    expect(topos[0]?.availableAmount).toBe(-1);
   });
 });

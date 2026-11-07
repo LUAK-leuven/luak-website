@@ -1,16 +1,16 @@
 import * as yup from 'yup';
 import { entries } from '#shared/utils/utils';
 import type { EntityId } from '#shared/types/ddd';
+import type { TotalAmount } from '#shared/api/rest/inventory';
 
 export const createRentalSelectionSchema = <T extends EntityId>(
-  selection: { id: T; name: string; totalAmount: number }[],
+  selection: { id: T; name: string; totalAmount: TotalAmount }[],
 ) =>
   yup
-    .object<Record<T, number>, Record<T, yup.NumberSchema<number>>>()
+    .object<Record<T, number | undefined>, Record<T, yup.NumberSchema>>()
     .default(() => ({}))
     .required()
-    // @ts-expect-error: I can't get the types to match, but it works
-    .test(function (items: Record<T, number>) {
+    .test(function (items: Record<string, unknown>) {
       for (const [id, amount] of entries(items)) {
         const item = selection.find((x) => x.id === id);
         if (item === undefined) {
@@ -20,6 +20,13 @@ export const createRentalSelectionSchema = <T extends EntityId>(
           return this.createError({
             path: `${this.path}.${id}`,
             message: `Error: item with id ${id} cannot be found in the inventory.`,
+          });
+        }
+        if (amount === undefined) return true;
+        if (typeof amount !== 'number') {
+          return this.createError({
+            path: `${this.path}.${id}`,
+            message: `Value for ${item.name} must be a number, received ${typeof amount}.`,
           });
         }
         if (!Number.isInteger(amount)) {

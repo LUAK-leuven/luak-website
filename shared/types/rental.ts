@@ -14,8 +14,8 @@ export type UnsavedRental = {
   comments: string | undefined;
   memberId: UserId | undefined;
   contactInfo: ContactInfo | undefined;
-  gear: Record<GearItemId, number>;
-  topos: Record<TopoId, number>;
+  gear: Partial<Record<GearItemId, number>>;
+  topos: Partial<Record<TopoId, number>>;
 };
 
 export type SavedRental = UnsavedRental & { id: RentalId };

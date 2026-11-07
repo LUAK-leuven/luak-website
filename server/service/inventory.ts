@@ -10,6 +10,10 @@ import {
   type RetirementDate,
 } from '#shared/api/rest/gear';
 import type { RentalRepository } from '#server/domain/rental/repository';
+import {
+  createAvailableAmount,
+  createTotalAmount,
+} from '#shared/api/rest/inventory';
 
 export class InventoryServiceImpl implements InventoryService {
   constructor(
@@ -29,13 +33,15 @@ export class InventoryServiceImpl implements InventoryService {
     );
     return gearItems.map((gearItem) => {
       const items = inventory[gearItem.id] ?? [];
-      const totalAmount = sumOf(items, 'totalAmount');
+      // TODO: TotalAmount of a RentalItem should be different type from TotalAmount of an InventoryItem
+      const totalAmount = createTotalAmount(sumOf(items, 'totalAmount'));
       return {
         id: gearItem.id,
         name: gearItem.name,
         totalAmount,
-        availableAmount:
+        availableAmount: createAvailableAmount(
           totalAmount - sumOf(rented[gearItem.id] ?? [], 'rentedAmount'),
+        ),
         earliestRetirementDate: this.calculateEarliestRetirementDate(
           items,
           gearItem.lifespan,
@@ -49,14 +55,16 @@ export class InventoryServiceImpl implements InventoryService {
     const inventory = await this.inventoryRepository.getInventoryDetails(id);
     const gearItem = await this.inventoryRepository.getGearItem(id);
     const rentals = await this.rentalRepository.getRentalsFor(id);
-    const totalAmount = sumOf(inventory, 'totalAmount');
+    const totalAmount = createTotalAmount(sumOf(inventory, 'totalAmount'));
     return {
       id,
       name: gearItem.name,
       lifespan: gearItem.lifespan,
       depositFee: gearItem.depositFee,
       totalAmount,
-      availableAmount: totalAmount - sumOf(rentals, 'rentedAmount'),
+      availableAmount: createAvailableAmount(
+        totalAmount - sumOf(rentals, 'rentedAmount'),
+      ),
       inventory: inventory.map((item) => ({
         ...item,
         retirementDate: this.calculateRetirementDate({

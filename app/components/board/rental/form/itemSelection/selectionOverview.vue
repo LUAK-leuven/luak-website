@@ -1,13 +1,17 @@
 <script lang="ts" setup generic="T extends EntityId">
   import InputNumber from '~/components/input/NumberCompact.vue';
+  import type {
+    AvailableAmount,
+    TotalAmount,
+  } from '#shared/api/rest/inventory';
 
   defineProps<{
     selectedItems: {
       id: T;
       name: string;
       selectedAmount: number;
-      availableAmount: number;
-      totalAmount: number;
+      availableAmount: AvailableAmount;
+      totalAmount: TotalAmount;
       depositFee: number;
     }[];
   }>();

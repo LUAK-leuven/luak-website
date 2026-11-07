@@ -27,14 +27,12 @@ export class RentalService {
       p_date_return: rental.dateReturn,
       p_deposit: rental.depositFee,
       p_gear: Object.entries(rental.gear)
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         .filter(([_, amount]) => amount !== undefined)
         .map(([id, amount]) => ({
           gear_item_id: id,
           rented_amount: amount,
         })),
       p_topos: Object.entries(rental.topos)
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         .filter(([_, amount]) => amount !== undefined)
         .map(([id, amount]) => ({
           topo_id: id,
@@ -169,14 +167,12 @@ export class RentalService {
       p_date_return: rental.dateReturn,
       p_deposit: rental.depositFee,
       p_gear: Object.entries(rental.gear)
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         .filter(([_, amount]) => amount !== undefined)
         .map(([id, amount]) => ({
           gear_item_id: id,
           rented_amount: amount,
         })),
       p_topos: Object.entries(rental.topos)
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         .filter(([_, amount]) => amount !== undefined)
         .map(([id, amount]) => ({
           topo_id: id,

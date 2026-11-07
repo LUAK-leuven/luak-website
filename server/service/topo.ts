@@ -10,7 +10,7 @@ import type {
   TopoListItem,
   TopoId,
 } from '#server/domain/topo/topo';
-import { createAvailableAmount } from '#shared/api/rest/topo';
+import { createAvailableAmount } from '#shared/api/rest/inventory';
 
 export class TopoServiceImpl implements TopoService {
   constructor(

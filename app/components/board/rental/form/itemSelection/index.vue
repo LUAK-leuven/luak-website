@@ -1,6 +1,7 @@
 <script lang="ts" setup generic="T extends EntityId">
   import { objectEntries } from '@vueuse/core';
   import type { RentalItem } from '#shared/types/board/form/RentalItem';
+  import { createAvailableAmount } from '#shared/api/rest/inventory';
 
   const props = withDefaults(
     defineProps<{
@@ -52,7 +53,9 @@
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
           id: name as T,
           name: name,
-          availableAmount: computeAvailableAmountForCompositeItem(items),
+          availableAmount: createAvailableAmount(
+            computeAvailableAmountForCompositeItem(items),
+          ),
         })),
       ),
   );
