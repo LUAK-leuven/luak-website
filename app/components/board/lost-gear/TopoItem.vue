@@ -5,6 +5,7 @@
   import { ErrorMessage } from 'vee-validate';
   import LoadingButton from '~/components/shared/LoadingButton.vue';
   import type { RentalTopoItem } from '~/model/Rental';
+  import type { RentalId } from '#shared/api/rest/rental';
 
   const props = defineProps<{
     rentalId: RentalId;

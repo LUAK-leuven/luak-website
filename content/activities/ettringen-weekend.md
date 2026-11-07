@@ -1,6 +1,6 @@
 ---
 title: Ettringen Weekend
-date: 2026-04-25
+date: '2026-04-25'
 image: /activities/ettringen.jpg
 price: 0
 ---
@@ -9,13 +9,9 @@ On the weekend of 25-26 April there will be a climbing meet in Ettringen, a very
 
 This is a weekend for both experienced trad climbers and beginners that want to try their hand crack climbing, topropes will be provided. KVB2 (bolted lead climbing) experience and a good basis of climbing technique and conditioning is recommended though.
 
-::flex-box
----
-class: gap-6
-justify: justify-start
----
+::flex-box{justify="justify-start" .gap-6}
 #item1
-![20241102\_134927\[1\]](/20241102_134927%5B1%5D.jpg)
+![20241102_1349271](/20241102_134927%5B1%5D.jpg)
 
 #item2
 Required gear:
@@ -24,14 +20,14 @@ Required gear:
 - Basic climbing gear: harness, helmet, climbing shoes, belay device, ...
 - Enough food
 
-:br Nice to have:
+Nice to have:
 
 - Rope & quickdraws
 - Cams
 - Crack gloves
 ::
 
-:br For the transport we'll arrange a carpool (there will be one KUL van).
+For the transport we'll arrange a carpool (there will be one KUL van).
 
 Interested in joining the Ettringen weekend? You can register by filling in [this form](https://docs.google.com/forms/d/e/1FAIpQLScp512B1aegAtkgkGT-sSJ3f7txQG7_GPmAsz5TZZsCQ7OPHA/viewform?usp=publish-editor).
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import dayjs from 'dayjs';
-  import type { ItemEvent } from '#server/domain/inventory/ItemEvent';
   import type { InitialAmount } from '#shared/api/rest/topo';
+  import type { ItemEvent } from '#shared/api/rest/inventory';
 
   defineProps<{
     events: (ItemEvent & { occurredOn: string })[];

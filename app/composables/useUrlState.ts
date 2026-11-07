@@ -1,6 +1,6 @@
 export const useUrlState = <T extends QueryParam>(
   key: string,
-  parse: (x: QueryParam) => T = (x) => x as T,
+  parse: (x: QueryParam) => T,
 ) => {
   const router = useRouter();
   const route = useRoute();

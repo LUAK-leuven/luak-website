@@ -1,13 +1,16 @@
-import type { GearInventoryId, GearItemId } from '#shared/api/rest/gear';
-import type { TopoId } from '#shared/api/rest/topo';
-import type { RentalId } from '#shared/types/rental';
+import {
+  createGearInventoryId,
+  createGearItemId,
+  type GearInventoryId,
+  type GearItemId,
+} from '#shared/api/rest/gear';
+import { createRentalId, type RentalId } from '#shared/api/rest/rental';
 
-export const aRandomRentalId = (): RentalId => crypto.randomUUID() as RentalId;
-
-export const aRandomTopoId = (): TopoId => crypto.randomUUID() as TopoId;
+export const aRandomRentalId = (): RentalId =>
+  createRentalId(crypto.randomUUID());
 
 export const aRandomGearItemId = (): GearItemId =>
-  crypto.randomUUID() as GearItemId;
+  createGearItemId(crypto.randomUUID());
 
 export const aRandomGearInventoryId = (): GearInventoryId =>
-  crypto.randomUUID() as GearInventoryId;
+  createGearInventoryId(crypto.randomUUID());

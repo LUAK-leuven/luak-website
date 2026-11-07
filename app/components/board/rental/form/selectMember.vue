@@ -2,6 +2,7 @@
   import Text from '~/components/input/Text.vue';
   import type { MembershipStatus } from '~/model/Membership';
   import SelectMemberItem from './selectMemberItem/SelectMemberItem.vue';
+  import type { UserId } from '#shared/api/rest/user.ts';
 
   withDefaults(
     defineProps<{

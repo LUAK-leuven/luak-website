@@ -5,7 +5,12 @@
   import SelectableBadge from '~/components/input/SelectableBadge.vue';
   import { refDebounced } from '@vueuse/core';
   import { asArray } from '~/utils/QueryParams';
-  import type { ClimbingType, Country } from '#shared/api/rest/topo';
+  import {
+    createClimbingType,
+    createCountry,
+    type ClimbingType,
+    type Country,
+  } from '#shared/api/rest/topo';
 
   definePageMeta({ middleware: 'active-member-guard' });
 
@@ -32,15 +37,18 @@
   const searchTerm = refDebounced(searchInput, 250);
 
   const selectedTypesOfClimbing = useUrlState<ClimbingType[]>('type', (x) => {
-    return asArray(x).filter(
-      (it) =>
-        it !== null && allTypesOfClimbing.value.includes(it as ClimbingType),
-    ) as ClimbingType[];
+    return asArray(x).flatMap((it) => {
+      if (it === null) return [];
+      const type = createClimbingType(it);
+      return allTypesOfClimbing.value.includes(type) ? [type] : [];
+    });
   });
   const selectedCountries = useUrlState<Country[]>('country', (x) => {
-    return asArray(x).filter(
-      (it) => it !== null && allCountries.value.includes(it as Country),
-    ) as Country[];
+    return asArray(x).flatMap((it) => {
+      if (it === null) return [];
+      const country = createCountry(it);
+      return allCountries.value.includes(country) ? [country] : [];
+    });
   });
   const _includeOldTopos = useUrlState<null | undefined>('old', (x) => {
     if (x === undefined) return undefined;

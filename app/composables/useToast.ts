@@ -1,3 +1,5 @@
+import type { infer as ZodInfer } from 'zod';
+
 export type ToastType = 'success' | 'warning' | 'error' | 'info';
 
 export type ToastItem = {
@@ -7,7 +9,10 @@ export type ToastItem = {
   progress: number;
 };
 
-type ToastId = EntityId<'toast'>;
+declare const _toastIdBrand: unique symbol;
+const toastIdSchema = entityIdSchema<typeof _toastIdBrand>();
+type ToastId = ZodInfer<typeof toastIdSchema>;
+const createToastId = (value: string) => toastIdSchema.parse(value);
 
 const TOAST_DURATION_MS = 5000;
 const PROGRESS_TICK_MS = 100;
@@ -52,7 +57,7 @@ export function useToast() {
     if (!import.meta.client)
       throw new Error('useToast.show can only be used on the client side.');
 
-    const id = crypto.randomUUID() as ToastId;
+    const id = createToastId(crypto.randomUUID());
 
     toasts.value.push({ id, type, message, progress: 1 });
 

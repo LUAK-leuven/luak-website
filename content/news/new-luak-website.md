@@ -1,6 +1,6 @@
 ---
 title: Finally!.. The new website!!saf
-date: 2024-08-15
+date: '2024-08-15'
 image: /news/new_website.jpg
 ---
 

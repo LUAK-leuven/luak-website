@@ -1,9 +1,12 @@
 <script setup lang="ts">
   import DetailsPage from '~/components/pages/DetailsPage.vue';
+  import { createRentalId } from '#shared/api/rest/rental';
 
   const { update, get } = useRentalService();
 
-  const rentalId = useRoute('board-rentals-id-return').params.id as RentalId;
+  const rentalId = createRentalId(
+    useRoute('board-rentals-id-return').params.id,
+  );
   const { rental: data, status } = await get(rentalId);
 
   async function updateRental(rental: RentalUpdate) {

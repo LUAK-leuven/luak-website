@@ -4,6 +4,8 @@ import {
   RentalService,
   rentalSummaryFromDb,
 } from '~/services/rentalService';
+import type { RentalId } from '#shared/api/rest/rental';
+import type { UserId } from '#shared/api/rest/user';
 
 const RENTAL = 'rental';
 

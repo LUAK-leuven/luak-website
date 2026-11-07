@@ -1,7 +1,7 @@
 import type { GearItemId } from '#shared/api/rest/gear';
 import type { TopoId } from '#shared/api/rest/topo';
-
-export type RentalId = EntityId<'rental'>;
+import type { RentalId } from '#shared/api/rest/rental';
+import type { UserId } from '#shared/api/rest/user';
 
 export type PaymentMethod = Enums<'payment_method'>;
 

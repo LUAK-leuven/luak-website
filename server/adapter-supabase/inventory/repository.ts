@@ -1,6 +1,11 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '#shared/types/database.types';
-import type { GearInventoryId, GearItemId } from '#shared/api/rest/gear';
+import {
+  createGearInventoryId,
+  createGearItemId,
+  createGearName,
+  type GearItemId,
+} from '#shared/api/rest/gear';
 import {
   foldInventoryItemEvents,
   type GearInventoryRecord,
@@ -8,9 +13,11 @@ import {
   type GearItemRecord,
   type InventoryItemId,
 } from '#server/domain/inventory/InventoryItem';
-import { parseEvent } from '#server/domain/inventory/ItemEvent';
 import type { InventoryRepository } from '#server/domain/inventory/repository';
-import type { InventoryItemEvent } from '#shared/api/rest/inventory';
+import {
+  itemEventSchema,
+  type InventoryItemEvent,
+} from '#shared/api/rest/inventory';
 
 export class SupabaseInventoryRepository implements InventoryRepository {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
@@ -38,9 +45,10 @@ export class SupabaseInventoryRepository implements InventoryRepository {
       (event) => event.gearInventoryId,
     );
     return data.map((item) => {
-      const itemEvents = events[item.id as GearInventoryId] ?? [];
+      const id = createGearInventoryId(item.id);
+      const itemEvents = events[id] ?? [];
       return {
-        id: item.id as GearInventoryId,
+        id,
         productionDate: item.production_date ?? undefined,
         purchaseDate: item.purchase_date ?? undefined,
         initialAmount: item.amount,
@@ -81,7 +89,7 @@ export class SupabaseInventoryRepository implements InventoryRepository {
       .throwOnError();
     return data.map((item) => ({
       occurredOn: item.occured_on,
-      ...parseEvent(item.event),
+      ...itemEventSchema.parse(item.event),
     }));
   }
 
@@ -92,9 +100,9 @@ export class SupabaseInventoryRepository implements InventoryRepository {
       .eq('item_type', 'gear')
       .throwOnError();
     return data.map((item) => ({
-      gearInventoryId: item.item_id as GearInventoryId,
+      gearInventoryId: createGearInventoryId(item.item_id),
       occurredOn: item.occured_on,
-      ...parseEvent(item.event),
+      ...itemEventSchema.parse(item.event),
     }));
   }
 
@@ -105,8 +113,8 @@ export class SupabaseInventoryRepository implements InventoryRepository {
       .not('gear_item_id', 'is', null)
       .throwOnError();
     return data.map((item) => ({
-      id: item.id as GearInventoryId,
-      gearItemId: item.gear_item_id as GearItemId,
+      id: createGearInventoryId(item.id),
+      gearItemId: createGearItemId(item.gear_item_id),
       productionDate: item.production_date ?? undefined,
       purchaseDate: item.purchase_date ?? undefined,
       amount: item.amount,
@@ -120,8 +128,8 @@ const mapGearItem = (item: {
   lifespan: number;
   deposit_fee: number;
 }): GearItemRecord => ({
-  id: item.id as GearItemId,
-  name: item.name,
+  id: createGearItemId(item.id),
+  name: createGearName(item.name),
   lifespan: item.lifespan,
   depositFee: item.deposit_fee,
 });

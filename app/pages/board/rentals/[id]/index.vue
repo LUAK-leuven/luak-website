@@ -1,8 +1,9 @@
 <script setup lang="ts">
   import DetailsPage from '~/components/pages/DetailsPage.vue';
+  import { createRentalId } from '#shared/api/rest/rental';
 
-  const retnalId = useRoute('board-rentals-id').params.id as RentalId;
-  const { rental: data, status } = await useRentalService().get(retnalId);
+  const rentalId = createRentalId(useRoute('board-rentals-id').params.id);
+  const { rental: data, status } = await useRentalService().get(rentalId);
 </script>
 
 <template>

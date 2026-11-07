@@ -6,15 +6,13 @@
   import TopoItem from '~/components/board/lost-gear/TopoItem.vue';
   import GearItem from '~/components/board/lost-gear/GearItem.vue';
   import BackButton from '~/components/shared/BackButton.vue';
-  import type { GearItemId } from '#shared/api/rest/gear';
-  import type { TopoId } from '#shared/api/rest/topo';
+  import { createGearItemId } from '#shared/api/rest/gear';
+  import { createTopoId } from '#shared/api/rest/topo';
+  import { rentalIdSchema } from '#shared/api/rest/rental';
 
   const route = useRoute('board-lost-gear');
-  const rentalId = computed(
-    () =>
-      yupUuid
-        .label('rentalId')
-        .validateSync(route.query['rentalId']) as RentalId,
+  const rentalId = computed(() =>
+    rentalIdSchema.parse(route.query['rentalId']),
   );
 
   const itemId = computed<RentalItemId | undefined>(() => {
@@ -31,12 +29,12 @@
       if (itemType === 'topo') {
         return {
           type: 'topo',
-          id: itemId as TopoId,
+          id: createTopoId(itemId),
         };
       } else {
         return {
           type: 'gear',
-          id: itemId as GearItemId,
+          id: createGearItemId(itemId),
         };
       }
     } catch (e) {

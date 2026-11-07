@@ -7,12 +7,15 @@ export class ServerTestService {
 
   constructor(private readonly testUserService: TestUserService) {}
 
-  readonly fetch = async (url: string, testUser: TestUserKey) => {
+  readonly fetch = async <T>(
+    url: string,
+    testUser: TestUserKey,
+  ): Promise<T> => {
     if (this.cookies[testUser] === undefined) {
       this.cookies[testUser] = await this.getTestUserAuthHeaders(testUser);
     }
 
-    return await $fetch(url, {
+    return await $fetch<T>(url, {
       headers: {
         Cookie: `sb-127-auth-token=base64-${this.cookies[testUser]}`,
       },

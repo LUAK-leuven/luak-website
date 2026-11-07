@@ -1,7 +1,7 @@
 <script setup lang="ts">
   defineProps<{
     rentals: {
-      id: EntityId<unknown>;
+      id: EntityId;
       memberName: string;
       rentedAmount: number;
     }[];

@@ -1,7 +1,7 @@
 ---
 title: Diedre du soleil levant - a story of first ascending in belgium
 author: Ward Lorenz
-date: 2021-03-06
+date: '2021-03-06'
 image: /stories/DSC05328-min-min-600x400.jpg
 ---
 

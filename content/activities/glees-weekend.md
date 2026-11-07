@@ -1,6 +1,6 @@
 ---
 title: Glees weekend
-date: 2026-10-31
+date: '2026-10-31'
 image: /activities/font.jpg
 price: 0
 ---

@@ -8,8 +8,10 @@ import {
 } from '~/model/Rental';
 import { getFullName } from './userService';
 import { object as zodObject, string as zodString } from 'zod';
-import type { GearItemId } from '#shared/api/rest/gear';
-import type { TopoId } from '#shared/api/rest/topo';
+import { createGearItemId } from '#shared/api/rest/gear';
+import { createTopoId } from '#shared/api/rest/topo';
+import { createRentalId, type RentalId } from '#shared/api/rest/rental';
+import { createUserId, type UserId } from '#shared/api/rest/user';
 
 export class RentalService {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
@@ -48,7 +50,7 @@ export class RentalService {
     });
 
     return {
-      id: (data as RentalId | null) ?? undefined,
+      id: data === null ? undefined : createRentalId(data),
       error: error?.message,
     };
   };
@@ -230,7 +232,7 @@ export const rentalSummaryFromDb = (args: RentalSummaryVo): RentalSummary => {
   const contactInfo: ContactInfo = contactInfoFromDb(args);
 
   return new RentalSummary({
-    id: args.id as RentalId,
+    id: createRentalId(args.id),
     gear: args.RentedGear.map((gear) => gearItemFromDb(gear)),
     topos: args.RentedTopos.map((topo) => topoItemFromDb(topo)),
     memberName: contactInfo.fullName,
@@ -247,7 +249,7 @@ export const rentalDetailsFromDb = (args: RentalDetailsVo): RentalDetails => {
   const contactInfo: ContactInfo = contactInfoFromDb(args);
 
   return new RentalDetails({
-    id: args.id as RentalId,
+    id: createRentalId(args.id),
     gear: args.RentedGear.map((gear) => gearItemFromDb(gear)),
     topos: args.RentedTopos.map((topo) => topoItemFromDb(topo)),
     contactInfo,
@@ -260,7 +262,7 @@ export const rentalDetailsFromDb = (args: RentalDetailsVo): RentalDetails => {
     boardMember: args.board_member ? getFullName(args.board_member) : '',
     paymentMethod: args.payment_method,
     comments: args.comments ?? '',
-    memberId: args.member?.id as UserId | undefined,
+    memberId: args.member === null ? undefined : createUserId(args.member.id),
   });
 };
 
@@ -272,7 +274,7 @@ export const publicRentalDetailsFromDb = (
   args: PublicRentalDetailsVo,
 ): PublicRentalDetails => {
   return new PublicRentalDetails({
-    id: args.id as RentalId,
+    id: createRentalId(args.id),
     gear: args.RentedGear.map((gear) => gearItemFromDb(gear)),
     topos: args.RentedTopos.map((topo) => topoItemFromDb(topo)),
     dateReturn: args.date_return,
@@ -337,7 +339,7 @@ const topoItemFromDb = (topo: {
   Topos: { title: string; year_published?: number | null };
 }) =>
   new RentalTopoItem({
-    id: topo.topo_id as TopoId,
+    id: createTopoId(topo.topo_id),
     name: topo.Topos.title,
     rentedAmount: topo.rented_amount,
     returnedAmount: topo.returned_amount,
@@ -353,7 +355,7 @@ const gearItemFromDb = (gear: {
   GearItems: { name: string };
 }) =>
   new RentalGearItem({
-    id: gear.gear_item_id as GearItemId,
+    id: createGearItemId(gear.gear_item_id),
     name: gear.GearItems.name,
     rentedAmount: gear.rented_amount,
     returnedAmount: gear.returned_amount,
