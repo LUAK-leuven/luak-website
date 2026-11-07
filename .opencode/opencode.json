@@ -24,5 +24,15 @@
       "model": "github-copilot/claude-haiku-5.5"
     }
   },
-  "lsp": true
+  "lsp": true,
+  "formatter": {
+    "eslint": {
+      "command": ["yarn", "eslint", "--fix", "$FILE"],
+      "extensions": [".ts", ".js", ".mjs", ".vue"]
+    },
+    "prettier": {
+      "command": ["yarn", "prettier", "--write", "$FILE"],
+      "extensions": [".ts", ".js", ".mjs", ".vue", ".json", ".css"]
+    }
+  }
 }

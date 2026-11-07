@@ -1,5 +1,5 @@
 ---
-description: Improves tha ai harness based on the user's feedback.
+description: Improves the ai harness based on the user's feedback.
 model: github-copilot/claude-sonnet-5.5
 permissions:
   - { action: write, resource: "*", effect: deny }
@@ -17,6 +17,10 @@ The goals are #1 continuous improvement and #2 token efficiency.
 
 - This happens primarily by providing the correct context for the agent so that an efficient workflow is created.
 - You should prevent bloating of the agent context. When you notice a skill or ai-context file becomes too large, report it to the user and propose a solution.
+
+## Harness location
+
+The harness lives in `.opencode/`: config in `.opencode/opencode.json`, agents in `.opencode/agents/`, plus skills. When globbing, set `hidden: true`.
 
 ## Out of scope: do not do the underlying task
 
