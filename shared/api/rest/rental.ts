@@ -21,3 +21,12 @@ const outstandingAmountSchema =
 export type OutstandingAmount = ZodInfer<typeof outstandingAmountSchema>;
 export const createOutstandingAmount = (n: number): OutstandingAmount =>
   outstandingAmountSchema.parse(n);
+
+declare const _rentalItemTotalAmountBrand: unique symbol;
+const rentalItemTotalAmountSchema =
+  amountSchema.brand<typeof _rentalItemTotalAmountBrand>();
+export type RentalItemTotalAmount = ZodInfer<
+  typeof rentalItemTotalAmountSchema
+>;
+export const createRentalItemTotalAmount = (n: number): RentalItemTotalAmount =>
+  rentalItemTotalAmountSchema.parse(n);

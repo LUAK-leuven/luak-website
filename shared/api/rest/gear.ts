@@ -10,12 +10,13 @@ import type {
   AvailableAmount,
   InitialAmount,
   InventoryItemEvent,
-  TotalAmount,
+  InventoryItemTotalAmount,
 } from '#shared/api/rest/inventory';
 import type {
   RentalId,
   OutstandingAmount,
   RentalMemberName,
+  RentalItemTotalAmount,
 } from '#shared/api/rest/rental';
 import { entityIdSchema } from '#shared/types/ddd';
 
@@ -34,7 +35,7 @@ export const createGearInventoryId = (value: string) =>
 export type GearInventorySummary = {
   id: GearItemId;
   name: GearName;
-  totalAmount: TotalAmount;
+  totalAmount: RentalItemTotalAmount;
   availableAmount: AvailableAmount;
   earliestRetirementDate: RetirementDate;
   depositFee: number;
@@ -45,7 +46,7 @@ export type GearInventoryDetails = {
   name: GearName;
   lifespan: number;
   depositFee: number;
-  totalAmount: TotalAmount;
+  totalAmount: RentalItemTotalAmount;
   availableAmount: AvailableAmount;
   inventory: {
     id: GearInventoryId;
@@ -54,7 +55,7 @@ export type GearInventoryDetails = {
     retirementDate: RetirementDate;
     details: string;
     initialAmount: InitialAmount;
-    totalAmount: TotalAmount;
+    totalAmount: InventoryItemTotalAmount;
     events: InventoryItemEvent[];
   }[];
   rentals: {

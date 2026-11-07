@@ -67,11 +67,15 @@ export type InitialAmount = ZodInfer<typeof initialAmountSchema>;
 export const createInitialAmount = (n: number): InitialAmount =>
   initialAmountSchema.parse(n);
 
-declare const _totalAmountBrand: unique symbol;
-const totalAmountSchema = amountSchema.brand<typeof _totalAmountBrand>();
-export type TotalAmount = ZodInfer<typeof totalAmountSchema>;
-export const createTotalAmount = (n: number): TotalAmount =>
-  totalAmountSchema.parse(n);
+declare const _inventoryItemTotalAmountBrand: unique symbol;
+const inventoryItemTotalAmountSchema =
+  amountSchema.brand<typeof _inventoryItemTotalAmountBrand>();
+export type InventoryItemTotalAmount = ZodInfer<
+  typeof inventoryItemTotalAmountSchema
+>;
+export const createInventoryItemTotalAmount = (
+  n: number,
+): InventoryItemTotalAmount => inventoryItemTotalAmountSchema.parse(n);
 
 declare const _availableAmountBrand: unique symbol;
 const availableAmountSchema = zodNumber()

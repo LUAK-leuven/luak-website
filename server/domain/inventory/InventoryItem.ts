@@ -5,11 +5,11 @@ import type {
   GearName,
 } from '#shared/api/rest/gear';
 import {
-  createTotalAmount,
+  createInventoryItemTotalAmount,
   type InitialAmount,
   type InventoryItemEvent,
   type ItemEvent,
-  type TotalAmount,
+  type InventoryItemTotalAmount,
 } from '#shared/api/rest/inventory';
 
 export type InventoryItemId =
@@ -26,14 +26,14 @@ export type GearInventorySummaryRecord = {
   gearItemId: GearItemId;
   productionDate: string | undefined;
   purchaseDate: string | undefined;
-  totalAmount: TotalAmount;
+  totalAmount: InventoryItemTotalAmount;
 };
 export type GearInventoryRecord = {
   id: GearInventoryId;
   productionDate: string | undefined;
   purchaseDate: string | undefined;
   initialAmount: InitialAmount;
-  totalAmount: TotalAmount;
+  totalAmount: InventoryItemTotalAmount;
   details: string;
   events: InventoryItemEvent[];
 };
@@ -47,8 +47,8 @@ export type GearItemRecord = {
 export const foldInventoryItemEvents = (
   initialAmount: InitialAmount,
   events: ItemEvent[],
-): TotalAmount => {
-  return createTotalAmount(
+): InventoryItemTotalAmount => {
+  return createInventoryItemTotalAmount(
     events.reduce<number>((acc, event) => {
       switch (event.eventName) {
         case 'ItemLostEvent':

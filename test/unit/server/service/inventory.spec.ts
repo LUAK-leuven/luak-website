@@ -1,9 +1,9 @@
 import { expect, test } from 'vitest';
 import { InventoryServiceImpl } from '#server/service/inventory';
 import { createGearItemId, createGearName } from '#shared/api/rest/gear';
-import { createTotalAmount } from '#shared/api/rest/inventory';
 import { createOutstandingAmount } from '#shared/api/rest/rental';
 import { inventoryRepositoryMock, rentalRepositoryMock } from '#test/mocks';
+import { createInventoryItemTotalAmount } from '#shared/api/rest/inventory';
 
 test('maps gear stock and allows negative availability', async () => {
   const gearItemId = createGearItemId('00000000-0000-4000-8000-000000000001');
@@ -15,7 +15,7 @@ test('maps gear stock and allows negative availability', async () => {
             gearItemId,
             productionDate: undefined,
             purchaseDate: undefined,
-            totalAmount: createTotalAmount(3),
+            totalAmount: createInventoryItemTotalAmount(3),
           },
         ]),
       getAllGearItems: () =>
