@@ -10,7 +10,7 @@ import type {
   InitialAmount,
   InventoryItemEvent,
 } from '#shared/api/rest/inventory';
-import type { RentalId } from '#shared/api/rest/rental';
+import type { RentalId, OutstandingAmount } from '#shared/api/rest/rental';
 import { entityIdSchema } from '#shared/types/ddd';
 
 declare const _gearItemIdBrand: unique symbol;
@@ -53,7 +53,7 @@ export type GearInventoryDetails = {
   }[];
   rentals: {
     id: RentalId;
-    rentedAmount: number;
+    rentedAmount: OutstandingAmount;
     memberName: string;
   }[];
 };

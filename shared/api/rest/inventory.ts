@@ -6,6 +6,7 @@ import {
   discriminatedUnion,
   type infer as ZodInfer,
 } from 'zod';
+import { amountSchema } from '#shared/types/common';
 
 declare const _itemLostAmountBrand: unique symbol;
 const itemLostAmountSchema = zodNumber()
