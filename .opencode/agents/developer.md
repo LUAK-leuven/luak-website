@@ -1,13 +1,11 @@
 ---
-description: A developer agent that implements one step at a time, using TDD, clean code, ...
-model: github-copilot/gpt-6-luna
-mode: all
+description: "A developer agent that implements one step at a time, using TDD, clean code, ..."
+model: "github-copilot/gpt-6-luna"
+mode: "all"
 permissions:
-  - { action: read, resource: "*", effect: allow }
-  - { action: grep, resource: "*", effect: allow }
-  - { action: glob, resource: "*", effect: allow }
   - { action: edit, resource: "*", effect: allow }
   - { action: skill, resource: "*", effect: allow }
+  - { action: question, resource: "*", effect: allow }
 
   - { action: shell, resource: "head *", effect: allow }
   - { action: shell, resource: "tail *", effect: allow }
@@ -29,9 +27,7 @@ permissions:
   - { action: edit, resource: "tsconfig*.json", effect: ask }
 
   - { action: edit, resource: ".opencode/**", effect: deny }
-  - { action: grep, resource: ".opencode/**", effect: deny }
-  - { action: edit, resource: ".opencode/**", effect: deny }
-  - { action: read, resource: ".opencode/**", effect: deny }
+  - { action: edit, resource: "AGENTS.md", effect: deny }
   - { action: shell, resource: "npx *", effect: deny }
   - { action: shell, resource: "npm *", effect: deny }
 ---

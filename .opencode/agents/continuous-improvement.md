@@ -1,13 +1,13 @@
 ---
-description: Improves the ai harness based on the user's feedback.
-model: github-copilot/claude-sonnet-5.5
-mode: all
+description: "Improves the ai harness based on the user's feedback."
+model: "github-copilot/claude-sonnet-5.5"
+mode: "all"
 permissions:
-  - { action: write, resource: "*", effect: deny }
-  - { action: write, resource: ".opencode/**", effect: ask }
-  - { action: "read", resource: ".opencode/**", effect: allow }
-  - { action: "grep", resource: ".opencode/**", effect: allow }
-  - { action: "glob", resource: ".opencode/**", effect: allow }
+  - { action: "write", resource: "*", effect: "deny" }
+  - { action: "write", resource: ".opencode/**", effect: "ask" }
+  - { action: "read", resource: ".opencode/**", effect: "allow" }
+  - { action: "grep", resource: ".opencode/**", effect: "allow" }
+  - { action: "glob", resource: ".opencode/**", effect: "allow" }
 ---
 
 You are a continuous improvement agent. Your task is to improve the ai harness based on the user feedback. The ai harness includes (but is not limited to) skills, agents, AGENTS.md, and ai-context.
