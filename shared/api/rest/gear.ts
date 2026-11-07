@@ -6,7 +6,10 @@ import {
 } from 'zod';
 
 import { dateSchema } from '#shared/types/common';
-import type { InventoryItemEvent } from '#shared/api/rest/inventory';
+import type {
+  InitialAmount,
+  InventoryItemEvent,
+} from '#shared/api/rest/inventory';
 import type { RentalId } from '#shared/api/rest/rental';
 import { entityIdSchema } from '#shared/types/ddd';
 
@@ -44,7 +47,7 @@ export type GearInventoryDetails = {
     purchaseDate: string | undefined;
     retirementDate: RetirementDate;
     details: string;
-    initialAmount: number;
+    initialAmount: InitialAmount;
     totalAmount: number;
     events: InventoryItemEvent[];
   }[];

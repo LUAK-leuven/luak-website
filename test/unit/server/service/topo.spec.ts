@@ -1,10 +1,7 @@
 import { expect, test } from 'vitest';
 import type { TopoLibraryRecord } from '#server/domain/topo/topo';
 import { TopoServiceImpl } from '#server/service/topo';
-import {
-  createInitialAmount,
-  createPlaceInLibrary,
-} from '#shared/api/rest/topo';
+import { createPlaceInLibrary } from '#shared/api/rest/topo';
 import {
   aRandomTopoId,
   aTopoLibraryRecord,
@@ -16,6 +13,7 @@ import {
   rentalRepositoryMock,
 } from '#test/mocks';
 import {
+  createInitialAmount,
   createItemArchivedAmount,
   createItemLostAmount,
   type InventoryItemEvent,

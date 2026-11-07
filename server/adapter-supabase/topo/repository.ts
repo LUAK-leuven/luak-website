@@ -10,7 +10,6 @@ import type {
 import type { TopoRepository } from '#server/domain/topo/repository';
 import type { Database } from '#shared/types/database.types';
 import {
-  createInitialAmount,
   createYearPublished,
   createAuthor,
   createCountry,
@@ -23,7 +22,10 @@ import {
   createClimbingType,
 } from '#shared/api/rest/topo';
 import { createDateTime } from '#shared/types/common';
-import { itemEventSchema } from '#shared/api/rest/inventory';
+import {
+  createInitialAmount,
+  itemEventSchema,
+} from '#shared/api/rest/inventory';
 
 export class SupabaseTopoRepository implements TopoRepository {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}

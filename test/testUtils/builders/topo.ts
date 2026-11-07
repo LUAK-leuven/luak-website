@@ -2,7 +2,6 @@ import {
   createAuthor,
   createClimbingType,
   createCountry,
-  createInitialAmount,
   createLanguage,
   createPlaceInLibrary,
   createTag,
@@ -12,6 +11,7 @@ import {
   type TopoId,
 } from '#shared/api/rest/topo';
 import type { TopoLibraryRecord, TopoRecord } from '#server/domain/topo/topo';
+import { createInitialAmount } from '#shared/api/rest/inventory';
 
 export const aRandomTopoId = (): TopoId => createTopoId(crypto.randomUUID());
 

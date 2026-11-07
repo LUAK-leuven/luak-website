@@ -15,6 +15,7 @@ import {
 } from '#server/domain/inventory/InventoryItem';
 import type { InventoryRepository } from '#server/domain/inventory/repository';
 import {
+  createInitialAmount,
   itemEventSchema,
   type InventoryItemEvent,
 } from '#shared/api/rest/inventory';
@@ -30,7 +31,10 @@ export class SupabaseInventoryRepository implements InventoryRepository {
       gearItemId: item.gearItemId,
       productionDate: item.productionDate,
       purchaseDate: item.purchaseDate,
-      totalAmount: foldInventoryItemEvents(item.amount, grouped[item.id] ?? []),
+      totalAmount: foldInventoryItemEvents(
+        createInitialAmount(item.amount),
+        grouped[item.id] ?? [],
+      ),
     }));
   }
 
@@ -40,19 +44,22 @@ export class SupabaseInventoryRepository implements InventoryRepository {
       .select('id, production_date, purchase_date, amount, details')
       .eq('gear_item_id', id)
       .throwOnError();
+
     const events = groupBy(
       await this.getAllGearInventoryItemEvents(),
       (event) => event.gearInventoryId,
     );
+
     return data.map((item) => {
       const id = createGearInventoryId(item.id);
       const itemEvents = events[id] ?? [];
+      const initialAmount = createInitialAmount(item.amount);
       return {
         id,
         productionDate: item.production_date ?? undefined,
         purchaseDate: item.purchase_date ?? undefined,
-        initialAmount: item.amount,
-        totalAmount: foldInventoryItemEvents(item.amount, itemEvents),
+        initialAmount,
+        totalAmount: foldInventoryItemEvents(initialAmount, itemEvents),
         details: item.details,
         events: itemEvents,
       };

@@ -2,7 +2,11 @@ import { type infer as ZodInfer, string as zodString } from 'zod';
 
 import { entityIdSchema } from '#shared/types/ddd';
 import type { RentalId } from '#shared/api/rest/rental';
-import type { InventoryItemEvent } from '#shared/api/rest/inventory';
+import type {
+  InitialAmount,
+  InventoryItemEvent,
+  TotalAmount,
+} from '#shared/api/rest/inventory';
 import { amountSchema, yearSchema } from '#shared/types/common';
 
 declare const _topoIdBrand: unique symbol;
@@ -105,18 +109,6 @@ const detailsSchema = zodString().nonempty().brand<typeof _detailsBrand>();
 export type Details = ZodInfer<typeof detailsSchema>;
 export const createDetails = (value: string): Details =>
   detailsSchema.parse(value);
-
-declare const _initialAmountBrand: unique symbol;
-const initialAmountSchema = amountSchema.brand<typeof _initialAmountBrand>();
-export type InitialAmount = ZodInfer<typeof initialAmountSchema>;
-export const createInitialAmount = (n: number): InitialAmount =>
-  initialAmountSchema.parse(n);
-
-declare const _totalAmountBrand: unique symbol;
-const totalAmountSchema = amountSchema.brand<typeof _totalAmountBrand>();
-export type TotalAmount = ZodInfer<typeof totalAmountSchema>;
-export const createTotalAmount = (n: number): TotalAmount =>
-  totalAmountSchema.parse(n);
 
 declare const _availableAmountBrand: unique symbol;
 const availableAmountSchema =

@@ -59,3 +59,15 @@ export const itemEventSchema = discriminatedUnion('eventName', [
 export type ItemEvent = ZodInfer<typeof itemEventSchema>;
 
 export type InventoryItemEvent = ItemEvent & { occurredOn: string };
+
+declare const _initialAmountBrand: unique symbol;
+const initialAmountSchema = amountSchema.brand<typeof _initialAmountBrand>();
+export type InitialAmount = ZodInfer<typeof initialAmountSchema>;
+export const createInitialAmount = (n: number): InitialAmount =>
+  initialAmountSchema.parse(n);
+
+declare const _totalAmountBrand: unique symbol;
+const totalAmountSchema = amountSchema.brand<typeof _totalAmountBrand>();
+export type TotalAmount = ZodInfer<typeof totalAmountSchema>;
+export const createTotalAmount = (n: number): TotalAmount =>
+  totalAmountSchema.parse(n);

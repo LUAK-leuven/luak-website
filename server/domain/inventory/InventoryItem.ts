@@ -1,14 +1,16 @@
-import {
-  createTotalAmount,
-  type TopoId,
-  type TotalAmount,
-} from '#shared/api/rest/topo';
+import type { TopoId } from '#shared/api/rest/topo';
 import type {
   GearInventoryId,
   GearItemId,
   GearName,
 } from '#shared/api/rest/gear';
-import type { InventoryItemEvent, ItemEvent } from '#shared/api/rest/inventory';
+import {
+  createTotalAmount,
+  type InitialAmount,
+  type InventoryItemEvent,
+  type ItemEvent,
+  type TotalAmount,
+} from '#shared/api/rest/inventory';
 
 export type InventoryItemId =
   | {
@@ -30,7 +32,7 @@ export type GearInventoryRecord = {
   id: GearInventoryId;
   productionDate: string | undefined;
   purchaseDate: string | undefined;
-  initialAmount: number;
+  initialAmount: InitialAmount;
   totalAmount: number;
   details: string;
   events: InventoryItemEvent[];
@@ -43,11 +45,11 @@ export type GearItemRecord = {
 };
 
 export const foldInventoryItemEvents = (
-  initialAmount: number,
+  initialAmount: InitialAmount,
   events: ItemEvent[],
 ): TotalAmount => {
   return createTotalAmount(
-    events.reduce((acc, event) => {
+    events.reduce<number>((acc, event) => {
       switch (event.eventName) {
         case 'ItemLostEvent':
           return acc - event.lostAmount;
