@@ -1,6 +1,10 @@
 import { expect, test } from 'vitest';
 import { InventoryServiceImpl } from '#server/service/inventory';
-import { createGearItemId, createGearName } from '#shared/api/rest/gear';
+import {
+  createGearItemId,
+  createGearName,
+  createLifeSpanInYears,
+} from '#shared/api/rest/gear';
 import { createOutstandingAmount } from '#shared/api/rest/rental';
 import { inventoryRepositoryMock, rentalRepositoryMock } from '#test/mocks';
 import { createInventoryItemTotalAmount } from '#shared/api/rest/inventory';
@@ -24,7 +28,7 @@ test('maps gear stock and allows negative availability', async () => {
           {
             id: gearItemId,
             name: createGearName('Carabiner'),
-            lifespan: 0,
+            lifespan: createLifeSpanInYears('infinite'),
             depositFee: aRandomDepositFee(),
           },
         ]),
@@ -40,5 +44,6 @@ test('maps gear stock and allows negative availability', async () => {
   expect(result[0]).toMatchObject({
     totalAmount: 3,
     availableAmount: -1,
+    earliestRetirementDate: 'infinite',
   });
 });

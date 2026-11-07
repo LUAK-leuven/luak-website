@@ -3,6 +3,7 @@ import type {
   GearInventoryId,
   GearItemId,
   GearName,
+  LifeSpanInYears,
 } from '#shared/api/rest/gear';
 import type { DepositFee } from '#shared/api/rest/rental';
 import {
@@ -41,7 +42,7 @@ export type GearInventoryRecord = {
 export type GearItemRecord = {
   id: GearItemId;
   name: GearName;
-  lifespan: number;
+  lifespan: LifeSpanInYears;
   depositFee: DepositFee;
 };
 

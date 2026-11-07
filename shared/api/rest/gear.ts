@@ -1,5 +1,6 @@
 import {
   string as zodString,
+  number as zodNumber,
   type infer as ZodInfer,
   literal as zodLiteral,
   union as zodUnion,
@@ -45,7 +46,7 @@ export type GearInventorySummary = {
 export type GearInventoryDetails = {
   id: GearItemId;
   name: GearName;
-  lifespan: number;
+  lifespan: LifeSpanInYears;
   depositFee: DepositFee;
   totalAmount: RentalItemTotalAmount;
   availableAmount: AvailableAmount;
@@ -65,6 +66,16 @@ export type GearInventoryDetails = {
     memberName: RentalMemberName;
   }[];
 };
+
+declare const _lifeSpanInYearsBrand: unique symbol;
+const lifeSpanInYearsSchema = zodUnion([
+  zodNumber().int().positive(),
+  zodLiteral('infinite'),
+]).brand<typeof _lifeSpanInYearsBrand>();
+export type LifeSpanInYears = ZodInfer<typeof lifeSpanInYearsSchema>;
+export const createLifeSpanInYears = (
+  value: number | 'infinite',
+): LifeSpanInYears => lifeSpanInYearsSchema.parse(value);
 
 declare const _gearNameBrand: unique symbol;
 const gearNameSchema = zodString().nonempty().brand<typeof _gearNameBrand>();

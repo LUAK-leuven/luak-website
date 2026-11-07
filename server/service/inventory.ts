@@ -7,6 +7,7 @@ import {
   type GearInventoryDetails,
   type GearInventorySummary,
   type GearItemId,
+  type LifeSpanInYears,
   type RetirementDate,
 } from '#shared/api/rest/gear';
 import type { RentalRepository } from '#server/domain/rental/repository';
@@ -81,9 +82,9 @@ export class InventoryServiceImpl implements InventoryService {
   private calculateRetirementDate(args: {
     purchaseDate: string | undefined;
     productionDate: string | undefined;
-    lifespan: number;
+    lifespan: LifeSpanInYears;
   }): RetirementDate {
-    if (args.lifespan === 0) return createRetirementDate('infinite');
+    if (args.lifespan === 'infinite') return createRetirementDate('infinite');
     const startDate = args.purchaseDate
       ? dayjs(args.purchaseDate)
       : args.productionDate
@@ -100,9 +101,9 @@ export class InventoryServiceImpl implements InventoryService {
       productionDate: string | undefined;
       purchaseDate: string | undefined;
     }[],
-    lifespan: number,
+    lifespan: LifeSpanInYears,
   ): GearInventorySummary['earliestRetirementDate'] {
-    if (lifespan === 0) return createRetirementDate('infinite');
+    if (lifespan === 'infinite') return createRetirementDate('infinite');
     const dates = items.map((item) =>
       this.calculateRetirementDate({ ...item, lifespan }),
     );

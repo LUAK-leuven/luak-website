@@ -4,6 +4,7 @@ import {
   createGearInventoryId,
   createGearItemId,
   createGearName,
+  createLifeSpanInYears,
   type GearItemId,
 } from '#shared/api/rest/gear';
 import {
@@ -130,7 +131,7 @@ export class SupabaseInventoryRepository implements InventoryRepository {
   }
 }
 
-const mapGearItem = (item: {
+export const mapGearItem = (item: {
   id: string;
   name: string;
   lifespan: number;
@@ -138,7 +139,9 @@ const mapGearItem = (item: {
 }): GearItemRecord => ({
   id: createGearItemId(item.id),
   name: createGearName(item.name),
-  lifespan: item.lifespan,
+  lifespan: createLifeSpanInYears(
+    item.lifespan === 0 ? 'infinite' : item.lifespan,
+  ),
   depositFee: createDepositFee(item.deposit_fee),
 });
 const groupBy = <T, K extends string>(items: T[], key: (item: T) => K) =>

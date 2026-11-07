@@ -5,6 +5,7 @@
   import {
     createGearItemId,
     type GearInventoryDetails,
+    type LifeSpanInYears,
   } from '#shared/api/rest/gear';
 
   const gearItemId = createGearItemId(useRoute('board-gear-id').params.id);
@@ -16,8 +17,8 @@
     },
   );
 
-  const displayLifespan = (lifespan: number): string => {
-    if (lifespan === 0) return '-';
+  const displayLifespan = (lifespan: LifeSpanInYears): string => {
+    if (lifespan === 'infinite') return '-';
     return `${lifespan.toFixed()} years`;
   };
 </script>
@@ -42,7 +43,7 @@
     <hr class="my-3" />
     <h3 class="mb-2">Inventory</h3>
     <Inventory
-      :has-infinite-lifespan="gearItems.lifespan === 0"
+      :has-infinite-lifespan="gearItems.lifespan === 'infinite'"
       :inventory="gearItems.inventory" />
 
     <template v-if="gearItems.rentals.length > 0">
