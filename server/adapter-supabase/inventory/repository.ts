@@ -5,6 +5,8 @@ import {
   createGearItemId,
   createGearName,
   createLifeSpanInYears,
+  createProductionDate,
+  createPurchaseDate,
   type GearItemId,
 } from '#shared/api/rest/gear';
 import {
@@ -58,8 +60,8 @@ export class SupabaseInventoryRepository implements InventoryRepository {
       const initialAmount = createInitialAmount(item.amount);
       return {
         id,
-        productionDate: item.production_date ?? undefined,
-        purchaseDate: item.purchase_date ?? undefined,
+        productionDate: mapOptional(item.production_date, createProductionDate),
+        purchaseDate: mapOptional(item.purchase_date, createPurchaseDate),
         initialAmount,
         totalAmount: foldInventoryItemEvents(initialAmount, itemEvents),
         details: item.details,
@@ -124,12 +126,17 @@ export class SupabaseInventoryRepository implements InventoryRepository {
     return data.map((item) => ({
       id: createGearInventoryId(item.id),
       gearItemId: createGearItemId(item.gear_item_id),
-      productionDate: item.production_date ?? undefined,
-      purchaseDate: item.purchase_date ?? undefined,
+      productionDate: mapOptional(item.production_date, createProductionDate),
+      purchaseDate: mapOptional(item.purchase_date, createPurchaseDate),
       amount: item.amount,
     }));
   }
 }
+
+const mapOptional = <T, V>(
+  value: V | null,
+  create: (value: V) => T,
+): T | undefined => (value === null ? undefined : create(value));
 
 export const mapGearItem = (item: {
   id: string;

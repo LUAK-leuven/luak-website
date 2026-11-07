@@ -8,6 +8,8 @@ import {
   type GearInventorySummary,
   type GearItemId,
   type LifeSpanInYears,
+  type ProductionDate,
+  type PurchaseDate,
   type RetirementDate,
 } from '#shared/api/rest/gear';
 import type { RentalRepository } from '#server/domain/rental/repository';
@@ -80,8 +82,8 @@ export class InventoryServiceImpl implements InventoryService {
   }
 
   private calculateRetirementDate(args: {
-    purchaseDate: string | undefined;
-    productionDate: string | undefined;
+    purchaseDate: PurchaseDate | undefined;
+    productionDate: ProductionDate | undefined;
     lifespan: LifeSpanInYears;
   }): RetirementDate {
     if (args.lifespan === 'infinite') return createRetirementDate('infinite');
@@ -98,8 +100,8 @@ export class InventoryServiceImpl implements InventoryService {
 
   private calculateEarliestRetirementDate(
     items: {
-      productionDate: string | undefined;
-      purchaseDate: string | undefined;
+      productionDate: ProductionDate | undefined;
+      purchaseDate: PurchaseDate | undefined;
     }[],
     lifespan: LifeSpanInYears,
   ): GearInventorySummary['earliestRetirementDate'] {

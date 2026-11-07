@@ -52,8 +52,8 @@ export type GearInventoryDetails = {
   availableAmount: AvailableAmount;
   inventory: {
     id: GearInventoryId;
-    productionDate: string | undefined;
-    purchaseDate: string | undefined;
+    productionDate: ProductionDate | undefined;
+    purchaseDate: PurchaseDate | undefined;
     retirementDate: RetirementDate;
     details: string;
     initialAmount: InitialAmount;
@@ -92,3 +92,15 @@ const retirementDateSchema = zodUnion([
 export type RetirementDate = ZodInfer<typeof retirementDateSchema>;
 export const createRetirementDate = (value: string): RetirementDate =>
   retirementDateSchema.parse(value);
+
+declare const _productionDateBrand: unique symbol;
+const productionDateSchema = dateSchema.brand<typeof _productionDateBrand>();
+export type ProductionDate = ZodInfer<typeof productionDateSchema>;
+export const createProductionDate = (value: string): ProductionDate =>
+  productionDateSchema.parse(value);
+
+declare const _purchaseDateBrand: unique symbol;
+const purchaseDateSchema = dateSchema.brand<typeof _purchaseDateBrand>();
+export type PurchaseDate = ZodInfer<typeof purchaseDateSchema>;
+export const createPurchaseDate = (value: string): PurchaseDate =>
+  purchaseDateSchema.parse(value);

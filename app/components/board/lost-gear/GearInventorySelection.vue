@@ -4,6 +4,8 @@
   import dayjs from 'dayjs';
   import type {
     GearInventoryId,
+    ProductionDate,
+    PurchaseDate,
     RetirementDate as RetirementDateType,
   } from '#shared/api/rest/gear';
   import type { InventoryItemTotalAmount } from '#shared/api/rest/inventory';
@@ -12,8 +14,8 @@
     inventory: {
       id: GearInventoryId;
       details: string;
-      purchaseDate: string | undefined;
-      productionDate: string | undefined;
+      purchaseDate: PurchaseDate | undefined;
+      productionDate: ProductionDate | undefined;
       retirementDate: RetirementDateType;
       totalAmount: InventoryItemTotalAmount;
     }[];
@@ -28,7 +30,9 @@
     props.inventory.filter((x) => x.totalAmount > 0),
   );
 
-  const formatDate = (date: string | undefined): string => {
+  const formatDate = (
+    date: ProductionDate | PurchaseDate | undefined,
+  ): string => {
     if (date === undefined) return '';
     return dayjs(date).format('MMM YYYY');
   };

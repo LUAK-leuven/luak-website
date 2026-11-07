@@ -4,6 +4,8 @@ import type {
   GearItemId,
   GearName,
   LifeSpanInYears,
+  ProductionDate,
+  PurchaseDate,
 } from '#shared/api/rest/gear';
 import type { DepositFee } from '#shared/api/rest/rental';
 import {
@@ -26,14 +28,14 @@ export type InventoryItemId =
 
 export type GearInventorySummaryRecord = {
   gearItemId: GearItemId;
-  productionDate: string | undefined;
-  purchaseDate: string | undefined;
+  productionDate: ProductionDate | undefined;
+  purchaseDate: PurchaseDate | undefined;
   totalAmount: InventoryItemTotalAmount;
 };
 export type GearInventoryRecord = {
   id: GearInventoryId;
-  productionDate: string | undefined;
-  purchaseDate: string | undefined;
+  productionDate: ProductionDate | undefined;
+  purchaseDate: PurchaseDate | undefined;
   initialAmount: InitialAmount;
   totalAmount: InventoryItemTotalAmount;
   details: string;

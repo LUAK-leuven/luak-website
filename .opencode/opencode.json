@@ -31,7 +31,6 @@
       "model": "github-copilot/claude-haiku-5.5"
     }
   },
-  "lsp": true,
   "formatter": {
     "eslint": {
       "command": ["yarn", "eslint", "--fix", "$FILE"],
