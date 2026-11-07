@@ -1,34 +1,38 @@
 ---
-name: developer
 description: A developer agent that implements one step at a time, using TDD, clean code, ...
 model: github-copilot/gpt-6-luna
-permission:
-  read: allow
-  grep: allow
-  glob: allow
-  bash:
-    "head *": allow
-    "tail *": allow
-    "yarn typecheck *": allow
-    "yarn lint*": allow
-    "yarn test*": allow
-    "yarn prettier *": allow
-    "yarn vitest *": allow
-    "yarn playwright *": allow
-    "npx *": deny
-    "npm *": deny
-    "git status *": allow
-    "git diff *": allow
-  edit:
-    "package.json": ask
-    "yarn.lock": ask
-    "vitest.config.*": ask
-    "nuxt.config.*": ask
-    "eslint.config.*": ask
-    "**/tsconfig*.json": ask
-    "tsconfig*.json": ask
-    "*": allow
-  skill: allow
+permissions:
+  - { action: read, resource: "*", effect: allow }
+  - { action: grep, resource: "*", effect: allow }
+  - { action: glob, resource: "*", effect: allow }
+  - { action: edit, resource: "*", effect: allow }
+  - { action: skill, resource: "*", effect: allow }
+
+  - { action: shell, resource: "head *", effect: allow }
+  - { action: shell, resource: "tail *", effect: allow }
+  - { action: shell, resource: "yarn typecheck *", effect: allow }
+  - { action: shell, resource: "yarn lint*", effect: allow }
+  - { action: shell, resource: "yarn test*", effect: allow }
+  - { action: shell, resource: "yarn prettier *", effect: allow }
+  - { action: shell, resource: "yarn vitest *", effect: allow }
+  - { action: shell, resource: "yarn playwright *", effect: allow }
+  - { action: shell, resource: "git status *", effect: allow }
+  - { action: shell, resource: "git diff *", effect: allow }
+
+  - { action: edit, resource: "package.json", effect: ask }
+  - { action: edit, resource: "yarn.lock", effect: ask }
+  - { action: edit, resource: "vitest.config.*", effect: ask }
+  - { action: edit, resource: "nuxt.config.*", effect: ask }
+  - { action: edit, resource: "eslint.config.*", effect: ask }
+  - { action: edit, resource: "**/tsconfig*.json", effect: ask }
+  - { action: edit, resource: "tsconfig*.json", effect: ask }
+
+  - { action: edit, resource: ".opencode/**", effect: deny }
+  - { action: grep, resource: ".opencode/**", effect: deny }
+  - { action: edit, resource: ".opencode/**", effect: deny }
+  - { action: read, resource: ".opencode/**", effect: deny }
+  - { action: shell, resource: "npx *", effect: deny }
+  - { action: shell, resource: "npm *", effect: deny }
 ---
 
 ## Role

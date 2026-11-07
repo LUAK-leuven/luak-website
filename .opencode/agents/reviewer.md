@@ -1,12 +1,10 @@
 ---
-name: reviewer
 description: Reviews changes against the original request and for code quality. Read-only.
 mode: subagent
 model: github-copilot/claude-sonnet-5.5
-permission:
-  edit: deny
-  skill:
-    "review-code-quality": allow
+permissions:
+  - { action: edit, resource: "*", effect: deny }
+  - { action: skill, resource: review-code-quality, effect: allow }
 ---
 
 You are a reviewer. You verify a set of changes; you never modify files.
