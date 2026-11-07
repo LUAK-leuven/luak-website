@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { DomainValidationException } from '~/model/DomainValidationException';
 import type { GearItemId } from '#shared/api/rest/gear';
 import type { TopoId } from '#shared/api/rest/topo';
-import type { RentalId } from '#shared/api/rest/rental';
+import type { DepositFee, RentalId } from '#shared/api/rest/rental';
 import type { UserId } from '#shared/api/rest/user';
 
 abstract class RentalBase {
@@ -12,7 +12,7 @@ abstract class RentalBase {
   readonly dateReturn: string;
   readonly dateBorrow: string;
   readonly depositReturned: boolean;
-  readonly depositFee: number;
+  readonly depositFee: DepositFee;
 
   constructor(args: {
     id: RentalId;
@@ -21,7 +21,7 @@ abstract class RentalBase {
     dateReturn: string;
     dateBorrow: string;
     depositReturned: boolean;
-    depositFee: number;
+    depositFee: DepositFee;
   }) {
     this.id = args.id;
     this.gear = args.gear;
@@ -105,7 +105,7 @@ export class RentalSummary extends RentalBase {
     dateReturn: string;
     dateBorrow: string;
     depositReturned: boolean;
-    depositFee: number;
+    depositFee: DepositFee;
   }) {
     super(args);
     this.memberName = args.memberName;
@@ -121,7 +121,7 @@ export class PublicRentalDetails extends RentalBase {
     topos: RentalTopoItem[];
     dateBorrow: string;
     dateReturn: string;
-    depositFee: number;
+    depositFee: DepositFee;
     depositReturned: boolean;
     paymentMethod: PaymentMethod;
   }) {
@@ -146,7 +146,7 @@ export class RentalDetails extends RentalBase {
     dateBorrow: string;
     depositReturned: boolean;
     boardMember: string;
-    depositFee: number;
+    depositFee: DepositFee;
     paymentMethod: PaymentMethod;
     comments: string;
     memberId: UserId | undefined;
@@ -170,7 +170,7 @@ export class RentalDetails extends RentalBase {
       dateBorrow: string;
       depositReturned: boolean;
       boardMember: string;
-      depositFee: number;
+      depositFee: DepositFee;
       paymentMethod?: PaymentMethod;
       comments: string;
       memberId: UserId | undefined;

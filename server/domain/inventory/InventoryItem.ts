@@ -4,6 +4,7 @@ import type {
   GearItemId,
   GearName,
 } from '#shared/api/rest/gear';
+import type { DepositFee } from '#shared/api/rest/rental';
 import {
   createInventoryItemTotalAmount,
   type InitialAmount,
@@ -41,7 +42,7 @@ export type GearItemRecord = {
   id: GearItemId;
   name: GearName;
   lifespan: number;
-  depositFee: number;
+  depositFee: DepositFee;
 };
 
 export const foldInventoryItemEvents = (

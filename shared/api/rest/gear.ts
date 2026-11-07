@@ -13,6 +13,7 @@ import type {
   InventoryItemTotalAmount,
 } from '#shared/api/rest/inventory';
 import type {
+  DepositFee,
   RentalId,
   OutstandingAmount,
   RentalMemberName,
@@ -38,14 +39,14 @@ export type GearInventorySummary = {
   totalAmount: RentalItemTotalAmount;
   availableAmount: AvailableAmount;
   earliestRetirementDate: RetirementDate;
-  depositFee: number;
+  depositFee: DepositFee;
 };
 
 export type GearInventoryDetails = {
   id: GearItemId;
   name: GearName;
   lifespan: number;
-  depositFee: number;
+  depositFee: DepositFee;
   totalAmount: RentalItemTotalAmount;
   availableAmount: AvailableAmount;
   inventory: {

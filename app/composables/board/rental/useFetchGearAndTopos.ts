@@ -1,3 +1,5 @@
+import { createDepositFee } from '#shared/api/rest/rental';
+
 export const useFetchGearAndTopos = () => {
   const { data: allGear, pending: gearPending } = useLazyFetch(
     '/api/gear/inventory',
@@ -19,7 +21,7 @@ export const useFetchGearAndTopos = () => {
         name,
         totalAmount: topo.totalAmount,
         availableAmount: topo.availableAmount,
-        depositFee: 500,
+        depositFee: createDepositFee(500),
       };
     }),
   );

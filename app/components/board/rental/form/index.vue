@@ -7,6 +7,7 @@
   import type { GearItemId } from '#shared/api/rest/gear';
   import type { TopoId } from '#shared/api/rest/topo';
   import type { UserId } from '#shared/api/rest/user.ts';
+  import { createDepositFee } from '#shared/api/rest/rental';
 
   const props = defineProps<{
     boardMemberName: string;
@@ -77,7 +78,7 @@
           dateReturn: formState.dateReturn,
           gear: formState.gear,
           topos: formState.topos,
-          depositFee: formState.depositFee,
+          depositFee: createDepositFee(formState.depositFee),
           paymentMethod: formState.paymentMethod ?? 'cash',
           contactInfo: formState.contactInfo
             ? {

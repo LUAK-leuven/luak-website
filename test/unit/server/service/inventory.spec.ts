@@ -4,6 +4,7 @@ import { createGearItemId, createGearName } from '#shared/api/rest/gear';
 import { createOutstandingAmount } from '#shared/api/rest/rental';
 import { inventoryRepositoryMock, rentalRepositoryMock } from '#test/mocks';
 import { createInventoryItemTotalAmount } from '#shared/api/rest/inventory';
+import { aRandomDepositFee } from '#test/builders/rental';
 
 test('maps gear stock and allows negative availability', async () => {
   const gearItemId = createGearItemId('00000000-0000-4000-8000-000000000001');
@@ -24,7 +25,7 @@ test('maps gear stock and allows negative availability', async () => {
             id: gearItemId,
             name: createGearName('Carabiner'),
             lifespan: 0,
-            depositFee: 500,
+            depositFee: aRandomDepositFee(),
           },
         ]),
     }),

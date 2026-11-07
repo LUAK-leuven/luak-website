@@ -19,6 +19,7 @@ import {
   itemEventSchema,
   type InventoryItemEvent,
 } from '#shared/api/rest/inventory';
+import { createDepositFee } from '#shared/api/rest/rental';
 
 export class SupabaseInventoryRepository implements InventoryRepository {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
@@ -138,7 +139,7 @@ const mapGearItem = (item: {
   id: createGearItemId(item.id),
   name: createGearName(item.name),
   lifespan: item.lifespan,
-  depositFee: item.deposit_fee,
+  depositFee: createDepositFee(item.deposit_fee),
 });
 const groupBy = <T, K extends string>(items: T[], key: (item: T) => K) =>
   items.reduce<Partial<Record<K, T[]>>>((groups, item) => {

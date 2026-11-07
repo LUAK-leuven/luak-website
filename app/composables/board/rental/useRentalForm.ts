@@ -4,6 +4,7 @@ import type { GearItemId } from '#shared/api/rest/gear';
 import type { TopoId } from '#shared/api/rest/topo';
 import type { UserId } from '#shared/api/rest/user';
 import { createRentalSelectionSchema } from '~/composables/board/rental/selectionSchema';
+import { depositFeeSchema } from '~/composables/board/rental/depositFeeSchema';
 
 type RentalFormState = {
   memberId: UserId | 'non-user';
@@ -47,7 +48,7 @@ export function useRentalForm(
       .label('return date'),
     gear: createRentalSelectionSchema(allGear),
     topos: createRentalSelectionSchema(allTopos),
-    depositFee: yup.number().label('deposit fee').required().min(0),
+    depositFee: depositFeeSchema,
     paymentMethod: yup.string<'transfer' | 'cash'>().when('depositFee', {
       is: (depositFee: number) => depositFee > 0,
       then: (schema) => schema.required('You must select a payment method.'),

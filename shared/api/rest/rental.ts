@@ -2,6 +2,12 @@ import { string as zodString, type infer as ZodInfer } from 'zod';
 import { entityIdSchema } from '#shared/types/ddd';
 import { amountSchema } from '#shared/types/common';
 
+declare const _depositFeeBrand: unique symbol;
+const depositFeeSchema = amountSchema.brand<typeof _depositFeeBrand>();
+export type DepositFee = ZodInfer<typeof depositFeeSchema>;
+export const createDepositFee = (n: number): DepositFee =>
+  depositFeeSchema.parse(n);
+
 declare const _rentalMemberNameBrand: unique symbol;
 const rentalMemberNameSchema = zodString()
   .nonempty()
