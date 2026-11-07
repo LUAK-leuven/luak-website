@@ -5,13 +5,13 @@ import type {
   RentalId,
   OutstandingAmount,
   RentalMemberName,
-  RentalItemTotalAmount,
+  TotalAmount,
 } from '#shared/api/rest/rental';
 import type {
   AvailableAmount,
   InitialAmount,
   InventoryItemEvent,
-  InventoryItemTotalAmount,
+  TotalAmount,
 } from '#shared/api/rest/inventory';
 import { yearSchema } from '#shared/types/common';
 
@@ -34,7 +34,7 @@ export type TopoDetails = {
   tags: Tag[];
   yearPublished: YearPublished | undefined;
   initialAmount: InitialAmount;
-  amount: InventoryItemTotalAmount;
+  amount: TotalAmount;
   events: TopoEvent[];
   rentals: {
     id: RentalId;
@@ -53,13 +53,13 @@ export type TopoLibraryItem = {
   title: Title;
   typesOfClimbing: ClimbingType[];
   yearPublished: YearPublished | undefined;
-  amount: InventoryItemTotalAmount;
+  amount: TotalAmount;
 };
 
 export type TopoListItem = {
   id: TopoId;
   title: Title;
-  totalAmount: InventoryItemTotalAmount & RentalItemTotalAmount;
+  totalAmount: TotalAmount & TotalAmount;
   availableAmount: AvailableAmount;
   yearPublished: YearPublished | undefined;
 };

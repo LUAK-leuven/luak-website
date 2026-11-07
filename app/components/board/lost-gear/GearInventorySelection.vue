@@ -9,7 +9,7 @@
     PurchaseDate,
     RetirementDate as RetirementDateType,
   } from '#shared/api/rest/gear';
-  import type { InventoryItemTotalAmount } from '#shared/api/rest/inventory';
+  import type { TotalAmount } from '#shared/api/rest/inventory';
 
   const props = defineProps<{
     inventory: {
@@ -18,7 +18,7 @@
       purchaseDate: PurchaseDate | undefined;
       productionDate: ProductionDate | undefined;
       retirementDate: RetirementDateType;
-      totalAmount: InventoryItemTotalAmount;
+      totalAmount: TotalAmount;
     }[];
     lostAmount: number | undefined;
   }>();

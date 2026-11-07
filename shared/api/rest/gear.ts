@@ -11,14 +11,14 @@ import type {
   AvailableAmount,
   InitialAmount,
   InventoryItemEvent,
-  InventoryItemTotalAmount,
+  TotalAmount as InventoryItemTotalAmount,
 } from '#shared/api/rest/inventory';
 import type {
   DepositFee,
   RentalId,
   OutstandingAmount,
   RentalMemberName,
-  RentalItemTotalAmount,
+  TotalAmount as RentalItemTotalAmount,
 } from '#shared/api/rest/rental';
 import { entityIdSchema } from '#shared/types/ddd';
 

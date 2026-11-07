@@ -12,9 +12,9 @@ import type {
 } from '#server/domain/topo/topo';
 import {
   createAvailableAmount,
-  type InventoryItemTotalAmount,
+  type TotalAmount,
 } from '#shared/api/rest/inventory';
-import type { RentalItemTotalAmount } from '~~/shared/api/rest/rental';
+import type { TotalAmount } from '~~/shared/api/rest/rental';
 
 export class TopoServiceImpl implements TopoService {
   constructor(
@@ -107,8 +107,7 @@ export class TopoServiceImpl implements TopoService {
           id: topo.id,
           title: topo.title,
           // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-          totalAmount: totalAmount_ as InventoryItemTotalAmount &
-            RentalItemTotalAmount,
+          totalAmount: totalAmount_ as TotalAmount & TotalAmount,
           availableAmount: createAvailableAmount(totalAmount_ - rentedAmount),
           yearPublished: topo.yearPublished,
         };

@@ -7,7 +7,7 @@ import {
 } from '#shared/api/rest/gear';
 import { createOutstandingAmount } from '#shared/api/rest/rental';
 import { inventoryRepositoryMock, rentalRepositoryMock } from '#test/mocks';
-import { createInventoryItemTotalAmount } from '#shared/api/rest/inventory';
+import { createTotalAmount } from '#shared/api/rest/inventory';
 import { aRandomDepositFee } from '#test/builders/rental';
 
 test('maps gear stock and allows negative availability', async () => {
@@ -20,7 +20,7 @@ test('maps gear stock and allows negative availability', async () => {
             gearItemId,
             productionDate: undefined,
             purchaseDate: undefined,
-            totalAmount: createInventoryItemTotalAmount(3),
+            totalAmount: createTotalAmount(3),
           },
         ]),
       getAllGearItems: () =>

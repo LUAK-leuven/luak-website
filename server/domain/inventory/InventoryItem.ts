@@ -10,11 +10,11 @@ import type {
 } from '#shared/api/rest/gear';
 import type { DepositFee } from '#shared/api/rest/rental';
 import {
-  createInventoryItemTotalAmount,
+  createTotalAmount,
   type InitialAmount,
   type InventoryItemEvent,
   type ItemEvent,
-  type InventoryItemTotalAmount,
+  type TotalAmount,
 } from '#shared/api/rest/inventory';
 
 export type InventoryItemId =
@@ -31,14 +31,14 @@ export type GearInventorySummaryRecord = {
   gearItemId: GearItemId;
   productionDate: ProductionDate | undefined;
   purchaseDate: PurchaseDate | undefined;
-  totalAmount: InventoryItemTotalAmount;
+  totalAmount: TotalAmount;
 };
 export type GearInventoryRecord = {
   id: GearInventoryId;
   productionDate: ProductionDate | undefined;
   purchaseDate: PurchaseDate | undefined;
   initialAmount: InitialAmount;
-  totalAmount: InventoryItemTotalAmount;
+  totalAmount: TotalAmount;
   details: Details;
   events: InventoryItemEvent[];
 };
@@ -52,8 +52,8 @@ export type GearItemRecord = {
 export const foldInventoryItemEvents = (
   initialAmount: InitialAmount,
   events: ItemEvent[],
-): InventoryItemTotalAmount => {
-  return createInventoryItemTotalAmount(
+): TotalAmount => {
+  return createTotalAmount(
     events.reduce<number>((acc, event) => {
       switch (event.eventName) {
         case 'ItemLostEvent':

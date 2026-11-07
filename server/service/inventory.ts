@@ -14,7 +14,7 @@ import {
 } from '#shared/api/rest/gear';
 import type { RentalRepository } from '#server/domain/rental/repository';
 import { createAvailableAmount } from '#shared/api/rest/inventory';
-import { createRentalItemTotalAmount } from '#shared/api/rest/rental';
+import { createTotalAmount } from '#shared/api/rest/rental';
 
 export class InventoryServiceImpl implements InventoryService {
   constructor(
@@ -34,9 +34,7 @@ export class InventoryServiceImpl implements InventoryService {
     );
     return gearItems.map((gearItem) => {
       const items = inventory[gearItem.id] ?? [];
-      const totalAmount = createRentalItemTotalAmount(
-        sumOf(items, 'totalAmount'),
-      );
+      const totalAmount = createTotalAmount(sumOf(items, 'totalAmount'));
       return {
         id: gearItem.id,
         name: gearItem.name,
@@ -57,9 +55,7 @@ export class InventoryServiceImpl implements InventoryService {
     const inventory = await this.inventoryRepository.getInventoryDetails(id);
     const gearItem = await this.inventoryRepository.getGearItem(id);
     const rentals = await this.rentalRepository.getRentalsFor(id);
-    const totalAmount = createRentalItemTotalAmount(
-      sumOf(inventory, 'totalAmount'),
-    );
+    const totalAmount = createTotalAmount(sumOf(inventory, 'totalAmount'));
     return {
       id,
       name: gearItem.name,
