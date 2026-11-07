@@ -6,7 +6,11 @@ import {
   discriminatedUnion,
   type infer as ZodInfer,
 } from 'zod';
-import { amountSchema } from '#shared/types/common';
+import {
+  amountSchema,
+  createDateTime,
+  dateTimeSchema,
+} from '#shared/types/common';
 
 declare const _itemLostAmountBrand: unique symbol;
 const itemLostAmountSchema = zodNumber()
@@ -59,7 +63,13 @@ export const itemEventSchema = discriminatedUnion('eventName', [
 ]);
 export type ItemEvent = ZodInfer<typeof itemEventSchema>;
 
-export type InventoryItemEvent = ItemEvent & { occurredOn: string };
+declare const _occurredOnBrand: unique symbol;
+const occurredOnSchema = dateTimeSchema.brand<typeof _occurredOnBrand>();
+export type OccurredOn = ZodInfer<typeof occurredOnSchema>;
+export const createOccurredOn = (value: string): OccurredOn =>
+  occurredOnSchema.parse(createDateTime(value));
+
+export type InventoryItemEvent = ItemEvent & { occurredOn: OccurredOn };
 
 declare const _initialAmountBrand: unique symbol;
 const initialAmountSchema = amountSchema.brand<typeof _initialAmountBrand>();

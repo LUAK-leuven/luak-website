@@ -18,6 +18,7 @@ import {
 } from '#server/domain/inventory/InventoryItem';
 import type { InventoryRepository } from '#server/domain/inventory/repository';
 import {
+  createOccurredOn,
   createInitialAmount,
   itemEventSchema,
   type InventoryItemEvent,
@@ -98,10 +99,7 @@ export class SupabaseInventoryRepository implements InventoryRepository {
       .eq('item_type', args.itemType)
       .eq('item_id', args.itemId)
       .throwOnError();
-    return data.map((item) => ({
-      occurredOn: item.occured_on,
-      ...itemEventSchema.parse(item.event),
-    }));
+    return data.map(mapInventoryItemEvent);
   }
 
   async getAllGearInventoryItemEvents() {
@@ -112,8 +110,7 @@ export class SupabaseInventoryRepository implements InventoryRepository {
       .throwOnError();
     return data.map((item) => ({
       gearInventoryId: createGearInventoryId(item.item_id),
-      occurredOn: item.occured_on,
-      ...itemEventSchema.parse(item.event),
+      ...mapInventoryItemEvent(item),
     }));
   }
 
@@ -137,6 +134,14 @@ const mapOptional = <T, V>(
   value: V | null,
   create: (value: V) => T,
 ): T | undefined => (value === null ? undefined : create(value));
+
+export const mapInventoryItemEvent = (item: {
+  occured_on: string;
+  event: unknown;
+}): InventoryItemEvent => ({
+  occurredOn: createOccurredOn(item.occured_on),
+  ...itemEventSchema.parse(item.event),
+});
 
 export const mapGearItem = (item: {
   id: string;

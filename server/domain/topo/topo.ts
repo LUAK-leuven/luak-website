@@ -14,8 +14,10 @@ import type {
   TopoListItem as TopoListItemDto,
   YearPublished,
 } from '#shared/api/rest/topo';
-import type { DateTime } from '#shared/types/common';
-import type { InitialAmount, ItemEvent } from '#shared/api/rest/inventory';
+import type {
+  InitialAmount,
+  InventoryItemEvent,
+} from '#shared/api/rest/inventory';
 
 export type { TopoCondition } from '#shared/api/rest/topo';
 export type { TopoId } from '#shared/api/rest/topo';
@@ -59,7 +61,6 @@ export type TopoSummary = {
   yearPublished: YearPublished | undefined;
 };
 
-export type TopoInventoryItemEvent = ItemEvent & {
+export type TopoInventoryItemEvent = InventoryItemEvent & {
   topoId: TopoId;
-  occurredOn: DateTime;
 };

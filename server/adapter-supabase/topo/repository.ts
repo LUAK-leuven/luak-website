@@ -21,8 +21,8 @@ import {
   createTitle,
   createClimbingType,
 } from '#shared/api/rest/topo';
-import { createDateTime } from '#shared/types/common';
 import {
+  createOccurredOn,
   createInitialAmount,
   itemEventSchema,
 } from '#shared/api/rest/inventory';
@@ -115,7 +115,7 @@ export class SupabaseTopoRepository implements TopoRepository {
 
     return data.map((it) => ({
       topoId: createTopoId(it.item_id),
-      occurredOn: createDateTime(it.occured_on),
+      occurredOn: createOccurredOn(it.occured_on),
       ...itemEventSchema.parse(it.event),
     }));
   }

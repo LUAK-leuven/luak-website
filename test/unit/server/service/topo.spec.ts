@@ -16,6 +16,7 @@ import {
   createInitialAmount,
   createItemArchivedAmount,
   createItemLostAmount,
+  createOccurredOn,
   type InventoryItemEvent,
 } from '#shared/api/rest/inventory';
 import { createOutstandingAmount } from '#shared/api/rest/rental';
@@ -38,12 +39,12 @@ test.describe('TopoService', () => {
       {
         eventName: 'ItemLostEvent' as const,
         lostAmount: createItemLostAmount(1),
-        occurredOn: '2026-01-01',
+        occurredOn: createOccurredOn('2026-01-01T00:00:00.000Z'),
       },
       {
         eventName: 'ItemArchivedEvent' as const,
         amount: createItemArchivedAmount(1),
-        occurredOn: '2026-01-02',
+        occurredOn: createOccurredOn('2026-01-02T00:00:00.000Z'),
       },
     ];
     const inventoryRepository = inventoryRepositoryMock({
