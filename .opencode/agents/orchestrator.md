@@ -1,5 +1,6 @@
 ---
 description: Orchestrates various tasks and agents within the system.
+mode: primary
 permissions:
   - { action: edit, resource: "*", effect: deny }
   - { action: shell, resource: "*", effect: deny }

@@ -1,6 +1,7 @@
 ---
 description: A developer agent that implements one step at a time, using TDD, clean code, ...
 model: github-copilot/gpt-6-luna
+mode: all
 permissions:
   - { action: read, resource: "*", effect: allow }
   - { action: grep, resource: "*", effect: allow }

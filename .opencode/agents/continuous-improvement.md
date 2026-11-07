@@ -1,6 +1,7 @@
 ---
 description: Improves the ai harness based on the user's feedback.
 model: github-copilot/claude-sonnet-5.5
+mode: all
 permissions:
   - { action: write, resource: "*", effect: deny }
   - { action: write, resource: ".opencode/**", effect: ask }
