@@ -1,3 +1,5 @@
+import type { UserId } from '#shared/api/rest/user';
+
 export interface UserRepository {
-  isBoardMember(userId: string): Promise<boolean>;
+  isBoardMember(userId: UserId): Promise<boolean>;
 }

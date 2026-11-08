@@ -2,22 +2,14 @@ import { object as zodObject } from 'zod';
 import luakEventHandler from '#server/luakEventHandler';
 import { gearItemIdSchema } from '#shared/api/rest/gear';
 
-const gearItemId = zodObject({
+const paramsSchema = zodObject({
   id: gearItemIdSchema,
 });
 
-export default luakEventHandler(async ({ inventoryService }, event) => {
-  const { data, success, error } = await getValidatedRouterParams(
-    event,
-    (data) => gearItemId.safeParse(data),
-  );
+export default luakEventHandler(
+  async ({ services: { inventoryService }, getRouterParams }) => {
+    const { id: gearItemId } = await getRouterParams(paramsSchema);
 
-  if (!success)
-    throw createError({
-      status: 400,
-      message: error.message,
-      cause: error,
-    });
-
-  return await inventoryService().getDetails(data.id);
-});
+    return await inventoryService().getDetails(gearItemId);
+  },
+);

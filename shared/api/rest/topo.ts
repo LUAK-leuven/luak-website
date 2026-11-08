@@ -5,18 +5,18 @@ import type {
   RentalId,
   OutstandingAmount,
   RentalMemberName,
-  TotalAmount,
+  TotalAmount as RentalItemTotalAmount,
 } from '#shared/api/rest/rental';
 import type {
   AvailableAmount,
   InitialAmount,
   InventoryItemEvent,
-  TotalAmount,
+  TotalAmount as InventoryItemTotalAmount,
 } from '#shared/api/rest/inventory';
 import { yearSchema } from '#shared/types/common';
 
 declare const _topoIdBrand: unique symbol;
-const topoIdSchema = entityIdSchema<typeof _topoIdBrand>();
+export const topoIdSchema = entityIdSchema<typeof _topoIdBrand>();
 export type TopoId = ZodInfer<typeof topoIdSchema>;
 export const createTopoId = (value: string): TopoId =>
   topoIdSchema.parse(value);
@@ -34,7 +34,7 @@ export type TopoDetails = {
   tags: Tag[];
   yearPublished: YearPublished | undefined;
   initialAmount: InitialAmount;
-  amount: TotalAmount;
+  amount: InventoryItemTotalAmount;
   events: TopoEvent[];
   rentals: {
     id: RentalId;
@@ -53,13 +53,13 @@ export type TopoLibraryItem = {
   title: Title;
   typesOfClimbing: ClimbingType[];
   yearPublished: YearPublished | undefined;
-  amount: TotalAmount;
+  amount: InventoryItemTotalAmount;
 };
 
 export type TopoListItem = {
   id: TopoId;
   title: Title;
-  totalAmount: TotalAmount & TotalAmount;
+  totalAmount: InventoryItemTotalAmount & RentalItemTotalAmount;
   availableAmount: AvailableAmount;
   yearPublished: YearPublished | undefined;
 };

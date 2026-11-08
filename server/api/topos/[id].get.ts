@@ -1,24 +1,17 @@
-import { object as zodObject, uuid as zodUuid } from 'zod';
+import { object as zodObject } from 'zod';
 import luakEventHandler from '#server/luakEventHandler';
-import { createTopoId } from '#shared/api/rest/topo';
+import { topoIdSchema } from '#shared/api/rest/topo';
 
-const lostTopo = zodObject({
-  id: zodUuid().transform(createTopoId),
+const lostTopoSchema = zodObject({
+  id: topoIdSchema,
 });
 
-export default luakEventHandler(async ({ topoService }, event) => {
-  const result = await getValidatedRouterParams(event, (data) =>
-    lostTopo.safeParse(data),
-  );
+export default luakEventHandler(
+  async ({ services: { topoService }, getRouterParams }) => {
+    const { id: topoId } = await getRouterParams(lostTopoSchema);
 
-  if (!result.success)
-    throw createError({
-      status: 400,
-      message: result.error.message,
-      cause: result.error,
-    });
+    const topoDetails = await topoService().getDetails(topoId);
 
-  const topoDetails = await topoService().getDetails(result.data.id);
-
-  return topoDetails;
-});
+    return topoDetails;
+  },
+);

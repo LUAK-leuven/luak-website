@@ -1,12 +1,13 @@
 import luakEventHandler from '#server/luakEventHandler';
-import { serverSupabaseUser } from '#supabase/server';
 import type { TopoLibraryItem } from '#shared/api/rest/topo';
 
 export default luakEventHandler(
-  async ({ topoService, userRepo }, event): Promise<TopoLibraryItem[]> => {
-    const user = await serverSupabaseUser(event);
+  async ({
+    services: { topoService, userRepo },
+    userId,
+  }): Promise<TopoLibraryItem[]> => {
     const isBoard =
-      user === null ? false : await userRepo().isBoardMember(user.sub);
+      userId === undefined ? false : await userRepo().isBoardMember(userId);
     return topoService().getTopoLibrary({ includeOutOfStock: isBoard });
   },
 );
