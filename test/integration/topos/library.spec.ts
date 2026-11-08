@@ -17,20 +17,14 @@ beforeAll(async () => {
   await testDao().clearRentals();
 
   await testDao().addInventoryItemEvent({
-    itemId: {
-      itemId: idTopoAilefroide,
-      itemType: 'topo',
-    },
+    itemId: idTopoAilefroide,
     event: {
       eventName: 'ItemLostEvent',
       lostAmount: createItemLostAmount(1),
     },
   });
   await testDao().addInventoryItemEvent({
-    itemId: {
-      itemId: idTopoFlone,
-      itemType: 'topo',
-    },
+    itemId: idTopoFlone,
     event: {
       eventName: 'ItemArchivedEvent',
       amount: createItemArchivedAmount(1),

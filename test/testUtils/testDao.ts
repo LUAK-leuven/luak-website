@@ -38,8 +38,7 @@ Failed to clear rentals:
     event: ItemEvent;
   }) => {
     await this.supabase.from('InventoryItemEvents').insert({
-      item_id: args.itemId.itemId,
-      item_type: args.itemId.itemType,
+      item_id: args.itemId,
       event: args.event,
     });
   };

@@ -23,18 +23,12 @@ test.describe('lost gear form', () => {
     // Archive some stuff
     const testDao = testServiceBuilder().testDao();
     await testDao.addInventoryItemEvent({
-      itemId: {
-        // TODO: find a better solution iso reusing the hardcoded ID from seed.sql
-        itemId: createGearInventoryId('3d7a2a9a-8a8a-456c-997e-8533427f6ed1'),
-        itemType: 'gear',
-      },
+      // TODO: find a better solution iso reusing the hardcoded ID from seed.sql
+      itemId: createGearInventoryId('3d7a2a9a-8a8a-456c-997e-8533427f6ed1'),
       event: createItemArchivedEvent(4),
     });
     await testDao.addInventoryItemEvent({
-      itemId: {
-        itemId: createGearInventoryId('49f1b67b-5289-4056-a43a-c9ad248ad883'),
-        itemType: 'gear',
-      },
+      itemId: createGearInventoryId('49f1b67b-5289-4056-a43a-c9ad248ad883'),
       event: createItemArchivedEvent(2),
     });
 
@@ -64,10 +58,7 @@ test.describe('lost gear form', () => {
     // Archive a topo
     const testDao = testServiceBuilder().testDao();
     await testDao.addInventoryItemEvent({
-      itemId: {
-        itemId: topoId,
-        itemType: 'topo',
-      },
+      itemId: topoId,
       event: createItemArchivedEvent(1),
     });
 

@@ -26,10 +26,8 @@ export class TopoServiceImpl implements TopoService {
   readonly getDetails = async (topoId: TopoId): Promise<TopoDetails> => {
     const topoDetails = await this.topoRepository.getDetails(topoId);
 
-    const topoEvents = await this.inventoryRepository.getInventoryItemEvents({
-      itemType: 'topo',
-      itemId: topoId,
-    });
+    const topoEvents =
+      await this.inventoryRepository.getInventoryItemEvents(topoId);
 
     const rentals = await this.rentalRepository.getRentalsForTopo(topoId);
 

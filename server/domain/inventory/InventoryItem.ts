@@ -1,12 +1,13 @@
-import type { TopoId } from '#shared/api/rest/topo';
-import type {
-  GearInventoryId,
-  GearItemId,
-  GearName,
-  Details,
-  LifeSpanInYears,
-  ProductionDate,
-  PurchaseDate,
+import { topoIdSchema } from '#shared/api/rest/topo';
+import {
+  type GearInventoryId,
+  type GearItemId,
+  type GearName,
+  type Details,
+  type LifeSpanInYears,
+  type ProductionDate,
+  type PurchaseDate,
+  gearInventoryIdSchema,
 } from '#shared/api/rest/gear';
 import type { DepositFee } from '#shared/api/rest/rental';
 import {
@@ -17,31 +18,33 @@ import {
   type TotalAmount,
 } from '#shared/api/rest/inventory';
 
-export type InventoryItemId =
-  | {
-      itemId: TopoId;
-      itemType: 'topo';
-    }
-  | {
-      itemId: GearInventoryId;
-      itemType: 'gear';
-    };
+import { type infer as ZodInfer, union as zodUnion } from 'zod';
 
-export type GearInventorySummaryRecord = {
+declare const _inventoryItemIdBrand: unique symbol;
+const inventoryItemIdSchema = zodUnion([topoIdSchema, gearInventoryIdSchema]);
+export type InventoryItemId = ZodInfer<typeof inventoryItemIdSchema>;
+export const createInventoryItemId = (value: string) =>
+  inventoryItemIdSchema.parse(value);
+
+export interface InventoryItem {
+  id: InventoryItemId;
+  amount: TotalAmount;
+}
+
+export interface GearInventorySummaryRecord {
   gearItemId: GearItemId;
   productionDate: ProductionDate | undefined;
   purchaseDate: PurchaseDate | undefined;
   totalAmount: TotalAmount;
-};
-export type GearInventoryRecord = {
+}
+export interface GearInventoryRecord extends InventoryItem {
   id: GearInventoryId;
   productionDate: ProductionDate | undefined;
   purchaseDate: PurchaseDate | undefined;
   initialAmount: InitialAmount;
-  totalAmount: TotalAmount;
   details: Details;
   events: InventoryItemEvent[];
-};
+}
 export type GearItemRecord = {
   id: GearItemId;
   name: GearName;

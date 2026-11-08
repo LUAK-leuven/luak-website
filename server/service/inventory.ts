@@ -55,7 +55,7 @@ export class InventoryServiceImpl implements InventoryService {
     const inventory = await this.inventoryRepository.getInventoryDetails(id);
     const gearItem = await this.inventoryRepository.getGearItem(id);
     const rentals = await this.rentalRepository.getRentalsFor(id);
-    const totalAmount = createTotalAmount(sumOf(inventory, 'totalAmount'));
+    const totalAmount = createTotalAmount(sumOf(inventory, 'amount'));
     return {
       id,
       name: gearItem.name,
@@ -66,7 +66,8 @@ export class InventoryServiceImpl implements InventoryService {
         totalAmount - sumOf(rentals, 'rentedAmount'),
       ),
       inventory: inventory.map((item) => ({
-        ...item,
+        ...item, // TODO: this should throw a lint error because 'amount' is no prop in GearInventoryDetails['inventory']
+        totalAmount: item.amount,
         retirementDate: this.calculateRetirementDate({
           productionDate: item.productionDate,
           purchaseDate: item.purchaseDate,

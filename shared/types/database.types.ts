@@ -141,6 +141,13 @@ export type Database = {
             referencedRelation: 'GearItems';
             referencedColumns: ['id'];
           },
+          {
+            foreignKeyName: 'GearInventory_Inventory_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'Inventory';
+            referencedColumns: ['id'];
+          },
         ];
       };
       GearItems: {
@@ -164,29 +171,49 @@ export type Database = {
         };
         Relationships: [];
       };
+      Inventory: {
+        Row: {
+          created_at: string;
+          id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+        };
+        Relationships: [];
+      };
       InventoryItemEvents: {
         Row: {
           event: Json;
           id: string;
           item_id: string;
-          item_type: Database['public']['Enums']['item_type'];
           occured_on: string;
         };
         Insert: {
           event: Json;
           id?: string;
           item_id: string;
-          item_type: Database['public']['Enums']['item_type'];
           occured_on?: string;
         };
         Update: {
           event?: Json;
           id?: string;
           item_id?: string;
-          item_type?: Database['public']['Enums']['item_type'];
           occured_on?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: 'InventoryItemEvents_Inventory_id_fkey';
+            columns: ['item_id'];
+            isOneToOne: false;
+            referencedRelation: 'Inventory';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       Memberships: {
         Row: {
@@ -442,7 +469,15 @@ export type Database = {
           types_of_climbing?: string[];
           year_published?: number | null;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: 'Topos_Inventory_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'Inventory';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       Users: {
         Row: {

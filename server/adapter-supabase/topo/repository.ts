@@ -109,8 +109,8 @@ export class SupabaseTopoRepository implements TopoRepository {
   async getAllTopoInventoryItemEvents(): Promise<TopoInventoryItemEvent[]> {
     const { data } = await this.supabaseClient
       .from('InventoryItemEvents')
-      .select('*')
-      .eq('item_type', 'topo')
+      .select('item_id, occured_on, event, Inventory(Topos(id))')
+      .not('Inventory.Topos.id', 'is', null)
       .throwOnError();
 
     return data.map((it) => ({

@@ -29,7 +29,8 @@ export const createGearItemId = (value: string) =>
   gearItemIdSchema.parse(value);
 
 declare const _gearInventoryIdBrand: unique symbol;
-const gearInventoryIdSchema = entityIdSchema<typeof _gearInventoryIdBrand>();
+export const gearInventoryIdSchema =
+  entityIdSchema<typeof _gearInventoryIdBrand>();
 export type GearInventoryId = ZodInfer<typeof gearInventoryIdSchema>;
 export const createGearInventoryId = (value: string) =>
   gearInventoryIdSchema.parse(value);

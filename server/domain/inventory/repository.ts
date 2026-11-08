@@ -12,7 +12,9 @@ export interface InventoryRepository {
   getInventoryDetails(id: GearItemId): Promise<GearInventoryRecord[]>;
   getAllGearItems(): Promise<GearItemRecord[]>;
   getGearItem(id: GearItemId): Promise<GearItemRecord>;
-  getInventoryItemEvents(args: InventoryItemId): Promise<InventoryItemEvent[]>;
+  getInventoryItemEvents(
+    inventoryItemId: InventoryItemId,
+  ): Promise<InventoryItemEvent[]>;
   getAllGearInventoryItemEvents(): Promise<
     (InventoryItemEvent & { gearInventoryId: GearInventoryId })[]
   >;

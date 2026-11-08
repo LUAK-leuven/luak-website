@@ -83,13 +83,12 @@ export class SupabaseInventoryRepository implements InventoryRepository {
   }
 
   async getInventoryItemEvents(
-    args: InventoryItemId,
+    inventoryItemId: InventoryItemId,
   ): Promise<InventoryItemEvent[]> {
     const { data } = await this.supabaseClient
       .from('InventoryItemEvents')
       .select('*')
-      .eq('item_type', args.itemType)
-      .eq('item_id', args.itemId)
+      .eq('item_id', inventoryItemId)
       .throwOnError();
     return data.map(mapInventoryItemEvent);
   }
@@ -97,8 +96,8 @@ export class SupabaseInventoryRepository implements InventoryRepository {
   async getAllGearInventoryItemEvents() {
     const { data } = await this.supabaseClient
       .from('InventoryItemEvents')
-      .select('*')
-      .eq('item_type', 'gear')
+      .select('item_id, occured_on, event, Inventory(GearInventory(id))')
+      .not('Inventory.GearInventory.id', 'is', null)
       .throwOnError();
     return data.map((item) => ({
       gearInventoryId: createGearInventoryId(item.item_id),
@@ -138,7 +137,7 @@ const mapGearInventoryRecord = (
     productionDate: mapOptional(item.production_date, createProductionDate),
     purchaseDate: mapOptional(item.purchase_date, createPurchaseDate),
     initialAmount,
-    totalAmount: foldInventoryItemEvents(initialAmount, itemEvents),
+    amount: foldInventoryItemEvents(initialAmount, itemEvents),
     details: createDetails(item.details),
     events: itemEvents,
   };
