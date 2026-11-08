@@ -1,13 +1,25 @@
 import {
   string as zodString,
+  number as zodNumber,
   type infer as ZodInfer,
   literal as zodLiteral,
   union as zodUnion,
 } from 'zod';
 
 import { dateSchema } from '#shared/types/common';
-import type { InventoryItemEvent } from '#shared/api/rest/inventory';
-import type { RentalId } from '#shared/api/rest/rental';
+import type {
+  AvailableAmount,
+  InitialAmount,
+  InventoryItemEvent,
+  TotalAmount as InventoryItemTotalAmount,
+} from '#shared/api/rest/inventory';
+import type {
+  DepositFee,
+  RentalId,
+  OutstandingAmount,
+  RentalMemberName,
+  TotalAmount as RentalItemTotalAmount,
+} from '#shared/api/rest/rental';
 import { entityIdSchema } from '#shared/types/ddd';
 
 declare const _gearItemIdBrand: unique symbol;
@@ -25,35 +37,51 @@ export const createGearInventoryId = (value: string) =>
 export type GearInventorySummary = {
   id: GearItemId;
   name: GearName;
-  totalAmount: number;
-  availableAmount: number;
+  totalAmount: RentalItemTotalAmount;
+  availableAmount: AvailableAmount;
   earliestRetirementDate: RetirementDate;
-  depositFee: number;
+  depositFee: DepositFee;
 };
 
 export type GearInventoryDetails = {
   id: GearItemId;
   name: GearName;
-  lifespan: number;
-  depositFee: number;
-  totalAmount: number;
-  availableAmount: number;
+  lifespan: LifeSpanInYears;
+  depositFee: DepositFee;
+  totalAmount: RentalItemTotalAmount;
+  availableAmount: AvailableAmount;
   inventory: {
     id: GearInventoryId;
-    productionDate: string | undefined;
-    purchaseDate: string | undefined;
+    productionDate: ProductionDate | undefined;
+    purchaseDate: PurchaseDate | undefined;
     retirementDate: RetirementDate;
-    details: string;
-    initialAmount: number;
-    totalAmount: number;
+    details: Details;
+    initialAmount: InitialAmount;
+    totalAmount: InventoryItemTotalAmount;
     events: InventoryItemEvent[];
   }[];
   rentals: {
     id: RentalId;
-    rentedAmount: number;
-    memberName: string;
+    rentedAmount: OutstandingAmount;
+    memberName: RentalMemberName;
   }[];
 };
+
+declare const _gearDetailsBrand: unique symbol;
+const detailsSchema = zodString().brand<typeof _gearDetailsBrand>();
+export type Details = ZodInfer<typeof detailsSchema>;
+export const createDetails = (value: string): Details =>
+  detailsSchema.parse(value);
+
+declare const _lifeSpanInYearsBrand: unique symbol;
+const lifeSpanInYearsSchema = zodUnion([
+  zodNumber().int().positive(),
+  zodLiteral('infinite'),
+]).brand<typeof _lifeSpanInYearsBrand>();
+export type LifeSpanInYears = ZodInfer<typeof lifeSpanInYearsSchema>;
+export const createLifeSpanInYears = (
+  value: number | 'infinite',
+): LifeSpanInYears => lifeSpanInYearsSchema.parse(value);
 
 declare const _gearNameBrand: unique symbol;
 const gearNameSchema = zodString().nonempty().brand<typeof _gearNameBrand>();
@@ -70,3 +98,15 @@ const retirementDateSchema = zodUnion([
 export type RetirementDate = ZodInfer<typeof retirementDateSchema>;
 export const createRetirementDate = (value: string): RetirementDate =>
   retirementDateSchema.parse(value);
+
+declare const _productionDateBrand: unique symbol;
+const productionDateSchema = dateSchema.brand<typeof _productionDateBrand>();
+export type ProductionDate = ZodInfer<typeof productionDateSchema>;
+export const createProductionDate = (value: string): ProductionDate =>
+  productionDateSchema.parse(value);
+
+declare const _purchaseDateBrand: unique symbol;
+const purchaseDateSchema = dateSchema.brand<typeof _purchaseDateBrand>();
+export type PurchaseDate = ZodInfer<typeof purchaseDateSchema>;
+export const createPurchaseDate = (value: string): PurchaseDate =>
+  purchaseDateSchema.parse(value);

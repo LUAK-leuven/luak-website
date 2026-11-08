@@ -10,7 +10,11 @@ import { getFullName } from './userService';
 import { object as zodObject, string as zodString } from 'zod';
 import { createGearItemId } from '#shared/api/rest/gear';
 import { createTopoId } from '#shared/api/rest/topo';
-import { createRentalId, type RentalId } from '#shared/api/rest/rental';
+import {
+  createDepositFee,
+  createRentalId,
+  type RentalId,
+} from '#shared/api/rest/rental';
 import { createUserId, type UserId } from '#shared/api/rest/user';
 
 export class RentalService {
@@ -27,14 +31,12 @@ export class RentalService {
       p_date_return: rental.dateReturn,
       p_deposit: rental.depositFee,
       p_gear: Object.entries(rental.gear)
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         .filter(([_, amount]) => amount !== undefined)
         .map(([id, amount]) => ({
           gear_item_id: id,
           rented_amount: amount,
         })),
       p_topos: Object.entries(rental.topos)
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         .filter(([_, amount]) => amount !== undefined)
         .map(([id, amount]) => ({
           topo_id: id,
@@ -169,14 +171,12 @@ export class RentalService {
       p_date_return: rental.dateReturn,
       p_deposit: rental.depositFee,
       p_gear: Object.entries(rental.gear)
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         .filter(([_, amount]) => amount !== undefined)
         .map(([id, amount]) => ({
           gear_item_id: id,
           rented_amount: amount,
         })),
       p_topos: Object.entries(rental.topos)
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         .filter(([_, amount]) => amount !== undefined)
         .map(([id, amount]) => ({
           topo_id: id,
@@ -239,7 +239,7 @@ export const rentalSummaryFromDb = (args: RentalSummaryVo): RentalSummary => {
     dateReturn: args.date_return,
     dateBorrow: args.date_borrow,
     depositReturned: args.deposit_returned,
-    depositFee: args.deposit,
+    depositFee: createDepositFee(args.deposit),
   });
 };
 
@@ -256,7 +256,7 @@ export const rentalDetailsFromDb = (args: RentalDetailsVo): RentalDetails => {
     dateReturn: args.date_return,
     dateBorrow: args.date_borrow,
     depositReturned: args.deposit_returned,
-    depositFee: args.deposit,
+    depositFee: createDepositFee(args.deposit),
     // Due to RLS board_member is only available for board members.
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     boardMember: args.board_member ? getFullName(args.board_member) : '',
@@ -280,7 +280,7 @@ export const publicRentalDetailsFromDb = (
     dateReturn: args.date_return,
     dateBorrow: args.date_borrow,
     depositReturned: args.deposit_returned,
-    depositFee: args.deposit,
+    depositFee: createDepositFee(args.deposit),
     paymentMethod: args.payment_method,
   });
 };

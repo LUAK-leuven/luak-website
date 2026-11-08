@@ -11,7 +11,7 @@ export type Date = ZodInfer<typeof dateSchema>;
 export const createDate = (value: string): Date => dateSchema.parse(value);
 
 declare const _dateTimeBrand: unique symbol;
-const dateTimeSchema = zodIso.datetime().brand<typeof _dateTimeBrand>();
+export const dateTimeSchema = zodIso.datetime().brand<typeof _dateTimeBrand>();
 export type DateTime = ZodInfer<typeof dateTimeSchema>;
 export const createDateTime = (value: string): DateTime => {
   return dateTimeSchema.parse(dayjs(value).toISOString());

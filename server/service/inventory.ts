@@ -7,9 +7,14 @@ import {
   type GearInventoryDetails,
   type GearInventorySummary,
   type GearItemId,
+  type LifeSpanInYears,
+  type ProductionDate,
+  type PurchaseDate,
   type RetirementDate,
 } from '#shared/api/rest/gear';
 import type { RentalRepository } from '#server/domain/rental/repository';
+import { createAvailableAmount } from '#shared/api/rest/inventory';
+import { createTotalAmount } from '#shared/api/rest/rental';
 
 export class InventoryServiceImpl implements InventoryService {
   constructor(
@@ -29,13 +34,14 @@ export class InventoryServiceImpl implements InventoryService {
     );
     return gearItems.map((gearItem) => {
       const items = inventory[gearItem.id] ?? [];
-      const totalAmount = sumOf(items, 'totalAmount');
+      const totalAmount = createTotalAmount(sumOf(items, 'totalAmount'));
       return {
         id: gearItem.id,
         name: gearItem.name,
         totalAmount,
-        availableAmount:
+        availableAmount: createAvailableAmount(
           totalAmount - sumOf(rented[gearItem.id] ?? [], 'rentedAmount'),
+        ),
         earliestRetirementDate: this.calculateEarliestRetirementDate(
           items,
           gearItem.lifespan,
@@ -49,14 +55,16 @@ export class InventoryServiceImpl implements InventoryService {
     const inventory = await this.inventoryRepository.getInventoryDetails(id);
     const gearItem = await this.inventoryRepository.getGearItem(id);
     const rentals = await this.rentalRepository.getRentalsFor(id);
-    const totalAmount = sumOf(inventory, 'totalAmount');
+    const totalAmount = createTotalAmount(sumOf(inventory, 'totalAmount'));
     return {
       id,
       name: gearItem.name,
       lifespan: gearItem.lifespan,
       depositFee: gearItem.depositFee,
       totalAmount,
-      availableAmount: totalAmount - sumOf(rentals, 'rentedAmount'),
+      availableAmount: createAvailableAmount(
+        totalAmount - sumOf(rentals, 'rentedAmount'),
+      ),
       inventory: inventory.map((item) => ({
         ...item,
         retirementDate: this.calculateRetirementDate({
@@ -70,11 +78,11 @@ export class InventoryServiceImpl implements InventoryService {
   }
 
   private calculateRetirementDate(args: {
-    purchaseDate: string | undefined;
-    productionDate: string | undefined;
-    lifespan: number;
+    purchaseDate: PurchaseDate | undefined;
+    productionDate: ProductionDate | undefined;
+    lifespan: LifeSpanInYears;
   }): RetirementDate {
-    if (args.lifespan === 0) return createRetirementDate('infinite');
+    if (args.lifespan === 'infinite') return createRetirementDate('infinite');
     const startDate = args.purchaseDate
       ? dayjs(args.purchaseDate)
       : args.productionDate
@@ -88,12 +96,12 @@ export class InventoryServiceImpl implements InventoryService {
 
   private calculateEarliestRetirementDate(
     items: {
-      productionDate: string | undefined;
-      purchaseDate: string | undefined;
+      productionDate: ProductionDate | undefined;
+      purchaseDate: PurchaseDate | undefined;
     }[],
-    lifespan: number,
+    lifespan: LifeSpanInYears,
   ): GearInventorySummary['earliestRetirementDate'] {
-    if (lifespan === 0) return createRetirementDate('infinite');
+    if (lifespan === 'infinite') return createRetirementDate('infinite');
     const dates = items.map((item) =>
       this.calculateRetirementDate({ ...item, lifespan }),
     );

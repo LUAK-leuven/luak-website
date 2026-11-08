@@ -4,6 +4,10 @@ import {
   createGearInventoryId,
   createGearItemId,
   createGearName,
+  createDetails,
+  createLifeSpanInYears,
+  createProductionDate,
+  createPurchaseDate,
   type GearItemId,
 } from '#shared/api/rest/gear';
 import {
@@ -15,9 +19,12 @@ import {
 } from '#server/domain/inventory/InventoryItem';
 import type { InventoryRepository } from '#server/domain/inventory/repository';
 import {
+  createOccurredOn,
+  createInitialAmount,
   itemEventSchema,
   type InventoryItemEvent,
 } from '#shared/api/rest/inventory';
+import { createDepositFee } from '#shared/api/rest/rental';
 
 export class SupabaseInventoryRepository implements InventoryRepository {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
@@ -30,7 +37,10 @@ export class SupabaseInventoryRepository implements InventoryRepository {
       gearItemId: item.gearItemId,
       productionDate: item.productionDate,
       purchaseDate: item.purchaseDate,
-      totalAmount: foldInventoryItemEvents(item.amount, grouped[item.id] ?? []),
+      totalAmount: foldInventoryItemEvents(
+        createInitialAmount(item.amount),
+        grouped[item.id] ?? [],
+      ),
     }));
   }
 
@@ -40,22 +50,16 @@ export class SupabaseInventoryRepository implements InventoryRepository {
       .select('id, production_date, purchase_date, amount, details')
       .eq('gear_item_id', id)
       .throwOnError();
+
     const events = groupBy(
       await this.getAllGearInventoryItemEvents(),
       (event) => event.gearInventoryId,
     );
+
     return data.map((item) => {
       const id = createGearInventoryId(item.id);
       const itemEvents = events[id] ?? [];
-      return {
-        id,
-        productionDate: item.production_date ?? undefined,
-        purchaseDate: item.purchase_date ?? undefined,
-        initialAmount: item.amount,
-        totalAmount: foldInventoryItemEvents(item.amount, itemEvents),
-        details: item.details,
-        events: itemEvents,
-      };
+      return mapGearInventoryRecord(item, itemEvents);
     });
   }
 
@@ -87,10 +91,7 @@ export class SupabaseInventoryRepository implements InventoryRepository {
       .eq('item_type', args.itemType)
       .eq('item_id', args.itemId)
       .throwOnError();
-    return data.map((item) => ({
-      occurredOn: item.occured_on,
-      ...itemEventSchema.parse(item.event),
-    }));
+    return data.map(mapInventoryItemEvent);
   }
 
   async getAllGearInventoryItemEvents() {
@@ -101,8 +102,7 @@ export class SupabaseInventoryRepository implements InventoryRepository {
       .throwOnError();
     return data.map((item) => ({
       gearInventoryId: createGearInventoryId(item.item_id),
-      occurredOn: item.occured_on,
-      ...itemEventSchema.parse(item.event),
+      ...mapInventoryItemEvent(item),
     }));
   }
 
@@ -115,14 +115,49 @@ export class SupabaseInventoryRepository implements InventoryRepository {
     return data.map((item) => ({
       id: createGearInventoryId(item.id),
       gearItemId: createGearItemId(item.gear_item_id),
-      productionDate: item.production_date ?? undefined,
-      purchaseDate: item.purchase_date ?? undefined,
+      productionDate: mapOptional(item.production_date, createProductionDate),
+      purchaseDate: mapOptional(item.purchase_date, createPurchaseDate),
       amount: item.amount,
     }));
   }
 }
 
-const mapGearItem = (item: {
+const mapGearInventoryRecord = (
+  item: {
+    id: string;
+    production_date: string | null;
+    purchase_date: string | null;
+    amount: number;
+    details: string;
+  },
+  itemEvents: InventoryItemEvent[],
+): GearInventoryRecord => {
+  const initialAmount = createInitialAmount(item.amount);
+  return {
+    id: createGearInventoryId(item.id),
+    productionDate: mapOptional(item.production_date, createProductionDate),
+    purchaseDate: mapOptional(item.purchase_date, createPurchaseDate),
+    initialAmount,
+    totalAmount: foldInventoryItemEvents(initialAmount, itemEvents),
+    details: createDetails(item.details),
+    events: itemEvents,
+  };
+};
+
+const mapOptional = <T, V>(
+  value: V | null,
+  create: (value: V) => T,
+): T | undefined => (value === null ? undefined : create(value));
+
+export const mapInventoryItemEvent = (item: {
+  occured_on: string;
+  event: unknown;
+}): InventoryItemEvent => ({
+  occurredOn: createOccurredOn(item.occured_on),
+  ...itemEventSchema.parse(item.event),
+});
+
+export const mapGearItem = (item: {
   id: string;
   name: string;
   lifespan: number;
@@ -130,8 +165,10 @@ const mapGearItem = (item: {
 }): GearItemRecord => ({
   id: createGearItemId(item.id),
   name: createGearName(item.name),
-  lifespan: item.lifespan,
-  depositFee: item.deposit_fee,
+  lifespan: createLifeSpanInYears(
+    item.lifespan === 0 ? 'infinite' : item.lifespan,
+  ),
+  depositFee: createDepositFee(item.deposit_fee),
 });
 const groupBy = <T, K extends string>(items: T[], key: (item: T) => K) =>
   items.reduce<Partial<Record<K, T[]>>>((groups, item) => {

@@ -1,5 +1,4 @@
-import type { H3Event } from '#build/types/nitro-imports';
-import { serverSupabaseClient } from '#supabase/server';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { SupabaseInventoryRepository } from '#server/adapter-supabase/inventory/repository';
 import type { InventoryRepository } from '#server/domain/inventory/repository';
 import { SupabaseTopoRepository } from '#server/adapter-supabase/topo/repository';
@@ -12,11 +11,9 @@ import type { InventoryService } from '#server/domain/inventory/service';
 import type { TopoRepository } from '#server/domain/topo/repository';
 import { SupabaseUserRepository } from '#server/adapter-supabase/user/repository';
 import type { UserRepository } from '#server/domain/user/repository';
+import type { Database } from '#shared/types/database.types';
 
-export const serviceBuilder = async (h3Event: H3Event) => {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-arguments
-  const supabase = await serverSupabaseClient<Database>(h3Event);
-
+export const serviceBuilder = (supabase: SupabaseClient<Database>) => {
   const inventoryRepo = useSingleton<InventoryRepository>(
     () => new SupabaseInventoryRepository(supabase),
   );
@@ -45,8 +42,6 @@ export const serviceBuilder = async (h3Event: H3Event) => {
     topoRepo,
     rentalRepo,
     userRepo,
-
-    supabase,
   };
 };
 

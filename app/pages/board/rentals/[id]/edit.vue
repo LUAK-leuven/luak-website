@@ -2,6 +2,7 @@
   import BackButton from '~/components/shared/BackButton.vue';
   import { useFetchGearAndTopos } from '~/composables/board/rental/useFetchGearAndTopos';
   import { createRentalId } from '#shared/api/rest/rental';
+  import { createAvailableAmount } from '#shared/api/rest/inventory';
 
   const { show: showPopup } = useToast();
   const rentalId = createRentalId(useRoute('board-rentals-id-edit').params.id);
@@ -19,20 +20,22 @@
   const allGear = computed(() =>
     _allGear.value?.map((gearItem) => ({
       ...gearItem,
-      availableAmount:
+      availableAmount: createAvailableAmount(
         gearItem.availableAmount +
-        (rental.value?.gear.find((g) => g.itemId.id === gearItem.id)
-          ?.rentedAmount ?? 0),
+          (rental.value?.gear.find((g) => g.itemId.id === gearItem.id)
+            ?.rentedAmount ?? 0),
+      ),
     })),
   );
 
   const allTopos = computed(() =>
     _allTopos.value?.map((topo) => ({
       ...topo,
-      availableAmount:
+      availableAmount: createAvailableAmount(
         topo.availableAmount +
-        (rental.value?.topos.find((t) => t.itemId.id === topo.id)
-          ?.rentedAmount ?? 0),
+          (rental.value?.topos.find((t) => t.itemId.id === topo.id)
+            ?.rentedAmount ?? 0),
+      ),
     })),
   );
 

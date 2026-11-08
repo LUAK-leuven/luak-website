@@ -1,7 +1,8 @@
 import { expect, test } from 'vitest';
 import { RentalGearItem, RentalSummary } from '~/model/Rental';
-import { randomBool, randomInt, randomOf } from '#shared/utils/utils';
+import { randomBool, randomInt } from '#shared/utils/utils';
 import { aRandomGearItemId, aRandomRentalId } from '#test/builders/ids';
+import { aRandomDepositFee } from '#test/builders/rental';
 
 test.describe('Rental status', () => {
   test('"returned" when all items are returned and deposit is returned', () => {
@@ -40,7 +41,7 @@ const aRentalSummary = (args: Partial<RentalSummaryArgs>): RentalSummary => {
     topos: [],
     dateBorrow: '2024-01-01',
     dateReturn: '2024-01-01',
-    depositFee: randomOf([0, randomInt(1, 100)]),
+    depositFee: aRandomDepositFee(),
     depositReturned: randomBool(),
     memberName: 'John Doe',
   };

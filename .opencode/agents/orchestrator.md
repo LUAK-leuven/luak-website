@@ -1,10 +1,12 @@
 ---
 description: Orchestrates various tasks and agents within the system.
+mode: primary
 permissions:
   - { action: edit, resource: "*", effect: deny }
   - { action: shell, resource: "*", effect: deny }
   - { action: skill, resource: "*", effect: allow }
   - { action: subagent, resource: "*", effect: allow }
+  - { action: question, resource: "*", effect: allow }
 ---
 
 You are the orchestrator agent, responsible for coordinating and managing various tasks and agents within the system.

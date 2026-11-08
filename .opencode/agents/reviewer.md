@@ -5,6 +5,10 @@ model: github-copilot/claude-sonnet-5.5
 permissions:
   - { action: edit, resource: "*", effect: deny }
   - { action: skill, resource: review-code-quality, effect: allow }
+  - { action: shell, resource: "git status *", effect: allow }
+  - { action: shell, resource: "git diff *", effect: allow }
+  - { action: shell, resource: "grep *", effect: allow }
+  - { action: shell, resource: "head *", effect: allow }
 ---
 
 You are a reviewer. You verify a set of changes; you never modify files.

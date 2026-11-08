@@ -10,7 +10,11 @@ import type {
   TopoListItem,
   TopoId,
 } from '#server/domain/topo/topo';
-import { createAvailableAmount } from '#shared/api/rest/topo';
+import {
+  createAvailableAmount,
+  type TotalAmount as InventoryItemTotalAmount,
+} from '#shared/api/rest/inventory';
+import type { TotalAmount as RentalItemTotalAmount } from '~~/shared/api/rest/rental';
 
 export class TopoServiceImpl implements TopoService {
   constructor(
@@ -84,7 +88,10 @@ export class TopoServiceImpl implements TopoService {
     const groupedTopoEvents = groupBy(events, (e) => e.topoId);
     const rentedTopoAmounts =
       await this.rentalRepository.getRentedTopoAmounts();
-    const groupedRentedAmounts = groupBy(rentedTopoAmounts, (x) => x.topoId);
+    const groupedOutstandingAmounts = groupBy(
+      rentedTopoAmounts,
+      (x) => x.topoId,
+    );
 
     return topos
       .map((topo) => {
@@ -93,13 +100,15 @@ export class TopoServiceImpl implements TopoService {
           groupedTopoEvents[topo.id] ?? [],
         );
         const rentedAmount = sumOf(
-          groupedRentedAmounts[topo.id] ?? [],
+          groupedOutstandingAmounts[topo.id] ?? [],
           'rentedAmount',
         );
         return {
           id: topo.id,
           title: topo.title,
-          totalAmount: totalAmount_,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+          totalAmount: totalAmount_ as InventoryItemTotalAmount &
+            RentalItemTotalAmount,
           availableAmount: createAvailableAmount(totalAmount_ - rentedAmount),
           yearPublished: topo.yearPublished,
         };

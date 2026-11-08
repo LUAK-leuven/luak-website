@@ -1,9 +1,11 @@
 <script setup lang="ts" generic="T extends EntityId">
+  import type { AvailableAmount } from '#shared/api/rest/inventory';
+
   const props = defineProps<{
     availableItems: {
       id: T;
       name: string;
-      availableAmount: number;
+      availableAmount: AvailableAmount;
     }[];
     placeholder: string;
   }>();

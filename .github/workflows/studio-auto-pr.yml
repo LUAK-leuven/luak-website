@@ -34,9 +34,8 @@ jobs:
       - name: Enable pull request automerge
         if: ${{ !cancelled() }}
         run: |
-          gh pr merge \
-          --auto \
-          --merge \
-          "studio"
+          if ! gh pr merge --merge "studio"; then
+            gh pr merge --auto --merge "studio"
+          fi
         env:
           GH_TOKEN: ${{ secrets.LUAK_PR_GITHUB_TOKEN }}

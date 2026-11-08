@@ -5,8 +5,11 @@
   import ItemHistory from '~/components/board/inventory/ItemHistory.vue';
   import RetirementDate from '~/components/board/gear/retirementDate.vue';
   import InventoryTableItem from '~/components/board/gear/inventoryTableItem.vue';
-  import type { GearInventoryDetails } from '#shared/api/rest/gear';
-  import { createInitialAmount } from '#shared/api/rest/topo';
+  import type {
+    GearInventoryDetails,
+    ProductionDate,
+    PurchaseDate,
+  } from '#shared/api/rest/gear';
 
   const props = defineProps<{
     hasInfiniteLifespan: boolean;
@@ -47,14 +50,16 @@
   const bp = useBreakpoints(breakpointsTailwind);
   const lg = computed(() => bp.lg.value);
 
-  const formatDate = (date: string | undefined): string => {
+  const formatDate = (
+    date: ProductionDate | PurchaseDate | undefined,
+  ): string => {
     if (date === undefined) return '';
     return dayjs(date).format('DD-MM-YYYY');
   };
 
   const displayPurchaseDate = (args: {
-    purchaseDate: string | undefined;
-    productionDate: string | undefined;
+    purchaseDate: PurchaseDate | undefined;
+    productionDate: ProductionDate | undefined;
   }) => {
     if (args.purchaseDate !== undefined)
       return dayjs(args.purchaseDate).format('DD-MM-YYYY');
@@ -119,7 +124,7 @@
             :purchase-date="
               displayPurchaseDate({ purchaseDate, productionDate })
             "
-            :initial-amount="createInitialAmount(initialAmount)" />
+            :initial-amount="initialAmount" />
         </InventoryTableItem>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import type { GearItemId } from '#shared/api/rest/gear';
 import type { TopoId } from '#shared/api/rest/topo';
-import type { RentalId } from '#shared/api/rest/rental';
+import type { DepositFee, RentalId } from '#shared/api/rest/rental';
 import type { UserId } from '#shared/api/rest/user';
 
 export type PaymentMethod = Enums<'payment_method'>;
@@ -9,13 +9,13 @@ export type UnsavedRental = {
   boardMemberId: UserId;
   dateBorrow: string;
   dateReturn: string;
-  depositFee: number;
+  depositFee: DepositFee;
   paymentMethod: PaymentMethod;
   comments: string | undefined;
   memberId: UserId | undefined;
   contactInfo: ContactInfo | undefined;
-  gear: Record<GearItemId, number>;
-  topos: Record<TopoId, number>;
+  gear: Partial<Record<GearItemId, number>>;
+  topos: Partial<Record<TopoId, number>>;
 };
 
 export type SavedRental = UnsavedRental & { id: RentalId };

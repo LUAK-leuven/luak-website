@@ -1,8 +1,10 @@
 <script setup lang="ts">
+  import type { RentalMemberName } from '#shared/api/rest/rental';
+
   defineProps<{
     rentals: {
       id: EntityId;
-      memberName: string;
+      memberName: RentalMemberName;
       rentedAmount: number;
     }[];
   }>();

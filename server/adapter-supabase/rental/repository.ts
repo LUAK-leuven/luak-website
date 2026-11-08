@@ -1,7 +1,11 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createGearItemId, type GearItemId } from '#shared/api/rest/gear';
 import { createTopoId, type TopoId } from '#shared/api/rest/topo';
-import { createRentalId } from '#shared/api/rest/rental';
+import {
+  createRentalId,
+  createOutstandingAmount,
+  createRentalMemberName,
+} from '#shared/api/rest/rental';
 import type { Database } from '#shared/types/database.types';
 import type { RentalRepository } from '#server/domain/rental/repository';
 import type {
@@ -21,7 +25,9 @@ export class SupabaseRentalRepository implements RentalRepository {
 
     return data.map((x) => ({
       gearItemId: createGearItemId(x.gear_item_id),
-      rentedAmount: x.rented_amount - x.returned_amount - x.lost_amount,
+      rentedAmount: createOutstandingAmount(
+        x.rented_amount - x.returned_amount - x.lost_amount,
+      ),
     }));
   }
 
@@ -33,7 +39,9 @@ export class SupabaseRentalRepository implements RentalRepository {
 
     return data.map((x) => ({
       topoId: createTopoId(x.topo_id),
-      rentedAmount: x.rented_amount - x.returned_amount - x.lost_amount,
+      rentedAmount: createOutstandingAmount(
+        x.rented_amount - x.returned_amount - x.lost_amount,
+      ),
     }));
   }
 
@@ -62,7 +70,7 @@ export class SupabaseRentalRepository implements RentalRepository {
   }
 }
 
-const mapRental = (rental: {
+export const mapRental = (rental: {
   rented_amount: number;
   returned_amount: number;
   lost_amount: number;
@@ -76,9 +84,10 @@ const mapRental = (rental: {
   };
 }): RentalForItem => ({
   id: createRentalId(rental.Rentals.id),
-  rentedAmount:
+  rentedAmount: createOutstandingAmount(
     rental.rented_amount - rental.returned_amount - rental.lost_amount,
-  memberName: getMemberName(rental.Rentals),
+  ),
+  memberName: createRentalMemberName(getMemberName(rental.Rentals)),
 });
 
 const getMemberName = (rental: {

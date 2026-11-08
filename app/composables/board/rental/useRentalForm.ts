@@ -3,7 +3,8 @@ import type { RentalItem } from '~~/shared/types/board/form/RentalItem';
 import type { GearItemId } from '#shared/api/rest/gear';
 import type { TopoId } from '#shared/api/rest/topo';
 import type { UserId } from '#shared/api/rest/user';
-import { entries } from '#shared/utils/utils';
+import { createRentalSelectionSchema } from '~/composables/board/rental/selectionSchema';
+import { depositFeeSchema } from '~/composables/board/rental/depositFeeSchema';
 
 type RentalFormState = {
   memberId: UserId | 'non-user';
@@ -22,45 +23,6 @@ type RentalFormState = {
   paymentMethod: Enums<'payment_method'>;
   comments: string | undefined;
 };
-
-function selectionFrom<T extends EntityId>(
-  selection: { id: T; name: string; totalAmount: number }[],
-) {
-  return (
-    yup
-      .object<Record<T, number>, Record<T, yup.NumberSchema<number>>>()
-      .default(() => ({}))
-      .required()
-      // @ts-expect-error: I can't get the types to match, but it works
-      .test(function (items: Record<T, number>) {
-        for (const [id, amount] of entries(items)) {
-          const item = selection.find((x) => x.id === id);
-          if (item === undefined) {
-            console.warn(
-              `Could not find item ${id} in ${selection.map((x) => x.id).toString()}!`,
-            );
-            return this.createError({
-              path: `${this.path}.${id}`,
-              message: `Error: item with id ${id} cannot be found in the inventory.`,
-            });
-          }
-          if (amount <= 0) {
-            return this.createError({
-              path: `${this.path}.${id}`,
-              message: `Value for ${item.name} must be a positive number.`,
-            });
-          }
-          if (amount > item.totalAmount) {
-            return this.createError({
-              path: `${this.path}.${id}`,
-              message: `Value for ${item.name} cannot exceed ${item.totalAmount.toFixed()}`,
-            });
-          }
-        }
-        return true;
-      })
-  );
-}
 
 export function useRentalForm(
   initialState: Partial2<RentalFormState>,
@@ -84,9 +46,9 @@ export function useRentalForm(
         },
       )
       .label('return date'),
-    gear: selectionFrom(allGear),
-    topos: selectionFrom(allTopos),
-    depositFee: yup.number().label('deposit fee').required().min(0),
+    gear: createRentalSelectionSchema(allGear),
+    topos: createRentalSelectionSchema(allTopos),
+    depositFee: depositFeeSchema,
     paymentMethod: yup.string<'transfer' | 'cash'>().when('depositFee', {
       is: (depositFee: number) => depositFee > 0,
       then: (schema) => schema.required('You must select a payment method.'),
