@@ -3,6 +3,7 @@
   import RentalItem from '~/components/board/rental/return/RentalItem.vue';
   import { useRentalReturnForm } from '~/composables/board/rental/useRentalReturnForm';
   import type { RentalDetails } from '~/model/Rental';
+  import type { RentalItemId } from '~~/shared/api/rest/rental';
 
   const props = defineProps<{
     rental: RentalDetails;
@@ -17,14 +18,14 @@
 
   const { bouncing, triggerBounce } = useBounce();
 
-  function mapFormRentedItems<T extends EntityId>(
-    formReturnedItems: Partial<Record<T, number>>,
-    rentalRentedItems: { itemId: { id: T }; returnedAmount: number }[],
-  ): [T, number][] {
-    const updatedItems: [T, number][] = [];
+  function mapFormRentedItems(
+    formReturnedItems: Partial<Record<RentalItemId, number>>,
+    rentalRentedItems: { id: RentalItemId; returnedAmount: number }[],
+  ): [RentalItemId, number][] {
+    const updatedItems: [RentalItemId, number][] = [];
 
     for (const rentalItem of rentalRentedItems) {
-      const { id } = rentalItem.itemId;
+      const id = rentalItem.id;
       if (!(id in formReturnedItems) || formReturnedItems[id] === undefined)
         continue;
       const returnedAmount = formReturnedItems[id];
@@ -43,7 +44,7 @@
           formState.returnedGear,
           props.rental.gear,
         ).map(([gear_item_id, returned_amount]) => ({
-          gear_item_id,
+          id: gear_item_id,
           returned_amount,
         }));
 
@@ -51,7 +52,7 @@
           formState.returnedTopos,
           props.rental.topos,
         ).map(([topo_id, returned_amount]) => ({
-          topo_id,
+          id: topo_id,
           returned_amount,
         }));
 
@@ -85,14 +86,12 @@
       depositReturned: values.depositReturned ?? props.rental.depositReturned,
       gear: props.rental.gear.map((g) =>
         g.copy({
-          returnedAmount:
-            values.returnedGear?.[g.itemId.id] ?? g.returnedAmount,
+          returnedAmount: values.returnedGear?.[g.id] ?? g.returnedAmount,
         }),
       ),
       topos: props.rental.topos.map((t) =>
         t.copy({
-          returnedAmount:
-            values.returnedTopos?.[t.itemId.id] ?? t.returnedAmount,
+          returnedAmount: values.returnedTopos?.[t.id] ?? t.returnedAmount,
         }),
       ),
       comments: values.comments ?? props.rental.comments,
@@ -181,23 +180,23 @@
       <b class="border px-1">Amount</b>
       <RentalItem
         v-for="gearItem of updatedRental.gear"
-        :key="gearItem.itemId.id"
+        :key="gearItem.id"
         :rental-id="rental.id"
-        :bouncing="bouncing[`returnedGear.${gearItem.itemId.id}`]"
+        :bouncing="bouncing[`returnedGear.${gearItem.id}`]"
         :item="gearItem"
         @update-returned-amount="
           (amount) =>
-            updateReturnedItem({ type: 'gear', id: gearItem.itemId.id, amount })
+            updateReturnedItem({ type: 'gear', id: gearItem.id, amount })
         " />
       <RentalItem
         v-for="topoItem of updatedRental.topos"
-        :key="topoItem.itemId.id"
-        :bouncing="bouncing[`returnedTopos.${topoItem.itemId.id}`]"
+        :key="topoItem.id"
+        :bouncing="bouncing[`returnedTopos.${topoItem.id}`]"
         :item="topoItem"
         :rental-id="rental.id"
         @update-returned-amount="
           (amount) =>
-            updateReturnedItem({ type: 'topo', id: topoItem.itemId.id, amount })
+            updateReturnedItem({ type: 'topo', id: topoItem.id, amount })
         " />
     </div>
     <hr class="my-3" />

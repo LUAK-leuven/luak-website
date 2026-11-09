@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { groupBy, min, sumOf } from '~~/shared/utils/utils';
+import { groupBy, sum, sumOf } from '#shared/utils/utils';
 import type { InventoryRepository } from '#server/domain/inventory/repository';
 import type { InventoryService } from '#server/domain/inventory/service';
 import {
@@ -28,10 +28,8 @@ export class InventoryServiceImpl implements InventoryService {
       (item) => item.gearItemId,
     );
     const gearItems = await this.inventoryRepository.getAllGearItems();
-    const rented = groupBy(
-      await this.rentalRepository.getRentedGearAmounts(),
-      (item) => item.gearItemId,
-    );
+    const rented = await this.rentalRepository.getRentedGearAmounts();
+
     return gearItems.map((gearItem) => {
       const items = inventory[gearItem.id] ?? [];
       const totalAmount = createTotalAmount(sumOf(items, 'totalAmount'));
@@ -40,12 +38,9 @@ export class InventoryServiceImpl implements InventoryService {
         name: gearItem.name,
         totalAmount,
         availableAmount: createAvailableAmount(
-          totalAmount - sumOf(rented[gearItem.id] ?? [], 'rentedAmount'),
+          totalAmount - sum(rented[gearItem.id] ?? []),
         ),
-        earliestRetirementDate: this.calculateEarliestRetirementDate(
-          items,
-          gearItem.lifespan,
-        ),
+        earliestRetirementDate: this.calculateEarliestRetirementDate(items),
         depositFee: gearItem.depositFee,
       };
     });
@@ -59,7 +54,6 @@ export class InventoryServiceImpl implements InventoryService {
     return {
       id,
       name: gearItem.name,
-      lifespan: gearItem.lifespan,
       depositFee: gearItem.depositFee,
       totalAmount,
       availableAmount: createAvailableAmount(
@@ -71,7 +65,7 @@ export class InventoryServiceImpl implements InventoryService {
         retirementDate: this.calculateRetirementDate({
           productionDate: item.productionDate,
           purchaseDate: item.purchaseDate,
-          lifespan: gearItem.lifespan,
+          lifespan: item.lifespan,
         }),
       })),
       rentals,
@@ -99,19 +93,16 @@ export class InventoryServiceImpl implements InventoryService {
     items: {
       productionDate: ProductionDate | undefined;
       purchaseDate: PurchaseDate | undefined;
+      lifespan: LifeSpanInYears;
     }[],
-    lifespan: LifeSpanInYears,
   ): GearInventorySummary['earliestRetirementDate'] {
-    if (lifespan === 'infinite') return createRetirementDate('infinite');
-    const dates = items.map((item) =>
-      this.calculateRetirementDate({ ...item, lifespan }),
-    );
-    return (
-      min(dates, (a, b) => {
-        if (a === 'infinite' || a === 'missing info') return true;
-        if (b === 'infinite' || b === 'missing info') return false;
-        return dayjs(a).isBefore(b);
-      }) ?? createRetirementDate('missing info')
-    );
+    let earliestDate: RetirementDate = createRetirementDate('missing info');
+    for (const item of items) {
+      const date = this.calculateRetirementDate(item);
+      if (date === 'infinite') return createRetirementDate('infinite');
+      if (earliestDate === 'missing info') earliestDate = date;
+      if (date < earliestDate) earliestDate = date;
+    }
+    return earliestDate;
   }
 }

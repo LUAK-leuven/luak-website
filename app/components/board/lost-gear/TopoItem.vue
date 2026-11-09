@@ -4,18 +4,19 @@
   import { object as yupObject, number as yupNumber } from 'yup';
   import { ErrorMessage } from 'vee-validate';
   import LoadingButton from '~/components/shared/LoadingButton.vue';
-  import type { RentalTopoItem } from '~/model/Rental';
+  import type { RentalItem } from '~/model/Rental';
   import type { RentalId } from '#shared/api/rest/rental';
+  import type { TopoDetails } from '#shared/api/rest/topo';
 
   const props = defineProps<{
     rentalId: RentalId;
-    topo: RentalTopoItem;
+    topo: RentalItem;
   }>();
 
   const { show } = useToast();
 
-  const { data, pending, error } = await useLazyFetch(
-    `/api/topos/${props.topo.itemId.id}`,
+  const { data, pending, error } = await useLazyFetch<TopoDetails>(
+    `/api/topos/${props.topo.id}`,
     { method: 'get' },
   );
 
@@ -35,7 +36,7 @@
       const { error } = await useSupabaseClient().rpc('mark_topo_as_lost', {
         p_lost_amount: formState.lostAmount,
         p_rental_id: props.rentalId,
-        p_topo_id: props.topo.itemId.id,
+        p_topo_id: props.topo.id,
       });
 
       if (error) {

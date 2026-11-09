@@ -1,6 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '#shared/types/database.types';
 import {
+  type LifeSpanInYears,
   createGearInventoryId,
   createGearItemId,
   createGearName,
@@ -25,6 +26,7 @@ import {
   type InventoryItemEvent,
 } from '#shared/api/rest/inventory';
 import { createDepositFee } from '#shared/api/rest/rental';
+import { groupBy } from '#shared/utils/utils';
 
 export class SupabaseInventoryRepository implements InventoryRepository {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
@@ -34,9 +36,10 @@ export class SupabaseInventoryRepository implements InventoryRepository {
     const events = await this.getAllGearInventoryItemEvents();
     const grouped = groupBy(events, (event) => event.gearInventoryId);
     return inventory.map((item) => ({
-      gearItemId: item.gearItemId,
+      gearItemId: item.rentalItemId,
       productionDate: item.productionDate,
       purchaseDate: item.purchaseDate,
+      lifespan: item.lifespan,
       totalAmount: foldInventoryItemEvents(
         createInitialAmount(item.amount),
         grouped[item.id] ?? [],
@@ -46,9 +49,11 @@ export class SupabaseInventoryRepository implements InventoryRepository {
 
   async getInventoryDetails(id: GearItemId): Promise<GearInventoryRecord[]> {
     const { data } = await this.supabaseClient
-      .from('GearInventory')
-      .select('id, production_date, purchase_date, amount, details')
-      .eq('gear_item_id', id)
+      .from('Inventory')
+      .select(
+        'GearInventory(id, production_date, purchase_date, amount, details, lifespan)',
+      )
+      .eq('rental_item_id', id)
       .throwOnError();
 
     const events = groupBy(
@@ -57,16 +62,19 @@ export class SupabaseInventoryRepository implements InventoryRepository {
     );
 
     return data.map((item) => {
-      const id = createGearInventoryId(item.id);
+      if (item.GearInventory === null)
+        throw new Error('Inventory item is not linked to GearInventory item');
+      const id = createGearInventoryId(item.GearInventory.id);
       const itemEvents = events[id] ?? [];
-      return mapGearInventoryRecord(item, itemEvents);
+      return mapGearInventoryRecord(item.GearInventory, itemEvents);
     });
   }
 
   async getAllGearItems(): Promise<GearItemRecord[]> {
     const { data } = await this.supabaseClient
-      .from('GearItems')
-      .select('*')
+      .from('RentalItems')
+      .select('id, name, deposit_fee, Inventory(GearInventory(lifespan))')
+      .eq('item_type', 'gear')
       .order('name')
       .throwOnError();
     return data.map(mapGearItem);
@@ -74,8 +82,8 @@ export class SupabaseInventoryRepository implements InventoryRepository {
 
   async getGearItem(id: GearItemId): Promise<GearItemRecord> {
     const { data } = await this.supabaseClient
-      .from('GearItems')
-      .select('*')
+      .from('RentalItems')
+      .select('id, name, deposit_fee, Inventory(GearInventory(lifespan))')
       .eq('id', id)
       .single()
       .throwOnError();
@@ -108,16 +116,26 @@ export class SupabaseInventoryRepository implements InventoryRepository {
   private async getInventoryRows() {
     const { data } = await this.supabaseClient
       .from('GearInventory')
-      .select('id, gear_item_id, production_date, purchase_date, amount')
-      .not('gear_item_id', 'is', null)
+      .select(
+        'id, Inventory(rental_item_id), production_date, purchase_date, amount, lifespan',
+      )
       .throwOnError();
-    return data.map((item) => ({
-      id: createGearInventoryId(item.id),
-      gearItemId: createGearItemId(item.gear_item_id),
-      productionDate: mapOptional(item.production_date, createProductionDate),
-      purchaseDate: mapOptional(item.purchase_date, createPurchaseDate),
-      amount: item.amount,
-    }));
+    return data.flatMap((item) => {
+      if (item.Inventory.rental_item_id === null) return [];
+      return [
+        {
+          id: createGearInventoryId(item.id),
+          rentalItemId: createGearItemId(item.Inventory.rental_item_id),
+          productionDate: mapOptional(
+            item.production_date,
+            createProductionDate,
+          ),
+          purchaseDate: mapOptional(item.purchase_date, createPurchaseDate),
+          amount: item.amount,
+          lifespan: mapLifeSpan(item.lifespan),
+        },
+      ];
+    });
   }
 }
 
@@ -128,6 +146,7 @@ const mapGearInventoryRecord = (
     purchase_date: string | null;
     amount: number;
     details: string;
+    lifespan: number;
   },
   itemEvents: InventoryItemEvent[],
 ): GearInventoryRecord => {
@@ -140,6 +159,7 @@ const mapGearInventoryRecord = (
     amount: foldInventoryItemEvents(initialAmount, itemEvents),
     details: createDetails(item.details),
     events: itemEvents,
+    lifespan: mapLifeSpan(item.lifespan),
   };
 };
 
@@ -159,19 +179,12 @@ export const mapInventoryItemEvent = (item: {
 export const mapGearItem = (item: {
   id: string;
   name: string;
-  lifespan: number;
   deposit_fee: number;
 }): GearItemRecord => ({
   id: createGearItemId(item.id),
   name: createGearName(item.name),
-  lifespan: createLifeSpanInYears(
-    item.lifespan === 0 ? 'infinite' : item.lifespan,
-  ),
   depositFee: createDepositFee(item.deposit_fee),
 });
-const groupBy = <T, K extends string>(items: T[], key: (item: T) => K) =>
-  items.reduce<Partial<Record<K, T[]>>>((groups, item) => {
-    const group = groups[key(item)] ?? (groups[key(item)] = []);
-    group.push(item);
-    return groups;
-  }, {});
+
+const mapLifeSpan = (lifespan: number): LifeSpanInYears =>
+  createLifeSpanInYears(lifespan === 0 ? 'infinite' : lifespan);

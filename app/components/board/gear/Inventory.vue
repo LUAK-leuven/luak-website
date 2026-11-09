@@ -12,7 +12,6 @@
   } from '#shared/api/rest/gear';
 
   const props = defineProps<{
-    hasInfiniteLifespan: boolean;
     inventory: GearInventoryDetails['inventory'];
   }>();
 
@@ -71,17 +70,12 @@
 <template>
   <ClientOnly>
     <div
-      class="grid border rounded-sm overflow-x-scroll"
-      :class="
-        hasInfiniteLifespan
-          ? 'grid-cols-[3fr_1fr] lg:grid-cols-[4fr_1fr_2fr_2fr]'
-          : 'grid-cols-[3fr_1fr_2fr] lg:grid-cols-[4fr_1fr_2fr_2fr_2fr]'
-      ">
+      class="grid border rounded-sm overflow-x-scroll grid-cols-[3fr_1fr_2fr] lg:grid-cols-[4fr_1fr_2fr_2fr_2fr]">
       <b class="border px-1">Details</b>
       <b class="border px-1">Amount</b>
       <b v-if="lg" class="border px-1">Production date</b>
       <b v-if="lg" class="border px-1">Purchase date</b>
-      <b v-if="!hasInfiniteLifespan" class="border px-1"> Retirement date </b>
+      <b class="border px-1"> Retirement date </b>
       <div
         v-for="{
           id,
@@ -110,9 +104,7 @@
         <InventoryTableItem v-if="lg" :is-archived="totalAmount <= 0">
           {{ formatDate(purchaseDate) }}
         </InventoryTableItem>
-        <InventoryTableItem
-          v-if="!hasInfiniteLifespan"
-          :is-archived="totalAmount <= 0">
+        <InventoryTableItem :is-archived="totalAmount <= 0">
           <RetirementDate :retirement-date="retirementDate" />
         </InventoryTableItem>
 

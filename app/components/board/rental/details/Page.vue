@@ -86,7 +86,7 @@
     <b class="border px-1"></b>
     <RentalItem
       v-for="item of rental.items"
-      :key="`${item.itemId.type}-${item.itemId.id}`"
+      :key="`${item.type}-${item.id}`"
       :item="item"
       :rental-id="rental.id" />
   </div>

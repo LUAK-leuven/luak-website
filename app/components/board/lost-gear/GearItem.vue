@@ -8,19 +8,22 @@
     string as yupString,
   } from 'yup';
   import GearInventorySelection from './GearInventorySelection.vue';
-  import type { GearInventoryId } from '#shared/api/rest/gear';
-  import type { RentalGearItem } from '~/model/Rental.js';
+  import type {
+    GearInventoryDetails,
+    GearInventoryId,
+  } from '#shared/api/rest/gear';
+  import type { RentalItem } from '~/model/Rental.js';
   import type { RentalId } from '#shared/api/rest/rental.ts';
 
   const props = defineProps<{
     rentalId: RentalId;
-    gearItem: RentalGearItem;
+    gearItem: RentalItem;
   }>();
 
   const { show } = useToast();
 
-  const { data, pending, error } = await useLazyFetch(
-    `/api/gear/inventory/${props.gearItem.itemId.id}`,
+  const { data, pending, error } = await useLazyFetch<GearInventoryDetails>(
+    `/api/gear/inventory/${props.gearItem.id}`,
     {
       method: 'get',
     },
@@ -59,7 +62,7 @@
     handleSubmit(
       async (formState) => {
         const { error } = await useSupabaseClient().rpc('mark_gear_as_lost', {
-          p_gear_item_id: props.gearItem.itemId.id,
+          p_gear_item_id: props.gearItem.id,
           p_rental_id: props.rentalId,
           p_inventory_item_id: formState.inventoryItem,
           p_lost_amount: formState.lostAmount,

@@ -13,17 +13,19 @@ import type {
   InventoryItemEvent,
   TotalAmount as InventoryItemTotalAmount,
 } from '#shared/api/rest/inventory';
-import type {
-  DepositFee,
-  RentalId,
-  OutstandingAmount,
-  RentalMemberName,
-  TotalAmount as RentalItemTotalAmount,
+import {
+  type DepositFee,
+  type RentalId,
+  type OutstandingAmount,
+  type RentalMemberName,
+  type TotalAmount as RentalItemTotalAmount,
+  rentalItemIdSchema,
 } from '#shared/api/rest/rental';
 import { entityIdSchema } from '#shared/types/ddd';
 
 declare const _gearItemIdBrand: unique symbol;
-export const gearItemIdSchema = entityIdSchema<typeof _gearItemIdBrand>();
+export const gearItemIdSchema =
+  rentalItemIdSchema.brand<typeof _gearItemIdBrand>();
 export type GearItemId = ZodInfer<typeof gearItemIdSchema>;
 export const createGearItemId = (value: string) =>
   gearItemIdSchema.parse(value);
@@ -47,7 +49,6 @@ export type GearInventorySummary = {
 export type GearInventoryDetails = {
   id: GearItemId;
   name: GearName;
-  lifespan: LifeSpanInYears;
   depositFee: DepositFee;
   totalAmount: RentalItemTotalAmount;
   availableAmount: AvailableAmount;
@@ -56,6 +57,7 @@ export type GearInventoryDetails = {
     productionDate: ProductionDate | undefined;
     purchaseDate: PurchaseDate | undefined;
     retirementDate: RetirementDate;
+    lifespan: LifeSpanInYears;
     details: Details;
     initialAmount: InitialAmount;
     totalAmount: InventoryItemTotalAmount;

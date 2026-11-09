@@ -10,8 +10,13 @@ import {
   createYearPublished,
   type TopoId,
 } from '#shared/api/rest/topo';
-import type { TopoLibraryRecord, TopoRecord } from '#server/domain/topo/topo';
+import type {
+  TopoLibraryRecord,
+  TopoRecord,
+  TopoSummary,
+} from '#server/domain/topo/topo';
 import { createInitialAmount } from '#shared/api/rest/inventory';
+import { createRentalItemId } from '~~/shared/api/rest/rental';
 
 export const aRandomTopoId = (): TopoId => createTopoId(crypto.randomUUID());
 
@@ -59,6 +64,20 @@ export const aTopoLibraryRecord = (
   };
   return {
     ...defaultTopoRecord,
+    ...args,
+  };
+};
+
+export const aTopoSummary = (args: Partial<TopoSummary>): TopoSummary => {
+  const defaultTopoSummary: TopoSummary = {
+    id: createTopoId(crypto.randomUUID()),
+    rentalItemId: createRentalItemId(crypto.randomUUID()),
+    title: createTitle('Freyr'),
+    initialAmount: createInitialAmount(1),
+    yearPublished: createYearPublished(2022),
+  };
+  return {
+    ...defaultTopoSummary,
     ...args,
   };
 };

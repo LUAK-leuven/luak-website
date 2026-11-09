@@ -1,55 +1,36 @@
 <script setup lang="ts">
   import FullPageCard from '~/components/FullPageCard.vue';
-  import { ValidationError, string as yupString } from 'yup';
   import WithLazyResource from '~/components/pages/WithLazyResource.vue';
   import PaymentBadge from '~/components/board/rental/PaymentBadge.vue';
   import TopoItem from '~/components/board/lost-gear/TopoItem.vue';
   import GearItem from '~/components/board/lost-gear/GearItem.vue';
   import BackButton from '~/components/shared/BackButton.vue';
-  import { createGearItemId } from '#shared/api/rest/gear';
-  import { createTopoId } from '#shared/api/rest/topo';
-  import { rentalIdSchema } from '#shared/api/rest/rental';
+  import { rentalIdSchema, rentalItemIdSchema } from '#shared/api/rest/rental';
+  import {
+    object as zodObject,
+    union as zodUnion,
+    literal as zodLiteral,
+  } from 'zod';
 
   const route = useRoute('board-lost-gear');
   const rentalId = computed(() =>
     rentalIdSchema.parse(route.query['rentalId']),
   );
 
-  const itemId = computed<RentalItemId | undefined>(() => {
-    try {
-      const itemId = yupUuid
-        .label('itemId')
-        .validateSync(route.query['itemId']);
-      const itemType = yupString<'topo' | 'gear'>()
-        .required()
-        .oneOf(['topo', 'gear'])
-        .label('itemType')
-        .validateSync(route.query['itemType'], {});
-
-      if (itemType === 'topo') {
-        return {
-          type: 'topo',
-          id: createTopoId(itemId),
-        };
-      } else {
-        return {
-          type: 'gear',
-          id: createGearItemId(itemId),
-        };
-      }
-    } catch (e) {
-      if (e instanceof ValidationError) {
-        throw createError({
-          statusCode: 400,
-          statusMessage: `Invalid query parameters: ${e.message}`,
-        });
-      } else {
-        console.error('Unexpected error while validating query parameters', e);
-        throw createError({
-          statusCode: 500,
-        });
-      }
+  const querySchema = zodObject({
+    itemType: zodUnion([zodLiteral('topo'), zodLiteral('gear')]),
+    itemId: rentalItemIdSchema,
+  });
+  const queryParams = computed(() => {
+    const result = querySchema.safeParse(route.query);
+    if (!result.success) {
+      console.error('Invalid query parameters', result.error);
+      throw createError({
+        statusCode: 400,
+        statusMessage: `Invalid query parameters: ${JSON.stringify(route.query)}`,
+      });
     }
+    return result.data;
   });
 
   const { get } = useRentalService();
@@ -109,13 +90,13 @@
       <hr class="my-2" />
 
       <TopoItem
-        v-if="itemId?.type === 'topo'"
+        v-if="queryParams.itemType === 'topo'"
         :rental-id="rentalId"
-        :topo="rental.getTopo(itemId.id)" />
+        :topo="rental.getTopo(queryParams.itemId)" />
       <GearItem
-        v-else-if="itemId?.type === 'gear'"
+        v-else-if="queryParams.itemType === 'gear'"
         :rental-id="rental.id"
-        :gear-item="rental.getGearItem(itemId.id)" />
+        :gear-item="rental.getGearItem(queryParams.itemId)" />
       <div v-else>KAPOT!</div>
     </WithLazyResource>
   </FullPageCard>

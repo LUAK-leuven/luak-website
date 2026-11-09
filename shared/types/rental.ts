@@ -1,9 +1,11 @@
-import type { GearItemId } from '#shared/api/rest/gear';
-import type { TopoId } from '#shared/api/rest/topo';
-import type { DepositFee, RentalId } from '#shared/api/rest/rental';
+import type {
+  DepositFee,
+  RentalId,
+  RentalItemId,
+} from '#shared/api/rest/rental';
 import type { UserId } from '#shared/api/rest/user';
 
-export type PaymentMethod = Enums<'payment_method'>;
+export type PaymentMethod = 'cash' | 'transfer';
 
 export type UnsavedRental = {
   boardMemberId: UserId;
@@ -14,8 +16,8 @@ export type UnsavedRental = {
   comments: string | undefined;
   memberId: UserId | undefined;
   contactInfo: ContactInfo | undefined;
-  gear: Partial<Record<GearItemId, number>>;
-  topos: Partial<Record<TopoId, number>>;
+  gear: Partial<Record<RentalItemId, number>>;
+  topos: Partial<Record<RentalItemId, number>>;
 };
 
 export type SavedRental = UnsavedRental & { id: RentalId };
@@ -23,21 +25,11 @@ export type SavedRental = UnsavedRental & { id: RentalId };
 export type RentalUpdate = {
   id: RentalId;
   dateReturn: string;
-  gear: { gear_item_id: GearItemId; returned_amount: number }[];
-  topos: { topo_id: TopoId; returned_amount: number }[];
+  gear: { id: RentalItemId; returned_amount: number }[];
+  topos: { id: RentalItemId; returned_amount: number }[];
   depositReturned: boolean;
   comments: string | undefined;
 };
-
-export type RentalItemId =
-  | {
-      id: GearItemId;
-      type: 'gear';
-    }
-  | {
-      id: TopoId;
-      type: 'topo';
-    };
 
 export type ComputedRentalStatus =
   'returned' | 'partially_returned' | 'not_returned';

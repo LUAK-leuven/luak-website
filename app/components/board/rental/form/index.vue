@@ -4,15 +4,13 @@
   import { useToast } from '~/composables/useToast';
   import { useRentalForm } from '~/composables/board/rental/useRentalForm';
   import DepositFeeField from './DepositFeeField.vue';
-  import type { GearItemId } from '#shared/api/rest/gear';
-  import type { TopoId } from '#shared/api/rest/topo';
   import type { UserId } from '#shared/api/rest/user.ts';
-  import { createDepositFee } from '#shared/api/rest/rental';
+  import { createDepositFee, type RentalItemId } from '#shared/api/rest/rental';
 
   const props = defineProps<{
     boardMemberName: string;
-    allGear: RentalItem<GearItemId>[];
-    allTopos: RentalItem<TopoId>[];
+    allGear: RentalItem<RentalItemId>[];
+    allTopos: RentalItem<RentalItemId>[];
     initialValues: Partial2<{
       memberId: UserId | 'non-user';
       contactInfo: {
@@ -22,8 +20,8 @@
       };
       dateBorrow: string;
       dateReturn: string;
-      gear: Record<GearItemId, number>;
-      topos: Record<TopoId, number>;
+      gear: Record<RentalItemId, number>;
+      topos: Record<RentalItemId, number>;
       depositFee: number;
       paymentMethod: Enums<'payment_method'>;
       comments: string;

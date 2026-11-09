@@ -22,8 +22,8 @@
       ...gearItem,
       availableAmount: createAvailableAmount(
         gearItem.availableAmount +
-          (rental.value?.gear.find((g) => g.itemId.id === gearItem.id)
-            ?.rentedAmount ?? 0),
+          (rental.value?.gear.find((g) => g.id === gearItem.id)?.rentedAmount ??
+            0),
       ),
     })),
   );
@@ -33,24 +33,20 @@
       ...topo,
       availableAmount: createAvailableAmount(
         topo.availableAmount +
-          (rental.value?.topos.find((t) => t.itemId.id === topo.id)
-            ?.rentedAmount ?? 0),
+          (rental.value?.topos.find((t) => t.id === topo.id)?.rentedAmount ??
+            0),
       ),
     })),
   );
 
   async function handleSubmit(state: Omit<UnsavedRental, 'boardMemberId'>) {
     if (rental.value) {
-      for (const {
-        itemId: { id },
-      } of rental.value.gear) {
+      for (const { id } of rental.value.gear) {
         if (!state.gear[id]) {
           state.gear[id] = 0;
         }
       }
-      for (const {
-        itemId: { id },
-      } of rental.value.topos) {
+      for (const { id } of rental.value.topos) {
         if (!state.topos[id]) {
           state.topos[id] = 0;
         }
@@ -114,10 +110,10 @@
               }
             : undefined,
         gear: Object.fromEntries(
-          rental.gear.map((it) => [it.itemId.id, it.rentedAmount]),
+          rental.gear.map((it) => [it.id, it.rentedAmount]),
         ),
         topos: Object.fromEntries(
-          rental.topos.map((it) => [it.itemId.id, it.rentedAmount]),
+          rental.topos.map((it) => [it.id, it.rentedAmount]),
         ),
         depositFee: rental.depositFee,
         paymentMethod: rental.paymentMethod,

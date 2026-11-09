@@ -6,6 +6,7 @@ import type {
   OutstandingAmount,
   RentalMemberName,
   TotalAmount as RentalItemTotalAmount,
+  RentalItemId,
 } from '#shared/api/rest/rental';
 import type {
   AvailableAmount,
@@ -57,7 +58,7 @@ export type TopoLibraryItem = {
 };
 
 export type TopoListItem = {
-  id: TopoId;
+  id: RentalItemId;
   title: Title;
   totalAmount: InventoryItemTotalAmount & RentalItemTotalAmount;
   availableAmount: AvailableAmount;

@@ -94,3 +94,21 @@ grant select on table "public"."Inventory" to "service_role";
 grant trigger on table "public"."Inventory" to "service_role";
 grant truncate on table "public"."Inventory" to "service_role";
 grant update on table "public"."Inventory" to "service_role";
+
+-- Set RLS policies
+create policy "Enable ALL for BoardMembers on Inventory"
+on "public"."Inventory"
+as permissive
+for all
+to authenticated
+using ((( SELECT auth.uid() AS uid) IN ( SELECT "BoardMembers".user_id
+   FROM "BoardMembers")))
+with check ((( SELECT auth.uid() AS uid) IN ( SELECT "BoardMembers".user_id
+   FROM "BoardMembers")));
+
+create policy "Enable read access on Inventory for all users"
+on "public"."Inventory"
+as permissive
+for select
+to authenticated
+using (true);

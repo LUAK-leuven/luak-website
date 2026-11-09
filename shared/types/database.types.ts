@@ -100,7 +100,7 @@ export type Database = {
             foreignKeyName: 'CompositeGearItems_GearItems_gear_item_id_fkey';
             columns: ['gear_item_id'];
             isOneToOne: false;
-            referencedRelation: 'GearItems';
+            referencedRelation: 'RentalItems';
             referencedColumns: ['id'];
           },
         ];
@@ -110,8 +110,8 @@ export type Database = {
           amount: number;
           created_at: string;
           details: string;
-          gear_item_id: string | null;
           id: string;
+          lifespan: number;
           production_date: string | null;
           purchase_date: string | null;
         };
@@ -119,8 +119,8 @@ export type Database = {
           amount: number;
           created_at?: string;
           details?: string;
-          gear_item_id?: string | null;
           id?: string;
+          lifespan?: number;
           production_date?: string | null;
           purchase_date?: string | null;
         };
@@ -128,19 +128,12 @@ export type Database = {
           amount?: number;
           created_at?: string;
           details?: string;
-          gear_item_id?: string | null;
           id?: string;
+          lifespan?: number;
           production_date?: string | null;
           purchase_date?: string | null;
         };
         Relationships: [
-          {
-            foreignKeyName: 'GearInventory_gear_item_id_fkey';
-            columns: ['gear_item_id'];
-            isOneToOne: false;
-            referencedRelation: 'GearItems';
-            referencedColumns: ['id'];
-          },
           {
             foreignKeyName: 'GearInventory_Inventory_id_fkey';
             columns: ['id'];
@@ -150,41 +143,31 @@ export type Database = {
           },
         ];
       };
-      GearItems: {
-        Row: {
-          deposit_fee: number;
-          id: string;
-          lifespan: number;
-          name: string;
-        };
-        Insert: {
-          deposit_fee: number;
-          id?: string;
-          lifespan: number;
-          name: string;
-        };
-        Update: {
-          deposit_fee?: number;
-          id?: string;
-          lifespan?: number;
-          name?: string;
-        };
-        Relationships: [];
-      };
       Inventory: {
         Row: {
           created_at: string;
           id: string;
+          rental_item_id: string | null;
         };
         Insert: {
           created_at?: string;
           id?: string;
+          rental_item_id?: string | null;
         };
         Update: {
           created_at?: string;
           id?: string;
+          rental_item_id?: string | null;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: 'Inventory_rental_item_id_fkey';
+            columns: ['rental_item_id'];
+            isOneToOne: false;
+            referencedRelation: 'RentalItems';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       InventoryItemEvents: {
         Row: {
@@ -285,6 +268,30 @@ export type Database = {
           },
         ];
       };
+      RentalItems: {
+        Row: {
+          created_at: string;
+          deposit_fee: number;
+          id: string;
+          item_type: Database['public']['Enums']['rental_item_type'];
+          name: string;
+        };
+        Insert: {
+          created_at?: string;
+          deposit_fee: number;
+          id?: string;
+          item_type: Database['public']['Enums']['rental_item_type'];
+          name: string;
+        };
+        Update: {
+          created_at?: string;
+          deposit_fee?: number;
+          id?: string;
+          item_type?: Database['public']['Enums']['rental_item_type'];
+          name?: string;
+        };
+        Relationships: [];
+      };
       Rentals: {
         Row: {
           board_member_id: string;
@@ -342,86 +349,44 @@ export type Database = {
           },
         ];
       };
-      RentedGear: {
+      RentedItems: {
         Row: {
-          gear_item_id: string;
-          last_edited_date: string;
+          created_at: string;
           lost_amount: number;
           rental_id: string;
+          rental_item_id: string;
           rented_amount: number;
           returned_amount: number;
         };
         Insert: {
-          gear_item_id: string;
-          last_edited_date?: string;
+          created_at?: string;
           lost_amount?: number;
           rental_id: string;
+          rental_item_id: string;
           rented_amount: number;
-          returned_amount: number;
+          returned_amount?: number;
         };
         Update: {
-          gear_item_id?: string;
-          last_edited_date?: string;
+          created_at?: string;
           lost_amount?: number;
           rental_id?: string;
+          rental_item_id?: string;
           rented_amount?: number;
           returned_amount?: number;
         };
         Relationships: [
           {
-            foreignKeyName: 'RentedGear_gear_item_id_fkey';
-            columns: ['gear_item_id'];
-            isOneToOne: false;
-            referencedRelation: 'GearItems';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'RentedGear_rental_id_fkey';
-            columns: ['rental_id'];
-            isOneToOne: false;
-            referencedRelation: 'Rentals';
-            referencedColumns: ['id'];
-          },
-        ];
-      };
-      RentedTopos: {
-        Row: {
-          last_edited_date: string;
-          lost_amount: number;
-          rental_id: string;
-          rented_amount: number;
-          returned_amount: number;
-          topo_id: string;
-        };
-        Insert: {
-          last_edited_date?: string;
-          lost_amount?: number;
-          rental_id: string;
-          rented_amount: number;
-          returned_amount: number;
-          topo_id: string;
-        };
-        Update: {
-          last_edited_date?: string;
-          lost_amount?: number;
-          rental_id?: string;
-          rented_amount?: number;
-          returned_amount?: number;
-          topo_id?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'RentedTopos_rental_id_fkey';
+            foreignKeyName: 'RentedItems_rental_id_fkey';
             columns: ['rental_id'];
             isOneToOne: false;
             referencedRelation: 'Rentals';
             referencedColumns: ['id'];
           },
           {
-            foreignKeyName: 'RentedTopos_topo_id_fkey';
-            columns: ['topo_id'];
+            foreignKeyName: 'RentedItems_rental_item_id_fkey';
+            columns: ['rental_item_id'];
             isOneToOne: false;
-            referencedRelation: 'Topos';
+            referencedRelation: 'RentalItems';
             referencedColumns: ['id'];
           },
         ];
@@ -525,10 +490,9 @@ export type Database = {
           p_date_borrow: string;
           p_date_return: string;
           p_deposit: number;
-          p_gear: Json;
+          p_items: Json;
           p_member_id: string;
           p_payment_method: Database['public']['Enums']['payment_method'];
-          p_topos: Json;
         };
         Returns: string;
       };
@@ -539,10 +503,9 @@ export type Database = {
           p_date_borrow: string;
           p_date_return: string;
           p_deposit: number;
-          p_gear: Json;
+          p_items: Json;
           p_payment_method: Database['public']['Enums']['payment_method'];
           p_rental_id: string;
-          p_topos: Json;
         };
         Returns: string;
       };
@@ -573,9 +536,8 @@ export type Database = {
           p_comments: string;
           p_date_return: string;
           p_deposit_returned: boolean;
-          p_gear: Json;
+          p_items: Json;
           p_rental_id: string;
-          p_topos: Json;
         };
         Returns: undefined;
       };
@@ -584,6 +546,7 @@ export type Database = {
       item_type: 'topo' | 'gear';
       kbf_uiaa: 'not' | 'kbf_luak' | 'kbf_other' | 'uiaa';
       payment_method: 'cash' | 'transfer';
+      rental_item_type: 'topo' | 'gear';
       student: 'student_kul' | 'phd_kul' | 'student_other' | 'not_student';
       topo_condition:
         'as_good_as_new' | 'good' | 'used' | 'damaged' | 'falling_appart';
@@ -1265,6 +1228,7 @@ export const Constants = {
       item_type: ['topo', 'gear'],
       kbf_uiaa: ['not', 'kbf_luak', 'kbf_other', 'uiaa'],
       payment_method: ['cash', 'transfer'],
+      rental_item_type: ['topo', 'gear'],
       student: ['student_kul', 'phd_kul', 'student_other', 'not_student'],
       topo_condition: [
         'as_good_as_new',

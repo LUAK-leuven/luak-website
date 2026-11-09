@@ -18,6 +18,7 @@ import type {
   InitialAmount,
   InventoryItemEvent,
 } from '#shared/api/rest/inventory';
+import type { RentalItemId } from '#shared/api/rest/rental';
 
 export type { TopoCondition } from '#shared/api/rest/topo';
 export type { TopoId } from '#shared/api/rest/topo';
@@ -56,6 +57,7 @@ export type TopoLibraryRecord = {
 
 export type TopoSummary = {
   id: TopoId;
+  rentalItemId: RentalItemId;
   title: Title;
   initialAmount: InitialAmount;
   yearPublished: YearPublished | undefined;

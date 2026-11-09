@@ -1,10 +1,11 @@
 import * as yup from 'yup';
-import type { RentalItem } from '~~/shared/types/board/form/RentalItem';
+import type { RentalItem } from '#shared/types/board/form/RentalItem';
 import type { GearItemId } from '#shared/api/rest/gear';
 import type { TopoId } from '#shared/api/rest/topo';
 import type { UserId } from '#shared/api/rest/user';
 import { createRentalSelectionSchema } from '~/composables/board/rental/selectionSchema';
 import { depositFeeSchema } from '~/composables/board/rental/depositFeeSchema';
+import type { RentalItemId } from '#shared/api/rest/rental';
 
 type RentalFormState = {
   memberId: UserId | 'non-user';
@@ -26,8 +27,8 @@ type RentalFormState = {
 
 export function useRentalForm(
   initialState: Partial2<RentalFormState>,
-  allGear: RentalItem<GearItemId>[],
-  allTopos: RentalItem<TopoId>[],
+  allGear: RentalItem<RentalItemId>[],
+  allTopos: RentalItem<RentalItemId>[],
 ) {
   const formSchema = yup.object({
     memberId: yup
@@ -115,10 +116,10 @@ export function useRentalForm(
   const [dateReturn, dateReturnAttr] = defineField('dateReturn', errorAttr);
   const [depositFee, depositFeeAttr] = defineField('depositFee', errorAttr);
 
-  const updateGear = (id: GearItemId, amount: number | undefined) => {
+  const updateGear = (id: RentalItemId, amount: number | undefined) => {
     setFieldValue('gear', { ...values.gear, [id]: amount });
   };
-  const updateTopos = (id: TopoId, amount: number | undefined) => {
+  const updateTopos = (id: RentalItemId, amount: number | undefined) => {
     setFieldValue('topos', { ...values.topos, [id]: amount });
   };
 

@@ -5,7 +5,6 @@
   import {
     createGearItemId,
     type GearInventoryDetails,
-    type LifeSpanInYears,
   } from '#shared/api/rest/gear';
 
   const gearItemId = createGearItemId(useRoute('board-gear-id').params.id);
@@ -16,11 +15,6 @@
       method: 'get',
     },
   );
-
-  const displayLifespan = (lifespan: LifeSpanInYears): string => {
-    if (lifespan === 'infinite') return '-';
-    return `${lifespan.toFixed()} years`;
-  };
 </script>
 <template>
   <DetailsPage
@@ -36,15 +30,12 @@
         Available: {{ gearItems.availableAmount }} /
         {{ gearItems.totalAmount }}
       </span>
-      <span> Lifespan: {{ displayLifespan(gearItems.lifespan) }} </span>
       <span>Deposit fee: {{ (gearItems.depositFee / 100).toFixed(2) }} €</span>
     </div>
 
     <hr class="my-3" />
     <h3 class="mb-2">Inventory</h3>
-    <Inventory
-      :has-infinite-lifespan="gearItems.lifespan === 'infinite'"
-      :inventory="gearItems.inventory" />
+    <Inventory :inventory="gearItems.inventory" />
 
     <template v-if="gearItems.rentals.length > 0">
       <hr class="my-3" />

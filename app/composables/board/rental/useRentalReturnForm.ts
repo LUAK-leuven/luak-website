@@ -3,51 +3,25 @@ import {
   string as yupString,
   bool as yupBool,
   mixed as yupMixed,
-  type MixedSchema,
-  type AnyObject,
 } from 'yup';
 import type { RentalDetails } from '~/model/Rental';
-import type { GearItemId } from '#shared/api/rest/gear';
-import type { TopoId } from '#shared/api/rest/topo';
-
-type Id<T extends 'gear' | 'topo'> = T extends 'gear' ? GearItemId : TopoId;
-type RentedItemSchema<T extends 'gear' | 'topo'> = MixedSchema<
-  Partial<Record<Id<T>, number>>,
-  AnyObject,
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  {},
-  'd'
->;
+import type { RentalItemId } from '#shared/api/rest/rental';
 
 function rentedItemSchema(
-  rentedItems: {
-    itemId: { id: GearItemId; type: 'gear' };
-    rentedAmount: number;
-  }[],
-): RentedItemSchema<'gear'>;
-function rentedItemSchema(
-  rentedItems: {
-    itemId: { id: TopoId; type: 'topo' };
-    rentedAmount: number;
-  }[],
-): RentedItemSchema<'topo'>;
-function rentedItemSchema(
-  rentedItems: { itemId: RentalItemId; rentedAmount: number }[],
-): RentedItemSchema<'gear' | 'topo'> {
-  const schema = yupMixed<Partial<Record<RentalItemId['id'], number>>>().test(
-    'validAmounts',
-    'Invalid returned amounts',
-    (value) => {
+  rentedItems: { id: RentalItemId; rentedAmount: number }[],
+) {
+  return yupMixed<Partial<Record<RentalItemId, number>>>()
+    .test('validAmounts', 'Invalid returned amounts', (value) => {
       if (!value) return false;
-      for (const { itemId, rentedAmount } of rentedItems) {
-        const returnedAmount = value[itemId.id];
+      for (const { id, rentedAmount } of rentedItems) {
+        const returnedAmount = value[id];
         if (returnedAmount === undefined) return false;
         if (returnedAmount < 0 || returnedAmount > rentedAmount) return false;
       }
       return true;
-    },
-  );
-  return schema.required().default({});
+    })
+    .required()
+    .default({});
 }
 
 export function useRentalReturnForm(rental: RentalDetails) {
@@ -69,24 +43,21 @@ export function useRentalReturnForm(rental: RentalDetails) {
     initialValues: {
       dateReturn: rental.dateReturn,
       returnedGear: Object.fromEntries(
-        rental.gear.map((gearItem) => [
-          gearItem.itemId.id,
-          gearItem.returnedAmount,
-        ]),
+        rental.gear.map((gearItem) => [gearItem.id, gearItem.returnedAmount]),
       ),
       returnedTopos: Object.fromEntries(
-        rental.topos.map((topo) => [topo.itemId.id, topo.returnedAmount]),
+        rental.topos.map((topo) => [topo.id, topo.returnedAmount]),
       ),
       depositReturned: rental.depositReturned,
       comments: rental.comments,
     },
   });
 
-  const updateReturnedItem = (
-    args: RentalItemId & {
-      amount: number | undefined;
-    },
-  ) => {
+  const updateReturnedItem = (args: {
+    id: RentalItemId;
+    type: 'gear' | 'topo';
+    amount: number | undefined;
+  }) => {
     switch (args.type) {
       case 'gear':
         setFieldValue('returnedGear', {

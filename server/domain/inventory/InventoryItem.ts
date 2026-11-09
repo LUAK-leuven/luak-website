@@ -4,10 +4,10 @@ import {
   type GearItemId,
   type GearName,
   type Details,
-  type LifeSpanInYears,
   type ProductionDate,
   type PurchaseDate,
   gearInventoryIdSchema,
+  type LifeSpanInYears,
 } from '#shared/api/rest/gear';
 import type { DepositFee } from '#shared/api/rest/rental';
 import {
@@ -35,12 +35,14 @@ export interface GearInventorySummaryRecord {
   gearItemId: GearItemId;
   productionDate: ProductionDate | undefined;
   purchaseDate: PurchaseDate | undefined;
+  lifespan: LifeSpanInYears;
   totalAmount: TotalAmount;
 }
 export interface GearInventoryRecord extends InventoryItem {
   id: GearInventoryId;
   productionDate: ProductionDate | undefined;
   purchaseDate: PurchaseDate | undefined;
+  lifespan: LifeSpanInYears;
   initialAmount: InitialAmount;
   details: Details;
   events: InventoryItemEvent[];
@@ -48,7 +50,6 @@ export interface GearInventoryRecord extends InventoryItem {
 export type GearItemRecord = {
   id: GearItemId;
   name: GearName;
-  lifespan: LifeSpanInYears;
   depositFee: DepositFee;
 };
 

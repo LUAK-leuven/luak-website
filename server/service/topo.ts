@@ -102,7 +102,7 @@ export class TopoServiceImpl implements TopoService {
           'rentedAmount',
         );
         return {
-          id: topo.id,
+          id: topo.rentalItemId,
           title: topo.title,
           // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
           totalAmount: totalAmount_ as InventoryItemTotalAmount &

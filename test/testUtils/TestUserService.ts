@@ -8,6 +8,7 @@ import {
 } from '#test/TestUser';
 import dayjs from 'dayjs';
 import { getCurrentMembershipYear } from '~/model/Membership';
+import { createUserId } from '#shared/api/rest/user';
 
 export class TestUserService {
   constructor(private readonly supabase: SupabaseClient<Database>) {}
@@ -172,7 +173,7 @@ export class TestUserService {
     }
   };
 
-  private readonly getTestUserId = async (testUser: TestUserKey) => {
+  readonly getTestUserId = async (testUser: TestUserKey) => {
     const { data } = await this.supabase
       .from('Users')
       .select('id')
@@ -180,7 +181,7 @@ export class TestUserService {
       .single()
       .throwOnError();
 
-    return data.id;
+    return createUserId(data.id);
   };
 
   private readonly createTestUser = async (testUser: TestUserKey) => {
@@ -211,7 +212,7 @@ export class TestUserService {
         cause: error,
       });
 
-    const userId = data.user.id;
+    const userId = createUserId(data.user.id);
 
     await this.supabase
       .from('Users')

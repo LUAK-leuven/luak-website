@@ -106,3 +106,10 @@ export const randomInt = (min: number, max: number): number => {
 };
 
 export const randomBool = (probTrue: number = 0.5) => Math.random() < probTrue;
+
+export const objectFrom = <K extends PropertyKey, V>(
+  entries: [K, V][],
+): Partial<Record<K, V>> => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+  return Object.fromEntries(entries) as Partial<Record<K, V>>;
+};

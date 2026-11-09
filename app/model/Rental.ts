@@ -1,14 +1,16 @@
 import dayjs from 'dayjs';
 import { DomainValidationException } from '~/model/DomainValidationException';
-import type { GearItemId } from '#shared/api/rest/gear';
-import type { TopoId } from '#shared/api/rest/topo';
-import type { DepositFee, RentalId } from '#shared/api/rest/rental';
+import type {
+  DepositFee,
+  RentalId,
+  RentalItemId,
+} from '#shared/api/rest/rental';
 import type { UserId } from '#shared/api/rest/user';
 
 abstract class RentalBase {
   readonly id: RentalId;
-  readonly gear: RentalGearItem[];
-  readonly topos: RentalTopoItem[];
+  readonly gear: RentalItem[];
+  readonly topos: RentalItem[];
   readonly dateReturn: string;
   readonly dateBorrow: string;
   readonly depositReturned: boolean;
@@ -16,8 +18,8 @@ abstract class RentalBase {
 
   constructor(args: {
     id: RentalId;
-    gear: RentalGearItem[];
-    topos: RentalTopoItem[];
+    gear: RentalItem[];
+    topos: RentalItem[];
     dateReturn: string;
     dateBorrow: string;
     depositReturned: boolean;
@@ -67,13 +69,19 @@ abstract class RentalBase {
     return [...this.gear, ...this.topos];
   }
 
-  readonly getItem = (itemId: RentalItemId): RentalItem => {
-    if (itemId.type === 'gear') return this.getGearItem(itemId.id);
-    else return this.getTopo(itemId.id);
+  readonly getItem = (rentalItemId: RentalItemId): RentalItem => {
+    const item = this.gear
+      .concat(this.topos) // Fix?
+      .find(({ id }) => id === rentalItemId);
+    if (!item)
+      throw new Error(
+        `Rental item with id ${rentalItemId} not found in rental ${this.id}`,
+      );
+    return item;
   };
 
-  readonly getGearItem = (gearItemId: GearItemId): RentalGearItem => {
-    const item = this.gear.find(({ itemId }) => itemId.id === gearItemId);
+  readonly getGearItem = (gearItemId: RentalItemId): RentalItem => {
+    const item = this.gear.find(({ id }) => id === gearItemId);
     if (!item)
       throw new Error(
         `Gear item with id ${gearItemId} not found in rental ${this.id}`,
@@ -81,8 +89,8 @@ abstract class RentalBase {
     return item;
   };
 
-  readonly getTopo = (topoId: TopoId): RentalTopoItem => {
-    const item = this.topos.find(({ itemId }) => itemId.id === topoId);
+  readonly getTopo = (topoId: RentalItemId): RentalItem => {
+    const item = this.topos.find(({ id }) => id === topoId);
     if (!item)
       throw new Error(`Topo with id ${topoId} not found in rental ${this.id}`);
     return item;
@@ -99,8 +107,8 @@ export class RentalSummary extends RentalBase {
 
   constructor(args: {
     id: RentalId;
-    gear: RentalGearItem[];
-    topos: RentalTopoItem[];
+    gear: RentalItem[];
+    topos: RentalItem[];
     memberName: string;
     dateReturn: string;
     dateBorrow: string;
@@ -117,8 +125,8 @@ export class PublicRentalDetails extends RentalBase {
 
   constructor(args: {
     id: RentalId;
-    gear: RentalGearItem[];
-    topos: RentalTopoItem[];
+    gear: RentalItem[];
+    topos: RentalItem[];
     dateBorrow: string;
     dateReturn: string;
     depositFee: DepositFee;
@@ -139,8 +147,8 @@ export class RentalDetails extends RentalBase {
 
   constructor(args: {
     id: RentalId;
-    gear: RentalGearItem[];
-    topos: RentalTopoItem[];
+    gear: RentalItem[];
+    topos: RentalItem[];
     contactInfo: ContactInfo;
     dateReturn: string;
     dateBorrow: string;
@@ -163,8 +171,8 @@ export class RentalDetails extends RentalBase {
   readonly copy = (
     args: Partial<{
       id: RentalId;
-      gear: RentalGearItem[];
-      topos: RentalTopoItem[];
+      gear: RentalItem[];
+      topos: RentalItem[];
       contactInfo: ContactInfo;
       dateReturn: string;
       dateBorrow: string;
@@ -192,27 +200,28 @@ export class RentalDetails extends RentalBase {
     });
 }
 
-export abstract class RentalItem {
-  abstract readonly itemId: RentalItemId;
-
+export class RentalItem {
+  readonly id: RentalItemId;
   readonly name: string;
   readonly rentedAmount: number;
   readonly returnedAmount: number;
   readonly lostAmount: number;
-  readonly displayName: string;
+  readonly type: RentalItemType;
 
-  protected constructor(args: {
+  constructor(args: {
+    id: RentalItemId;
     name: string;
     rentedAmount: number;
     returnedAmount: number;
     lostAmount: number;
-    displayName: string;
+    type: RentalItemType;
   }) {
+    this.id = args.id;
     this.name = args.name;
     this.rentedAmount = args.rentedAmount;
     this.returnedAmount = args.returnedAmount;
     this.lostAmount = args.lostAmount;
-    this.displayName = args.displayName;
+    this.type = args.type;
   }
 
   readonly isValid = () => {
@@ -242,68 +251,18 @@ export abstract class RentalItem {
     return 'invalid';
   };
 
-  abstract readonly copy: (args: { returnedAmount?: number }) => RentalItem;
-}
-
-export class RentalGearItem extends RentalItem {
-  override readonly itemId;
-
-  constructor(args: {
-    id: GearItemId;
-    name: string;
-    rentedAmount: number;
-    returnedAmount: number;
-    lostAmount: number;
-  }) {
-    super({ ...args, displayName: args.name });
-    this.itemId = { id: args.id, type: 'gear' as const };
-  }
-
-  override readonly copy = (args: Partial<{ returnedAmount: number }>) =>
-    new RentalGearItem({
-      id: this.itemId.id,
-      name: this.name,
-      rentedAmount: this.rentedAmount,
+  readonly copy = (
+    args: Partial<ConstructorParameters<typeof RentalItem>[0]>,
+  ): RentalItem => {
+    return new RentalItem({
+      id: args.id ?? this.id,
+      name: args.name ?? this.name,
+      rentedAmount: args.rentedAmount ?? this.rentedAmount,
       returnedAmount: args.returnedAmount ?? this.returnedAmount,
-      lostAmount: this.lostAmount,
+      lostAmount: args.lostAmount ?? this.lostAmount,
+      type: args.type ?? this.type,
     });
+  };
 }
 
-export class RentalTopoItem extends RentalItem {
-  override readonly itemId;
-
-  private readonly yearPublished: number | undefined | null;
-
-  constructor(args: {
-    id: TopoId;
-    name: string;
-    rentedAmount: number;
-    returnedAmount: number;
-    lostAmount: number;
-    yearPublished?: number | null | undefined;
-  }) {
-    super({
-      ...args,
-      displayName: args.yearPublished
-        ? `${args.name} (${args.yearPublished.toFixed()})`
-        : args.name,
-    });
-    this.itemId = { id: args.id, type: 'topo' as const };
-    this.yearPublished = args.yearPublished;
-  }
-
-  override readonly copy = (args: { returnedAmount?: number }) =>
-    new RentalTopoItem({
-      id: this.itemId.id,
-      name: this.name,
-      rentedAmount: this.rentedAmount,
-      returnedAmount:
-        args.returnedAmount === undefined
-          ? this.returnedAmount
-          : args.returnedAmount,
-      lostAmount: this.lostAmount,
-      yearPublished: this.yearPublished,
-    });
-}
-
-type PaymentMethod = 'cash' | 'transfer';
+export type RentalItemType = 'gear' | 'topo';

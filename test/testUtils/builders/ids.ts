@@ -4,13 +4,12 @@ import {
   type GearInventoryId,
   type GearItemId,
 } from '#shared/api/rest/gear';
-import { createRentalId, type RentalId } from '#shared/api/rest/rental';
-
-export const aRandomRentalId = (): RentalId =>
-  createRentalId(crypto.randomUUID());
+import { createUserId } from '#shared/api/rest/user';
 
 export const aRandomGearItemId = (): GearItemId =>
   createGearItemId(crypto.randomUUID());
 
 export const aRandomGearInventoryId = (): GearInventoryId =>
   createGearInventoryId(crypto.randomUUID());
+
+export const aRandomUserId = () => createUserId(crypto.randomUUID());

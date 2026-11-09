@@ -1,14 +1,11 @@
 import { expect, test } from 'vitest';
-import { RentalGearItem, RentalSummary } from '~/model/Rental';
-import { randomBool, randomInt } from '#shared/utils/utils';
-import { aRandomGearItemId, aRandomRentalId } from '#test/builders/ids';
-import { aRandomDepositFee } from '#test/builders/rental';
+import { aRentalItem, aRentalSummary } from '#test/builders/rental';
 
 test.describe('Rental status', () => {
   test('"returned" when all items are returned and deposit is returned', () => {
     const rental = aRentalSummary({
       depositReturned: true,
-      gear: [aRentalGearItem({ rentedAmount: 1, returnedAmount: 1 })],
+      gear: [aRentalItem({ rentedAmount: 1, returnedAmount: 1 })],
     });
 
     expect(rental.status).toBe('returned');
@@ -25,50 +22,9 @@ test.describe('Rental status', () => {
   test('"partially returned" when an item is returned', () => {
     const rental = aRentalSummary({
       depositReturned: false,
-      gear: [aRentalGearItem({ rentedAmount: 1, returnedAmount: 1 })],
+      gear: [aRentalItem({ rentedAmount: 1, returnedAmount: 1 })],
     });
 
     expect(rental.status).toBe('partially_returned');
   });
 });
-
-type RentalSummaryArgs = ConstructorParameters<typeof RentalSummary>[0];
-
-const aRentalSummary = (args: Partial<RentalSummaryArgs>): RentalSummary => {
-  const defaultArgs: RentalSummaryArgs = {
-    id: aRandomRentalId(),
-    gear: [],
-    topos: [],
-    dateBorrow: '2024-01-01',
-    dateReturn: '2024-01-01',
-    depositFee: aRandomDepositFee(),
-    depositReturned: randomBool(),
-    memberName: 'John Doe',
-  };
-  return new RentalSummary({
-    ...defaultArgs,
-    ...args,
-  });
-};
-
-type RentalGearItemArgs = ConstructorParameters<typeof RentalGearItem>[0];
-
-const aRentalGearItem = (
-  args: Partial<RentalGearItemArgs> = {},
-): RentalGearItem => {
-  const rentedAmount =
-    args.rentedAmount === undefined ? randomInt(1, 10) : args.rentedAmount;
-  const returnedAmount =
-    args.returnedAmount === undefined
-      ? randomInt(0, rentedAmount)
-      : args.returnedAmount;
-  const lostAmount = args.lostAmount === undefined ? 0 : args.lostAmount;
-
-  return new RentalGearItem({
-    id: args.id ?? aRandomGearItemId(),
-    name: args.name ?? 'Gear Item',
-    rentedAmount,
-    returnedAmount,
-    lostAmount,
-  });
-};

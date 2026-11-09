@@ -26,6 +26,7 @@ import {
   createInitialAmount,
   itemEventSchema,
 } from '#shared/api/rest/inventory';
+import { createRentalItemId } from '#shared/api/rest/rental';
 
 export class SupabaseTopoRepository implements TopoRepository {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
@@ -92,11 +93,12 @@ export class SupabaseTopoRepository implements TopoRepository {
   async getTopos(): Promise<TopoSummary[]> {
     const { data } = await this.supabaseClient
       .from('Topos')
-      .select('id, title, amount, year_published')
+      .select('id, title, amount, year_published, Inventory(rental_item_id)')
       .throwOnError();
 
     return data.map((topo) => ({
       id: createTopoId(topo.id),
+      rentalItemId: createRentalItemId(topo.Inventory.rental_item_id!),
       title: createTitle(topo.title),
       initialAmount: createInitialAmount(topo.amount),
       yearPublished:

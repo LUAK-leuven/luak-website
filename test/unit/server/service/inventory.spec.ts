@@ -21,6 +21,7 @@ test('maps gear stock and allows negative availability', async () => {
             productionDate: undefined,
             purchaseDate: undefined,
             totalAmount: createTotalAmount(3),
+            lifespan: createLifeSpanInYears('infinite'),
           },
         ]),
       getAllGearItems: () =>
@@ -35,9 +36,9 @@ test('maps gear stock and allows negative availability', async () => {
     }),
     rentalRepositoryMock({
       getRentedGearAmounts: () =>
-        Promise.resolve([
-          { gearItemId, rentedAmount: createOutstandingAmount(4) },
-        ]),
+        Promise.resolve({
+          [gearItemId]: [createOutstandingAmount(4)],
+        }),
     }),
   ).getInventorySummary();
 

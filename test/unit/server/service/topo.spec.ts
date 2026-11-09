@@ -6,6 +6,7 @@ import {
   aRandomTopoId,
   aTopoLibraryRecord,
   aTopoRecord,
+  aTopoSummary,
 } from '#test/builders/topo';
 import {
   topoRepositoryMock,
@@ -96,7 +97,7 @@ test.describe('TopoService', () => {
   });
 
   test('allows negative availability when more topos are rented than stocked', async () => {
-    const topo = aTopoLibraryRecord({ initialAmount: createInitialAmount(1) });
+    const topo = aTopoSummary({ initialAmount: createInitialAmount(1) });
     const topos = await new TopoServiceImpl(
       topoRepositoryMock({
         getTopos: () => Promise.resolve([topo]),
@@ -106,7 +107,11 @@ test.describe('TopoService', () => {
       rentalRepositoryMock({
         getRentedTopoAmounts: () =>
           Promise.resolve([
-            { topoId: topo.id, rentedAmount: createOutstandingAmount(2) },
+            {
+              topoId: topo.id,
+              rentalItemId: topo.rentalItemId,
+              rentedAmount: createOutstandingAmount(2),
+            },
           ]),
       }),
     ).getTopos();

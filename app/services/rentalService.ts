@@ -3,19 +3,19 @@ import {
   RentalSummary,
   RentalDetails,
   PublicRentalDetails,
-  RentalTopoItem,
-  RentalGearItem,
+  RentalItem,
 } from '~/model/Rental';
 import { getFullName } from './userService';
 import { object as zodObject, string as zodString } from 'zod';
 import { createGearItemId } from '#shared/api/rest/gear';
-import { createTopoId } from '#shared/api/rest/topo';
 import {
   createDepositFee,
   createRentalId,
+  createRentalItemId,
   type RentalId,
 } from '#shared/api/rest/rental';
 import { createUserId, type UserId } from '#shared/api/rest/user';
+import type { Database } from '#shared/types/database.types';
 
 export class RentalService {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
@@ -30,18 +30,20 @@ export class RentalService {
       p_date_borrow: rental.dateBorrow,
       p_date_return: rental.dateReturn,
       p_deposit: rental.depositFee,
-      p_gear: Object.entries(rental.gear)
+      p_items: Object.entries(rental.gear)
         .filter(([_, amount]) => amount !== undefined)
         .map(([id, amount]) => ({
-          gear_item_id: id,
+          item_id: id,
           rented_amount: amount,
-        })),
-      p_topos: Object.entries(rental.topos)
-        .filter(([_, amount]) => amount !== undefined)
-        .map(([id, amount]) => ({
-          topo_id: id,
-          rented_amount: amount,
-        })),
+        }))
+        .concat(
+          Object.entries(rental.topos)
+            .filter(([_, amount]) => amount !== undefined)
+            .map(([id, amount]) => ({
+              item_id: id,
+              rented_amount: amount,
+            })),
+        ),
       p_payment_method: rental.paymentMethod,
       // @ts-expect-error: type generation doesn't work for nullable function types
       p_contact_info: rental.contactInfo
@@ -72,19 +74,11 @@ export class RentalService {
           contact_info,
           deposit_returned,
           deposit,
-          RentedGear(
-            gear_item_id,
+          RentedItems(
             rented_amount,
             returned_amount,
             lost_amount,
-            GearItems(name)
-          ),
-          RentedTopos(
-            topo_id,
-            Topos(title),
-            rented_amount,
-            returned_amount,
-            lost_amount
+            RentalItems(id, name, item_type)
           )
         `,
       )
@@ -115,16 +109,8 @@ export class RentalService {
           deposit,
           deposit_returned,
           payment_method,
-          RentedGear(
-            gear_item_id,
-            GearItems(name),
-            rented_amount,
-            returned_amount,
-            lost_amount
-          ),
-          RentedTopos(
-            topo_id,
-            Topos(title, year_published),
+          RentedItems(
+            RentalItems(id, name, item_type),
             rented_amount,
             returned_amount,
             lost_amount
@@ -148,8 +134,12 @@ export class RentalService {
       p_rental_id: id,
       p_date_return: rentalUpdate.dateReturn,
       p_deposit_returned: rentalUpdate.depositReturned,
-      p_gear: rentalUpdate.gear,
-      p_topos: rentalUpdate.topos,
+      p_items: rentalUpdate.gear
+        .concat(rentalUpdate.topos)
+        .map(({ id, returned_amount }) => ({
+          item_id: id,
+          returned_amount,
+        })),
       // @ts-expect-error: type generation doesn't work for nullable function types
       p_comments: rentalUpdate.comments ?? null,
     });
@@ -170,18 +160,20 @@ export class RentalService {
       p_date_borrow: rental.dateBorrow,
       p_date_return: rental.dateReturn,
       p_deposit: rental.depositFee,
-      p_gear: Object.entries(rental.gear)
+      p_items: Object.entries(rental.gear)
         .filter(([_, amount]) => amount !== undefined)
         .map(([id, amount]) => ({
-          gear_item_id: id,
+          item_id: id,
           rented_amount: amount,
-        })),
-      p_topos: Object.entries(rental.topos)
-        .filter(([_, amount]) => amount !== undefined)
-        .map(([id, amount]) => ({
-          topo_id: id,
-          rented_amount: amount,
-        })),
+        }))
+        .concat(
+          Object.entries(rental.topos)
+            .filter(([_, amount]) => amount !== undefined)
+            .map(([id, amount]) => ({
+              item_id: id,
+              rented_amount: amount,
+            })),
+        ),
       p_payment_method: rental.paymentMethod,
       // @ts-expect-error: type generation doesn't work for nullable function types
       p_comments: rental.comments ?? null,
@@ -201,16 +193,8 @@ export class RentalService {
           deposit,
           deposit_returned,
           payment_method,
-          RentedGear(
-            gear_item_id,
-            GearItems(name),
-            rented_amount,
-            returned_amount,
-            lost_amount
-          ),
-          RentedTopos(
-            topo_id,
-            Topos(title, year_published),
+          RentedItems(
+            RentalItems(id, name, item_type),
             rented_amount,
             returned_amount,
             lost_amount
@@ -233,8 +217,8 @@ export const rentalSummaryFromDb = (args: RentalSummaryVo): RentalSummary => {
 
   return new RentalSummary({
     id: createRentalId(args.id),
-    gear: args.RentedGear.map((gear) => gearItemFromDb(gear)),
-    topos: args.RentedTopos.map((topo) => topoItemFromDb(topo)),
+    gear: extractGearItems(args.RentedItems),
+    topos: extractTopoItems(args.RentedItems),
     memberName: contactInfo.fullName,
     dateReturn: args.date_return,
     dateBorrow: args.date_borrow,
@@ -250,8 +234,8 @@ export const rentalDetailsFromDb = (args: RentalDetailsVo): RentalDetails => {
 
   return new RentalDetails({
     id: createRentalId(args.id),
-    gear: args.RentedGear.map((gear) => gearItemFromDb(gear)),
-    topos: args.RentedTopos.map((topo) => topoItemFromDb(topo)),
+    gear: extractGearItems(args.RentedItems),
+    topos: extractTopoItems(args.RentedItems),
     contactInfo,
     dateReturn: args.date_return,
     dateBorrow: args.date_borrow,
@@ -275,8 +259,8 @@ export const publicRentalDetailsFromDb = (
 ): PublicRentalDetails => {
   return new PublicRentalDetails({
     id: createRentalId(args.id),
-    gear: args.RentedGear.map((gear) => gearItemFromDb(gear)),
-    topos: args.RentedTopos.map((topo) => topoItemFromDb(topo)),
+    gear: extractGearItems(args.RentedItems),
+    topos: extractTopoItems(args.RentedItems),
     dateReturn: args.date_return,
     dateBorrow: args.date_borrow,
     depositReturned: args.deposit_returned,
@@ -331,33 +315,49 @@ const contactInfoSchema = zodObject({
   phoneNumber: zodString().nonempty().optional(),
 });
 
-const topoItemFromDb = (topo: {
-  topo_id: string;
+type RentalItemDb = {
   rented_amount: number;
   returned_amount: number;
   lost_amount: number;
-  Topos: { title: string; year_published?: number | null };
+  RentalItems: { id: string; name: string; item_type: 'gear' | 'topo' };
+};
+
+const extractTopoItems = (items: RentalItemDb[]): RentalItem[] =>
+  items
+    .filter((item) => item.RentalItems.item_type === 'topo')
+    .map(topoItemFromDb);
+
+const extractGearItems = (items: RentalItemDb[]): RentalItem[] =>
+  items
+    .filter((item) => item.RentalItems.item_type === 'gear')
+    .map(gearItemFromDb);
+
+const topoItemFromDb = (topo: {
+  rented_amount: number;
+  returned_amount: number;
+  lost_amount: number;
+  RentalItems: { id: string; name: string };
 }) =>
-  new RentalTopoItem({
-    id: createTopoId(topo.topo_id),
-    name: topo.Topos.title,
+  new RentalItem({
+    id: createRentalItemId(topo.RentalItems.id),
+    name: topo.RentalItems.name,
     rentedAmount: topo.rented_amount,
     returnedAmount: topo.returned_amount,
     lostAmount: topo.lost_amount,
-    yearPublished: topo.Topos.year_published,
+    type: 'topo',
   });
 
 const gearItemFromDb = (gear: {
-  gear_item_id: string;
   rented_amount: number;
   returned_amount: number;
   lost_amount: number;
-  GearItems: { name: string };
+  RentalItems: { id: string; name: string };
 }) =>
-  new RentalGearItem({
-    id: createGearItemId(gear.gear_item_id),
-    name: gear.GearItems.name,
+  new RentalItem({
+    id: createGearItemId(gear.RentalItems.id),
+    name: gear.RentalItems.name,
     rentedAmount: gear.rented_amount,
     returnedAmount: gear.returned_amount,
     lostAmount: gear.lost_amount,
+    type: 'gear',
   });
