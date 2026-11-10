@@ -9,8 +9,9 @@ A regression is caused by a change, not by a missing feature. Your job is to **f
 
 ## Protocol
 
-Follow in order. Do not skip ahead to step 4.
+Follow in order. Do not skip ahead to step 4. Never skip step 0.
 
+0. **Preserve evidence first.** Before running ANY test/build/command that regenerates output, locate (or ask for) existing failure evidence (`playwright-report/`, `test-results/`, traces, screenshots, logs, coverage, `.nuxt`/`.output` etc.). Read it, then copy it to `.tmp/evidence-<timestamp>/` and diagnose from the copy. Re-running Playwright overwrites `playwright-report/` and `test-results/`. If evidence is missing or unreadable, say so rather than silently re-running.
 1. **Reproduce.** Run the failing command. Capture the exact error and the files in the stack trace.
 2. **Find the change.** `git status`, `git diff`, `git log --oneline -15`, and `git log -p -3 -- <suspect file>`. The cause is almost always in the recent diff. Anything in the diff that *configures* the thing that broke is suspect number one.
 3. **Revert to prove it.** Undo the suspect change (`git stash`, `git checkout -- <file>`, or delete the added lines) and re-run. Confirm the failure disappears before writing a single line of fix.

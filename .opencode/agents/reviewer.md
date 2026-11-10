@@ -1,7 +1,7 @@
 ---
 description: Reviews changes against the original request and for code quality. Read-only.
 mode: subagent
-model: github-copilot/claude-sonnet-5.5
+model: github-copilot/gpt-6.1-sol
 permissions:
   - { action: edit, resource: "*", effect: deny }
   - { action: skill, resource: review-code-quality, effect: allow }

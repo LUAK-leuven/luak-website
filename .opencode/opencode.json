@@ -24,7 +24,8 @@
     { "action": "grep", "resource": ".opencode/**", "effect": "deny" },
     { "action": "grep", "resource": "AGENTS.md", "effect": "deny" },
 
-    { "action": "shell", "resource": "cat *", "effect": "deny" }
+    { "action": "shell", "resource": "cat *", "effect": "deny" },
+    { "action": "external_directory", "resource": "*", "effect": "deny" }
   ],
   "agents": {
     "explore": {

@@ -9,6 +9,13 @@ permissions:
 
   - { action: shell, resource: "head *", effect: allow }
   - { action: shell, resource: "tail *", effect: allow }
+  - { action: shell, resource: "rg *", effect: allow }
+
+  - { action: shell, resource: "mkdir* .tmp/*", effect: allow }
+  - { action: shell, resource: "cp *", effect: allow }
+
+  - { action: shell, resource: "unzip *", effect: allow }
+
   - { action: shell, resource: "yarn typecheck *", effect: allow }
   - { action: shell, resource: "yarn lint*", effect: allow }
   - { action: shell, resource: "yarn test*", effect: allow }
@@ -16,8 +23,11 @@ permissions:
   - { action: shell, resource: "yarn vitest *", effect: allow }
   - { action: shell, resource: "yarn playwright *", effect: allow }
   - { action: shell, resource: "yarn eslint *", effect: allow }
+
   - { action: shell, resource: "git status *", effect: allow }
   - { action: shell, resource: "git diff *", effect: allow }
+  - { action: shell, resource: "git log *", effect: allow }
+  - { action: shell, resource: "git show *", effect: allow }
 
   - { action: edit, resource: "package.json", effect: ask }
   - { action: edit, resource: "yarn.lock", effect: ask }
@@ -26,6 +36,9 @@ permissions:
   - { action: edit, resource: "eslint.config.*", effect: ask }
   - { action: edit, resource: "**/tsconfig*.json", effect: ask }
   - { action: edit, resource: "tsconfig*.json", effect: ask }
+  - { action: shell, resource: "* /*", effect: ask}
+  - { action: shell, resource: "* ../*", effect: ask}
+  - { action: shell, resource: "* ~/*", effect: ask}
 
   - { action: edit, resource: ".opencode/**", effect: deny }
   - { action: edit, resource: "AGENTS.md", effect: deny }
