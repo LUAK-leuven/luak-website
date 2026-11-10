@@ -6,7 +6,11 @@ import {
 import { randomInt, randomOf, randomBool } from '#shared/utils/utils';
 import { RentalItem, RentalSummary } from '~/model/Rental';
 import { aRandomGearItemId, aRandomUserId } from '#test/builders/ids';
-import type { SavedRental, PaymentMethod } from '#shared/types/rental';
+import type {
+  SavedRental,
+  UnsavedRental,
+  PaymentMethod,
+} from '#shared/types/rental';
 
 export const aRandomRentalId = () => createRentalId(crypto.randomUUID());
 
@@ -40,9 +44,10 @@ export const aRentalSummary = (
   });
 };
 
-export const aRental = (args: Partial<SavedRental> = {}): SavedRental => {
-  const defaultRental: SavedRental = {
-    id: aRandomRentalId(),
+export const aRentalInput = (
+  args: Partial<UnsavedRental> = {},
+): UnsavedRental => {
+  const defaultRental: UnsavedRental = {
     memberId: aRandomUserId(),
     contactInfo: undefined,
     boardMemberId: aRandomUserId(),
@@ -59,6 +64,11 @@ export const aRental = (args: Partial<SavedRental> = {}): SavedRental => {
     ...args,
   };
 };
+
+export const aRental = (args: Partial<SavedRental> = {}): SavedRental => ({
+  ...aRentalInput(args),
+  id: args.id ?? aRandomRentalId(),
+});
 
 export const aRentalItem = (
   args: Partial<ConstructorParameters<typeof RentalItem>[0]> = {},

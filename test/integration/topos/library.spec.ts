@@ -13,9 +13,6 @@ const idTopoAilefroide = createTopoId('184c489c-bee4-4a09-87d1-2b711e2a1248');
 
 beforeAll(async () => {
   const { testDao } = testServiceBuilder();
-  await testDao().cleanInventoryEvents();
-  await testDao().clearRentals();
-
   await testDao().addInventoryItemEvent({
     itemId: idTopoAilefroide,
     event: {

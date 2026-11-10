@@ -4,7 +4,9 @@ mode: subagent
 model: github-copilot/gpt-6.1-sol
 permissions:
   - { action: edit, resource: "*", effect: deny }
+  
   - { action: skill, resource: review-code-quality, effect: allow }
+
   - { action: shell, resource: "git status *", effect: allow }
   - { action: shell, resource: "git diff *", effect: allow }
   - { action: shell, resource: "grep *", effect: allow }

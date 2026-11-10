@@ -14,7 +14,7 @@ import type {
   RentalForItem,
 } from '#server/domain/rental/rental';
 import { createGearItemId, type GearItemId } from '#shared/api/rest/gear';
-import { objectFrom } from '#shared/utils/utils';
+import { objectFrom, single } from '#shared/utils/utils';
 
 export class SupabaseRentalRepository implements RentalRepository {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
@@ -44,7 +44,7 @@ export class SupabaseRentalRepository implements RentalRepository {
     const { data } = await this.supabaseClient
       .from('RentedItems')
       .select(
-        'RentalItems(id, Inventory(id)), rented_amount, returned_amount, lost_amount',
+        'RentalItems!inner(id, Inventory(id)), rented_amount, returned_amount, lost_amount',
       )
       .eq('RentalItems.item_type', 'topo')
       .throwOnError();
