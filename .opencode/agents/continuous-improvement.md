@@ -4,6 +4,9 @@ model: "github-copilot/claude-opus-5.5#high"
 mode: "all"
 permissions:
   - { action: "question", resource: "*", effect: "allow" }
+  - { action: "skill", resource: "opencode", effect: "allow" }
+  - { action: "webfetch", resource: "https://opencode.ai/docs/*", effect: "allow" }
+
   - { action: "write", resource: "*", effect: "deny" }
   - { action: "write", resource: ".opencode/**", effect: "ask" }
   - { action: "read", resource: ".opencode/**", effect: "allow" }

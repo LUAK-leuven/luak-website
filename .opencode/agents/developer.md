@@ -68,6 +68,7 @@ A step is **one outcome**, not one tool call. Diagnosing, implementing and verif
 - **Refactors** require existing test coverage; without it, return `BLOCKED` plus a `PLAN_PROPOSAL`.
 - **Behavior changes** use TDD; no manual probing instead of tests. Manual verification is a flag for a missing test. When you are probing manually, you must justify why it should not be done with a test.
 - **Verification** covers tests relevant to the change; skip e2e/app suites when no application code is touched. Failures not caused by your change (also failing without it) are a note in `DONE`, not `BLOCKED`.
+- Run project tools via `yarn <bin>`, never `npx`/`npm`.
 - Config files contain only config; implementation code goes in its own module.
 - Keep code clean and maintainable.
 
@@ -76,6 +77,6 @@ A step is **one outcome**, not one tool call. Diagnosing, implementing and verif
 Start your final reply with exactly one of these statuses:
 
 - `DONE`: changed files, verification evidence, assumptions made.
-- `BLOCKED`: the reason and the specific questions.
+- `BLOCKED`: the reason and the specific questions; for a denied action, the report required by `AGENTS.md`.
 - `TOO_LARGE`: why you consider the task too large, do not propose a split yourself; let the orchestrator handle it.
 - `PLAN_PROPOSAL`: suggested plan changes (e.g. a new story for an untested area). Never edit the plan file yourself.

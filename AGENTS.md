@@ -22,3 +22,4 @@ The website is also used by the board to keep track of rented gear.
   - Use `workdir` instead of `cd ... &&`; use Read/Grep/Glob/Edit/Write instead of `cat`/`grep`/`find`/`sed`/`echo`.
   - Run independent commands as parallel tool calls, dependent ones are sequential calls.
   - Prefer tool flags over shell filtering; read long output from the saved file.
+- Denied actions are usually deliberate. Never retry a denied call; switch to the project alternative (`yarn <bin>` instead of `npx`/`npm`, Read/Grep/Glob instead of `cat`/`grep`/`find`). If none works, report the exact denied tool/action (verbatim) and why your task needed it.

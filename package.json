@@ -7,7 +7,7 @@
     "dev": "nuxt dev --dotenv .env.local",
     "dev:prod": "nuxt dev --dotenv .env.production",
     "generate": "nuxt generate",
-    "preview": "NODE_OPTIONS='--import ./public/instrument.server.mjs' nuxt preview --dotenv .env.local",
+    "preview": "nuxt preview --dotenv .env.local",
     "sb:start": "supabase start -x edge-runtime,imgproxy,logflare,realtime,storage-api,supavisor,vector",
     "sb:gentypes": "yarn --silent supabase gen types --lang typescript --local > shared/types/database.types.ts && yarn prettier --write shared/types/database.types.ts",
     "postinstall": "nuxt prepare",
