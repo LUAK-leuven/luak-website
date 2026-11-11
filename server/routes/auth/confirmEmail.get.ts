@@ -2,7 +2,7 @@ import { object as zodObject, string as zodString, union } from 'zod';
 import {
   type EmailConfirmationCookie,
   emailConfirmationCookieName,
-} from '~~/shared/api/cookies/email-confirmation';
+} from '#shared/api/cookies/email-confirmation';
 import { serverSupabaseClient } from '#supabase/server';
 
 const querySchema = union([

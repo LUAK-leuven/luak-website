@@ -1,7 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
 import { ProfileSettingsPage } from '#test/e2e/pages/profile/settings.page';
-import type { TestUser } from '#test/testUtils/TestUser';
+import type { TestUser } from '#test/TestUser';
 import { LoginPage } from '#test/e2e/pages/login.page';
 
 export class AppPage {

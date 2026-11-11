@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import FullscreenImage from './FullscreenImage.vue';
+  import FullscreenImage from '~/components/content/FullscreenImage.vue';
 
   const props = withDefaults(
     defineProps<{

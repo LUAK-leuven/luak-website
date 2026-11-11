@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { csvHeaders } from './helpers';
+  import { csvHeaders } from '~/components/board/subscriptions-overview/helpers';
 
   const props = defineProps<{
     data: {

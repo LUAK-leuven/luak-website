@@ -1,6 +1,6 @@
 import type { TopoRepository } from '#server/domain/topo/repository';
 import type { InventoryRepository } from '#server/domain/inventory/repository';
-import type { RentalRepository } from '~~/server/domain/rental/repository';
+import type { RentalRepository } from '#server/domain/rental/repository';
 
 export const topoRepositoryMock = (
   overrides: Partial<TopoRepository>,

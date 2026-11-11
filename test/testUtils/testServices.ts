@@ -4,7 +4,7 @@ import type { Database } from '#shared/types/database.types';
 import { TestDao } from '#test/testDao';
 import { TestUserService } from '#test/TestUserService';
 import { ServerTestService } from '#test/fetch';
-import { MailpitService } from '#test/testUtils/MailpitService';
+import { MailpitService } from '#test/MailpitService';
 
 export const createSupabaseClientForTests = () => {
   if (

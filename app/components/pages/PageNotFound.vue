@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import type { RoutesNamedLocations } from '@typed-router';
-  import BackButton from '../shared/BackButton.vue';
+  import BackButton from '~/components/shared/BackButton.vue';
 
   defineProps<{ backTo?: RoutesNamedLocations | undefined }>();
 </script>

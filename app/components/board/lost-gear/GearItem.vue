@@ -7,7 +7,7 @@
     number as yupNumber,
     string as yupString,
   } from 'yup';
-  import GearInventorySelection from './GearInventorySelection.vue';
+  import GearInventorySelection from '~/components/board/lost-gear/GearInventorySelection.vue';
   import type {
     GearInventoryDetails,
     GearInventoryId,

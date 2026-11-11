@@ -5,7 +5,7 @@ import {
   PublicRentalDetails,
   RentalItem,
 } from '~/model/Rental';
-import { getFullName } from './userService';
+import { getFullName } from '~/services/userService';
 import { object as zodObject, string as zodString } from 'zod';
 import { createGearItemId } from '#shared/api/rest/gear';
 import {

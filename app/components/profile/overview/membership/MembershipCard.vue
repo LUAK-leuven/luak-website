@@ -3,9 +3,9 @@
     getCurrentMembershipYear,
     type Membership,
   } from '~/model/Membership';
-  import BuyMembershipCard from './BuyMembership/Card.vue';
-  import ValidMembershipCard from './ValidMembershipCard.vue';
-  import RenewMembershipCard from './RenewMembershipCard.vue';
+  import BuyMembershipCard from '~/components/profile/overview/membership/BuyMembership/Card.vue';
+  import ValidMembershipCard from '~/components/profile/overview/membership/ValidMembershipCard.vue';
+  import RenewMembershipCard from '~/components/profile/overview/membership/RenewMembershipCard.vue';
 
   defineProps<{
     membership: Membership | undefined;

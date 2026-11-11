@@ -3,7 +3,7 @@
   import RentalItem from '~/components/board/rental/return/RentalItem.vue';
   import { useRentalReturnForm } from '~/composables/board/rental/useRentalReturnForm';
   import type { RentalDetails } from '~/model/Rental';
-  import type { RentalItemId } from '~~/shared/api/rest/rental';
+  import type { RentalItemId } from '#shared/api/rest/rental';
 
   const props = defineProps<{
     rental: RentalDetails;

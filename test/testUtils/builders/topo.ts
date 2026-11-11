@@ -16,7 +16,7 @@ import type {
   TopoSummary,
 } from '#server/domain/topo/topo';
 import { createInitialAmount } from '#shared/api/rest/inventory';
-import { createRentalItemId } from '~~/shared/api/rest/rental';
+import { createRentalItemId } from '#shared/api/rest/rental';
 
 export const aRandomTopoId = (): TopoId => createTopoId(crypto.randomUUID());
 

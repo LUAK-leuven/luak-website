@@ -5,8 +5,8 @@ import { testServiceBuilder } from '#test/testServices';
 import { SupabaseRentalRepository } from '#server/adapter-supabase/rental/repository';
 import { SupabaseTopoRepository } from '#server/adapter-supabase/topo/repository';
 import { SupabaseInventoryRepository } from '#server/adapter-supabase/inventory/repository';
-import type { GearItemRecord } from '~~/server/domain/inventory/InventoryItem';
-import type { TopoSummary } from '~~/server/domain/topo/topo';
+import type { GearItemRecord } from '#server/domain/inventory/InventoryItem';
+import type { TopoSummary } from '#server/domain/topo/topo';
 
 const { supabase, userTestService, testDao } = testServiceBuilder();
 

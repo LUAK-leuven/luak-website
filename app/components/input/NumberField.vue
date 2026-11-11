@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import FormInput from './FormInput.vue';
+  import FormInput from '~/components/input/FormInput.vue';
 
   withDefaults(
     defineProps<{

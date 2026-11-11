@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import NumberInput from '~/components/input/NumberCompact.vue';
   import type { RentalItem } from '~/model/Rental';
-  import getItemColor from '../getItemColor';
+  import getItemColor from '~/components/board/rental/getItemColor';
   import Button from '~/components/shared/Button.vue';
   import type { RentalId } from '#shared/api/rest/rental';
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import InventoryTableItem from '../gear/inventoryTableItem.vue';
-  import RetirementDate from '../gear/retirementDate.vue';
+  import InventoryTableItem from '~/components/board/gear/inventoryTableItem.vue';
+  import RetirementDate from '~/components/board/gear/retirementDate.vue';
   import dayjs from 'dayjs';
   import type {
     GearInventoryId,

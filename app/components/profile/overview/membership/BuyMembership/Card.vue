@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import BuyMembershipModal from './Modal.vue';
+  import BuyMembershipModal from '~/components/profile/overview/membership/BuyMembership/Modal.vue';
   import ProfileCard from '~/components/profile/overview/Card.vue';
 
   defineProps<{
