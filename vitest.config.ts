@@ -8,7 +8,7 @@ export default defineConfig({
         resolve: { tsconfigPaths: true },
         test: {
           name: 'unit',
-          include: ['test/unit/**/*.spec.ts'],
+          include: ['test/unit/**/*.spec.ts', 'eslint-rules/**/*.spec.ts'],
           environment: 'node',
         },
       },

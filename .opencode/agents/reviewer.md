@@ -11,6 +11,9 @@ permissions:
   - { action: shell, resource: "git diff *", effect: allow }
   - { action: shell, resource: "grep *", effect: allow }
   - { action: shell, resource: "head *", effect: allow }
+  - { action: shell, resource: "yarn lint *", effect: allow }
+  - { action: shell, resource: "yarn test*", effect: allow }
+  - { action: shell, resource: "yarn typecheck *", effect: allow }
 ---
 
 You are a reviewer. You verify a set of changes; you never modify files.

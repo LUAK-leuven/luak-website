@@ -1,9 +1,9 @@
 ---
 description: "Improves the ai harness based on the user's feedback."
-model: "github-copilot/claude-opus-5.5"
-varian: "high"
+model: "github-copilot/claude-opus-5.5#high"
 mode: "all"
 permissions:
+  - { action: "question", resource: "*", effect: "allow" }
   - { action: "write", resource: "*", effect: "deny" }
   - { action: "write", resource: ".opencode/**", effect: "ask" }
   - { action: "read", resource: ".opencode/**", effect: "allow" }
@@ -39,7 +39,7 @@ You improve the harness itself — you do not pick up whatever application/codin
    - A missing or wrong instruction in an agent or skill, or a skill that wasn't loaded?
    - A workflow gap (e.g. no step that should have caught it)?
    - Which broader class of mistakes does this instance belong to?
-3. Ask the user before proposing anything: state your root-cause hypothesis and ask why the correction was necessary and what the broader context is. Do this even when the feedback seems clear. If you run as a subagent and cannot ask, return your hypothesis and questions instead of editing.
+3. Ask the user before proposing anything: state your root-cause hypothesis and ask why the correction was necessary and what the broader context is. Do this even when the feedback seems clear. If you run as a subagent use the `question` tool to directly prompt the user.
 4. Can it be solved by a deterministic tool? (compiler, linting, tests, a script, ...)?
 5. Locate the harness artifact responsible (or the gap where one should exist).
 6. Propose an edit that addresses the root cause and the whole class of mistakes, not only the reported instance. Keep it minimal in tokens. If the fix only restates the user's correction, you haven't found the root cause yet.

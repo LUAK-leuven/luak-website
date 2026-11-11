@@ -113,9 +113,12 @@ export default defineNuxtConfig({
     },
     nodeTsConfig: {
       compilerOptions: {
+        paths: {
+          '#eslint-rules/*': ['../eslint-rules/*'],
+        },
         ...tsCompilerOptions,
       },
-      include: ['../*.ts', '../*.mjs'],
+      include: ['../*.ts', '../*.mjs', '../eslint-rules/**/*.ts'],
     },
   },
 });

@@ -1,6 +1,6 @@
 ---
 description: "A developer agent that implements one step at a time, using TDD, clean code, ..."
-model: "github-copilot/gpt-6-luna"
+model: "github-copilot/claude-haiku-5.5#high"
 mode: "all"
 permissions:
   - { action: edit, resource: "*", effect: allow }
@@ -10,11 +10,14 @@ permissions:
   - { action: shell, resource: "head *", effect: allow }
   - { action: shell, resource: "tail *", effect: allow }
   - { action: shell, resource: "rg *", effect: allow }
+  - { action: shell, resource: "printf *", effect: allow }
 
-  - { action: shell, resource: "mkdir* .tmp/*", effect: allow }
+  - { action: shell, resource: "mkdir* .tmp/debug/*", effect: allow }
   - { action: shell, resource: "cp *", effect: allow }
+  - { action: shell, resource: "git mv *", effect: allow }
 
   - { action: shell, resource: "unzip *", effect: allow }
+  - { action: shell, resource: "node --version", effect: allow }
 
   - { action: shell, resource: "yarn typecheck *", effect: allow }
   - { action: shell, resource: "yarn lint*", effect: allow }
@@ -62,7 +65,10 @@ A step is **one outcome**, not one tool call. Diagnosing, implementing and verif
 
 - **Size**: one concern, one reviewable commit, no "and also". If the task bundles more, return `TOO_LARGE`. Do not scope it down silently.
 - **Boy scout**: fix small gaps you touch (naming, dead code, a missing simple test). If the area is untested, complex or critical, return `BLOCKED` plus a `PLAN_PROPOSAL` instead.
-- **Refactors** require existing test coverage; without it, return `BLOCKED` plus a `PLAN_PROPOSAL`. **Behavior changes** use TDD.
+- **Refactors** require existing test coverage; without it, return `BLOCKED` plus a `PLAN_PROPOSAL`.
+- **Behavior changes** use TDD; no manual probing instead of tests. Manual verification is a flag for a missing test. When you are probing manually, you must justify why it should not be done with a test.
+- **Verification** covers tests relevant to the change; skip e2e/app suites when no application code is touched. Failures not caused by your change (also failing without it) are a note in `DONE`, not `BLOCKED`.
+- Config files contain only config; implementation code goes in its own module.
 - Keep code clean and maintainable.
 
 ## Return contract
