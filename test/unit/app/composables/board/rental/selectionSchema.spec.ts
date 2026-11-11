@@ -1,14 +1,17 @@
 import { expect, test } from 'vitest';
 
 import { createGearItemId } from '#shared/api/rest/gear';
-import { createTotalAmount } from '#shared/api/rest/rental';
+import {
+  createRentalItemName,
+  createTotalAmount,
+} from '#shared/api/rest/rental/rentalItem';
 import { createRentalSelectionSchema } from '~/composables/board/rental/selectionSchema';
 
 const gearItemId = createGearItemId('00000000-0000-4000-8000-000000000001');
 const schema = createRentalSelectionSchema([
   {
     id: gearItemId,
-    name: 'Carabiner',
+    name: createRentalItemName('Carabiner'),
     totalAmount: createTotalAmount(10),
   },
 ]);

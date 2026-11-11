@@ -1,14 +1,24 @@
 import * as yup from 'yup';
 
-import type { TotalAmount } from '#shared/api/rest/rental';
-import type { EntityId } from '#shared/types/ddd';
+import type {
+  RentalItemId,
+  RentalItemName,
+  TotalAmount,
+} from '#shared/api/rest/rental/rentalItem';
 import { entries } from '#shared/utils/utils';
 
-export const createRentalSelectionSchema = <T extends EntityId>(
-  selection: { id: T; name: string; totalAmount: TotalAmount }[],
+export const createRentalSelectionSchema = (
+  selection: {
+    id: RentalItemId;
+    name: RentalItemName;
+    totalAmount: TotalAmount;
+  }[],
 ) =>
   yup
-    .object<Record<T, number | undefined>, Record<T, yup.NumberSchema>>()
+    .object<
+      Record<RentalItemId, number | undefined>,
+      Record<RentalItemId, yup.NumberSchema>
+    >()
     .default(() => ({}))
     .required()
     .test(function (items: Record<string, unknown>) {

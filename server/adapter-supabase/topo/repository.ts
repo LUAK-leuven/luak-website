@@ -14,7 +14,7 @@ import {
   createOccurredOn,
   itemEventSchema,
 } from '#shared/api/rest/inventory';
-import { createRentalItemId } from '#shared/api/rest/rental';
+import { createRentalItemId } from '#shared/api/rest/rental/rentalItem';
 import {
   createAuthor,
   createClimbingType,

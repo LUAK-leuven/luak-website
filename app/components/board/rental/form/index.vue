@@ -1,5 +1,6 @@
 <script setup lang="ts">
-  import { createDepositFee, type RentalItemId } from '#shared/api/rest/rental';
+  import { createDepositFee, type DepositFee } from '#shared/api/rest/rental';
+  import type { RentalItemId } from '#shared/api/rest/rental/rentalItem';
   import type { UserId } from '#shared/api/rest/user.ts';
   import type { RentalItem } from '#shared/types/board/form/RentalItem';
   import DepositFeeField from '~/components/board/rental/form/DepositFeeField.vue';
@@ -9,8 +10,8 @@
 
   const props = defineProps<{
     boardMemberName: string;
-    allGear: RentalItem<RentalItemId>[];
-    allTopos: RentalItem<RentalItemId>[];
+    allGear: RentalItem[];
+    allTopos: RentalItem[];
     initialValues: Partial2<{
       memberId: UserId | 'non-user';
       contactInfo: {
@@ -22,8 +23,8 @@
       dateReturn: string;
       gear: Record<RentalItemId, number>;
       topos: Record<RentalItemId, number>;
-      depositFee: number;
-      paymentMethod: Enums<'payment_method'>;
+      depositFee: DepositFee;
+      paymentMethod: PaymentMethod;
       comments: string;
     }>;
     handleSubmit: (

@@ -5,9 +5,13 @@ import { createGearItemId } from '#shared/api/rest/gear';
 import {
   createDepositFee,
   createRentalId,
-  createRentalItemId,
   type RentalId,
 } from '#shared/api/rest/rental';
+import {
+  createRentalItemId,
+  createRentalItemName,
+  RentalItemType,
+} from '#shared/api/rest/rental/rentalItem';
 import { createUserId, type UserId } from '#shared/api/rest/user';
 import type { Database } from '#shared/types/database.types';
 import {
@@ -341,11 +345,11 @@ const topoItemFromDb = (topo: {
 }) =>
   new RentalItem({
     id: createRentalItemId(topo.RentalItems.id),
-    name: topo.RentalItems.name,
+    name: createRentalItemName(topo.RentalItems.name),
     rentedAmount: topo.rented_amount,
     returnedAmount: topo.returned_amount,
     lostAmount: topo.lost_amount,
-    type: 'topo',
+    type: RentalItemType.topo,
   });
 
 const gearItemFromDb = (gear: {
@@ -356,9 +360,9 @@ const gearItemFromDb = (gear: {
 }) =>
   new RentalItem({
     id: createGearItemId(gear.RentalItems.id),
-    name: gear.RentalItems.name,
+    name: createRentalItemName(gear.RentalItems.name),
     rentedAmount: gear.rented_amount,
     returnedAmount: gear.returned_amount,
     lostAmount: gear.lost_amount,
-    type: 'gear',
+    type: RentalItemType.gear,
   });

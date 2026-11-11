@@ -1,12 +1,17 @@
-<script lang="ts" setup generic="T extends EntityId">
+<script lang="ts" setup>
   import type { AvailableAmount } from '#shared/api/rest/inventory'; // TODO: move AvailableAmount to rental
-  import type { DepositFee, TotalAmount } from '#shared/api/rest/rental';
+  import type { DepositFee } from '#shared/api/rest/rental';
+  import type {
+    RentalItemId,
+    RentalItemName,
+    TotalAmount,
+  } from '#shared/api/rest/rental/rentalItem';
   import InputNumber from '~/components/input/NumberCompact.vue';
 
   defineProps<{
     selectedItems: {
-      id: T;
-      name: string;
+      id: RentalItemId;
+      name: RentalItemName;
       selectedAmount: number;
       availableAmount: AvailableAmount;
       totalAmount: TotalAmount;
@@ -15,8 +20,8 @@
   }>();
 
   const emit = defineEmits<{
-    removeItem: [itemId: T];
-    updateSelectedItemAmount: [itemId: T, amount: number];
+    removeItem: [itemId: RentalItemId];
+    updateSelectedItemAmount: [itemId: RentalItemId, amount: number];
   }>();
 </script>
 

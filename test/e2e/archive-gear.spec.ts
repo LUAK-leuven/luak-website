@@ -2,6 +2,7 @@ import { expect } from '@playwright/test';
 
 import { createGearInventoryId } from '#shared/api/rest/gear';
 import { createItemArchivedEvent } from '#shared/api/rest/inventory';
+import { RentalItemType } from '#shared/api/rest/rental/rentalItem';
 import { createTopoId } from '#shared/api/rest/topo';
 import { authStateFile, cleanDatabase, test } from '#test/e2e/fixtures';
 import { GearInventoryPage } from '#test/e2e/pages/gear/inventory.page';
@@ -44,9 +45,9 @@ test.describe('lost gear form', () => {
     // Rental form
     const rentalFormPage = await RentalFormPage.navigate(page);
 
-    await rentalFormPage.selectSearchBar('gear');
+    await rentalFormPage.selectSearchBar(RentalItemType.gear);
     const item = await rentalFormPage
-      .selectComponent('gear')
+      .selectComponent(RentalItemType.gear)
       .option('quickdraw');
     await expect(item).toContainText('32');
   });
@@ -75,8 +76,10 @@ test.describe('lost gear form', () => {
     // Rental form
     const rentalFormPage = await RentalFormPage.navigate(page);
 
-    await rentalFormPage.selectSearchBar('topos');
-    const item = await rentalFormPage.selectComponent('topos').option('flone');
+    await rentalFormPage.selectSearchBar(RentalItemType.topo);
+    const item = await rentalFormPage
+      .selectComponent(RentalItemType.topo)
+      .option('flone');
     await expect(item).toContainText('1');
   });
 });

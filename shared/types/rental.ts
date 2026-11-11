@@ -1,8 +1,5 @@
-import type {
-  DepositFee,
-  RentalId,
-  RentalItemId,
-} from '#shared/api/rest/rental';
+import type { DepositFee, RentalId } from '#shared/api/rest/rental';
+import type { RentalItemId } from '#shared/api/rest/rental/rentalItem';
 import type { UserId } from '#shared/api/rest/user';
 
 export type PaymentMethod = 'cash' | 'transfer';

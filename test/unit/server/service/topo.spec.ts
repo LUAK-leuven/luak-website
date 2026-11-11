@@ -9,7 +9,7 @@ import {
   createOccurredOn,
   type InventoryItemEvent,
 } from '#shared/api/rest/inventory';
-import { createOutstandingAmount } from '#shared/api/rest/rental';
+import { createOutstandingAmount } from '#shared/api/rest/rental/rentalItem';
 import { createPlaceInLibrary } from '#shared/api/rest/topo';
 import {
   aRandomTopoId,

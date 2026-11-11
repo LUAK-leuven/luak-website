@@ -14,7 +14,7 @@ import {
   type RetirementDate,
 } from '#shared/api/rest/gear';
 import { createAvailableAmount } from '#shared/api/rest/inventory';
-import { createTotalAmount } from '#shared/api/rest/rental';
+import { createTotalAmount } from '#shared/api/rest/rental/rentalItem';
 import { groupBy, sum, sumOf } from '#shared/utils/utils';
 
 export class InventoryServiceImpl implements InventoryService {

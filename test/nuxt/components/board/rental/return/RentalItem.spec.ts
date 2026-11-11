@@ -1,6 +1,7 @@
 import { mountSuspended } from '@nuxt/test-utils/runtime';
 import { describe, expect, test } from 'vitest';
 
+import { createRentalItemName } from '#shared/api/rest/rental/rentalItem';
 import { aRandomRentalId, aRentalItem } from '#test/builders/rental';
 import RentalItemComponent from '~/components/board/rental/return/RentalItem.vue';
 
@@ -24,7 +25,7 @@ describe('RentalItem', () => {
         props: {
           rentalId: aRandomRentalId(),
           item: aRentalItem({
-            name: 'quickdraw',
+            name: createRentalItemName('quickdraw'),
             rentedAmount,
             returnedAmount,
             lostAmount: 0,

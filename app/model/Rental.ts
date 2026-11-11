@@ -1,10 +1,11 @@
 import dayjs from 'dayjs';
 
+import type { DepositFee, RentalId } from '#shared/api/rest/rental';
 import type {
-  DepositFee,
-  RentalId,
   RentalItemId,
-} from '#shared/api/rest/rental';
+  RentalItemName,
+  RentalItemType,
+} from '#shared/api/rest/rental/rentalItem';
 import type { UserId } from '#shared/api/rest/user';
 import { DomainValidationException } from '~/model/DomainValidationException';
 
@@ -203,7 +204,7 @@ export class RentalDetails extends RentalBase {
 
 export class RentalItem {
   readonly id: RentalItemId;
-  readonly name: string;
+  readonly name: RentalItemName;
   readonly rentedAmount: number;
   readonly returnedAmount: number;
   readonly lostAmount: number;
@@ -211,7 +212,7 @@ export class RentalItem {
 
   constructor(args: {
     id: RentalItemId;
-    name: string;
+    name: RentalItemName;
     rentedAmount: number;
     returnedAmount: number;
     lostAmount: number;
@@ -265,5 +266,3 @@ export class RentalItem {
     });
   };
 }
-
-export type RentalItemType = 'gear' | 'topo';

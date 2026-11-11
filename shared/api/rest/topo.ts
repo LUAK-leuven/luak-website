@@ -6,13 +6,12 @@ import type {
   InventoryItemEvent,
   TotalAmount as InventoryItemTotalAmount,
 } from '#shared/api/rest/inventory';
+import type { RentalId, RentalMemberName } from '#shared/api/rest/rental';
 import type {
   OutstandingAmount,
-  RentalId,
   RentalItemId,
-  RentalMemberName,
   TotalAmount as RentalItemTotalAmount,
-} from '#shared/api/rest/rental';
+} from '#shared/api/rest/rental/rentalItem';
 import { yearSchema } from '#shared/types/common';
 import { entityIdSchema } from '#shared/types/ddd';
 

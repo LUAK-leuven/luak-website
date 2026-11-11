@@ -7,12 +7,14 @@ import type {
 import type { RentalRepository } from '#server/domain/rental/repository';
 import { createGearItemId, type GearItemId } from '#shared/api/rest/gear';
 import {
-  createOutstandingAmount,
   createRentalId,
-  createRentalItemId,
   createRentalMemberName,
-  type RentalItemId,
 } from '#shared/api/rest/rental';
+import {
+  createOutstandingAmount,
+  createRentalItemId,
+  type RentalItemId,
+} from '#shared/api/rest/rental/rentalItem';
 import { createTopoId, type TopoId } from '#shared/api/rest/topo';
 import type { Database } from '#shared/types/database.types';
 import { objectFrom, single } from '#shared/utils/utils';

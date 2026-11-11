@@ -1,11 +1,15 @@
 <script setup lang="ts">
-  import type { RentalId, RentalItemId } from '#shared/api/rest/rental';
+  import type { RentalId } from '#shared/api/rest/rental';
+  import type {
+    RentalItemId,
+    RentalItemType,
+  } from '#shared/api/rest/rental/rentalItem';
   import Button from '~/components/shared/Button.vue';
 
   defineProps<{
     rentalId: RentalId;
     itemId: RentalItemId;
-    itemType: 'gear' | 'topo';
+    itemType: RentalItemType;
   }>();
 </script>
 <template>

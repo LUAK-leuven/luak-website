@@ -12,14 +12,16 @@ import type {
   InventoryItemEvent,
   TotalAmount as InventoryItemTotalAmount,
 } from '#shared/api/rest/inventory';
-import {
-  type DepositFee,
-  type OutstandingAmount,
-  type RentalId,
-  rentalItemIdSchema,
-  type RentalMemberName,
-  type TotalAmount as RentalItemTotalAmount,
+import type {
+  DepositFee,
+  RentalId,
+  RentalMemberName,
 } from '#shared/api/rest/rental';
+import {
+  type OutstandingAmount,
+  rentalItemIdSchema,
+  type TotalAmount as RentalItemTotalAmount,
+} from '#shared/api/rest/rental/rentalItem';
 import { dateSchema } from '#shared/types/common';
 import { entityIdSchema } from '#shared/types/ddd';
 

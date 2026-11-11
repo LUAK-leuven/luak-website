@@ -21,22 +21,3 @@ declare const _rentalIdBrand: unique symbol;
 export const rentalIdSchema = entityIdSchema<typeof _rentalIdBrand>();
 export type RentalId = ZodInfer<typeof rentalIdSchema>;
 export const createRentalId = (value: string) => rentalIdSchema.parse(value);
-
-declare const _outstandingAmountBrand: unique symbol;
-const outstandingAmountSchema =
-  amountSchema.brand<typeof _outstandingAmountBrand>();
-export type OutstandingAmount = ZodInfer<typeof outstandingAmountSchema>;
-export const createOutstandingAmount = (n: number): OutstandingAmount =>
-  outstandingAmountSchema.parse(n);
-
-declare const _totalAmountBrand: unique symbol;
-const totalAmountSchema = amountSchema.brand<typeof _totalAmountBrand>();
-export type TotalAmount = ZodInfer<typeof totalAmountSchema>;
-export const createTotalAmount = (n: number): TotalAmount =>
-  totalAmountSchema.parse(n);
-
-declare const _rentalItemIdBrand: unique symbol;
-export const rentalItemIdSchema = entityIdSchema<typeof _rentalItemIdBrand>();
-export type RentalItemId = ZodInfer<typeof rentalItemIdSchema>;
-export const createRentalItemId = (value: string) =>
-  rentalItemIdSchema.parse(value);

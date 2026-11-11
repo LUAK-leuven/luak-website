@@ -1,6 +1,10 @@
 import { expect } from '@playwright/test';
 import dayjs from 'dayjs';
 
+import {
+  createRentalItemName,
+  RentalItemType,
+} from '#shared/api/rest/rental/rentalItem';
 import { sleep, uuidRegex } from '#shared/utils/utils';
 import {
   authStateFile,
@@ -9,7 +13,10 @@ import {
   test,
 } from '#test/e2e/fixtures';
 import { RentalDetailsPage } from '#test/e2e/pages/rental/details.page';
-import { RentalFormPage } from '#test/e2e/pages/rental/form.page';
+import {
+  RentalFormPage,
+  type RentalItem as RentalItemTestInput,
+} from '#test/e2e/pages/rental/form.page';
 import { RentalReturnPage } from '#test/e2e/pages/rental/return.page';
 import { RentalsOverviewPage } from '#test/e2e/pages/rentals-overview.page';
 import { testUsers } from '#test/TestUser';
@@ -72,11 +79,22 @@ test.describe('create a new rental', () => {
     await rentalDetailsPage.editButton.click();
     await expect(page).toHaveURL(`/board/rentals/${rentalId}/edit`);
 
-    await rentalFormPage.addItem('gear', 'BD C4 .4');
-    await rentalFormPage.addItem('gear', 'BD C4 .5');
+    const gearItem1: RentalItemTestInput = {
+      exactItemName: createRentalItemName('BD C4 .4'),
+      searchTerm: 'BD C4 .4',
+      itemType: RentalItemType.gear,
+    };
+    const gearItem2: RentalItemTestInput = {
+      exactItemName: createRentalItemName('BD C4 .5'),
+      searchTerm: 'BD C4 .5',
+      itemType: RentalItemType.gear,
+    };
+
+    await rentalFormPage.addItem(gearItem1);
+    await rentalFormPage.addItem(gearItem2);
     await rentalFormPage
-      .selectComponent('gear')
-      .listItem('BD C4 .5')
+      .selectComponent(gearItem2.itemType)
+      .listItem(gearItem2.exactItemName)
       .remove.click();
 
     await rentalFormPage.submit();
@@ -90,12 +108,17 @@ test.describe('create a new rental', () => {
       comments: '',
       numberOfItems: 1,
     });
-    await rentalDetailsPage.expectItem({ name: 'BD C4 .4', rentedAmount: 1 });
+    await rentalDetailsPage.expectItem({
+      name: gearItem1.exactItemName,
+      rentedAmount: 1,
+    });
 
     // --- return the rental ---
     const rentalReturnPage = await rentalDetailsPage.returnRental();
 
-    await rentalReturnPage.rentedItem('BD C4 .4').quickReturn.click();
+    await rentalReturnPage
+      .rentedItem(gearItem1.exactItemName)
+      .quickReturn.click();
     await rentalReturnPage.depositReturned.check();
 
     await rentalReturnPage.submit();
@@ -105,7 +128,7 @@ test.describe('create a new rental', () => {
       numberOfItems: 1,
     });
     await rentalDetailsPage.expectItem({
-      name: 'BD C4 .4',
+      name: gearItem1.exactItemName,
       rentedAmount: 1,
       returnedAmount: 1,
     });
@@ -123,16 +146,36 @@ test.describe('create a new rental', () => {
       depositFee: 50,
       paymentMethod: 'cash' as const,
     };
+    const gearItem1: RentalItemTestInput = {
+      exactItemName: createRentalItemName('quickdraw'),
+      searchTerm: 'quickdraw',
+      itemType: RentalItemType.gear,
+    };
+    const gearItem2: RentalItemTestInput = {
+      exactItemName: createRentalItemName('single rope 000'),
+      searchTerm: 'single rope 000',
+      itemType: RentalItemType.gear,
+    };
+    const gearItem3: RentalItemTestInput = {
+      exactItemName: createRentalItemName('single rope 001'),
+      searchTerm: 'single rope 001',
+      itemType: RentalItemType.gear,
+    };
+    const topoItem: RentalItemTestInput = {
+      exactItemName: createRentalItemName('Ailefriode (2011)'),
+      searchTerm: 'ailefriode',
+      itemType: RentalItemType.topo,
+    };
 
     await rentalFormPage.fillForm(formValues);
-    await rentalFormPage.addItem('gear', 'quickdraw', 14);
-    await rentalFormPage.addItem('gear', 'single rope 000');
-    await rentalFormPage.addItem('gear', 'single rope 001');
+    await rentalFormPage.addItem(gearItem1, 14);
+    await rentalFormPage.addItem(gearItem2);
+    await rentalFormPage.addItem(gearItem3);
     await rentalFormPage
-      .selectComponent('gear')
-      .listItem('single rope 001')
+      .selectComponent(gearItem3.itemType)
+      .listItem(gearItem3.exactItemName)
       .remove.click();
-    await rentalFormPage.addItem('topos', 'ailefriode');
+    await rentalFormPage.addItem(topoItem);
     await rentalFormPage.submit();
 
     await expect(page).toHaveURL(new RegExp(`board\\/rentals\\/${uuidRegex}`));
@@ -144,12 +187,18 @@ test.describe('create a new rental', () => {
       status: 'Not returned',
       numberOfItems: 3,
     });
-    await rentalDetailsPage.expectItem({ name: 'quickdraw', rentedAmount: 14 });
     await rentalDetailsPage.expectItem({
-      name: 'single rope 000',
+      name: gearItem1.exactItemName,
+      rentedAmount: 14,
+    });
+    await rentalDetailsPage.expectItem({
+      name: gearItem2.exactItemName,
       rentedAmount: 1,
     });
-    await rentalDetailsPage.expectItem({ name: 'Ailefriode', rentedAmount: 1 });
+    await rentalDetailsPage.expectItem({
+      name: topoItem.exactItemName,
+      rentedAmount: 1,
+    });
 
     const rentalsOverviewPage = await RentalsOverviewPage.navigate(page);
 
@@ -163,11 +212,13 @@ test.describe('create a new rental', () => {
     const rentalReturnPage = new RentalReturnPage(page);
     await rentalReturnPage.comments.fill('a test comment');
     await rentalReturnPage
-      .rentedItem('quickdraw')
+      .rentedItem(gearItem1.exactItemName)
       .returnedAmountInput.fill('10');
-    await rentalReturnPage.rentedItem('single rope 000').quickReturn.click();
+    await rentalReturnPage
+      .rentedItem(gearItem2.exactItemName)
+      .quickReturn.click();
     await expect(
-      rentalReturnPage.rentedItem('single rope 000').returnedAmountInput,
+      rentalReturnPage.rentedItem(gearItem2.exactItemName).returnedAmountInput,
     ).toHaveValue('1');
 
     await rentalReturnPage.submit();
@@ -178,17 +229,17 @@ test.describe('create a new rental', () => {
       numberOfItems: 3,
     });
     await rentalDetailsPage.expectItem({
-      name: 'quickdraw',
+      name: gearItem1.exactItemName,
       rentedAmount: 14,
       returnedAmount: 10,
     });
     await rentalDetailsPage.expectItem({
-      name: 'single rope 000',
+      name: gearItem2.exactItemName,
       rentedAmount: 1,
       returnedAmount: 1,
     });
     await rentalDetailsPage.expectItem({
-      name: 'Ailefriode',
+      name: topoItem.exactItemName,
       rentedAmount: 1,
       returnedAmount: 0,
     });

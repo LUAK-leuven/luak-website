@@ -1,5 +1,6 @@
 <script setup lang="ts">
-  import type { RentalItemId } from '#shared/api/rest/rental';
+  import type { RentalItemId } from '#shared/api/rest/rental/rentalItem';
+  import { RentalItemType } from '#shared/api/rest/rental/rentalItem';
   import RentalItem from '~/components/board/rental/return/RentalItem.vue';
   import TextField from '~/components/input/TextField.vue';
   import { useRentalReturnForm } from '~/composables/board/rental/useRentalReturnForm';
@@ -15,6 +16,13 @@
   const { handleSubmit, values, updateReturnedItem } = useRentalReturnForm(
     props.rental,
   );
+
+  const updateReturnedGear = (id: RentalItemId, amount: number) => {
+    updateReturnedItem({ type: RentalItemType.gear, id, amount });
+  };
+  const updateReturnedTopo = (id: RentalItemId, amount: number) => {
+    updateReturnedItem({ type: RentalItemType.topo, id, amount });
+  };
 
   const { bouncing, triggerBounce } = useBounce();
 
@@ -185,8 +193,7 @@
         :bouncing="bouncing[`returnedGear.${gearItem.id}`]"
         :item="gearItem"
         @update-returned-amount="
-          (amount) =>
-            updateReturnedItem({ type: 'gear', id: gearItem.id, amount })
+          (amount) => updateReturnedGear(gearItem.id, amount)
         " />
       <RentalItem
         v-for="topoItem of updatedRental.topos"
@@ -195,8 +202,7 @@
         :item="topoItem"
         :rental-id="rental.id"
         @update-returned-amount="
-          (amount) =>
-            updateReturnedItem({ type: 'topo', id: topoItem.id, amount })
+          (amount) => updateReturnedTopo(topoItem.id, amount)
         " />
     </div>
     <hr class="my-3" />

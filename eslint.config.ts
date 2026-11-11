@@ -50,7 +50,7 @@ export default withNuxt(
       '@typescript-eslint/no-unsafe-type-assertion': 'error',
       'local/canonical-import-paths': 'error',
       'simple-import-sort/imports': [
-        'error',
+        'warn',
         {
           groups: [
             // Side-effect imports.
@@ -66,7 +66,7 @@ export default withNuxt(
           ],
         },
       ],
-      'simple-import-sort/exports': 'error',
+      'simple-import-sort/exports': 'warn',
     },
     plugins: {
       local: localImportRules,

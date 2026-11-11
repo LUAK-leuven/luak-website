@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest';
 
-import { createDepositFee, createRentalItemId } from '#shared/api/rest/rental';
+import { createDepositFee } from '#shared/api/rest/rental';
+import { createRentalItemId } from '#shared/api/rest/rental/rentalItem';
 import { aRental } from '#test/builders/rental';
 import { testServiceBuilder } from '#test/testServices';
 import { RentalService } from '~/services/rentalService';

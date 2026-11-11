@@ -1,7 +1,10 @@
-import { createDepositFee } from '#shared/api/rest/rental';
+import {
+  toRentalFormGearItem,
+  toRentalFormTopoItem,
+} from '~/composables/board/rental/rentalFormItems';
 
 export const useFetchGearAndTopos = () => {
-  const { data: allGear, pending: gearPending } = useLazyFetch(
+  const { data: allGear_, pending: gearPending } = useLazyFetch(
     '/api/gear/inventory',
     { method: 'get' },
   );
@@ -10,20 +13,11 @@ export const useFetchGearAndTopos = () => {
     { method: 'get' },
   );
 
+  const allGear = computed(() =>
+    allGear_.value?.map((gear) => toRentalFormGearItem(gear)),
+  );
   const allTopos = computed(() =>
-    allTopos_.value?.map((topo) => {
-      const name =
-        topo.yearPublished === undefined
-          ? topo.title
-          : `${topo.title} (${topo.yearPublished.toFixed()})`;
-      return {
-        id: topo.id,
-        name,
-        totalAmount: topo.totalAmount,
-        availableAmount: topo.availableAmount,
-        depositFee: createDepositFee(500),
-      };
-    }),
+    allTopos_.value?.map((topo) => toRentalFormTopoItem(topo)),
   );
 
   return {

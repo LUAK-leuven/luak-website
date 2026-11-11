@@ -1,23 +1,30 @@
-<script lang="ts" setup generic="T extends EntityId">
+<script lang="ts" setup>
   import { objectEntries } from '@vueuse/core';
 
-  import { createAvailableAmount } from '#shared/api/rest/inventory';
+  import {
+    type AvailableAmount,
+    createAvailableAmount,
+  } from '#shared/api/rest/inventory';
+  import type { RentalItemId } from '#shared/api/rest/rental/rentalItem';
   import type { RentalItem } from '#shared/types/board/form/RentalItem';
 
   const props = withDefaults(
     defineProps<{
-      allItems: RentalItem<T>[];
-      compositeItems?: Record<string, { itemId: T; amount: number }[]>;
+      allItems: RentalItem[];
+      compositeItems?: Record<
+        string,
+        { itemId: RentalItemId; amount: number }[]
+      >;
       placeholder: string;
-      selectedItems: Record<T, number | undefined>;
+      selectedItems: Record<RentalItemId, number | undefined>;
     }>(),
     { compositeItems: () => ({}) },
   );
 
   const emit = defineEmits<{
     computedDeposit: [value: number];
-    setItem: [id: T, amount: number];
-    removeItem: [id: T];
+    setItem: [id: RentalItemId, amount: number];
+    removeItem: [id: RentalItemId];
   }>();
 
   const selectedItems = computed(() =>
@@ -36,8 +43,10 @@
     }),
   );
 
-  const availableItems = computed(() =>
-    props.allItems
+  const availableItems = computed<
+    { id: RentalItemId; name: string; availableAmount: AvailableAmount }[]
+  >(() => [
+    ...props.allItems
       .filter(
         (it) =>
           !selectedItems.value.some(
@@ -48,22 +57,20 @@
         id: it.id,
         name: it.name,
         availableAmount: it.availableAmount,
-      }))
-      .concat(
-        objectEntries(props.compositeItems).map(([name, items]) => ({
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-          id: name as T,
-          name: name,
-          availableAmount: createAvailableAmount(
-            computeAvailableAmountForCompositeItem(items),
-          ),
-        })),
+      })),
+    ...objectEntries(props.compositeItems).map(([name, items]) => ({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      id: name as RentalItemId,
+      name: name,
+      availableAmount: createAvailableAmount(
+        computeAvailableAmountForCompositeItem(items),
       ),
-  );
+    })),
+  ]);
 
   const computeAvailableAmountForCompositeItem = (
     subItems: {
-      itemId: T;
+      itemId: RentalItemId;
       amount: number;
     }[],
   ) =>
@@ -77,7 +84,7 @@
   const getDefaultAmount = (item: { name: string }) =>
     item.name === 'quickdraw' ? 12 : 1;
 
-  const addItem = (id: T) => {
+  const addItem = (id: RentalItemId) => {
     const compositeItem = props.compositeItems[id];
     if (compositeItem !== undefined) {
       for (const { itemId, amount } of compositeItem) {
@@ -114,7 +121,7 @@
 
   <BoardRentalFormItemSelectionOverview
     :selected-items="selectedItems"
-    @remove-item="(itemId: T) => emit('removeItem', itemId)"
+    @remove-item="(itemId: RentalItemId) => emit('removeItem', itemId)"
     @update-selected-item-amount="
       (itemId, amount) => emit('setItem', itemId, amount)
     ">

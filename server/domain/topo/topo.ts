@@ -2,7 +2,7 @@ import type {
   InitialAmount,
   InventoryItemEvent,
 } from '#shared/api/rest/inventory';
-import type { RentalItemId } from '#shared/api/rest/rental';
+import type { RentalItemId } from '#shared/api/rest/rental/rentalItem';
 import type {
   Author,
   ClimbingType,

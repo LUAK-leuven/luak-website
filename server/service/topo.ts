@@ -13,7 +13,7 @@ import {
   createAvailableAmount,
   type TotalAmount as InventoryItemTotalAmount,
 } from '#shared/api/rest/inventory';
-import type { TotalAmount as RentalItemTotalAmount } from '#shared/api/rest/rental';
+import type { TotalAmount as RentalItemTotalAmount } from '#shared/api/rest/rental/rentalItem';
 import { groupBy, sumOf } from '#shared/utils/utils';
 
 export class TopoServiceImpl implements TopoService {

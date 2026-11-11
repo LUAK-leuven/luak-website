@@ -11,6 +11,7 @@ permissions:
   - { action: shell, resource: "tail *", effect: allow }
   - { action: shell, resource: "rg *", effect: allow }
   - { action: shell, resource: "printf *", effect: allow }
+  - { action: shell, resource: "ls *", effect: allow }
 
   - { action: shell, resource: "mkdir* .tmp/debug/*", effect: allow }
   - { action: shell, resource: "cp *", effect: allow }

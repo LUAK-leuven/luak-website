@@ -1,7 +1,8 @@
 import * as yup from 'yup';
 
 import type { GearItemId } from '#shared/api/rest/gear';
-import type { RentalItemId } from '#shared/api/rest/rental';
+import type { DepositFee } from '#shared/api/rest/rental';
+import type { RentalItemId } from '#shared/api/rest/rental/rentalItem';
 import type { TopoId } from '#shared/api/rest/topo';
 import type { UserId } from '#shared/api/rest/user';
 import type { RentalItem } from '#shared/types/board/form/RentalItem';
@@ -21,15 +22,15 @@ type RentalFormState = {
   dateReturn: string;
   gear: Record<GearItemId, number>;
   topos: Record<TopoId, number>;
-  depositFee: number;
-  paymentMethod: Enums<'payment_method'>;
+  depositFee: DepositFee;
+  paymentMethod: PaymentMethod;
   comments: string | undefined;
 };
 
 export function useRentalForm(
   initialState: Partial2<RentalFormState>,
-  allGear: RentalItem<RentalItemId>[],
-  allTopos: RentalItem<RentalItemId>[],
+  allGear: RentalItem[],
+  allTopos: RentalItem[],
 ) {
   const formSchema = yup.object({
     memberId: yup

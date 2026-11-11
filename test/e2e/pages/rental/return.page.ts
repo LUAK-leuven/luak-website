@@ -1,6 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
 import type { RentalId } from '#shared/api/rest/rental';
+import type { RentalItemName } from '#shared/api/rest/rental/rentalItem';
 import { uuidRegex } from '#shared/utils/utils';
 import { navigateTo } from '#test/e2e/fixtures';
 import { RentalDetailsPage } from '#test/e2e/pages/rental/details.page';
@@ -38,7 +39,7 @@ export class RentalReturnPage {
     return new RentalDetailsPage(this.page);
   };
 
-  rentedItem(name: string) {
+  rentedItem(name: RentalItemName) {
     const item = this.page.getByTestId(`rental-item-${name}`);
     return {
       item,

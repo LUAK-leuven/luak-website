@@ -3,7 +3,8 @@ import dayjs from 'dayjs';
 
 import type { InventoryItemId } from '#server/domain/inventory/InventoryItem';
 import type { ItemEvent } from '#shared/api/rest/inventory';
-import type { RentalId, RentalItemId } from '#shared/api/rest/rental';
+import type { RentalId } from '#shared/api/rest/rental';
+import type { RentalItemId } from '#shared/api/rest/rental/rentalItem';
 import type { Database } from '#shared/types/database.types';
 import type { UnsavedRental } from '#shared/types/rental';
 import { RentalService } from '~/services/rentalService';

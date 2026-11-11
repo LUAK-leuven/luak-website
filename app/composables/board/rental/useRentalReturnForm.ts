@@ -5,7 +5,10 @@ import {
   string as yupString,
 } from 'yup';
 
-import type { RentalItemId } from '#shared/api/rest/rental';
+import {
+  type RentalItemId,
+  RentalItemType,
+} from '#shared/api/rest/rental/rentalItem';
 import type { RentalDetails } from '~/model/Rental';
 
 function rentedItemSchema(
@@ -56,17 +59,17 @@ export function useRentalReturnForm(rental: RentalDetails) {
 
   const updateReturnedItem = (args: {
     id: RentalItemId;
-    type: 'gear' | 'topo';
+    type: RentalItemType;
     amount: number | undefined;
   }) => {
     switch (args.type) {
-      case 'gear':
+      case RentalItemType.gear:
         setFieldValue('returnedGear', {
           ...values.returnedGear,
           [args.id]: args.amount,
         });
         break;
-      case 'topo':
+      case RentalItemType.topo:
         setFieldValue('returnedTopos', {
           ...values.returnedTopos,
           [args.id]: args.amount,

@@ -1,6 +1,10 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import type { Dayjs } from 'dayjs';
 
+import {
+  type RentalItemName,
+  RentalItemType,
+} from '#shared/api/rest/rental/rentalItem';
 import { navigateTo } from '#test/e2e/fixtures';
 import { RentalDetailsPage } from '#test/e2e/pages/rental/details.page';
 
@@ -58,12 +62,14 @@ export class RentalFormPage {
     return instance;
   }
 
-  selectComponent(which: 'gear' | 'topos') {
+  selectComponent(which: RentalItemType) {
     switch (which) {
-      case 'gear':
+      case RentalItemType.gear:
         return this.select('Search gear to add ...');
-      case 'topos':
+      case RentalItemType.topo:
         return this.select('Search topos ...');
+      default:
+        throw new Error(`Unknown rental item type: ${which}`);
     }
   }
 
@@ -142,18 +148,24 @@ export class RentalFormPage {
     await this.selectPaymentMethod(args.paymentMethod);
   }
 
-  async selectSearchBar(which: 'gear' | 'topos') {
+  async selectSearchBar(which: RentalItemType) {
     const { search, options } = this.selectComponent(which);
     await search.click();
     await expect(options).toBeVisible();
   }
 
-  async addItem(which: 'gear' | 'topos', name: string, amount?: number) {
-    const { search, option, listItem } = this.selectComponent(which);
-    await search.fill(name);
-    await (await option(name)).click();
-    await listItem(name).name.isVisible();
+  async addItem(item: RentalItem, amount?: number) {
+    const { search, option, listItem } = this.selectComponent(item.itemType);
+    await search.fill(item.searchTerm);
+    await (await option(item.exactItemName)).click();
+    await listItem(item.exactItemName).name.isVisible();
     if (amount !== undefined)
-      await listItem(name).amount.fill(amount.toString());
+      await listItem(item.exactItemName).amount.fill(amount.toString());
   }
 }
+
+export type RentalItem = {
+  exactItemName: RentalItemName;
+  searchTerm: string;
+  itemType: RentalItemType;
+};

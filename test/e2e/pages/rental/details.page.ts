@@ -2,6 +2,7 @@ import { expect, type Page } from '@playwright/test';
 import type { Dayjs } from 'dayjs';
 
 import { createRentalId, type RentalId } from '#shared/api/rest/rental';
+import type { RentalItemName } from '#shared/api/rest/rental/rentalItem';
 import { uuidRegex } from '#shared/utils/utils';
 import { navigateTo } from '#test/e2e/fixtures';
 import { LostGearPage } from '#test/e2e/pages/lost-gear.page';
@@ -74,7 +75,7 @@ export class RentalDetailsPage {
     return this.page.getByTestId('returnButton');
   }
 
-  rentedItem(name: string) {
+  rentedItem(name: RentalItemName) {
     const item = this.page.getByTestId(`rental-item-${name}`);
     return {
       item,
@@ -88,7 +89,7 @@ export class RentalDetailsPage {
     };
   }
 
-  async markItemAsLost(name: string) {
+  async markItemAsLost(name: RentalItemName) {
     const item = this.rentedItem(name);
     await item.more.menuButton.click();
     await item.more.markAsLost.click();
@@ -150,7 +151,7 @@ export class RentalDetailsPage {
   }
 
   async expectItem(args: {
-    name: string;
+    name: RentalItemName;
     rentedAmount: number;
     returnedAmount?: number;
     lostAmount?: number;

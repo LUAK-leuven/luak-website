@@ -1,8 +1,9 @@
+import { createDepositFee, createRentalId } from '#shared/api/rest/rental';
 import {
-  createDepositFee,
-  createRentalId,
   createRentalItemId,
-} from '#shared/api/rest/rental';
+  createRentalItemName,
+  RentalItemType,
+} from '#shared/api/rest/rental/rentalItem';
 import type {
   PaymentMethod,
   SavedRental,
@@ -83,10 +84,10 @@ export const aRentalItem = (
 
   return new RentalItem({
     id: args.id ?? aRandomGearItemId(),
-    name: args.name ?? 'Item name',
+    name: args.name ?? createRentalItemName('Item name'),
     rentedAmount,
     returnedAmount,
     lostAmount,
-    type: args.type ?? 'gear',
+    type: args.type ?? RentalItemType.gear,
   });
 };

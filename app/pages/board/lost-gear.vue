@@ -1,11 +1,12 @@
 <script setup lang="ts">
-  import {
-    literal as zodLiteral,
-    object as zodObject,
-    union as zodUnion,
-  } from 'zod';
+  import { object as zodObject } from 'zod';
 
-  import { rentalIdSchema, rentalItemIdSchema } from '#shared/api/rest/rental';
+  import { rentalIdSchema } from '#shared/api/rest/rental';
+  import {
+    rentalItemIdSchema,
+    RentalItemType,
+    rentalItemTypeSchema,
+  } from '#shared/api/rest/rental/rentalItem';
   import GearItem from '~/components/board/lost-gear/GearItem.vue';
   import TopoItem from '~/components/board/lost-gear/TopoItem.vue';
   import PaymentBadge from '~/components/board/rental/PaymentBadge.vue';
@@ -19,7 +20,7 @@
   );
 
   const querySchema = zodObject({
-    itemType: zodUnion([zodLiteral('topo'), zodLiteral('gear')]),
+    itemType: rentalItemTypeSchema,
     itemId: rentalItemIdSchema,
   });
   const queryParams = computed(() => {
@@ -91,11 +92,11 @@
       <hr class="my-2" />
 
       <TopoItem
-        v-if="queryParams.itemType === 'topo'"
+        v-if="queryParams.itemType === RentalItemType.topo"
         :rental-id="rentalId"
         :topo="rental.getTopo(queryParams.itemId)" />
       <GearItem
-        v-else-if="queryParams.itemType === 'gear'"
+        v-else-if="queryParams.itemType === RentalItemType.gear"
         :rental-id="rental.id"
         :gear-item="rental.getGearItem(queryParams.itemId)" />
       <div v-else>KAPOT!</div>
