@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { createAvailableAmount } from '#shared/api/rest/inventory';
   import { createRentalId } from '#shared/api/rest/rental';
+  import { createAvailableAmount } from '#shared/api/rest/rental/availability';
   import BackButton from '~/components/shared/BackButton.vue';
   import { useFetchGearAndTopos } from '~/composables/board/rental/useFetchGearAndTopos';
 

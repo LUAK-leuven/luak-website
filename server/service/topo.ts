@@ -9,10 +9,8 @@ import type {
   TopoLibraryItem,
   TopoListItem,
 } from '#server/domain/topo/topo';
-import {
-  createAvailableAmount,
-  type TotalAmount as InventoryItemTotalAmount,
-} from '#shared/api/rest/inventory';
+import type { TotalAmount as InventoryItemTotalAmount } from '#shared/api/rest/inventory';
+import { createAvailableAmount } from '#shared/api/rest/rental/availability';
 import type { TotalAmount as RentalItemTotalAmount } from '#shared/api/rest/rental/rentalItem';
 import { groupBy, sumOf } from '#shared/utils/utils';
 

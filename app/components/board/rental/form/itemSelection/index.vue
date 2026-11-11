@@ -4,8 +4,12 @@
   import {
     type AvailableAmount,
     createAvailableAmount,
-  } from '#shared/api/rest/inventory';
-  import type { RentalItemId } from '#shared/api/rest/rental/rentalItem';
+  } from '#shared/api/rest/rental/availability';
+  import {
+    createRentalItemName,
+    type RentalItemId,
+    type RentalItemName,
+  } from '#shared/api/rest/rental/rentalItem';
   import type { RentalItem } from '#shared/types/board/form/RentalItem';
 
   const props = withDefaults(
@@ -44,7 +48,11 @@
   );
 
   const availableItems = computed<
-    { id: RentalItemId; name: string; availableAmount: AvailableAmount }[]
+    {
+      id: RentalItemId;
+      name: RentalItemName;
+      availableAmount: AvailableAmount;
+    }[]
   >(() => [
     ...props.allItems
       .filter(
@@ -61,7 +69,7 @@
     ...objectEntries(props.compositeItems).map(([name, items]) => ({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       id: name as RentalItemId,
-      name: name,
+      name: createRentalItemName(name),
       availableAmount: createAvailableAmount(
         computeAvailableAmountForCompositeItem(items),
       ),

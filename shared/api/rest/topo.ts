@@ -1,12 +1,12 @@
 import { type infer as ZodInfer, string as zodString } from 'zod';
 
 import type {
-  AvailableAmount,
   InitialAmount,
   InventoryItemEvent,
   TotalAmount as InventoryItemTotalAmount,
 } from '#shared/api/rest/inventory';
 import type { RentalId, RentalMemberName } from '#shared/api/rest/rental';
+import type { AvailableAmount } from '#shared/api/rest/rental/availability';
 import type {
   OutstandingAmount,
   RentalItemId,

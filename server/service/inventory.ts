@@ -13,7 +13,7 @@ import {
   type PurchaseDate,
   type RetirementDate,
 } from '#shared/api/rest/gear';
-import { createAvailableAmount } from '#shared/api/rest/inventory';
+import { createAvailableAmount } from '#shared/api/rest/rental/availability';
 import { createTotalAmount } from '#shared/api/rest/rental/rentalItem';
 import { groupBy, sum, sumOf } from '#shared/utils/utils';
 

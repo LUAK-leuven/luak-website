@@ -7,7 +7,6 @@ import {
 } from 'zod';
 
 import type {
-  AvailableAmount,
   InitialAmount,
   InventoryItemEvent,
   TotalAmount as InventoryItemTotalAmount,
@@ -17,6 +16,7 @@ import type {
   RentalId,
   RentalMemberName,
 } from '#shared/api/rest/rental';
+import type { AvailableAmount } from '#shared/api/rest/rental/availability';
 import {
   type OutstandingAmount,
   rentalItemIdSchema,

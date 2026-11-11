@@ -1,5 +1,5 @@
-import type { AvailableAmount } from '#shared/api/rest/inventory';
 import type { DepositFee } from '#shared/api/rest/rental';
+import type { AvailableAmount } from '#shared/api/rest/rental/availability';
 import type {
   RentalItemId,
   RentalItemName,

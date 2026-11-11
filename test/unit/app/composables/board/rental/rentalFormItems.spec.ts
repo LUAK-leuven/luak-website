@@ -1,8 +1,8 @@
 import { expect, test } from 'vitest';
 
 import { createGearName, createRetirementDate } from '#shared/api/rest/gear';
-import { createAvailableAmount } from '#shared/api/rest/inventory';
 import { createDepositFee } from '#shared/api/rest/rental';
+import { createAvailableAmount } from '#shared/api/rest/rental/availability';
 import {
   createRentalItemId,
   createTotalAmount,

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-  import type { AvailableAmount } from '#shared/api/rest/inventory'; // TODO: move AvailableAmount to rental
   import type { DepositFee } from '#shared/api/rest/rental';
+  import type { AvailableAmount } from '#shared/api/rest/rental/availability';
   import type {
     RentalItemId,
     RentalItemName,
