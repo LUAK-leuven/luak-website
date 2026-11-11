@@ -36,6 +36,7 @@
     "eslint-import-resolver-node": "^0.4.0",
     "eslint-plugin-nuxt": "^4.0.0",
     "eslint-plugin-prettier": "^5.5.7",
+    "eslint-plugin-simple-import-sort": "^14.0.0",
     "happy-dom": "^21.0.4",
     "nuxt": "^4.5.1",
     "nuxt-studio": "^1.8.0",

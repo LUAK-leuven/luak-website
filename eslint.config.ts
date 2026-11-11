@@ -1,8 +1,10 @@
-import withNuxt from './.nuxt/eslint.config.mjs';
-import tseslint from 'typescript-eslint';
-import localImportRules from './eslint-rules/canonical-import-paths.ts';
 import type { Linter } from 'eslint';
 import { globalIgnores } from 'eslint/config';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import tseslint from 'typescript-eslint';
+
+import withNuxt from './.nuxt/eslint.config.mjs';
+import localImportRules from './eslint-rules/canonical-import-paths.ts';
 
 // Extract only the rules from the strict-type-checked-only preset,
 // avoiding the plugin/parser registration that conflicts with @nuxt/eslint.
@@ -47,9 +49,28 @@ export default withNuxt(
       '@typescript-eslint/consistent-type-assertions': 'error',
       '@typescript-eslint/no-unsafe-type-assertion': 'error',
       'local/canonical-import-paths': 'error',
+      'simple-import-sort/imports': [
+        'error',
+        {
+          groups: [
+            // Side-effect imports.
+            ['^\\u0000'],
+            // Node.js builtins.
+            ['^node:'],
+            // External packages, including scoped ones.
+            ['^@?\\w'],
+            // Aliases: `#…` before `~/…`.
+            ['^#', '^~'],
+            // Relative imports (banned by canonical-import-paths; safety net).
+            ['^\\.'],
+          ],
+        },
+      ],
+      'simple-import-sort/exports': 'error',
     },
     plugins: {
       local: localImportRules,
+      'simple-import-sort': simpleImportSort,
     },
   },
   {
