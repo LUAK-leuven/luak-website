@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-  import { yup_phone } from '~/utils/yup';
   import * as yup from 'yup';
-  import TextField from '~/components/input/TextField.vue';
+
   import BoolField from '~/components/input/BoolField.vue';
+  import TextField from '~/components/input/TextField.vue';
   import Button from '~/components/shared/Button.vue';
+  import { yup_phone } from '~/utils/yup';
 
   const supabase = useSupabaseClient();
   const user = useSupabaseUser();

@@ -1,12 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import {
-  RentalSummary,
-  RentalDetails,
-  PublicRentalDetails,
-  RentalItem,
-} from '~/model/Rental';
-import { getFullName } from '~/services/userService';
 import { object as zodObject, string as zodString } from 'zod';
+
 import { createGearItemId } from '#shared/api/rest/gear';
 import {
   createDepositFee,
@@ -16,6 +10,13 @@ import {
 } from '#shared/api/rest/rental';
 import { createUserId, type UserId } from '#shared/api/rest/user';
 import type { Database } from '#shared/types/database.types';
+import {
+  PublicRentalDetails,
+  RentalDetails,
+  RentalItem,
+  RentalSummary,
+} from '~/model/Rental';
+import { getFullName } from '~/services/userService';
 
 export class RentalService {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}

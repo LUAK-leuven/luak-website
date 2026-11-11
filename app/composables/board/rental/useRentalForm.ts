@@ -1,11 +1,12 @@
 import * as yup from 'yup';
-import type { RentalItem } from '#shared/types/board/form/RentalItem';
+
 import type { GearItemId } from '#shared/api/rest/gear';
+import type { RentalItemId } from '#shared/api/rest/rental';
 import type { TopoId } from '#shared/api/rest/topo';
 import type { UserId } from '#shared/api/rest/user';
-import { createRentalSelectionSchema } from '~/composables/board/rental/selectionSchema';
+import type { RentalItem } from '#shared/types/board/form/RentalItem';
 import { depositFeeSchema } from '~/composables/board/rental/depositFeeSchema';
-import type { RentalItemId } from '#shared/api/rest/rental';
+import { createRentalSelectionSchema } from '~/composables/board/rental/selectionSchema';
 
 type RentalFormState = {
   memberId: UserId | 'non-user';

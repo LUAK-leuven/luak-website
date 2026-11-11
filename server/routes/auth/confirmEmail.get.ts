@@ -1,4 +1,5 @@
 import { object as zodObject, string as zodString, union } from 'zod';
+
 import {
   type EmailConfirmationCookie,
   emailConfirmationCookieName,

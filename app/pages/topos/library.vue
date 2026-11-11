@@ -1,16 +1,17 @@
 <script setup lang="ts">
-  import Text from '~/components/input/Text.vue';
-  import { string as yupString } from 'yup';
-  import SelectCountry from '~/components/topoLibrary/SelectCountry.vue';
-  import SelectableBadge from '~/components/input/SelectableBadge.vue';
   import { refDebounced } from '@vueuse/core';
-  import { asArray } from '~/utils/QueryParams';
+  import { string as yupString } from 'yup';
+
   import {
-    createClimbingType,
-    createCountry,
     type ClimbingType,
     type Country,
+    createClimbingType,
+    createCountry,
   } from '#shared/api/rest/topo';
+  import SelectableBadge from '~/components/input/SelectableBadge.vue';
+  import Text from '~/components/input/Text.vue';
+  import SelectCountry from '~/components/topoLibrary/SelectCountry.vue';
+  import { asArray } from '~/utils/QueryParams';
 
   definePageMeta({ middleware: 'active-member-guard' });
 

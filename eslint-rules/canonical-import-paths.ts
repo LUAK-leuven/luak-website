@@ -8,6 +8,7 @@ import {
   sep,
 } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
 import type { Rule } from 'eslint';
 import type * as ESTree from 'estree';
 

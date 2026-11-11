@@ -1,7 +1,7 @@
 <script lang="ts" setup generic="T extends EntityId">
-  import InputNumber from '~/components/input/NumberCompact.vue';
   import type { AvailableAmount } from '#shared/api/rest/inventory'; // TODO: move AvailableAmount to rental
   import type { DepositFee, TotalAmount } from '#shared/api/rest/rental';
+  import InputNumber from '~/components/input/NumberCompact.vue';
 
   defineProps<{
     selectedItems: {

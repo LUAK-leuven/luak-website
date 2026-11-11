@@ -1,21 +1,22 @@
 import { expect } from '@playwright/test';
-import { TestUser, testUsers } from '#test/TestUser';
+import dayjs from 'dayjs';
+
+import { findBy, sleep } from '#shared/utils/utils';
 import {
   authStateFile,
+  generatedUserTest,
   login,
   navigateTo,
-  generatedUserTest,
   randomUserTest,
   test,
 } from '#test/e2e/fixtures';
-import { LoginPage } from '#test/e2e/pages/login.page';
-import { ProfileSettingsPage } from '#test/e2e/pages/profile/settings.page';
-import { testServiceBuilder } from '#test/testServices';
-import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
 import { ForgotPasswordPage } from '#test/e2e/pages/forgot-password.page';
-import { findBy, sleep } from '#shared/utils/utils';
-import dayjs from 'dayjs';
+import { LoginPage } from '#test/e2e/pages/login.page';
+import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
+import { ProfileSettingsPage } from '#test/e2e/pages/profile/settings.page';
 import { ResetPasswordPage } from '#test/e2e/pages/reset-password.page';
+import { testServiceBuilder } from '#test/testServices';
+import { TestUser, testUsers } from '#test/TestUser';
 
 const testUserService = testServiceBuilder().userTestService();
 

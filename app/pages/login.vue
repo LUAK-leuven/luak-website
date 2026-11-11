@@ -1,8 +1,9 @@
 <script setup lang="ts">
-  import { string as yupString, object as yupObject } from 'yup';
-  import { useWaitForAuthUser } from '~/composables/useWaitForAuthUser';
+  import { object as yupObject, string as yupString } from 'yup';
+
   import TextField from '~/components/input/TextField.vue';
   import LoadingButton from '~/components/shared/LoadingButton.vue';
+  import { useWaitForAuthUser } from '~/composables/useWaitForAuthUser';
 
   const supabase = useSupabaseClient();
   const route = useRoute();

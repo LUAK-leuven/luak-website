@@ -1,3 +1,10 @@
+import type {
+  TopoLibraryRecord,
+  TopoRecord,
+  TopoSummary,
+} from '#server/domain/topo/topo';
+import { createInitialAmount } from '#shared/api/rest/inventory';
+import { createRentalItemId } from '#shared/api/rest/rental';
 import {
   createAuthor,
   createClimbingType,
@@ -10,13 +17,6 @@ import {
   createYearPublished,
   type TopoId,
 } from '#shared/api/rest/topo';
-import type {
-  TopoLibraryRecord,
-  TopoRecord,
-  TopoSummary,
-} from '#server/domain/topo/topo';
-import { createInitialAmount } from '#shared/api/rest/inventory';
-import { createRentalItemId } from '#shared/api/rest/rental';
 
 export const aRandomTopoId = (): TopoId => createTopoId(crypto.randomUUID());
 

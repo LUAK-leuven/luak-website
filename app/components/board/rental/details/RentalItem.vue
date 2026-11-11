@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import ItemMenu from '~/components/board/rental/details/ItemMenu.vue';
-  import type { RentalItem } from '~/model/Rental.js';
-  import getItemColor from '~/components/board/rental/getItemColor.js';
   import type { RentalId } from '#shared/api/rest/rental.ts';
+  import ItemMenu from '~/components/board/rental/details/ItemMenu.vue';
+  import getItemColor from '~/components/board/rental/getItemColor.js';
+  import type { RentalItem } from '~/model/Rental.js';
 
   const props = defineProps<{
     item: RentalItem;

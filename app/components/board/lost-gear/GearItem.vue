@@ -1,19 +1,20 @@
 <script setup lang="ts">
-  import WithLazyResource from '~/components/pages/WithLazyResource.vue';
-  import LoadingButton from '~/components/shared/LoadingButton.vue';
-  import Number from '~/components/input/NumberCompact.vue';
   import {
-    object as yupObject,
     number as yupNumber,
+    object as yupObject,
     string as yupString,
   } from 'yup';
-  import GearInventorySelection from '~/components/board/lost-gear/GearInventorySelection.vue';
+
   import type {
     GearInventoryDetails,
     GearInventoryId,
   } from '#shared/api/rest/gear';
-  import type { RentalItem } from '~/model/Rental.js';
   import type { RentalId } from '#shared/api/rest/rental.ts';
+  import GearInventorySelection from '~/components/board/lost-gear/GearInventorySelection.vue';
+  import Number from '~/components/input/NumberCompact.vue';
+  import WithLazyResource from '~/components/pages/WithLazyResource.vue';
+  import LoadingButton from '~/components/shared/LoadingButton.vue';
+  import type { RentalItem } from '~/model/Rental.js';
 
   const props = defineProps<{
     rentalId: RentalId;

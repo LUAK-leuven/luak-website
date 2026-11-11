@@ -1,4 +1,5 @@
 import { expect } from '@playwright/test';
+
 import { navigateTo, test } from '#test/e2e/fixtures';
 
 test('homepage is visible', async ({ page }) => {

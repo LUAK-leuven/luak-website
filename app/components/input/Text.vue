@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import type { TextType } from '~/components/shared/input/TextType.ts';
   import FormInput from '~/components/input/FormInput.vue';
+  import type { TextType } from '~/components/shared/input/TextType.ts';
 
   withDefaults(
     defineProps<{

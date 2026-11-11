@@ -1,11 +1,11 @@
 <script setup lang="ts">
-  import RentalsForItem from '~/components/board/inventory/RentalsForItem.vue';
-  import Inventory from '~/components/board/gear/Inventory.vue';
-  import DetailsPage from '~/components/pages/DetailsPage.vue';
   import {
     createGearItemId,
     type GearInventoryDetails,
   } from '#shared/api/rest/gear';
+  import Inventory from '~/components/board/gear/Inventory.vue';
+  import RentalsForItem from '~/components/board/inventory/RentalsForItem.vue';
+  import DetailsPage from '~/components/pages/DetailsPage.vue';
 
   const gearItemId = createGearItemId(useRoute('board-gear-id').params.id);
 

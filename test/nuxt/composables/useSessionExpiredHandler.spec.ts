@@ -1,6 +1,7 @@
+import { mockNuxtImport } from '@nuxt/test-utils/runtime';
 import { AuthApiError } from '@supabase/supabase-js';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
-import { mockNuxtImport } from '@nuxt/test-utils/runtime';
+
 import { useSessionExpiredHandler } from '~/composables/useSessionExpiredHandler';
 
 const SESSION_EXPIRED_MESSAGE =

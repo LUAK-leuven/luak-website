@@ -1,8 +1,8 @@
 import type {
-  InventoryItemId,
   GearInventoryRecord,
   GearInventorySummaryRecord,
   GearItemRecord,
+  InventoryItemId,
 } from '#server/domain/inventory/InventoryItem';
 import type { GearInventoryId, GearItemId } from '#shared/api/rest/gear';
 import type { InventoryItemEvent } from '#shared/api/rest/inventory';

@@ -1,8 +1,8 @@
 import type {
   TopoDetails,
+  TopoId,
   TopoLibraryItem,
   TopoListItem,
-  TopoId,
 } from '#server/domain/topo/topo';
 
 export interface TopoService {

@@ -1,10 +1,10 @@
 <script setup lang="ts" generic="T">
   import {
-    useFloating,
-    offset,
-    flip,
-    shift,
     autoUpdate,
+    flip,
+    offset,
+    shift,
+    useFloating,
   } from '@floating-ui/vue';
 
   const props = withDefaults(

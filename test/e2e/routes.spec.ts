@@ -1,4 +1,5 @@
 import { expect, type Page } from '@playwright/test';
+
 import { authStateFile, test } from '#test/e2e/fixtures';
 
 type Access = 'allow' | 'abort' | 'redirect' | 'page not found';

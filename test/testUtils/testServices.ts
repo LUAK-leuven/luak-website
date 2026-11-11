@@ -1,10 +1,11 @@
-import { validateSupabaseUrl } from '#test/validateSupabaseUrl';
 import { createClient } from '@supabase/supabase-js';
+
 import type { Database } from '#shared/types/database.types';
-import { TestDao } from '#test/testDao';
-import { TestUserService } from '#test/TestUserService';
 import { ServerTestService } from '#test/fetch';
 import { MailpitService } from '#test/MailpitService';
+import { TestDao } from '#test/testDao';
+import { TestUserService } from '#test/TestUserService';
+import { validateSupabaseUrl } from '#test/validateSupabaseUrl';
 
 export const createSupabaseClientForTests = () => {
   if (

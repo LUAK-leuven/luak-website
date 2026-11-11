@@ -1,16 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Database } from '#shared/types/database.types';
-import {
-  type LifeSpanInYears,
-  createGearInventoryId,
-  createGearItemId,
-  createGearName,
-  createDetails,
-  createLifeSpanInYears,
-  createProductionDate,
-  createPurchaseDate,
-  type GearItemId,
-} from '#shared/api/rest/gear';
+
 import {
   foldInventoryItemEvents,
   type GearInventoryRecord,
@@ -20,12 +9,24 @@ import {
 } from '#server/domain/inventory/InventoryItem';
 import type { InventoryRepository } from '#server/domain/inventory/repository';
 import {
-  createOccurredOn,
+  createDetails,
+  createGearInventoryId,
+  createGearItemId,
+  createGearName,
+  createLifeSpanInYears,
+  createProductionDate,
+  createPurchaseDate,
+  type GearItemId,
+  type LifeSpanInYears,
+} from '#shared/api/rest/gear';
+import {
   createInitialAmount,
-  itemEventSchema,
+  createOccurredOn,
   type InventoryItemEvent,
+  itemEventSchema,
 } from '#shared/api/rest/inventory';
 import { createDepositFee } from '#shared/api/rest/rental';
+import type { Database } from '#shared/types/database.types';
 import { groupBy } from '#shared/utils/utils';
 
 export class SupabaseInventoryRepository implements InventoryRepository {

@@ -1,11 +1,12 @@
 import dayjs from 'dayjs';
 import { expect, test } from 'vitest';
+
+import { withFakeTimers } from '#test/vitest/withFakeTimers';
 import {
-  Membership,
   _getMembershipYearForDate,
   _isValidForMembershipYear,
+  Membership,
 } from '~/model/Membership';
-import { withFakeTimers } from '#test/vitest/withFakeTimers';
 
 test.for([
   [2023, '2023-06-30', false], // Valid 01-07-2023 to 31-08-2024

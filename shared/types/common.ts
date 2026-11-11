@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
 import {
-  number as zodNumber,
   type infer as ZodInfer,
   iso as zodIso,
+  number as zodNumber,
 } from 'zod';
 
 declare const _dateBrand: unique symbol;

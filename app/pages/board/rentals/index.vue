@@ -1,8 +1,8 @@
 <script setup lang="ts">
+  import { refDebounced } from '@vueuse/core';
+
   import Text from '~/components/input/Text.vue';
   import { useRentalService } from '~/composables/useRentalService';
-
-  import { refDebounced } from '@vueuse/core';
 
   definePageMeta({
     layout: false,

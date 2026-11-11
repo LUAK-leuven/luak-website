@@ -1,4 +1,5 @@
 import type { infer as ZodInfer } from 'zod';
+
 import { entityIdSchema } from '#shared/types/ddd';
 
 declare const _userIdBrand: unique symbol;

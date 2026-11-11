@@ -1,5 +1,6 @@
-import { navigateTo } from '#test/e2e/fixtures';
 import type { Locator, Page } from '@playwright/test';
+
+import { navigateTo } from '#test/e2e/fixtures';
 
 export class SignupPage {
   static readonly path = '/signup';

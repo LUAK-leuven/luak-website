@@ -2,14 +2,14 @@
   import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
   import dayjs from 'dayjs';
 
-  import ItemHistory from '~/components/board/inventory/ItemHistory.vue';
-  import RetirementDate from '~/components/board/gear/retirementDate.vue';
-  import InventoryTableItem from '~/components/board/gear/inventoryTableItem.vue';
   import type {
     GearInventoryDetails,
     ProductionDate,
     PurchaseDate,
   } from '#shared/api/rest/gear';
+  import InventoryTableItem from '~/components/board/gear/inventoryTableItem.vue';
+  import RetirementDate from '~/components/board/gear/retirementDate.vue';
+  import ItemHistory from '~/components/board/inventory/ItemHistory.vue';
 
   const props = defineProps<{
     inventory: GearInventoryDetails['inventory'];

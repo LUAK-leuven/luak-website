@@ -1,9 +1,11 @@
 // RuleTester coverage for the project's custom import restriction.
 import { basename, dirname, resolve, sep } from 'node:path';
+
 import { Linter, RuleTester } from 'eslint';
-import { describe, expect, it, vi } from 'vitest';
 import tseslint from 'typescript-eslint';
+import { describe, expect, it, vi } from 'vitest';
 import vueParser from 'vue-eslint-parser';
+
 import { canonicalImportPaths as rule } from '#eslint-rules/canonical-import-paths';
 
 const mockedFiles = vi.hoisted(() => new Set<string>());

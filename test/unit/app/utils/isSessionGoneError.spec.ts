@@ -4,6 +4,7 @@ import {
   AuthWeakPasswordError,
 } from '@supabase/supabase-js';
 import { expect, test } from 'vitest';
+
 import { isSessionGoneError } from '~/utils/isSessionGoneError';
 
 const SESSION_GONE_CODES = [

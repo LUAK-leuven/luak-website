@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import ProfileCard from '~/components/profile/overview/Card.vue';
-  import MembershipCard from '~/components/profile/overview/membership/MembershipCard.vue';
   import LogOutCard from '~/components/profile/overview/LogOutCard.vue';
+  import MembershipCard from '~/components/profile/overview/membership/MembershipCard.vue';
 
   const { getUserInfo, getMembershipInfo } = useUserService();
   const membershipInfo = await getMembershipInfo();

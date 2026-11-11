@@ -1,8 +1,9 @@
+import { expect, test } from 'vitest';
+
+import { createDepositFee, createRentalItemId } from '#shared/api/rest/rental';
 import { aRental } from '#test/builders/rental';
 import { testServiceBuilder } from '#test/testServices';
-import { expect, test } from 'vitest';
 import { RentalService } from '~/services/rentalService';
-import { createDepositFee, createRentalItemId } from '#shared/api/rest/rental';
 
 const { supabase, userTestService } = testServiceBuilder();
 

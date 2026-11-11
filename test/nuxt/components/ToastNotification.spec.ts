@@ -1,5 +1,6 @@
-import { expect, test } from 'vitest';
 import { mountSuspended } from '@nuxt/test-utils/runtime';
+import { expect, test } from 'vitest';
+
 import ToastNotification from '~/components/ToastNotification.vue';
 
 test('emits close when the close button is clicked', async () => {

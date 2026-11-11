@@ -1,9 +1,9 @@
 <script setup lang="ts">
-  import NumberInput from '~/components/input/NumberCompact.vue';
-  import type { RentalItem } from '~/model/Rental';
-  import getItemColor from '~/components/board/rental/getItemColor';
-  import Button from '~/components/shared/Button.vue';
   import type { RentalId } from '#shared/api/rest/rental';
+  import getItemColor from '~/components/board/rental/getItemColor';
+  import NumberInput from '~/components/input/NumberCompact.vue';
+  import Button from '~/components/shared/Button.vue';
+  import type { RentalItem } from '~/model/Rental';
 
   const props = defineProps<{
     rentalId: RentalId;

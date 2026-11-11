@@ -1,14 +1,15 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
+import dayjs from 'dayjs';
+
+import { createUserId } from '#shared/api/rest/user';
 import type { Database } from '#shared/types/database.types';
 import {
-  testUserKeys,
-  testUsers,
   type TestUser,
   type TestUserKey,
+  testUserKeys,
+  testUsers,
 } from '#test/TestUser';
-import dayjs from 'dayjs';
 import { getCurrentMembershipYear } from '~/model/Membership';
-import { createUserId } from '#shared/api/rest/user';
 
 export class TestUserService {
   constructor(private readonly supabase: SupabaseClient<Database>) {}

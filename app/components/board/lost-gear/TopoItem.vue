@@ -1,12 +1,13 @@
 <script setup lang="ts">
-  import Number from '~/components/input/NumberCompact.vue';
-  import WithLazyResource from '~/components/pages/WithLazyResource.vue';
-  import { object as yupObject, number as yupNumber } from 'yup';
   import { ErrorMessage } from 'vee-validate';
-  import LoadingButton from '~/components/shared/LoadingButton.vue';
-  import type { RentalItem } from '~/model/Rental';
+  import { number as yupNumber, object as yupObject } from 'yup';
+
   import type { RentalId } from '#shared/api/rest/rental';
   import type { TopoDetails } from '#shared/api/rest/topo';
+  import Number from '~/components/input/NumberCompact.vue';
+  import WithLazyResource from '~/components/pages/WithLazyResource.vue';
+  import LoadingButton from '~/components/shared/LoadingButton.vue';
+  import type { RentalItem } from '~/model/Rental';
 
   const props = defineProps<{
     rentalId: RentalId;

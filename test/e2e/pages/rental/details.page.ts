@@ -1,11 +1,12 @@
 import { expect, type Page } from '@playwright/test';
 import type { Dayjs } from 'dayjs';
+
 import { createRentalId, type RentalId } from '#shared/api/rest/rental';
-import { testUsers } from '#test/TestUser';
 import { uuidRegex } from '#shared/utils/utils';
-import { RentalReturnPage } from '#test/e2e/pages/rental/return.page';
-import { LostGearPage } from '#test/e2e/pages/lost-gear.page';
 import { navigateTo } from '#test/e2e/fixtures';
+import { LostGearPage } from '#test/e2e/pages/lost-gear.page';
+import { RentalReturnPage } from '#test/e2e/pages/rental/return.page';
+import { testUsers } from '#test/TestUser';
 
 export class RentalDetailsPage {
   private readonly page: Page;

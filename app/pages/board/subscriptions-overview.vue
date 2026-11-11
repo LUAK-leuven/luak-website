@@ -1,13 +1,14 @@
 <script lang="ts" setup>
+  import { refDebounced } from '@vueuse/core';
+  import dayjs from 'dayjs';
+
+  import CsvExport from '~/components/board/subscriptions-overview/CsvExport.vue';
   import {
     formatKbfUiaaStatus,
     formatStudentStatus,
   } from '~/components/board/subscriptions-overview/helpers';
-  import dayjs from 'dayjs';
   import Text from '~/components/input/Text.vue';
   import { getCurrentMembershipYear } from '~/model/Membership';
-  import CsvExport from '~/components/board/subscriptions-overview/CsvExport.vue';
-  import { refDebounced } from '@vueuse/core';
 
   const supabase = useSupabaseClient();
   const isLoading = ref(true);

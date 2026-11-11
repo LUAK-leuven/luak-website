@@ -1,10 +1,11 @@
 import { expect, type Page } from '@playwright/test';
+import dayjs, { type Dayjs } from 'dayjs';
+
 import { authStateFile, login, test } from '#test/e2e/fixtures';
 import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
 import { testServiceBuilder } from '#test/testServices';
 import { testUsers } from '#test/TestUser';
 import { getCurrentMembershipYear } from '~/model/Membership';
-import dayjs, { type Dayjs } from 'dayjs';
 
 (
   [

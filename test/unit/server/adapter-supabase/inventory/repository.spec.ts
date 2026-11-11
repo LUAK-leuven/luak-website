@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+
 import { mapInventoryItemEvent } from '#server/adapter-supabase/inventory/repository';
 
 test('maps a database event timestamp to OccurredOn', () => {

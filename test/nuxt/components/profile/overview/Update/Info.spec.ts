@@ -1,5 +1,6 @@
-import { beforeEach, expect, test, vi } from 'vitest';
 import { mockNuxtImport, mountSuspended } from '@nuxt/test-utils/runtime';
+import { beforeEach, expect, test, vi } from 'vitest';
+
 import Info from '~/components/profile/overview/Update/Info.vue';
 
 const SESSION_EXPIRED_MESSAGE =

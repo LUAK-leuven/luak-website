@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import type { Dayjs } from 'dayjs';
+
 import { navigateTo } from '#test/e2e/fixtures';
 import { RentalDetailsPage } from '#test/e2e/pages/rental/details.page';
 

@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+
 import { createAvailableAmount } from '#shared/api/rest/inventory';
 
 test('AvailableAmount accepts negative integers', () => {

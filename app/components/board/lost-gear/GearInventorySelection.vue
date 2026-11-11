@@ -1,15 +1,16 @@
 <script setup lang="ts">
-  import InventoryTableItem from '~/components/board/gear/inventoryTableItem.vue';
-  import RetirementDate from '~/components/board/gear/retirementDate.vue';
   import dayjs from 'dayjs';
+
   import type {
-    GearInventoryId,
     Details,
+    GearInventoryId,
     ProductionDate,
     PurchaseDate,
     RetirementDate as RetirementDateType,
   } from '#shared/api/rest/gear';
   import type { TotalAmount } from '#shared/api/rest/inventory';
+  import InventoryTableItem from '~/components/board/gear/inventoryTableItem.vue';
+  import RetirementDate from '~/components/board/gear/retirementDate.vue';
 
   const props = defineProps<{
     inventory: {

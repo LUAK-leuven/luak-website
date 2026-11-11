@@ -1,6 +1,6 @@
+import { createUserId } from '#shared/api/rest/user';
 import { LuakUser } from '~/model/LuakUser';
 import { luakUserFromDb, UserService } from '~/services/userService';
-import { createUserId } from '#shared/api/rest/user';
 
 export function useUserService() {
   const user = useSupabaseUser();

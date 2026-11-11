@@ -1,8 +1,7 @@
 <script setup lang="ts">
-  import PaymentModal from '~/components/PaymentModal.vue';
   import RentalItem from '~/components/board/rental/details/RentalItem.vue';
+  import PaymentModal from '~/components/PaymentModal.vue';
   import Button from '~/components/shared/Button.vue';
-
   import { usePaymentModal } from '~/composables/components/usePaymentModal';
   import type { RentalDetails } from '~/model/Rental';
   import { formatToDMY } from '~/utils/rental/dateFormatter';

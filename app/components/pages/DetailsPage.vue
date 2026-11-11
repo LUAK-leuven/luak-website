@@ -1,5 +1,6 @@
 <script setup lang="ts" generic="T extends { id: EntityId } | null | undefined">
   import type { RoutesNamedLocations } from '@typed-router';
+
   import BackButton from '~/components/shared/BackButton.vue';
 
   withDefaults(

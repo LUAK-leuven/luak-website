@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import Button from '~/components/shared/Button.vue';
   import ProfileCard from '~/components/profile/overview/Card.vue';
+  import Button from '~/components/shared/Button.vue';
 
   const supabase = useSupabaseClient();
   const logout = async () => {

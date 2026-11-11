@@ -1,11 +1,11 @@
 <script setup lang="ts">
-  import type { RentalItem } from '#shared/types/board/form/RentalItem';
-  import Text from '~/components/input/Text.vue';
-  import { useToast } from '~/composables/useToast';
-  import { useRentalForm } from '~/composables/board/rental/useRentalForm';
-  import DepositFeeField from '~/components/board/rental/form/DepositFeeField.vue';
-  import type { UserId } from '#shared/api/rest/user.ts';
   import { createDepositFee, type RentalItemId } from '#shared/api/rest/rental';
+  import type { UserId } from '#shared/api/rest/user.ts';
+  import type { RentalItem } from '#shared/types/board/form/RentalItem';
+  import DepositFeeField from '~/components/board/rental/form/DepositFeeField.vue';
+  import Text from '~/components/input/Text.vue';
+  import { useRentalForm } from '~/composables/board/rental/useRentalForm';
+  import { useToast } from '~/composables/useToast';
 
   const props = defineProps<{
     boardMemberName: string;

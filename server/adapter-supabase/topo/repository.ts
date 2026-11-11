@@ -1,32 +1,33 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
+
+import type { TopoRepository } from '#server/domain/topo/repository';
 import type {
   TopoCondition,
+  TopoId,
   TopoInventoryItemEvent,
   TopoLibraryRecord,
   TopoRecord,
   TopoSummary,
-  TopoId,
 } from '#server/domain/topo/topo';
-import type { TopoRepository } from '#server/domain/topo/repository';
-import type { Database } from '#shared/types/database.types';
 import {
-  createYearPublished,
+  createInitialAmount,
+  createOccurredOn,
+  itemEventSchema,
+} from '#shared/api/rest/inventory';
+import { createRentalItemId } from '#shared/api/rest/rental';
+import {
   createAuthor,
+  createClimbingType,
   createCountry,
   createDetails,
-  createTopoId,
   createLanguage,
   createPlaceInLibrary,
   createTag,
   createTitle,
-  createClimbingType,
+  createTopoId,
+  createYearPublished,
 } from '#shared/api/rest/topo';
-import {
-  createOccurredOn,
-  createInitialAmount,
-  itemEventSchema,
-} from '#shared/api/rest/inventory';
-import { createRentalItemId } from '#shared/api/rest/rental';
+import type { Database } from '#shared/types/database.types';
 
 export class SupabaseTopoRepository implements TopoRepository {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}

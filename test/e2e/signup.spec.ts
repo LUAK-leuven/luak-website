@@ -1,11 +1,12 @@
-import { TestUser } from '#test/TestUser';
-import { login, navigateTo, test } from '#test/e2e/fixtures';
 import { expect } from '@playwright/test';
+import dayjs from 'dayjs';
+
+import { findBy } from '#shared/utils/utils';
+import { login, navigateTo, test } from '#test/e2e/fixtures';
+import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
 import { SignupPage } from '#test/e2e/pages/signup.page';
 import { testServiceBuilder } from '#test/testServices';
-import dayjs from 'dayjs';
-import { findBy } from '#shared/utils/utils';
-import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
+import { TestUser } from '#test/TestUser';
 
 test('Can sign up a new user', async ({ page, luakPage }) => {
   const signupPage = await SignupPage.navigate(page);

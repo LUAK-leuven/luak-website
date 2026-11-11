@@ -1,9 +1,10 @@
 import { expect } from '@playwright/test';
-import { LoginPage } from '#test/e2e/pages/login.page';
+
 import { generatedUserTest, login, navigateTo, test } from '#test/e2e/fixtures';
-import { testUsers } from '#test/TestUser';
+import { LoginPage } from '#test/e2e/pages/login.page';
 import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
 import { ProfileSettingsPage } from '#test/e2e/pages/profile/settings.page';
+import { testUsers } from '#test/TestUser';
 
 generatedUserTest(
   'Login & logout — happy path',

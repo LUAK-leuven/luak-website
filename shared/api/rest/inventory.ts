@@ -1,11 +1,12 @@
-import { rentalIdSchema, type RentalId } from '#shared/api/rest/rental';
 import {
-  object as zodObject,
-  literal,
-  number as zodNumber,
   discriminatedUnion,
   type infer as ZodInfer,
+  literal,
+  number as zodNumber,
+  object as zodObject,
 } from 'zod';
+
+import { type RentalId, rentalIdSchema } from '#shared/api/rest/rental';
 import {
   amountSchema,
   createDateTime,

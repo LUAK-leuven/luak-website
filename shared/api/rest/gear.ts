@@ -1,12 +1,11 @@
 import {
-  string as zodString,
-  number as zodNumber,
   type infer as ZodInfer,
   literal as zodLiteral,
+  number as zodNumber,
+  string as zodString,
   union as zodUnion,
 } from 'zod';
 
-import { dateSchema } from '#shared/types/common';
 import type {
   AvailableAmount,
   InitialAmount,
@@ -15,12 +14,13 @@ import type {
 } from '#shared/api/rest/inventory';
 import {
   type DepositFee,
-  type RentalId,
   type OutstandingAmount,
+  type RentalId,
+  rentalItemIdSchema,
   type RentalMemberName,
   type TotalAmount as RentalItemTotalAmount,
-  rentalItemIdSchema,
 } from '#shared/api/rest/rental';
+import { dateSchema } from '#shared/types/common';
 import { entityIdSchema } from '#shared/types/ddd';
 
 declare const _gearItemIdBrand: unique symbol;

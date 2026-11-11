@@ -1,7 +1,7 @@
 <script setup lang="ts">
+  import ProfileCard from '~/components/profile/overview/Card.vue';
   import type { Membership } from '~/model/Membership';
   import { formatMembershipYear } from '~/utils/membershipYear';
-  import ProfileCard from '~/components/profile/overview/Card.vue';
 
   defineProps<{
     membership: Membership;

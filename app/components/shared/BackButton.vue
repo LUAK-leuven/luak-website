@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import type { RoutesNamedLocations } from '@typed-router';
+
   import Button from '~/components/shared/Button.vue';
 
   defineProps<{ to: RoutesNamedLocations | undefined }>();

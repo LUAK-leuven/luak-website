@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+
 import { aRentalItem, aRentalSummary } from '#test/builders/rental';
 
 test.describe('Rental status', () => {

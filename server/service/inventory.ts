@@ -1,7 +1,8 @@
 import dayjs from 'dayjs';
-import { groupBy, sum, sumOf } from '#shared/utils/utils';
+
 import type { InventoryRepository } from '#server/domain/inventory/repository';
 import type { InventoryService } from '#server/domain/inventory/service';
+import type { RentalRepository } from '#server/domain/rental/repository';
 import {
   createRetirementDate,
   type GearInventoryDetails,
@@ -12,9 +13,9 @@ import {
   type PurchaseDate,
   type RetirementDate,
 } from '#shared/api/rest/gear';
-import type { RentalRepository } from '#server/domain/rental/repository';
 import { createAvailableAmount } from '#shared/api/rest/inventory';
 import { createTotalAmount } from '#shared/api/rest/rental';
+import { groupBy, sum, sumOf } from '#shared/utils/utils';
 
 export class InventoryServiceImpl implements InventoryService {
   constructor(

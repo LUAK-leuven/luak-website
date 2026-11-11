@@ -1,7 +1,8 @@
 import * as yup from 'yup';
-import { entries } from '#shared/utils/utils';
-import type { EntityId } from '#shared/types/ddd';
+
 import type { TotalAmount } from '#shared/api/rest/rental';
+import type { EntityId } from '#shared/types/ddd';
+import { entries } from '#shared/utils/utils';
 
 export const createRentalSelectionSchema = <T extends EntityId>(
   selection: { id: T; name: string; totalAmount: TotalAmount }[],

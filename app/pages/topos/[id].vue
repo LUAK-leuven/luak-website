@@ -1,9 +1,9 @@
 <script setup lang="ts">
+  import { createTopoId, type TopoDetails } from '#shared/api/rest/topo';
   import ItemHistory from '~/components/board/inventory/ItemHistory.vue';
   import RentalsForItem from '~/components/board/inventory/RentalsForItem.vue';
   import BackButton from '~/components/shared/BackButton.vue';
   import TopoCondition from '~/components/topoLibrary/TopoCondition.vue';
-  import { createTopoId, type TopoDetails } from '#shared/api/rest/topo';
 
   definePageMeta({ middleware: 'active-member-guard' });
 

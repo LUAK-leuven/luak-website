@@ -1,20 +1,20 @@
 import { type infer as ZodInfer, string as zodString } from 'zod';
 
-import { entityIdSchema } from '#shared/types/ddd';
-import type {
-  RentalId,
-  OutstandingAmount,
-  RentalMemberName,
-  TotalAmount as RentalItemTotalAmount,
-  RentalItemId,
-} from '#shared/api/rest/rental';
 import type {
   AvailableAmount,
   InitialAmount,
   InventoryItemEvent,
   TotalAmount as InventoryItemTotalAmount,
 } from '#shared/api/rest/inventory';
+import type {
+  OutstandingAmount,
+  RentalId,
+  RentalItemId,
+  RentalMemberName,
+  TotalAmount as RentalItemTotalAmount,
+} from '#shared/api/rest/rental';
 import { yearSchema } from '#shared/types/common';
+import { entityIdSchema } from '#shared/types/ddd';
 
 declare const _topoIdBrand: unique symbol;
 export const topoIdSchema = entityIdSchema<typeof _topoIdBrand>();

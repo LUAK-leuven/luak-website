@@ -1,6 +1,7 @@
+import { expect, type Locator, type Page } from '@playwright/test';
+
 import { navigateTo } from '#test/e2e/fixtures';
 import { FullPageCard } from '#test/e2e/pages/FullPageCard';
-import { expect, type Locator, type Page } from '@playwright/test';
 import { RentalDetailsPage } from '#test/e2e/pages/rental/details.page';
 
 export class LostGearPage extends FullPageCard {

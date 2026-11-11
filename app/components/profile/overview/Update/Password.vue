@@ -1,9 +1,10 @@
 <script lang="ts" setup>
   import * as yup from 'yup';
-  import { yup_password } from '~/utils/yup';
-  import { isSessionGoneError } from '~/utils/isSessionGoneError';
+
   import TextField from '~/components/input/TextField.vue';
   import Button from '~/components/shared/Button.vue';
+  import { isSessionGoneError } from '~/utils/isSessionGoneError';
+  import { yup_password } from '~/utils/yup';
 
   const user = useSupabaseUser();
   const supabase = useSupabaseClient();

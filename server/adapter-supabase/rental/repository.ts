@@ -1,19 +1,20 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { createTopoId, type TopoId } from '#shared/api/rest/topo';
+
+import type {
+  RentalForItem,
+  RentedTopoAmount,
+} from '#server/domain/rental/rental';
+import type { RentalRepository } from '#server/domain/rental/repository';
+import { createGearItemId, type GearItemId } from '#shared/api/rest/gear';
 import {
-  createRentalId,
   createOutstandingAmount,
+  createRentalId,
+  createRentalItemId,
   createRentalMemberName,
   type RentalItemId,
-  createRentalItemId,
 } from '#shared/api/rest/rental';
+import { createTopoId, type TopoId } from '#shared/api/rest/topo';
 import type { Database } from '#shared/types/database.types';
-import type { RentalRepository } from '#server/domain/rental/repository';
-import type {
-  RentedTopoAmount,
-  RentalForItem,
-} from '#server/domain/rental/rental';
-import { createGearItemId, type GearItemId } from '#shared/api/rest/gear';
 import { objectFrom, single } from '#shared/utils/utils';
 
 export class SupabaseRentalRepository implements RentalRepository {

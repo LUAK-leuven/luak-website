@@ -1,12 +1,13 @@
 import { expect, test } from 'vitest';
-import { aRentalInput } from '#test/builders/rental';
-import { createRentalItemId } from '#shared/api/rest/rental';
-import { testServiceBuilder } from '#test/testServices';
+
+import { SupabaseInventoryRepository } from '#server/adapter-supabase/inventory/repository';
 import { SupabaseRentalRepository } from '#server/adapter-supabase/rental/repository';
 import { SupabaseTopoRepository } from '#server/adapter-supabase/topo/repository';
-import { SupabaseInventoryRepository } from '#server/adapter-supabase/inventory/repository';
 import type { GearItemRecord } from '#server/domain/inventory/InventoryItem';
 import type { TopoSummary } from '#server/domain/topo/topo';
+import { createRentalItemId } from '#shared/api/rest/rental';
+import { aRentalInput } from '#test/builders/rental';
+import { testServiceBuilder } from '#test/testServices';
 
 const { supabase, userTestService, testDao } = testServiceBuilder();
 

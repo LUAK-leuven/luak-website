@@ -1,11 +1,12 @@
 import {
-  object as yupObject,
-  string as yupString,
   bool as yupBool,
   mixed as yupMixed,
+  object as yupObject,
+  string as yupString,
 } from 'yup';
-import type { RentalDetails } from '~/model/Rental';
+
 import type { RentalItemId } from '#shared/api/rest/rental';
+import type { RentalDetails } from '~/model/Rental';
 
 function rentedItemSchema(
   rentedItems: { id: RentalItemId; rentedAmount: number }[],

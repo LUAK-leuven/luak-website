@@ -3,14 +3,14 @@ import {
   createRentalId,
   createRentalItemId,
 } from '#shared/api/rest/rental';
-import { randomInt, randomOf, randomBool } from '#shared/utils/utils';
-import { RentalItem, RentalSummary } from '~/model/Rental';
-import { aRandomGearItemId, aRandomUserId } from '#test/builders/ids';
 import type {
+  PaymentMethod,
   SavedRental,
   UnsavedRental,
-  PaymentMethod,
 } from '#shared/types/rental';
+import { randomBool, randomInt, randomOf } from '#shared/utils/utils';
+import { aRandomGearItemId, aRandomUserId } from '#test/builders/ids';
+import { RentalItem, RentalSummary } from '~/model/Rental';
 
 export const aRandomRentalId = () => createRentalId(crypto.randomUUID());
 

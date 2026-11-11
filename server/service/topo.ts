@@ -1,20 +1,20 @@
-import type { TopoRepository } from '#server/domain/topo/repository';
-import type { InventoryRepository } from '#server/domain/inventory/repository';
 import { foldInventoryItemEvents } from '#server/domain/inventory/InventoryItem';
+import type { InventoryRepository } from '#server/domain/inventory/repository';
 import type { RentalRepository } from '#server/domain/rental/repository';
+import type { TopoRepository } from '#server/domain/topo/repository';
 import type { TopoService } from '#server/domain/topo/service';
-import { groupBy, sumOf } from '#shared/utils/utils';
 import type {
   TopoDetails,
+  TopoId,
   TopoLibraryItem,
   TopoListItem,
-  TopoId,
 } from '#server/domain/topo/topo';
 import {
   createAvailableAmount,
   type TotalAmount as InventoryItemTotalAmount,
 } from '#shared/api/rest/inventory';
 import type { TotalAmount as RentalItemTotalAmount } from '#shared/api/rest/rental';
+import { groupBy, sumOf } from '#shared/utils/utils';
 
 export class TopoServiceImpl implements TopoService {
   constructor(

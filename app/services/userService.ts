@@ -1,12 +1,13 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import dayjs from 'dayjs';
+
+import { createUserId, type UserId } from '#shared/api/rest/user';
 import { LuakUser } from '~/model/LuakUser';
 import {
   getCurrentMembershipYear,
   getMembershipStatus,
   Membership,
 } from '~/model/Membership';
-import { createUserId, type UserId } from '#shared/api/rest/user';
 
 export class UserService {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}

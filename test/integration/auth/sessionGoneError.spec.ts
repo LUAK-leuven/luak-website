@@ -1,5 +1,6 @@
-import { afterEach, expect, test } from 'vitest';
 import type { AuthError, Session, SupabaseClient } from '@supabase/supabase-js';
+import { afterEach, expect, test } from 'vitest';
+
 import type { Database } from '#shared/types/database.types';
 import {
   createSupabaseClientForTests,

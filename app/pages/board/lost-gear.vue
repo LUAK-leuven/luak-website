@@ -1,16 +1,17 @@
 <script setup lang="ts">
-  import FullPageCard from '~/components/FullPageCard.vue';
-  import WithLazyResource from '~/components/pages/WithLazyResource.vue';
-  import PaymentBadge from '~/components/board/rental/PaymentBadge.vue';
-  import TopoItem from '~/components/board/lost-gear/TopoItem.vue';
-  import GearItem from '~/components/board/lost-gear/GearItem.vue';
-  import BackButton from '~/components/shared/BackButton.vue';
-  import { rentalIdSchema, rentalItemIdSchema } from '#shared/api/rest/rental';
   import {
+    literal as zodLiteral,
     object as zodObject,
     union as zodUnion,
-    literal as zodLiteral,
   } from 'zod';
+
+  import { rentalIdSchema, rentalItemIdSchema } from '#shared/api/rest/rental';
+  import GearItem from '~/components/board/lost-gear/GearItem.vue';
+  import TopoItem from '~/components/board/lost-gear/TopoItem.vue';
+  import PaymentBadge from '~/components/board/rental/PaymentBadge.vue';
+  import FullPageCard from '~/components/FullPageCard.vue';
+  import WithLazyResource from '~/components/pages/WithLazyResource.vue';
+  import BackButton from '~/components/shared/BackButton.vue';
 
   const route = useRoute('board-lost-gear');
   const rentalId = computed(() =>

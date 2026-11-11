@@ -1,4 +1,9 @@
 import type {
+  InitialAmount,
+  InventoryItemEvent,
+} from '#shared/api/rest/inventory';
+import type { RentalItemId } from '#shared/api/rest/rental';
+import type {
   Author,
   ClimbingType,
   Country,
@@ -14,11 +19,6 @@ import type {
   TopoListItem as TopoListItemDto,
   YearPublished,
 } from '#shared/api/rest/topo';
-import type {
-  InitialAmount,
-  InventoryItemEvent,
-} from '#shared/api/rest/inventory';
-import type { RentalItemId } from '#shared/api/rest/rental';
 
 export type { TopoCondition } from '#shared/api/rest/topo';
 export type { TopoId } from '#shared/api/rest/topo';

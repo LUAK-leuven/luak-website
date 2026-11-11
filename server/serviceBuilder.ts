@@ -1,16 +1,17 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
+
 import { SupabaseInventoryRepository } from '#server/adapter-supabase/inventory/repository';
-import type { InventoryRepository } from '#server/domain/inventory/repository';
-import { SupabaseTopoRepository } from '#server/adapter-supabase/topo/repository';
-import { TopoServiceImpl } from '#server/service/topo';
-import type { TopoService } from '#server/domain/topo/service';
 import { SupabaseRentalRepository } from '#server/adapter-supabase/rental/repository';
-import type { RentalRepository } from '#server/domain/rental/repository';
-import { InventoryServiceImpl } from '#server/service/inventory';
-import type { InventoryService } from '#server/domain/inventory/service';
-import type { TopoRepository } from '#server/domain/topo/repository';
+import { SupabaseTopoRepository } from '#server/adapter-supabase/topo/repository';
 import { SupabaseUserRepository } from '#server/adapter-supabase/user/repository';
+import type { InventoryRepository } from '#server/domain/inventory/repository';
+import type { InventoryService } from '#server/domain/inventory/service';
+import type { RentalRepository } from '#server/domain/rental/repository';
+import type { TopoRepository } from '#server/domain/topo/repository';
+import type { TopoService } from '#server/domain/topo/service';
 import type { UserRepository } from '#server/domain/user/repository';
+import { InventoryServiceImpl } from '#server/service/inventory';
+import { TopoServiceImpl } from '#server/service/topo';
 import type { Database } from '#shared/types/database.types';
 
 export const serviceBuilder = (supabase: SupabaseClient<Database>) => {

@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+
 import { createGearItemId } from '#shared/api/rest/gear';
 import { createTotalAmount } from '#shared/api/rest/rental';
 import { createRentalSelectionSchema } from '~/composables/board/rental/selectionSchema';

@@ -1,6 +1,7 @@
-import { string as zodString, type infer as ZodInfer } from 'zod';
-import { entityIdSchema } from '#shared/types/ddd';
+import { type infer as ZodInfer, string as zodString } from 'zod';
+
 import { amountSchema } from '#shared/types/common';
+import { entityIdSchema } from '#shared/types/ddd';
 
 declare const _depositFeeBrand: unique symbol;
 const depositFeeSchema = amountSchema.brand<typeof _depositFeeBrand>();

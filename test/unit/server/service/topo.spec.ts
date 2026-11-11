@@ -1,18 +1,7 @@
 import { expect, test } from 'vitest';
+
 import type { TopoLibraryRecord } from '#server/domain/topo/topo';
 import { TopoServiceImpl } from '#server/service/topo';
-import { createPlaceInLibrary } from '#shared/api/rest/topo';
-import {
-  aRandomTopoId,
-  aTopoLibraryRecord,
-  aTopoRecord,
-  aTopoSummary,
-} from '#test/builders/topo';
-import {
-  topoRepositoryMock,
-  inventoryRepositoryMock,
-  rentalRepositoryMock,
-} from '#test/mocks';
 import {
   createInitialAmount,
   createItemArchivedAmount,
@@ -21,6 +10,18 @@ import {
   type InventoryItemEvent,
 } from '#shared/api/rest/inventory';
 import { createOutstandingAmount } from '#shared/api/rest/rental';
+import { createPlaceInLibrary } from '#shared/api/rest/topo';
+import {
+  aRandomTopoId,
+  aTopoLibraryRecord,
+  aTopoRecord,
+  aTopoSummary,
+} from '#test/builders/topo';
+import {
+  inventoryRepositoryMock,
+  rentalRepositoryMock,
+  topoRepositoryMock,
+} from '#test/mocks';
 
 test.describe('TopoService', () => {
   test('maps topo details and folds inventory events', async () => {

@@ -1,8 +1,8 @@
 <script setup lang="ts">
+  import { createAvailableAmount } from '#shared/api/rest/inventory';
+  import { createRentalId } from '#shared/api/rest/rental';
   import BackButton from '~/components/shared/BackButton.vue';
   import { useFetchGearAndTopos } from '~/composables/board/rental/useFetchGearAndTopos';
-  import { createRentalId } from '#shared/api/rest/rental';
-  import { createAvailableAmount } from '#shared/api/rest/inventory';
 
   const { show: showPopup } = useToast();
   const rentalId = createRentalId(useRoute('board-rentals-id-edit').params.id);

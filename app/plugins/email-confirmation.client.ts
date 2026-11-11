@@ -1,6 +1,6 @@
 import {
-  emailConfirmationCookieName,
   type EmailConfirmationCookie,
+  emailConfirmationCookieName,
 } from '#shared/api/cookies/email-confirmation';
 
 export default defineNuxtPlugin(() => {

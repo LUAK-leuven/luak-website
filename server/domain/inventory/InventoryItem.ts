@@ -1,15 +1,15 @@
-import { topoIdSchema } from '#shared/api/rest/topo';
+import { type infer as ZodInfer, union as zodUnion } from 'zod';
+
 import {
+  type Details,
   type GearInventoryId,
+  gearInventoryIdSchema,
   type GearItemId,
   type GearName,
-  type Details,
+  type LifeSpanInYears,
   type ProductionDate,
   type PurchaseDate,
-  gearInventoryIdSchema,
-  type LifeSpanInYears,
 } from '#shared/api/rest/gear';
-import type { DepositFee } from '#shared/api/rest/rental';
 import {
   createTotalAmount,
   type InitialAmount,
@@ -17,8 +17,8 @@ import {
   type ItemEvent,
   type TotalAmount,
 } from '#shared/api/rest/inventory';
-
-import { type infer as ZodInfer, union as zodUnion } from 'zod';
+import type { DepositFee } from '#shared/api/rest/rental';
+import { topoIdSchema } from '#shared/api/rest/topo';
 
 declare const _inventoryItemIdBrand: unique symbol;
 const inventoryItemIdSchema = zodUnion([topoIdSchema, gearInventoryIdSchema]);

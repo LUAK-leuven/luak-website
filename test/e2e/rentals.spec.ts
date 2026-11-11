@@ -1,16 +1,17 @@
 import { expect } from '@playwright/test';
-import { RentalFormPage } from '#test/e2e/pages/rental/form.page';
+import dayjs from 'dayjs';
+
+import { sleep, uuidRegex } from '#shared/utils/utils';
 import {
   authStateFile,
   cleanDatabase,
   navigateTo,
   test,
 } from '#test/e2e/fixtures';
-import dayjs from 'dayjs';
 import { RentalDetailsPage } from '#test/e2e/pages/rental/details.page';
-import { RentalsOverviewPage } from '#test/e2e/pages/rentals-overview.page';
-import { uuidRegex, sleep } from '#shared/utils/utils';
+import { RentalFormPage } from '#test/e2e/pages/rental/form.page';
 import { RentalReturnPage } from '#test/e2e/pages/rental/return.page';
+import { RentalsOverviewPage } from '#test/e2e/pages/rentals-overview.page';
 import { testUsers } from '#test/TestUser';
 
 test.use({ storageState: authStateFile('boardMember') });

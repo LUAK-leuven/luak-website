@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+
 import { mapRental } from '#server/adapter-supabase/rental/repository';
 import type { RentalMemberName } from '#shared/api/rest/rental';
 

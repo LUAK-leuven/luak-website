@@ -1,11 +1,11 @@
 <script lang="ts" setup>
+  import BuyMembershipCard from '~/components/profile/overview/membership/BuyMembership/Card.vue';
+  import RenewMembershipCard from '~/components/profile/overview/membership/RenewMembershipCard.vue';
+  import ValidMembershipCard from '~/components/profile/overview/membership/ValidMembershipCard.vue';
   import {
     getCurrentMembershipYear,
     type Membership,
   } from '~/model/Membership';
-  import BuyMembershipCard from '~/components/profile/overview/membership/BuyMembership/Card.vue';
-  import ValidMembershipCard from '~/components/profile/overview/membership/ValidMembershipCard.vue';
-  import RenewMembershipCard from '~/components/profile/overview/membership/RenewMembershipCard.vue';
 
   defineProps<{
     membership: Membership | undefined;

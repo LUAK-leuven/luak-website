@@ -1,9 +1,9 @@
 <script setup lang="ts">
-  import TextField from '~/components/input/TextField.vue';
+  import type { RentalItemId } from '#shared/api/rest/rental';
   import RentalItem from '~/components/board/rental/return/RentalItem.vue';
+  import TextField from '~/components/input/TextField.vue';
   import { useRentalReturnForm } from '~/composables/board/rental/useRentalReturnForm';
   import type { RentalDetails } from '~/model/Rental';
-  import type { RentalItemId } from '#shared/api/rest/rental';
 
   const props = defineProps<{
     rental: RentalDetails;

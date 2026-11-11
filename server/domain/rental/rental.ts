@@ -1,10 +1,10 @@
-import type { TopoId } from '#shared/api/rest/topo';
 import type {
-  RentalId,
   OutstandingAmount,
-  RentalMemberName,
+  RentalId,
   RentalItemId,
+  RentalMemberName,
 } from '#shared/api/rest/rental';
+import type { TopoId } from '#shared/api/rest/topo';
 
 export type RentedTopoAmount = {
   topoId: TopoId;

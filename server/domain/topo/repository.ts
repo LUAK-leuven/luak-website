@@ -1,9 +1,9 @@
 import type {
+  TopoId,
   TopoInventoryItemEvent,
   TopoLibraryRecord,
   TopoRecord,
   TopoSummary,
-  TopoId,
 } from '#server/domain/topo/topo';
 
 export interface TopoRepository {
