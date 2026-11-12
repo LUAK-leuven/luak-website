@@ -16,7 +16,13 @@ alter table "public"."RentalItems" enable row level security;
 -- Migrate Topos to RentalItems
 insert into "public"."RentalItems" (name, deposit_fee, item_type, tmp_ref)
 select format('%s (%s)', t.title, t.year_published), 500, 'topo', t.id
-from "public"."Topos" t;
+from "public"."Topos" t
+where t.year_published is not null;
+
+insert into "public"."RentalItems" (name, deposit_fee, item_type, tmp_ref)
+select t.title, 500, 'topo', t.id
+from "public"."Topos" t
+where t.year_published is null;
 
 -- Migrate GearItems to RentalItems
 insert into "public"."RentalItems" (id, name, deposit_fee, item_type, tmp_ref)

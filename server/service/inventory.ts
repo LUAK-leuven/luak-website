@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 
 import type { InventoryRepository } from '#server/domain/inventory/repository';
 import type { InventoryService } from '#server/domain/inventory/service';
+import type { RentalItemRepository } from '#server/domain/rental/rentalItem';
 import type { RentalRepository } from '#server/domain/rental/repository';
 import {
   createRetirementDate,
@@ -21,6 +22,7 @@ export class InventoryServiceImpl implements InventoryService {
   constructor(
     private readonly inventoryRepository: InventoryRepository,
     private readonly rentalRepository: RentalRepository,
+    private readonly rentalItemRepository: RentalItemRepository,
   ) {}
 
   async getInventorySummary(): Promise<GearInventorySummary[]> {
@@ -28,7 +30,7 @@ export class InventoryServiceImpl implements InventoryService {
       await this.inventoryRepository.getInventorySummary(),
       (item) => item.gearItemId,
     );
-    const gearItems = await this.inventoryRepository.getAllGearItems();
+    const gearItems = await this.rentalItemRepository.getAllRentalGearItems();
     const rented = await this.rentalRepository.getRentedGearAmounts();
 
     return gearItems.map((gearItem) => {

@@ -20,6 +20,7 @@ import type { AvailableAmount } from '#shared/api/rest/rental/availability';
 import {
   type OutstandingAmount,
   rentalItemIdSchema,
+  type RentalItemName,
   type TotalAmount as RentalItemTotalAmount,
 } from '#shared/api/rest/rental/rentalItem';
 import { dateSchema } from '#shared/types/common';
@@ -41,7 +42,7 @@ export const createGearInventoryId = (value: string) =>
 
 export type GearInventorySummary = {
   id: GearItemId;
-  name: GearName;
+  name: RentalItemName;
   totalAmount: RentalItemTotalAmount;
   availableAmount: AvailableAmount;
   earliestRetirementDate: RetirementDate;

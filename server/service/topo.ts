@@ -7,12 +7,8 @@ import type {
   TopoDetails,
   TopoId,
   TopoLibraryItem,
-  TopoListItem,
 } from '#server/domain/topo/topo';
-import type { TotalAmount as InventoryItemTotalAmount } from '#shared/api/rest/inventory';
-import { createAvailableAmount } from '#shared/api/rest/rental/availability';
-import type { TotalAmount as RentalItemTotalAmount } from '#shared/api/rest/rental/rentalItem';
-import { groupBy, sumOf } from '#shared/utils/utils';
+import { groupBy } from '#shared/utils/utils';
 
 export class TopoServiceImpl implements TopoService {
   constructor(
@@ -76,39 +72,5 @@ export class TopoServiceImpl implements TopoService {
         ),
       }))
       .filter((topo) => includeOutOfStock || topo.amount > 0);
-  };
-
-  readonly getTopos = async (): Promise<TopoListItem[]> => {
-    const topos = await this.topoRepository.getTopos();
-    const events = await this.topoRepository.getAllTopoInventoryItemEvents();
-    const groupedTopoEvents = groupBy(events, (e) => e.topoId);
-    const rentedTopoAmounts =
-      await this.rentalRepository.getRentedTopoAmounts();
-    const groupedOutstandingAmounts = groupBy(
-      rentedTopoAmounts,
-      (x) => x.topoId,
-    );
-
-    return topos
-      .map((topo) => {
-        const totalAmount_ = foldInventoryItemEvents(
-          topo.initialAmount,
-          groupedTopoEvents[topo.id] ?? [],
-        );
-        const rentedAmount = sumOf(
-          groupedOutstandingAmounts[topo.id] ?? [],
-          'rentedAmount',
-        );
-        return {
-          id: topo.rentalItemId,
-          title: topo.title,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-          totalAmount: totalAmount_ as InventoryItemTotalAmount &
-            RentalItemTotalAmount,
-          availableAmount: createAvailableAmount(totalAmount_ - rentedAmount),
-          yearPublished: topo.yearPublished,
-        };
-      })
-      .filter((topo) => topo.totalAmount > 0);
   };
 }

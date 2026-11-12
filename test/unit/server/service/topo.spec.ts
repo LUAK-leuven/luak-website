@@ -9,13 +9,11 @@ import {
   createOccurredOn,
   type InventoryItemEvent,
 } from '#shared/api/rest/inventory';
-import { createOutstandingAmount } from '#shared/api/rest/rental/rentalItem';
 import { createPlaceInLibrary } from '#shared/api/rest/topo';
 import {
   aRandomTopoId,
   aTopoLibraryRecord,
   aTopoRecord,
-  aTopoSummary,
 } from '#test/builders/topo';
 import {
   inventoryRepositoryMock,
@@ -95,28 +93,5 @@ test.describe('TopoService', () => {
     ).getTopoLibrary({ includeOutOfStock: false });
 
     expect(topos.map((topo) => topo.id)).toEqual([inStockTopoId]);
-  });
-
-  test('allows negative availability when more topos are rented than stocked', async () => {
-    const topo = aTopoSummary({ initialAmount: createInitialAmount(1) });
-    const topos = await new TopoServiceImpl(
-      topoRepositoryMock({
-        getTopos: () => Promise.resolve([topo]),
-        getAllTopoInventoryItemEvents: () => Promise.resolve([]),
-      }),
-      inventoryRepositoryMock(),
-      rentalRepositoryMock({
-        getRentedTopoAmounts: () =>
-          Promise.resolve([
-            {
-              topoId: topo.id,
-              rentalItemId: topo.rentalItemId,
-              rentedAmount: createOutstandingAmount(2),
-            },
-          ]),
-      }),
-    ).getTopos();
-
-    expect(topos[0]?.availableAmount).toBe(-1);
   });
 });

@@ -74,7 +74,7 @@ export class SupabaseInventoryRepository implements InventoryRepository {
   async getAllGearItems(): Promise<GearItemRecord[]> {
     const { data } = await this.supabaseClient
       .from('RentalItems')
-      .select('id, name, deposit_fee, Inventory(GearInventory(lifespan))')
+      .select('id, name, deposit_fee')
       .eq('item_type', 'gear')
       .order('name')
       .throwOnError();
@@ -84,7 +84,7 @@ export class SupabaseInventoryRepository implements InventoryRepository {
   async getGearItem(id: GearItemId): Promise<GearItemRecord> {
     const { data } = await this.supabaseClient
       .from('RentalItems')
-      .select('id, name, deposit_fee, Inventory(GearInventory(lifespan))')
+      .select('id, name, deposit_fee')
       .eq('id', id)
       .single()
       .throwOnError();
