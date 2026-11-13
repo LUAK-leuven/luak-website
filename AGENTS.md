@@ -13,6 +13,7 @@ The website is also used by the board to keep track of rented gear.
 ## Key Rules for AI Agents
 
 - Reply with concise answers. Never reply with more than 3000 characters.
+- Never ask the user something they cannot see. A `question` dialog hides text written in the same turn. So put a plan of under ~50 lines in your reply and end the turn without a `question` call. Write a larger plan to `.tmp/<name>.md` and name the path in the question.
 - Read [`docs/ai-agent-architecture.md`](docs/ai-agent-architecture.md) before changing data access or business logic.
 - Keep business logic and non-trivial Supabase access in Nitro; use direct frontend Supabase calls only for explicitly simple, business-rule-free interactions.
 - Shell command style:

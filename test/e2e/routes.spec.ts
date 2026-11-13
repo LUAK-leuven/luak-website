@@ -67,10 +67,27 @@ const accessGraph: {
     },
   },
   {
-    rule: 'non-existing pages',
-    paths: ['pages/profile/'],
+    rule: 'non-existing content pages',
+    paths: [
+      '/news/missing-news',
+      '/activities/missing-activity',
+      '/info/missing-info',
+      '/pages/missing-page',
+    ],
     users: {
       unauthenticated: 'page not found',
+      nonMember: 'skip',
+      unpaidMembership: 'skip',
+      paidLastYear: 'skip',
+      paidMembership: 'page not found',
+      boardMember: 'page not found',
+    },
+  },
+  {
+    rule: 'non-existing member content pages',
+    paths: ['/stories/missing-story'],
+    users: {
+      unauthenticated: 'redirect',
       nonMember: 'skip',
       unpaidMembership: 'skip',
       paidLastYear: 'skip',

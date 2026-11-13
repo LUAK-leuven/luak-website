@@ -24,6 +24,17 @@
     { "action": "grep", "resource": ".opencode/*", "effect": "deny" },
     { "action": "grep", "resource": "AGENTS.md", "effect": "deny" },
 
+    {
+      "action": "webfetch",
+      "resource": "https://nuxt.com/docs/4.x/*",
+      "effect": "allow"
+    },
+    {
+      "action": "webfetch",
+      "resource": "https://refactoring.guru/*",
+      "effect": "allow"
+    },
+
     { "action": "shell", "resource": "cat *", "effect": "deny" },
     { "action": "external_directory", "resource": "*", "effect": "deny" }
   ],

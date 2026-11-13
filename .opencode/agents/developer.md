@@ -12,6 +12,7 @@ permissions:
   - { action: shell, resource: "rg *", effect: allow }
   - { action: shell, resource: "printf *", effect: allow }
   - { action: shell, resource: "ls *", effect: allow }
+  - { action: shell, resource: "wc *", effect: allow }
 
   - { action: shell, resource: "mkdir* .tmp/debug/*", effect: allow }
   - { action: shell, resource: "cp *", effect: allow }
@@ -28,11 +29,15 @@ permissions:
   - { action: shell, resource: "yarn playwright *", effect: allow }
   - { action: shell, resource: "yarn eslint *", effect: allow }
   - { action: shell, resource: "yarn supabase status", effect: allow }
+  - { action: shell, resource: "yarn supabase --version", effect: allow }
+  - { action: shell, resource: "yarn sb:start", effect: allow }
+  - { action: shell, resource: "yarn install --frozen-lockfile", effect: allow }
 
   - { action: shell, resource: "git status *", effect: allow }
   - { action: shell, resource: "git diff *", effect: allow }
   - { action: shell, resource: "git log *", effect: allow }
   - { action: shell, resource: "git show *", effect: allow }
+  - { action: shell, resource: "git check-ignore *", effect: allow }
 
   - { action: edit, resource: "package.json", effect: ask }
   - { action: edit, resource: "yarn.lock", effect: ask }
@@ -72,6 +77,7 @@ A step is **one outcome**, not one tool call. Diagnosing, implementing and verif
 - **Verification** covers tests relevant to the change; skip e2e/app suites when no application code is touched. Failures not caused by your change (also failing without it) are a note in `DONE`, not `BLOCKED`.
 - Run project tools via `yarn <bin>`, never `npx`/`npm`.
 - Config files contain only config; implementation code goes in its own module.
+- Derive types from their source of truth (framework-generated types, schemas, config) instead of hand-writing them.
 - Keep code clean and maintainable.
 
 ## Return contract
