@@ -14,7 +14,6 @@ export class LostGearPage extends FullPageCard {
   readonly dateReturn: Locator;
 
   readonly topoTitle: Locator;
-  readonly year: Locator;
   readonly rentedAmount: Locator;
   readonly unreturnedAmount: Locator;
   readonly lostAmount: Locator;
@@ -35,7 +34,6 @@ export class LostGearPage extends FullPageCard {
     this.dateReturn = this.page.getByTestId('dateReturn');
 
     this.topoTitle = this.page.getByTestId('topo.title');
-    this.year = this.page.getByTestId('topo.year_published');
     this.rentedAmount = this.page.getByTestId('returnedAmount');
     this.rentedAmount = this.page.getByTestId('rentedAmount');
     this.unreturnedAmount = this.page.getByTestId('unreturnedAmount');
@@ -74,7 +72,6 @@ export class LostGearPage extends FullPageCard {
       | {
           topo: {
             title?: string;
-            year?: number;
             rentedAmount?: number;
             unreturnedAmount?: number;
             lostAmount?: number;
@@ -107,7 +104,6 @@ export class LostGearPage extends FullPageCard {
     if ('topo' in args) {
       await Promise.all([
         optionalExpect(this.topoTitle).toContainText(args.topo.title),
-        optionalExpect(this.year).toContainText(args.topo.year?.toFixed()),
         optionalExpect(this.rentedAmount).toContainText(
           args.topo.rentedAmount?.toFixed(),
         ),

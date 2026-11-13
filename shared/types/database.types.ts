@@ -39,6 +39,7 @@ export type Database = {
           created_at: string;
           user_id: string;
         };
+        ComputedFields: never;
         Insert: {
           created_at?: string;
           user_id: string;
@@ -62,6 +63,7 @@ export type Database = {
           id: string;
           name: string;
         };
+        ComputedFields: never;
         Insert: {
           id?: string;
           name: string;
@@ -78,6 +80,7 @@ export type Database = {
           composite_gear_item_id: string;
           gear_item_id: string;
         };
+        ComputedFields: never;
         Insert: {
           amount: number;
           composite_gear_item_id: string;
@@ -115,6 +118,7 @@ export type Database = {
           production_date: string | null;
           purchase_date: string | null;
         };
+        ComputedFields: never;
         Insert: {
           amount: number;
           created_at?: string;
@@ -149,6 +153,7 @@ export type Database = {
           id: string;
           rental_item_id: string | null;
         };
+        ComputedFields: never;
         Insert: {
           created_at?: string;
           id?: string;
@@ -171,19 +176,20 @@ export type Database = {
       };
       InventoryItemEvents: {
         Row: {
-          event: Json;
+          event: NonNullable<Json>;
           id: string;
           item_id: string;
           occured_on: string;
         };
+        ComputedFields: never;
         Insert: {
-          event: Json;
+          event: NonNullable<Json>;
           id?: string;
           item_id: string;
           occured_on?: string;
         };
         Update: {
-          event?: Json;
+          event?: NonNullable<Json>;
           id?: string;
           item_id?: string;
           occured_on?: string;
@@ -208,6 +214,7 @@ export type Database = {
           user_id: string;
           year: number;
         };
+        ComputedFields: never;
         Insert: {
           created_at?: string;
           id?: string;
@@ -244,6 +251,7 @@ export type Database = {
           id: string;
           membership_id: string;
         };
+        ComputedFields: never;
         Insert: {
           amount?: number | null;
           approved: boolean;
@@ -276,6 +284,7 @@ export type Database = {
           item_type: Database['public']['Enums']['rental_item_type'];
           name: string;
         };
+        ComputedFields: never;
         Insert: {
           created_at?: string;
           deposit_fee: number;
@@ -306,6 +315,7 @@ export type Database = {
           member_id: string | null;
           payment_method: Database['public']['Enums']['payment_method'];
         };
+        ComputedFields: never;
         Insert: {
           board_member_id?: string;
           comments?: string | null;
@@ -358,6 +368,7 @@ export type Database = {
           rented_amount: number;
           returned_amount: number;
         };
+        ComputedFields: never;
         Insert: {
           created_at?: string;
           lost_amount?: number;
@@ -406,6 +417,7 @@ export type Database = {
           types_of_climbing: string[];
           year_published: number | null;
         };
+        ComputedFields: never;
         Insert: {
           amount: number;
           authors: string[];
@@ -455,6 +467,7 @@ export type Database = {
           last_name: string;
           phone_number: string | null;
         };
+        ComputedFields: never;
         Insert: {
           created_at?: string;
           email: string;
@@ -509,17 +522,13 @@ export type Database = {
         };
         Returns: string;
       };
-      mark_gear_as_lost: {
+      mark_item_as_lost: {
         Args: {
-          p_gear_item_id: string;
           p_inventory_item_id: string;
           p_lost_amount: number;
           p_rental_id: string;
+          p_rental_item_id: string;
         };
-        Returns: undefined;
-      };
-      mark_topo_as_lost: {
-        Args: { p_lost_amount: number; p_rental_id: string; p_topo_id: string };
         Returns: undefined;
       };
       save_membership: {
@@ -571,6 +580,7 @@ export type Database = {
           type: Database['storage']['Enums']['buckettype'];
           updated_at: string | null;
         };
+        ComputedFields: never;
         Insert: {
           allowed_mime_types?: string[] | null;
           avif_autodetection?: boolean | null;
@@ -609,6 +619,7 @@ export type Database = {
           type: Database['storage']['Enums']['buckettype'];
           updated_at: string;
         };
+        ComputedFields: never;
         Insert: {
           created_at?: string;
           deleted_at?: string | null;
@@ -636,6 +647,7 @@ export type Database = {
           type: Database['storage']['Enums']['buckettype'];
           updated_at: string;
         };
+        ComputedFields: never;
         Insert: {
           created_at?: string;
           id: string;
@@ -656,16 +668,17 @@ export type Database = {
           catalog_id: string;
           created_at: string;
           id: string;
-          metadata: Json;
+          metadata: NonNullable<Json>;
           name: string;
           updated_at: string;
         };
+        ComputedFields: never;
         Insert: {
           bucket_name: string;
           catalog_id: string;
           created_at?: string;
           id?: string;
-          metadata?: Json;
+          metadata?: NonNullable<Json>;
           name: string;
           updated_at?: string;
         };
@@ -674,7 +687,7 @@ export type Database = {
           catalog_id?: string;
           created_at?: string;
           id?: string;
-          metadata?: Json;
+          metadata?: NonNullable<Json>;
           name?: string;
           updated_at?: string;
         };
@@ -702,6 +715,7 @@ export type Database = {
           shard_key: string | null;
           updated_at: string;
         };
+        ComputedFields: never;
         Insert: {
           bucket_name: string;
           catalog_id: string;
@@ -752,6 +766,7 @@ export type Database = {
           id: number;
           name: string;
         };
+        ComputedFields: never;
         Insert: {
           executed_at?: string | null;
           hash: string;
@@ -781,6 +796,7 @@ export type Database = {
           user_metadata: Json | null;
           version: string | null;
         };
+        ComputedFields: never;
         Insert: {
           bucket_id?: string | null;
           created_at?: string | null;
@@ -790,7 +806,7 @@ export type Database = {
           name?: string | null;
           owner?: string | null;
           owner_id?: string | null;
-          path_tokens?: string[] | null;
+          path_tokens?: never;
           updated_at?: string | null;
           user_metadata?: Json | null;
           version?: string | null;
@@ -804,7 +820,7 @@ export type Database = {
           name?: string | null;
           owner?: string | null;
           owner_id?: string | null;
-          path_tokens?: string[] | null;
+          path_tokens?: never;
           updated_at?: string | null;
           user_metadata?: Json | null;
           version?: string | null;
@@ -832,6 +848,7 @@ export type Database = {
           user_metadata: Json | null;
           version: string;
         };
+        ComputedFields: never;
         Insert: {
           bucket_id: string;
           created_at?: string;
@@ -879,6 +896,7 @@ export type Database = {
           upload_id: string;
           version: string;
         };
+        ComputedFields: never;
         Insert: {
           bucket_id: string;
           created_at?: string;
@@ -932,6 +950,7 @@ export type Database = {
           name: string;
           updated_at: string;
         };
+        ComputedFields: never;
         Insert: {
           bucket_id: string;
           created_at?: string;
@@ -989,7 +1008,7 @@ export type Database = {
         Returns: string;
       };
       get_size_by_bucket: {
-        Args: never;
+        Args: Record<PropertyKey, never>;
         Returns: {
           bucket_id: string;
           size: number;
@@ -1029,7 +1048,7 @@ export type Database = {
           updated_at: string;
         }[];
       };
-      operation: { Args: never; Returns: string };
+      operation: { Args: Record<PropertyKey, never>; Returns: string };
       search: {
         Args: {
           bucketname: string;

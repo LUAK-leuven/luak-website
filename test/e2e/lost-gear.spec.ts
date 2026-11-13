@@ -27,12 +27,12 @@ test.describe('lost gear form', () => {
 
     const rentalFormPage = await RentalFormPage.navigate(page);
 
+    const topoTitle = 'Topo Flone';
     const topoItem: RentalItem = {
       exactItemName: createRentalItemName('Topo Flone (2019)'),
       searchTerm: 'flone',
       itemType: RentalItemType.topo,
     };
-    const topoTitle = 'Topo Flone';
 
     // Create a rental
     await rentalFormPage.fillForm({
@@ -66,8 +66,7 @@ test.describe('lost gear form', () => {
         paymentMethod: 'cash',
       },
       topo: {
-        title: topoTitle,
-        year: 2019,
+        title: topoItem.exactItemName,
         rentedAmount: 2,
         unreturnedAmount: 1,
         lostAmount: 1,
@@ -116,7 +115,7 @@ test.describe('lost gear form', () => {
 
     await lostGearPage.expectToHave({
       topo: {
-        title: topoTitle,
+        title: topoItem.exactItemName,
         rentedAmount: 2,
         unreturnedAmount: 0,
         lostAmount: 1,

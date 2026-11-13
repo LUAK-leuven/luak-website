@@ -22,6 +22,7 @@
   }>();
 
   const { show } = useToast();
+  const gearService = useGearService();
 
   const { data, pending, error } = await useLazyFetch<GearInventoryDetails>(
     `/api/gear/inventory/${props.gearItem.id}`,
@@ -62,14 +63,13 @@
   const onSubmit = async () =>
     handleSubmit(
       async (formState) => {
-        const { error } = await useSupabaseClient().rpc('mark_gear_as_lost', {
-          p_gear_item_id: props.gearItem.id,
-          p_rental_id: props.rentalId,
-          p_inventory_item_id: formState.inventoryItem,
-          p_lost_amount: formState.lostAmount,
+        const { error } = await gearService.markAsLost({
+          rentalItemId: props.gearItem.id,
+          rentalId: props.rentalId,
+          inventoryItemId: formState.inventoryItem,
+          lostAmount: formState.lostAmount,
         });
         if (error) {
-          console.error(error.message);
           show('error', 'Server error: Failed to submit response.');
         } else {
           await navigateTo({

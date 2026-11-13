@@ -272,8 +272,11 @@ BEGIN
 END;$$
 ;
 
-create or replace function "public"."mark_gear_as_lost"(
-  p_gear_item_id uuid,
+drop function "public"."mark_gear_as_lost";
+drop function "public"."mark_topo_as_lost";
+
+create function "public"."mark_item_as_lost"(
+  p_rental_item_id uuid,
   p_rental_id uuid,
   p_inventory_item_id uuid,
   p_lost_amount numeric
@@ -292,34 +295,11 @@ begin
     )
   );
 
-  update "RentedGear"
+  update "RentedItems"
   set lost_amount = lost_amount + p_lost_amount
-  where gear_item_id = p_gear_item_id and rental_id = p_rental_id;
+  where rental_item_id = p_rental_item_id and rental_id = p_rental_id;
 end;$$;
 
-create or replace function public.mark_topo_as_lost(
-  p_topo_id uuid,
-  p_rental_id uuid,
-  p_lost_amount numeric
-)
-returns void
-language plpgsql
-as $$
-begin
-  insert into "InventoryItemEvents" (item_id, event)
-  values (
-    p_topo_id,
-    jsonb_build_object(
-      'eventName', 'ItemLostEvent',
-      'rentalId', p_rental_id,
-      'lostAmount', p_lost_amount
-    )
-  );
-
-  update "RentedTopos"
-  set lost_amount = lost_amount + p_lost_amount
-  where topo_id = p_topo_id and rental_id = p_rental_id;
-end;$$;
 
 -- #5: Some cleanup and new indexes on existing tables
 CREATE OR REPLACE FUNCTION fits_smallint(value NUMERIC)

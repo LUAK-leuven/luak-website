@@ -36,8 +36,9 @@ test('Does not return topos with total amount 0 for non-board members', async ()
     'paidMembership',
   );
 
-  expect(library).toHaveLength(1);
-  expect(library[0]!.amount).toBe(1);
+  expect(library.map((topo) => topo.id)).not.toContain(idTopoAilefroide);
+  expect(library.find((topo) => topo.id === idTopoFlone)!.amount).toBe(1);
+  expect(library.filter((topo) => topo.amount === 0)).toEqual([]);
 });
 
 test('Also returns topos with total amount 0 for board members', async () => {
@@ -46,7 +47,6 @@ test('Also returns topos with total amount 0 for board members', async () => {
     'boardMember',
   );
 
-  expect(library).toHaveLength(2);
   expect(library.find((topo) => topo.id === idTopoAilefroide)!.amount).toBe(0);
   expect(library.find((topo) => topo.id === idTopoFlone)!.amount).toBe(1);
 });

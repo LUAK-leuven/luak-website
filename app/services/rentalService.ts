@@ -324,7 +324,11 @@ type RentalItemDb = {
   rented_amount: number;
   returned_amount: number;
   lost_amount: number;
-  RentalItems: { id: string; name: string; item_type: 'gear' | 'topo' };
+  RentalItems: {
+    id: string;
+    name: string;
+    item_type: 'gear' | 'topo';
+  };
 };
 
 const extractTopoItems = (items: RentalItemDb[]): RentalItem[] =>
@@ -337,13 +341,8 @@ const extractGearItems = (items: RentalItemDb[]): RentalItem[] =>
     .filter((item) => item.RentalItems.item_type === 'gear')
     .map(gearItemFromDb);
 
-const topoItemFromDb = (topo: {
-  rented_amount: number;
-  returned_amount: number;
-  lost_amount: number;
-  RentalItems: { id: string; name: string };
-}) =>
-  new RentalItem({
+const topoItemFromDb = (topo: RentalItemDb) => {
+  return new RentalItem({
     id: createRentalItemId(topo.RentalItems.id),
     name: createRentalItemName(topo.RentalItems.name),
     rentedAmount: topo.rented_amount,
@@ -351,13 +350,9 @@ const topoItemFromDb = (topo: {
     lostAmount: topo.lost_amount,
     type: RentalItemType.topo,
   });
+};
 
-const gearItemFromDb = (gear: {
-  rented_amount: number;
-  returned_amount: number;
-  lost_amount: number;
-  RentalItems: { id: string; name: string };
-}) =>
+const gearItemFromDb = (gear: RentalItemDb) =>
   new RentalItem({
     id: createGearItemId(gear.RentalItems.id),
     name: createRentalItemName(gear.RentalItems.name),
