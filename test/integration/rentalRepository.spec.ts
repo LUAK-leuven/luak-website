@@ -1,20 +1,19 @@
 import { expect, test } from 'vitest';
 
-import { SupabaseInventoryRepository } from '#server/adapter-supabase/inventory/repository';
 import { SupabaseRentalRepository } from '#server/adapter-supabase/rental/repository';
-import { SupabaseTopoRepository } from '#server/adapter-supabase/topo/repository';
-import type { GearItemRecord } from '#server/domain/inventory/InventoryItem';
-import type { TopoSummary } from '#server/domain/topo/topo';
 import { createRentalItemId } from '#shared/api/rest/rental/rentalItem';
 import { aRentalInput } from '#test/builders/rental';
 import { testServiceBuilder } from '#test/testServices';
 
-const { supabase, userTestService, testDao } = testServiceBuilder();
+const { supabase, userTestService, testDao, rentalTestRepository } =
+  testServiceBuilder();
 
 test.describe('getRentedTopoAmounts', () => {
   test('returns outstanding amounts for topo rentals, excluding gear rentals', async () => {
-    const gearItem = await getSeededGearItem();
-    const topo = await getSeededTopo();
+    const [gearItem] =
+      await rentalTestRepository().getRandomSeededGearRentalItems();
+    const [topo] =
+      await rentalTestRepository().getRandomSeededTopoRentalItems();
 
     const gearRentalItemId = createRentalItemId(gearItem.id);
     const boardMemberId = await userTestService().getTestUserId('boardMember');
@@ -25,12 +24,12 @@ test.describe('getRentedTopoAmounts', () => {
         boardMemberId,
         memberId,
         gear: { [gearRentalItemId]: 5 },
-        topos: { [topo.rentalItemId]: 4 },
+        topos: { [topo.id]: 4 },
       }),
     );
     await testDao().setRentedItemAmounts({
       rentalId,
-      rentalItemId: topo.rentalItemId,
+      rentalItemId: topo.id,
       returnedAmount: 1,
       lostAmount: 1,
     });
@@ -40,25 +39,10 @@ test.describe('getRentedTopoAmounts', () => {
     ).getRentedTopoAmounts();
 
     expect(
-      result.find((amount) => amount.rentalItemId === topo.rentalItemId)
-        ?.rentedAmount,
+      result.find((amount) => amount.rentalItemId === topo.id)?.rentedAmount,
     ).toBe(2);
     expect(
       result.some((amount) => amount.rentalItemId === gearRentalItemId),
     ).toBe(false);
   });
 });
-
-const getSeededTopo = async (): Promise<TopoSummary> => {
-  const [topo] = await new SupabaseTopoRepository(supabase()).getTopos();
-  if (!topo) throw new Error('Seeded topo item not found');
-  return topo;
-};
-
-const getSeededGearItem = async (): Promise<GearItemRecord> => {
-  const [gearItem] = await new SupabaseInventoryRepository(
-    supabase(),
-  ).getAllGearItems();
-  if (!gearItem) throw new Error('Seeded gear item not found');
-  return gearItem;
-};

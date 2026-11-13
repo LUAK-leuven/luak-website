@@ -10,8 +10,11 @@ permissions:
   - { action: shell, resource: "git status *", effect: allow }
   - { action: shell, resource: "git diff *", effect: allow }
   - { action: shell, resource: "git show *", effect: allow }
+  - { action: shell, resource: "git ls-files *", effect: allow }
+
   - { action: shell, resource: "grep *", effect: allow }
   - { action: shell, resource: "head *", effect: allow }
+  
   - { action: shell, resource: "yarn lint *", effect: allow }
   - { action: shell, resource: "yarn test*", effect: allow }
   - { action: shell, resource: "yarn typecheck *", effect: allow }

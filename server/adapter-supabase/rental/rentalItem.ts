@@ -5,6 +5,7 @@ import type {
   RentalItem,
   RentalItemRepository,
 } from '#server/domain/rental/rentalItem';
+import type { GearItemId } from '#shared/api/rest/gear';
 import { createGearItemId } from '#shared/api/rest/gear';
 import {
   createInitialAmount,
@@ -15,17 +16,19 @@ import {
   createAvailableAmount,
   type RentalItemWithAvailability,
 } from '#shared/api/rest/rental/availability';
+import type { RentalItemId } from '#shared/api/rest/rental/rentalItem';
 import {
   createRentalItemId,
   createRentalItemName,
   createTotalAmount,
 } from '#shared/api/rest/rental/rentalItem';
 import type { Database, Json } from '#shared/types/database.types';
+import { sum } from '#shared/utils/utils';
 
 export class SupabaseRentalItemRepository implements RentalItemRepository {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
 
-  async getAllRentalGearItems(): Promise<RentalItem[]> {
+  async getAllRentalGearItems(): Promise<RentalItem<GearItemId>[]> {
     const { data } = await this.supabaseClient
       .from('RentalItems')
       .select('id, name, deposit_fee')
@@ -33,7 +36,7 @@ export class SupabaseRentalItemRepository implements RentalItemRepository {
       .order('name')
       .throwOnError();
 
-    return data.map(mapRentalItem);
+    return data.map(mapRentalItem<GearItemId>);
   }
 
   async getAllRentalTopoItems(): Promise<RentalItemWithAvailability[]> {
@@ -56,12 +59,13 @@ export class SupabaseRentalItemRepository implements RentalItemRepository {
   }
 }
 
-const mapRentalItem = (item: {
+const mapRentalItem = <T extends RentalItemId>(item: {
   id: string;
   name: string;
   deposit_fee: number;
-}): RentalItem => ({
-  id: createGearItemId(item.id),
+}): RentalItem<T> => ({
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+  id: createGearItemId(item.id) as unknown as T,
   name: createRentalItemName(item.name),
   depositFee: createDepositFee(item.deposit_fee),
 });

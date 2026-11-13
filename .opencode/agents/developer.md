@@ -27,6 +27,7 @@ permissions:
   - { action: shell, resource: "yarn vitest *", effect: allow }
   - { action: shell, resource: "yarn playwright *", effect: allow }
   - { action: shell, resource: "yarn eslint *", effect: allow }
+  - { action: shell, resource: "yarn supabase status", effect: allow }
 
   - { action: shell, resource: "git status *", effect: allow }
   - { action: shell, resource: "git diff *", effect: allow }

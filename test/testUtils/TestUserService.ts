@@ -1,7 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import dayjs from 'dayjs';
 
-import { createUserId } from '#shared/api/rest/user';
+import { createUserId, type UserId } from '#shared/api/rest/user';
 import type { Database } from '#shared/types/database.types';
 import {
   type TestUser,
@@ -174,15 +174,28 @@ export class TestUserService {
     }
   };
 
-  readonly getTestUserId = async (testUser: TestUserKey) => {
-    const { data } = await this.supabase
+  readonly getTestUserId = async (testUser: TestUserKey): Promise<UserId> => {
+    const { data, error } = await this.supabase
       .from('Users')
       .select('id')
       .eq('email', testUsers[testUser].email)
-      .single()
-      .throwOnError();
-
-    return createUserId(data.id);
+      .single();
+    if (error === null) return createUserId(data.id);
+    if (error.code === 'PGRST116') {
+      await this.createTestUser(testUser);
+      await this.createMemberships(testUser);
+      const { data } = await this.supabase
+        .from('Users')
+        .select('id')
+        .eq('email', testUsers[testUser].email)
+        .single()
+        .throwOnError();
+      return createUserId(data.id);
+    }
+    throw new Error(
+      `Error fetching user ID for ${testUsers[testUser].email}:`,
+      { cause: error },
+    );
   };
 
   private readonly createTestUser = async (testUser: TestUserKey) => {

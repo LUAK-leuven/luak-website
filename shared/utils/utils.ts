@@ -97,9 +97,35 @@ export const entries = <K extends PropertyKey, V>(
 
 export const uuidRegex = `[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}`;
 
+const randomIndexOf = (arr: readonly unknown[]): number =>
+  Math.floor(Math.random() * arr.length);
+
 export const randomOf = <T>(arr: readonly T[]): T =>
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  arr[Math.floor(Math.random() * arr.length)]!;
+  arr[randomIndexOf(arr)]!;
+
+export type FixedArray<
+  T,
+  N extends number,
+  R extends readonly T[] = [],
+> = R['length'] extends N ? R : FixedArray<T, N, readonly [...R, T]>;
+
+export const randomSelection = <T>(arr: readonly T[], amount: number): T[] => {
+  if (!Number.isInteger(amount))
+    throw Error(`Amount must be an integer, got ${amount.toPrecision()}`);
+  if (amount < 0 || amount > arr.length)
+    throw Error(
+      `Invalid amount: ${amount.toFixed()} for array of length ${arr.length.toFixed()}`,
+    );
+
+  if (amount === 0) return [];
+  const i = randomIndexOf(arr);
+  return [
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    arr[i]!,
+    ...randomSelection(arr.slice(0, i).concat(arr.slice(i + 1)), amount - 1),
+  ];
+};
 
 export const randomInt = (min: number, max: number): number => {
   return Math.floor(Math.random() * (max - min + 1)) + min;

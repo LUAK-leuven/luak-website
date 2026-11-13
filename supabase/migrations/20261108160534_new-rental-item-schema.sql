@@ -214,7 +214,7 @@ BEGIN
 
     update "RentedItems"
     set returned_amount = item_amount
-    where item_id = item_id and rental_id = p_rental_id;
+    where rental_item_id = item_id and rental_id = p_rental_id;
 
     if not found then
       raise exception 'RentalItem % does not belong to Rental % or does not exist',
