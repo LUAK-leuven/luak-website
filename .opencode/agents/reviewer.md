@@ -15,7 +15,7 @@ permissions:
   - { action: shell, resource: "grep *", effect: allow }
   - { action: shell, resource: "head *", effect: allow }
   
-  - { action: shell, resource: "yarn lint *", effect: allow }
+  - { action: shell, resource: "yarn lint*", effect: allow }
   - { action: shell, resource: "yarn test*", effect: allow }
   - { action: shell, resource: "yarn typecheck *", effect: allow }
 ---

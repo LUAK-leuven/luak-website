@@ -82,7 +82,9 @@ export class UserService {
   readonly getUserInfo = async (userId: UserId) => {
     const { data } = await this.supabaseClient
       .from('Users')
-      .select('id, first_name, last_name, email, phone_number')
+      .select(
+        'id, first_name, last_name, email, phone_number, has_newsletter, has_whatsapp',
+      )
       .eq('id', userId)
       .single()
       .throwOnError();
@@ -94,6 +96,8 @@ export class UserService {
       fullName: data.first_name + ' ' + data.last_name,
       email: data.email,
       phoneNumber: data.phone_number ?? undefined,
+      newsletter: data.has_newsletter,
+      whatsapp: data.has_whatsapp,
     };
   };
 

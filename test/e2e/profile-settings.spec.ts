@@ -139,10 +139,7 @@ generatedUserTest(
 
     await profilePage.logout();
 
-    await luakPage.login(
-      // eslint-disable-next-line @typescript-eslint/no-misused-spread
-      new TestUser({ ...user, password: 'my new password :)' }),
-    );
+    await luakPage.login(user.copy({ password: 'my new password :)' }));
   },
 );
 

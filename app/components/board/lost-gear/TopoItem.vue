@@ -17,16 +17,20 @@
   const gearService = useGearService();
   const supabase = useSupabaseClient();
 
-  const { data: topoId, error: topoIdError } = await useAsyncData(async () => {
-    const { data } = await supabase
-      .from('Inventory')
-      .select('Topos(id)')
-      .eq('rental_item_id', props.topo.id)
-      .single()
-      .throwOnError();
-    if (data.Topos === null) throw new Error('Failed to get topo ID');
-    return createTopoId(data.Topos.id);
-  });
+  const topoId = await useRequiredAsyncData(
+    'lost-gear-getTopoId',
+    async () => {
+      const { data } = await supabase
+        .from('Inventory')
+        .select('Topos(id)')
+        .eq('rental_item_id', props.topo.id)
+        .single()
+        .throwOnError();
+      if (data.Topos === null) throw new Error('Failed to get topo ID');
+      return createTopoId(data.Topos.id);
+    },
+    { errorMessage: () => 'Failed to get topo ID' },
+  );
 
   const formSchema = yupObject({
     lostAmount: yupNumber().required().min(1).max(props.topo.unreturnedAmount),
@@ -41,11 +45,6 @@
 
   const onSubmit = async () =>
     await handleSubmit(async (formState) => {
-      if (topoId.value === undefined) {
-        if (topoIdError.value) console.error(topoIdError.value.message);
-        show('error', 'Failed to get topo ID');
-        return;
-      }
       const { error } = await gearService.markAsLost({
         rentalItemId: props.topo.id,
         rentalId: props.rentalId,

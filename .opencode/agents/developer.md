@@ -13,6 +13,8 @@ permissions:
   - { action: shell, resource: "printf *", effect: allow }
   - { action: shell, resource: "ls *", effect: allow }
   - { action: shell, resource: "wc *", effect: allow }
+  - { action: shell, resource: "find *", effect: allow }
+  - { action: shell, resource: "echo *", effect: allow }
 
   - { action: shell, resource: "mkdir* .tmp/debug/*", effect: allow }
   - { action: shell, resource: "cp *", effect: allow }
@@ -38,6 +40,7 @@ permissions:
   - { action: shell, resource: "git log *", effect: allow }
   - { action: shell, resource: "git show *", effect: allow }
   - { action: shell, resource: "git check-ignore *", effect: allow }
+  - { action: shell, resource: "git ls-files *", effect: allow }
 
   - { action: edit, resource: "package.json", effect: ask }
   - { action: edit, resource: "yarn.lock", effect: ask }
@@ -76,6 +79,7 @@ A step is **one outcome**, not one tool call. Diagnosing, implementing and verif
 - **Behavior changes** use TDD; no manual probing instead of tests. Manual verification is a flag for a missing test. When you are probing manually, you must justify why it should not be done with a test.
 - **Verification** covers tests relevant to the change; skip e2e/app suites when no application code is touched. Failures not caused by your change (also failing without it) are a note in `DONE`, not `BLOCKED`.
 - Run project tools via `yarn <bin>`, never `npx`/`npm`.
+- App server: e2e and live diagnosis reuse the dev server on `BASE_URL` (:3000; Playwright reuses it). Hot-reloading temporary edits into it is fine. Only if it is not running, start it with plain `yarn dev`. Never start another server/port or kill one: custom commands bypass the script's env and need manual approval.
 - Config files contain only config; implementation code goes in its own module.
 - Derive types from their source of truth (framework-generated types, schemas, config) instead of hand-writing them.
 - Keep code clean and maintainable.

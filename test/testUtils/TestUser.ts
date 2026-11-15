@@ -19,6 +19,15 @@ export class TestUser {
   get fullName() {
     return `${this.firstName} ${this.lastName}`;
   }
+
+  copy(args: Partial<TestUser>) {
+    return new TestUser({
+      firstName: args.firstName ?? this.firstName,
+      lastName: args.lastName ?? this.lastName,
+      email: args.email ?? this.email,
+      password: args.password ?? this.password,
+    });
+  }
 }
 
 export const testUserKeys = [
