@@ -16,8 +16,8 @@ test.describe('getRentedTopoAmounts', () => {
       await rentalTestRepository().getRandomSeededTopoRentalItems();
 
     const gearRentalItemId = createRentalItemId(gearItem.id);
-    const boardMemberId = await userTestService().getTestUserId('boardMember');
-    const memberId = await userTestService().getTestUserId('unpaidMembership');
+    const boardMemberId = await userTestService().getUserId('boardMember');
+    const memberId = await userTestService().getUserId('unpaidMembership');
 
     const rentalId = await testDao().addRental(
       aRentalInput({

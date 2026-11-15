@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+import { ForgotPasswordPage } from '#test/e2e/pages/forgot-password.page';
 import { LoginPage } from '#test/e2e/pages/login.page';
 import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
 import { ProfileSettingsPage } from '#test/e2e/pages/profile/settings.page';
@@ -21,6 +22,9 @@ export class AppPage {
 
   readonly toMySettings = async () =>
     await ProfileSettingsPage.navigate(this.page);
+
+  readonly toForgotPasswordPage = async () =>
+    await ForgotPasswordPage.navigate(this.page);
 
   async login(user: TestUser) {
     const loginPage = await LoginPage.navigate(this.page);

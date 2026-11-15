@@ -20,8 +20,8 @@ test.describe('marking gear as lost', () => {
   test('records the lost amount on the rental and the inventory item', async () => {
     // Seeded gear item 'BD C4 .5' with one inventory item
     const gearItemId = createGearItemId('6777b0e7-1b72-4572-821c-f0d7e7ed898c');
-    const boardMemberId = await userTestService().getTestUserId('boardMember');
-    const memberId = await userTestService().getTestUserId('unpaidMembership');
+    const boardMemberId = await userTestService().getUserId('boardMember');
+    const memberId = await userTestService().getUserId('unpaidMembership');
     const rentalId = await testDao().addRental(
       aRentalInput({ boardMemberId, memberId, gear: { [gearItemId]: 2 } }),
     );
@@ -60,8 +60,8 @@ test.describe('marking gear as lost', () => {
 test.describe('marking a topo as lost', () => {
   test('records the lost amount on the rental and the topo inventory item', async () => {
     const { topoId, rentalItemId } = await testDao().addTopo({ amount: 2 });
-    const boardMemberId = await userTestService().getTestUserId('boardMember');
-    const memberId = await userTestService().getTestUserId('unpaidMembership');
+    const boardMemberId = await userTestService().getUserId('boardMember');
+    const memberId = await userTestService().getUserId('unpaidMembership');
     const rentalId = await testDao().addRental(
       aRentalInput({ boardMemberId, memberId, topos: { [rentalItemId]: 2 } }),
     );

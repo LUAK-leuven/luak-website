@@ -2,10 +2,11 @@ import type { Page } from '@playwright/test';
 import { expect, test as base } from '@playwright/test';
 
 import { randomOf } from '#shared/utils/utils';
+import { aRandomTestUser } from '#test/builders/user';
 import { AppPage } from '#test/e2e/pages/app.page';
 import { LoginPage } from '#test/e2e/pages/login.page';
 import { testServiceBuilder } from '#test/testServices';
-import { TestUser, type TestUserKey, testUserKeys } from '#test/TestUser';
+import { type TestUser, type TestUserKey, testUserKeys } from '#test/TestUser';
 
 export const test = base.extend<{
   luakPage: AppPage;
@@ -38,16 +39,12 @@ export const randomUserTest = test.extend<{
 });
 
 export const generatedUserTest = test.extend<{
-  generatedUser: TestUser;
+  user: TestUser;
 }>({
   // eslint-disable-next-line no-empty-pattern
-  generatedUser: async ({}, use) => {
+  user: async ({}, use) => {
     const userTestService = testServiceBuilder().userTestService();
-    const user = new TestUser({
-      firstName: 'Generated',
-      lastName: 'User',
-      email: `generated_${crypto.randomUUID()}@test.com`,
-    });
+    const user = aRandomTestUser();
 
     await userTestService.createUser(user);
     try {

@@ -5,7 +5,8 @@ import { testServiceBuilder } from '#test/testServices';
 configDotenv({ path: '.env.local', quiet: true });
 
 export default async function globalSetup() {
-  const { testDao } = testServiceBuilder();
+  const { testDao, userTestService } = testServiceBuilder();
   await testDao().clearRentals();
   await testDao().cleanInventoryEvents();
+  await userTestService().resetTestUsers();
 }

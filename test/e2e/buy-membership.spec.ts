@@ -2,7 +2,6 @@ import { expect, type Page } from '@playwright/test';
 import dayjs, { type Dayjs } from 'dayjs';
 
 import { authStateFile, login, test } from '#test/e2e/fixtures';
-import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
 import { testServiceBuilder } from '#test/testServices';
 import { testUsers } from '#test/TestUser';
 import { getCurrentMembershipYear } from '~/model/Membership';
@@ -11,7 +10,11 @@ import { getCurrentMembershipYear } from '~/model/Membership';
   [
     { user: 'unpaidMembership', membershipPrice: 15 },
     { user: 'nonMember', membershipPrice: 15 },
-  ] as const
+    { user: 'paidLastYear', membershipPrice: 20 },
+  ] as const satisfies {
+    user: keyof typeof testUsers;
+    membershipPrice: number;
+  }[]
 ).forEach(({ user, membershipPrice }) => {
   test.describe(user, () => {
     test.use({ storageState: authStateFile(user) });
@@ -20,8 +23,8 @@ import { getCurrentMembershipYear } from '~/model/Membership';
       await testServiceBuilder().userTestService().resetTestMemberships();
     });
 
-    test(`can buy a membership`, async ({ page }) => {
-      const profilePage = await ProfileOverviewPage.navigate(page);
+    test(`can buy a membership`, async ({ luakPage }) => {
+      const profilePage = await luakPage.toMyProfile();
 
       await expect(profilePage.hiUserName).toHaveText(
         `Hi ${testUsers[user].firstName} 👋`,
@@ -47,9 +50,9 @@ test.describe('paidMembership', () => {
   test.use({ storageState: authStateFile('paidMembership') });
 
   test('buyMembership - card is hidden and membership card is visible', async ({
-    page,
+    luakPage,
   }) => {
-    const profilePage = await ProfileOverviewPage.navigate(page);
+    const profilePage = await luakPage.toMyProfile();
 
     await expect(profilePage.hiUserName).toHaveText(
       `Hi ${testUsers.paidMembership.firstName} 👋`,

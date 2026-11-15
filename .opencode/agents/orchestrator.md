@@ -3,7 +3,6 @@ description: "Orchestrates various tasks and agents within the system."
 mode: "primary"
 model: "github-copilot/claude-sonnet-5.5#high"
 permissions:
-  - { action: edit, resource: "*", effect: deny }
   - { action: shell, resource: "*", effect: deny }
   - { action: skill, resource: "*", effect: allow }
   - { action: subagent, resource: "*", effect: allow }

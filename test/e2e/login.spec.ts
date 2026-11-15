@@ -6,32 +6,26 @@ import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
 import { ProfileSettingsPage } from '#test/e2e/pages/profile/settings.page';
 import { testUsers } from '#test/TestUser';
 
-generatedUserTest(
-  'Login & logout — happy path',
-  async ({ page, generatedUser }) => {
-    const loginPage = await LoginPage.navigate(page);
-    const profilePage = await loginPage.loginAsserted(
-      generatedUser.email,
-      generatedUser.password,
-    );
-    await Promise.all([
-      expect(page).toHaveURL(ProfileOverviewPage.path),
-      expect(page.getByTestId('nav.profile').first()).toBeVisible(),
-    ]);
+generatedUserTest('Login & logout — happy path', async ({ page, user }) => {
+  const loginPage = await LoginPage.navigate(page);
+  const profilePage = await loginPage.loginAsserted(user.email, user.password);
+  await Promise.all([
+    expect(page).toHaveURL(ProfileOverviewPage.path),
+    expect(page.getByTestId('nav.profile').first()).toBeVisible(),
+  ]);
 
-    await profilePage.logout();
-    await expect(page.getByTestId('nav.login').first()).toBeVisible();
-  },
-);
+  await profilePage.logout();
+  await expect(page.getByTestId('nav.login').first()).toBeVisible();
+});
 
 generatedUserTest(
   'Log out — keeps the session of the same user on another device',
-  async ({ page, browser, generatedUser }) => {
+  async ({ page, browser, user }) => {
     const otherDeviceContext = await browser.newContext();
     try {
       const otherDevicePage = await otherDeviceContext.newPage();
-      await login(page, generatedUser);
-      await login(otherDevicePage, generatedUser);
+      await login(page, user);
+      await login(otherDevicePage, user);
 
       const profilePage = new ProfileOverviewPage(page);
       await profilePage.logout();

@@ -12,8 +12,8 @@ const { supabase, userTestService, testDao, rentalTestRepository } =
 const rentalService = new RentalService(supabase());
 
 test('Can create, update and edit a rental', async () => {
-  const boardMemberId = await userTestService().getTestUserId('boardMember');
-  const memberId = await userTestService().getTestUserId('unpaidMembership');
+  const boardMemberId = await userTestService().getUserId('boardMember');
+  const memberId = await userTestService().getUserId('unpaidMembership');
 
   const { id, error } = await rentalService.saveRental(
     aRental({
@@ -79,8 +79,8 @@ test('Can create, update and edit a rental', async () => {
 test('Updating a rental sets the returned amount of each item individually', async () => {
   const [{ id: itemIdA }, { id: itemIdB }] =
     await rentalTestRepository().getRandomSeededGearRentalItems(2);
-  const boardMemberId = await userTestService().getTestUserId('boardMember');
-  const memberId = await userTestService().getTestUserId('unpaidMembership');
+  const boardMemberId = await userTestService().getUserId('boardMember');
+  const memberId = await userTestService().getUserId('unpaidMembership');
 
   const rentalId = await testDao().addRental(
     aRentalInput({

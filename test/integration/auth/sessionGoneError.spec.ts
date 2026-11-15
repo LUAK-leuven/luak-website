@@ -1,12 +1,14 @@
+// TODO LUAK-39: clean up by creating and using proper test fixtures
 import type { AuthError, Session, SupabaseClient } from '@supabase/supabase-js';
 import { afterEach, expect, test } from 'vitest';
 
 import type { Database } from '#shared/types/database.types';
+import { aRandomTestUser } from '#test/builders/user';
 import {
   createSupabaseClientForTests,
   testServiceBuilder,
 } from '#test/testServices';
-import { TestUser } from '#test/TestUser';
+import type { TestUser } from '#test/TestUser';
 import { isSessionGoneError } from '~/utils/isSessionGoneError';
 
 const NEW_PASSWORD = 'NewPassword123!';
@@ -15,11 +17,7 @@ const WEAK_PASSWORD = '123';
 const createdUsers: TestUser[] = [];
 
 const createGeneratedUser = async () => {
-  const user = new TestUser({
-    firstName: 'Session',
-    lastName: 'Gone',
-    email: `session_gone_${crypto.randomUUID()}@test.com`,
-  });
+  const user = aRandomTestUser();
   createdUsers.push(user);
   await testServiceBuilder().userTestService().createUser(user);
   return user;
