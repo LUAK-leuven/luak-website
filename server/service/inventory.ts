@@ -63,7 +63,7 @@ export class InventoryServiceImpl implements InventoryService {
         totalAmount - sumOf(rentals, 'rentedAmount'),
       ),
       inventory: inventory.map((item) => ({
-        ...item, // TODO: this should throw a lint error because 'amount' is no prop in GearInventoryDetails['inventory']
+        ...item,
         totalAmount: item.amount,
         retirementDate: this.calculateRetirementDate({
           productionDate: item.productionDate,

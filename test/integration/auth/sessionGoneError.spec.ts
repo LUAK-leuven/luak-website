@@ -1,27 +1,77 @@
-// TODO LUAK-39: clean up by creating and using proper test fixtures
 import type { AuthError, Session, SupabaseClient } from '@supabase/supabase-js';
-import { afterEach, expect, test } from 'vitest';
+import { expect, test } from 'vitest';
 
 import type { Database } from '#shared/types/database.types';
-import { aRandomTestUser } from '#test/builders/user';
-import {
-  createSupabaseClientForTests,
-  testServiceBuilder,
-} from '#test/testServices';
+import { createSupabaseClientForTests } from '#test/testServices';
 import type { TestUser } from '#test/TestUser';
+import { generatedUserTest } from '#test/vitest/fixtures';
 import { isSessionGoneError } from '~/utils/isSessionGoneError';
 
-const NEW_PASSWORD = 'NewPassword123!';
-const WEAK_PASSWORD = '123';
+generatedUserTest(
+  'isSessionGoneError classifies the error of a session revoked by a global sign-out',
+  async ({ user }) => {
+    const revokingClient = createSupabaseClientForTests();
+    const revokedClient = createSupabaseClientForTests();
+    await signIn(revokingClient, user);
+    await signIn(revokedClient, user);
 
-const createdUsers: TestUser[] = [];
+    const { error: signOutError } = await revokingClient.auth.signOut({
+      scope: 'global',
+    });
+    expect(signOutError).toBeNull();
 
-const createGeneratedUser = async () => {
-  const user = aRandomTestUser();
-  createdUsers.push(user);
-  await testServiceBuilder().userTestService().createUser(user);
-  return user;
-};
+    const { error } = await revokedClient.auth.updateUser({
+      password: 'NewPassword123!',
+    });
+
+    expectSessionGone(error);
+  },
+);
+
+generatedUserTest(
+  'isSessionGoneError classifies the error of a refresh token revoked by a global sign-out',
+  async ({ user }) => {
+    const client = createSupabaseClientForTests();
+    const { refresh_token: revokedRefreshToken } = await signIn(client, user);
+
+    const revokingClient = createSupabaseClientForTests();
+    await signIn(revokingClient, user);
+    const { error: signOutError } = await revokingClient.auth.signOut({
+      scope: 'global',
+    });
+    expect(signOutError).toBeNull();
+
+    const refreshingClient = createSupabaseClientForTests();
+    const { error } = await refreshingClient.auth.refreshSession({
+      refresh_token: revokedRefreshToken,
+    });
+
+    expectSessionGone(error);
+  },
+);
+
+generatedUserTest(
+  'isSessionGoneError does not classify a weak password error as session gone',
+  async ({ user }) => {
+    const client = createSupabaseClientForTests();
+    await signIn(client, user);
+
+    const WEAK_PASSWORD = '123';
+    const { error } = await client.auth.updateUser({ password: WEAK_PASSWORD });
+
+    expectNotSessionGone(error);
+  },
+);
+
+test('isSessionGoneError classifies the error of an authenticated request without a session', async () => {
+  const clientWithoutSession = createSupabaseClientForTests();
+
+  const { error } = await clientWithoutSession.auth.updateUser({
+    password: 'NewPassword123!',
+  });
+
+  expectSessionGone(error);
+});
 
 const signIn = async (
   client: SupabaseClient<Database>,
@@ -45,73 +95,3 @@ const expectNotSessionGone = (error: AuthError | null) => {
   if (error === null) throw new Error('Expected an error, got success');
   expect(isSessionGoneError(error)).toBe(false);
 };
-
-afterEach(async () => {
-  const userTestService = testServiceBuilder().userTestService();
-  for (const user of createdUsers.splice(0)) {
-    await userTestService.deleteUser(user).catch((error: unknown) => {
-      console.warn(`Could not delete generated user ${user.email}:`, error);
-    });
-  }
-});
-
-test('isSessionGoneError classifies the error of a session revoked by a global sign-out', async () => {
-  const user = await createGeneratedUser();
-
-  const revokingClient = createSupabaseClientForTests();
-  const revokedClient = createSupabaseClientForTests();
-  await signIn(revokingClient, user);
-  await signIn(revokedClient, user);
-
-  const { error: signOutError } = await revokingClient.auth.signOut({
-    scope: 'global',
-  });
-  expect(signOutError).toBeNull();
-
-  const { error } = await revokedClient.auth.updateUser({
-    password: NEW_PASSWORD,
-  });
-
-  expectSessionGone(error);
-});
-
-test('isSessionGoneError classifies the error of a refresh token revoked by a global sign-out', async () => {
-  const user = await createGeneratedUser();
-
-  const client = createSupabaseClientForTests();
-  const { refresh_token: revokedRefreshToken } = await signIn(client, user);
-
-  const revokingClient = createSupabaseClientForTests();
-  await signIn(revokingClient, user);
-  const { error: signOutError } = await revokingClient.auth.signOut({
-    scope: 'global',
-  });
-  expect(signOutError).toBeNull();
-
-  const refreshingClient = createSupabaseClientForTests();
-  const { error } = await refreshingClient.auth.refreshSession({
-    refresh_token: revokedRefreshToken,
-  });
-
-  expectSessionGone(error);
-});
-
-test('isSessionGoneError does not classify a weak password error as session gone', async () => {
-  const user = await createGeneratedUser();
-  const client = createSupabaseClientForTests();
-  await signIn(client, user);
-
-  const { error } = await client.auth.updateUser({ password: WEAK_PASSWORD });
-
-  expectNotSessionGone(error);
-});
-
-test('isSessionGoneError classifies the error of an authenticated request without a session', async () => {
-  const clientWithoutSession = createSupabaseClientForTests();
-
-  const { error } = await clientWithoutSession.auth.updateUser({
-    password: NEW_PASSWORD,
-  });
-
-  expectSessionGone(error);
-});

@@ -7,7 +7,7 @@
   const user = await useUserService().getUserInfo();
 
   const { rentals, status } = await useRentalService().getRentalsForUser(
-    user.value!.id,
+    user.value.id,
   );
 
   const activeRentals = computed(() =>
@@ -63,7 +63,6 @@
         </Button>
       </div>
       <template v-if="showReturned">
-        <!-- TODO: fix spinner position not in center (for some reason styles fail to apply or I'm missing something here ...) -->
         <div v-if="returnedRentals === undefined">
           <span>Error</span>
         </div>
