@@ -1,5 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
+import { outstandingAmountOf } from '#server/adapter-supabase/rental/outstandingAmount';
+import * as RentedItems from '#server/adapter-supabase/rental/RentedItemsTable';
 import type {
   RentalForItem,
   RentedTopoAmount,
@@ -11,7 +13,6 @@ import {
   createRentalMemberName,
 } from '#shared/api/rest/rental';
 import {
-  createOutstandingAmount,
   createRentalItemId,
   type RentalItemId,
 } from '#shared/api/rest/rental/rentalItem';
@@ -25,29 +26,23 @@ export class SupabaseRentalRepository implements RentalRepository {
   async getRentedGearAmounts(): Promise<Partial<Record<GearItemId, number[]>>> {
     const { data } = await this.supabaseClient
       .from('RentalItems')
-      .select(
-        'id, RentedItems(rental_item_id, rented_amount, returned_amount, lost_amount)',
-      )
+      .select(`id, ${RentedItems.table}(${RentedItems.availabilityColumns})`)
       .eq('item_type', 'gear')
       .throwOnError();
 
     return objectFrom(
       data.map((x) => [
         createGearItemId(x.id),
-        x.RentedItems.map((y) =>
-          createOutstandingAmount(
-            y.rented_amount - y.returned_amount - y.lost_amount,
-          ),
-        ),
+        x.RentedItems.map((y) => outstandingAmountOf(y)),
       ]),
     );
   }
 
   async getRentedTopoAmounts(): Promise<RentedTopoAmount[]> {
     const { data } = await this.supabaseClient
-      .from('RentedItems')
+      .from(RentedItems.table)
       .select(
-        'RentalItems!inner(id, Inventory(id)), rented_amount, returned_amount, lost_amount',
+        `RentalItems!inner(id, Inventory(id)), ${RentedItems.availabilityColumns}`,
       )
       .eq('RentalItems.item_type', 'topo')
       .throwOnError();
@@ -55,17 +50,18 @@ export class SupabaseRentalRepository implements RentalRepository {
     return data.map((x) => ({
       topoId: createTopoId(single(x.RentalItems.Inventory).id),
       rentalItemId: createRentalItemId(x.RentalItems.id),
-      rentedAmount: createOutstandingAmount(
-        x.rented_amount - x.returned_amount - x.lost_amount,
-      ),
+      rentedAmount: outstandingAmountOf(x),
     }));
   }
 
   async getRentalsFor(rentalItemId: RentalItemId): Promise<RentalForItem[]> {
     const { data } = await this.supabaseClient
-      .from('RentedItems')
+      .from(RentedItems.table)
       .select(
-        'rented_amount, returned_amount, lost_amount, Rentals(id, member:Users!member_id(first_name, last_name), contact_info)',
+        `
+          ${RentedItems.availabilityColumns},
+          Rentals(id, member:Users!member_id(first_name, last_name), contact_info)
+        `,
       )
       .eq('rental_item_id', rentalItemId)
       .throwOnError();
@@ -79,8 +75,9 @@ export class SupabaseRentalRepository implements RentalRepository {
       .select(
         `
           RentalItems(
-            RentedItems(
-              rented_amount, returned_amount, lost_amount, Rentals(id, member:Users!member_id(first_name, last_name), contact_info)
+            ${RentedItems.table}(
+              ${RentedItems.availabilityColumns},
+              Rentals(id, member:Users!member_id(first_name, last_name), contact_info)
             )
           )
         `,
@@ -112,9 +109,7 @@ export const mapRental = (rental: {
   };
 }): RentalForItem => ({
   id: createRentalId(rental.Rentals.id),
-  rentedAmount: createOutstandingAmount(
-    rental.rented_amount - rental.returned_amount - rental.lost_amount,
-  ),
+  rentedAmount: outstandingAmountOf(rental),
   memberName: createRentalMemberName(getMemberName(rental.Rentals)),
 });
 

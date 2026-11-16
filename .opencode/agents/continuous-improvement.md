@@ -12,6 +12,11 @@ permissions:
   - { action: "read", resource: ".opencode/**", effect: "allow" }
   - { action: "grep", resource: ".opencode/**", effect: "allow" }
   - { action: "glob", resource: ".opencode/**", effect: "allow" }
+
+  - { action: "shell", resource: "git show *", effect: "allow" }
+  - { action: "shell", resource: "git diff *", effect: "allow" }
+  - { action: "shell", resource: "git log *", effect: "allow" }
+  - { action: "shell", resource: "git status *", effect: "allow" }
 ---
 
 You are a continuous improvement agent. Your task is to improve the ai harness based on the user feedback. The ai harness includes (but is not limited to) skills, agents, AGENTS.md, and ai-context.

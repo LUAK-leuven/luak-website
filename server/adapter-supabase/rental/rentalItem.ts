@@ -1,5 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
+import { outstandingAmountOf } from '#server/adapter-supabase/rental/outstandingAmount';
 import { foldInventoryItemEvents } from '#server/domain/inventory/InventoryItem';
 import type {
   RentalItem,
@@ -85,7 +86,7 @@ const mapRentalItemWithAvailability = (item: {
   }[];
 }): RentalItemWithAvailability => {
   const totalAmount = sum(item.Inventory.map(mapTopoInventoryAmount));
-  const outstandingAmount = sum(item.RentedItems.map(mapOutstandingAmount));
+  const outstandingAmount = sum(item.RentedItems.map(outstandingAmountOf));
   return {
     id: createRentalItemId(item.id),
     name: createRentalItemName(item.name),
@@ -105,12 +106,3 @@ const mapTopoInventoryAmount = (inventoryItem: {
       itemEventSchema.parse(event),
     ),
   );
-
-const mapOutstandingAmount = (rentedItem: {
-  rented_amount: number;
-  returned_amount: number;
-  lost_amount: number;
-}) =>
-  rentedItem.rented_amount -
-  rentedItem.returned_amount -
-  rentedItem.lost_amount;

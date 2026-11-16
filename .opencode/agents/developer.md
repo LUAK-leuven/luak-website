@@ -44,11 +44,11 @@ permissions:
 
   - { action: edit, resource: "package.json", effect: ask }
   - { action: edit, resource: "yarn.lock", effect: ask }
-  - { action: edit, resource: "vitest.config.*", effect: ask }
-  - { action: edit, resource: "nuxt.config.*", effect: ask }
-  - { action: edit, resource: "eslint.config.*", effect: ask }
-  - { action: edit, resource: "**/tsconfig*.json", effect: ask }
-  - { action: edit, resource: "tsconfig*.json", effect: ask }
+  - { action: edit, resource: "*config*", effect: ask }
+  - { action: shell, resource: "*package.json*", effect: ask }
+  - { action: shell, resource: "*yarn.lock*", effect: ask }
+  - { action: shell, resource: "*config*", effect: ask }
+
   - { action: shell, resource: "* /*", effect: ask}
   - { action: shell, resource: "* ../*", effect: ask}
   - { action: shell, resource: "* ~/*", effect: ask}
