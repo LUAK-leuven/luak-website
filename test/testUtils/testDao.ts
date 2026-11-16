@@ -65,9 +65,11 @@ export class TestDao {
     });
   };
 
-  readonly addTopo = async (args: {
-    amount: number;
-  }): Promise<{ topoId: TopoId; rentalItemId: RentalItemId }> => {
+  readonly addTopo = async (
+    args: Partial<
+      Omit<Database['public']['Tables']['Topos']['Insert'], 'id'>
+    > = {},
+  ): Promise<{ topoId: TopoId; rentalItemId: RentalItemId }> => {
     const rentalItemId = aRandomRentalItemId();
     const topoId = aRandomTopoId();
     await this.supabase
@@ -88,13 +90,14 @@ export class TestDao {
       .insert({
         id: topoId,
         title: 'Test topo',
-        amount: args.amount,
+        amount: 1,
         authors: [],
         countries: [],
         languages: [],
         place_in_library: 'test',
         tags: [],
         types_of_climbing: [],
+        ...args,
       })
       .throwOnError();
     return { topoId, rentalItemId };

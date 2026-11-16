@@ -29,6 +29,8 @@ import {
 } from '#shared/api/rest/topo';
 import type { Database } from '#shared/types/database.types';
 
+type TopoRow = Database['public']['Tables']['Topos']['Row'];
+
 export class SupabaseTopoRepository implements TopoRepository {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
 
@@ -41,26 +43,18 @@ export class SupabaseTopoRepository implements TopoRepository {
       .throwOnError();
 
     return {
-      totalAmount: createInitialAmount(topo.amount),
-      authors: topo.authors.map((it) => createAuthor(it)),
-      condition: mapTopoCondition(topo.condition),
-      countries: topo.countries.map((it) => createCountry(it)),
-      details:
-        topo.details === null || topo.details.trim() === ''
-          ? undefined
-          : createDetails(topo.details),
       id: createTopoId(topo.id),
-      languages: topo.languages.map((it) => createLanguage(it)),
-      place_in_library: createPlaceInLibrary(topo.place_in_library),
-      tags: topo.tags.map((it) => createTag(it.trim())),
       title: createTitle(topo.title),
-      types_of_climbing: topo.types_of_climbing.map((it) =>
-        createClimbingType(it),
-      ),
-      year_published:
-        topo.year_published === null
-          ? undefined
-          : createYearPublished(topo.year_published),
+      authors: mapAuthors(topo.authors),
+      condition: mapTopoCondition(topo.condition),
+      countries: mapCountries(topo.countries),
+      tags: mapTags(topo.tags),
+      totalAmount: createInitialAmount(topo.amount),
+      details: mapDetails(topo.details),
+      languages: mapLanguages(topo.languages),
+      place_in_library: createPlaceInLibrary(topo.place_in_library),
+      types_of_climbing: mapClimbingTypes(topo.types_of_climbing),
+      year_published: mapYearPublished(topo.year_published),
     };
   }
 
@@ -74,19 +68,14 @@ export class SupabaseTopoRepository implements TopoRepository {
 
     return data.map((topo) => ({
       id: createTopoId(topo.id),
-      authors: topo.authors.map((it) => createAuthor(it)),
-      condition: mapTopoCondition(topo.condition),
-      countries: topo.countries.map((it) => createCountry(it)),
-      placeInLibrary: createPlaceInLibrary(topo.place_in_library),
-      tags: topo.tags.map((it) => createTag(it.trim())),
       title: createTitle(topo.title),
-      typesOfClimbing: topo.types_of_climbing.map((it) =>
-        createClimbingType(it),
-      ),
-      yearPublished:
-        topo.year_published === null
-          ? undefined
-          : createYearPublished(topo.year_published),
+      authors: mapAuthors(topo.authors),
+      condition: mapTopoCondition(topo.condition),
+      countries: mapCountries(topo.countries),
+      tags: mapTags(topo.tags),
+      placeInLibrary: createPlaceInLibrary(topo.place_in_library),
+      typesOfClimbing: mapClimbingTypes(topo.types_of_climbing),
+      yearPublished: mapYearPublished(topo.year_published),
       initialAmount: createInitialAmount(topo.amount),
     }));
   }
@@ -102,10 +91,7 @@ export class SupabaseTopoRepository implements TopoRepository {
       rentalItemId: createRentalItemId(topo.Inventory.rental_item_id!),
       title: createTitle(topo.title),
       initialAmount: createInitialAmount(topo.amount),
-      yearPublished:
-        topo.year_published === null
-          ? undefined
-          : createYearPublished(topo.year_published),
+      yearPublished: mapYearPublished(topo.year_published),
     }));
   }
 
@@ -124,9 +110,24 @@ export class SupabaseTopoRepository implements TopoRepository {
   }
 }
 
-export function mapTopoCondition(
+const mapAuthors = (authors: TopoRow['authors']) =>
+  authors.map((it) => createAuthor(it));
+
+const mapCountries = (countries: TopoRow['countries']) =>
+  countries.map((it) => createCountry(it));
+
+const mapTags = (tags: TopoRow['tags']) =>
+  tags.map((it) => createTag(it.trim()));
+
+const mapClimbingTypes = (typesOfClimbing: TopoRow['types_of_climbing']) =>
+  typesOfClimbing.map((it) => createClimbingType(it));
+
+const mapYearPublished = (yearPublished: TopoRow['year_published']) =>
+  yearPublished === null ? undefined : createYearPublished(yearPublished);
+
+export const mapTopoCondition = (
   condition: Database['public']['Enums']['topo_condition'] | null,
-): TopoCondition {
+): TopoCondition => {
   switch (condition) {
     case null:
       return undefined;
@@ -137,4 +138,14 @@ export function mapTopoCondition(
     case 'falling_appart':
       return condition;
   }
-}
+};
+
+const mapDetails = (details: TopoRow['details']) => {
+  if (details === null) return undefined;
+  const trimmedDetails = details.trim();
+  if (trimmedDetails === '') return undefined;
+  return createDetails(details.trim());
+};
+
+const mapLanguages = (languages: TopoRow['languages']) =>
+  languages.map((it) => createLanguage(it));

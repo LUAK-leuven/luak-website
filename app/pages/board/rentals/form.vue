@@ -16,10 +16,6 @@
   const { openPaymentModal } = usePaymentModal();
 
   async function handleSubmit(state: Omit<UnsavedRental, 'boardMemberId'>) {
-    if (user.value === undefined) {
-      showPopup('error', 'Failed to read user id.');
-      return { error: 'Failed to read user id.' };
-    }
     const { error, id } = await saveRental({
       ...state,
       boardMemberId: user.value.id,
@@ -55,7 +51,7 @@
 
     <BoardRentalForm
       v-else
-      :board-member-name="user?.fullName ?? 'ERROR'"
+      :board-member-name="user.fullName"
       :all-gear="allGear"
       :all-topos="allTopos"
       :handle-submit="handleSubmit"

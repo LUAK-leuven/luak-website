@@ -7,7 +7,8 @@ const userService = testServiceBuilder().userTestService();
 
 export const generatedUserTest = baseTest.extend(
   'user',
-  async (_, { onCleanup }) => {
+  // eslint-disable-next-line no-empty-pattern
+  async ({}, { onCleanup }) => {
     const user = aRandomTestUser();
     await userService.createUser(user);
 
