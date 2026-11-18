@@ -35,7 +35,7 @@
     lostAmount: yupNumber()
       .required()
       .min(1)
-      .max(props.gearItem.unreturnedAmount),
+      .max(props.gearItem.outstandingAmount),
     inventoryItem: yupString<GearInventoryId>()
       .uuid()
       .required('You must select an inventory item'),
@@ -97,7 +97,7 @@
         Rented amount: {{ gearItem.rentedAmount }}
       </div>
       <div data-testId="unreturnedAmount">
-        Unreturned amount: {{ gearItem.unreturnedAmount }}
+        Unreturned amount: {{ gearItem.outstandingAmount }}
       </div>
       <div>
         <div class="col-span-full flex flex-row gap-2 items-center">

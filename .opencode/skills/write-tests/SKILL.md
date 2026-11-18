@@ -15,6 +15,7 @@ description: "Use when writing or editing tests"
   - integration (`test/integration/**/*.spec.ts`, local Supabase via `yarn sb:start`, real seeded rows): every endpoint and anything touching Supabase (queries, joins, filters, RLS, RPCs, SQL);
   - e2e: user workflows.
 - Never mock or stub Supabase, at any level.
+- Mocks mock the interface, not the implementation: a test double exposes only the collaborator's contract (props, emits, signature, return value) and the test drives it through that contract (e.g. trigger its emit). Never reimplement its behavior or rendering.
 - Bug fix: write the failing test first at the lowest level that reproduces the bug in its real layer.
 - Test data only via builders (`#test/builders`) + test repositories (from `testServiceBuilder()`); no raw Supabase inserts, no `crypto.randomUUID()`. No manual cleanup: the framework cleans the DB once before the run.
 - Missing builder or test repository? After checking `test/testUtils` that it doesn't exist, add a minimal one there.

@@ -8,10 +8,10 @@ permissions:
   - { action: "webfetch", resource: "https://opencode.ai/docs/*", effect: "allow" }
 
   - { action: "write", resource: "*", effect: "deny" }
-  - { action: "write", resource: ".opencode/**", effect: "ask" }
-  - { action: "read", resource: ".opencode/**", effect: "allow" }
-  - { action: "grep", resource: ".opencode/**", effect: "allow" }
-  - { action: "glob", resource: ".opencode/**", effect: "allow" }
+  - { action: "write", resource: ".opencode*", effect: "ask" }
+  - { action: "read", resource: ".opencode*", effect: "allow" }
+  - { action: "grep", resource: ".opencode*", effect: "allow" }
+  - { action: "glob", resource: ".opencode*", effect: "allow" }
 
   - { action: "shell", resource: "git show *", effect: "allow" }
   - { action: "shell", resource: "git diff *", effect: "allow" }

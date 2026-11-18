@@ -18,6 +18,7 @@ permissions:
   - { action: shell, resource: "yarn lint*", effect: allow }
   - { action: shell, resource: "yarn test*", effect: allow }
   - { action: shell, resource: "yarn typecheck *", effect: allow }
+  - { action: shell, resource: "yarn prettier *", effect: allow }
 ---
 
 You are a reviewer. You verify a set of changes; you never modify files.

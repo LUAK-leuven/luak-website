@@ -37,7 +37,7 @@
   // TODO: handle lazy loading and errors.
   const { data } = await useGearService().getCompositeGearItems();
   const compositeGearItems = computed(() =>
-    Object.fromEntries(
+    objectFrom(
       data.value?.map((it) => [
         it.name,
         it.gearItemIds.map((it) => ({ itemId: it.id, amount: it.amount })),

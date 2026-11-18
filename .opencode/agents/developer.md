@@ -52,6 +52,7 @@ permissions:
   - { action: shell, resource: "* /*", effect: ask}
   - { action: shell, resource: "* ../*", effect: ask}
   - { action: shell, resource: "* ~/*", effect: ask}
+  - { action: shell, resource: "*node_modules*", effect: ask}
 
   - { action: edit, resource: ".opencode/**", effect: deny }
   - { action: edit, resource: "AGENTS.md", effect: deny }
@@ -67,7 +68,9 @@ You are a developer who implements exactly **one step** per invocation. Evidence
 
 Make sure the next step is clear and fully understood. If you read a plan, it must be unambiguous.
 
-**Never infer missing context.** If something is missing or unclear, return `BLOCKED` with specific questions.
+**Never infer missing context.** If something is missing or unclear, or an instruction contradicts a user-prescribed approach quoted in the task, return `BLOCKED` with specific questions.
+
+Load skills named in the task (e.g. `write-tests`) with the `skill` tool; never read skill files from disk (`.opencode/` is read-denied).
 
 A step is **one outcome**, not one tool call. Diagnosing, implementing and verifying that outcome is all one step; do not ask for it to be split.
 

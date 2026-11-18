@@ -233,7 +233,7 @@ export class RentalItem {
     return true;
   };
 
-  get unreturnedAmount(): number {
+  get outstandingAmount(): number {
     return this.rentedAmount - this.returnedAmount - this.lostAmount;
   }
 
@@ -242,14 +242,14 @@ export class RentalItem {
   }
 
   get isFullyReturned(): boolean {
-    return this.unreturnedAmount === 0;
+    return this.outstandingAmount === 0;
   }
 
   readonly getStatus = () => {
     if (!this.isValid()) return 'invalid';
     if (this.isFullyReturned) return 'fullyReturned';
     if (this.returnedAmount === 0) return 'notReturned';
-    if (this.unreturnedAmount > 0) return 'partiallyReturned';
+    if (this.outstandingAmount > 0) return 'partiallyReturned';
     return 'invalid';
   };
 
