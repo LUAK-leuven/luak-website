@@ -7,10 +7,10 @@ import {
   itemEventSchema,
 } from '#shared/api/rest/inventory';
 import { createRentalItemId } from '#shared/api/rest/rental/rentalItem';
-import type {
-  PlaceInLibrary,
+import {
+  type PlaceInLibrary,
   TopoCondition,
-  TopoId,
+  type TopoId,
 } from '#shared/api/rest/topo';
 import {
   createAuthor,
@@ -125,11 +125,15 @@ export const mapTopoCondition = (
     case null:
       return undefined;
     case 'as_good_as_new':
+      return TopoCondition.asGoodAsNew;
     case 'good':
+      return TopoCondition.good;
     case 'used':
+      return TopoCondition.used;
     case 'damaged':
+      return TopoCondition.damaged;
     case 'falling_appart':
-      return condition;
+      return TopoCondition.fallingApart;
   }
 };
 

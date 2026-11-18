@@ -1,9 +1,6 @@
 import type { InventoryItemEvent } from '#shared/api/rest/inventory';
-import type {
-  TopoId,
-  TopoLibraryRecord,
-  TopoSummary,
-} from '#shared/domain/topo/topo';
+import type { TopoId } from '#shared/api/rest/topo';
+import type { TopoLibraryRecord, TopoSummary } from '#shared/domain/topo/topo';
 
 export interface TopoRepository {
   getDetails(topoId: TopoId): Promise<TopoLibraryRecord>;

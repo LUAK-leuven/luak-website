@@ -13,19 +13,9 @@ import type {
   Tag,
   Title,
   TopoCondition,
-  TopoDetails as TopoDetailsDto,
   TopoId,
-  TopoLibraryItem as TopoLibraryItemDto,
-  TopoListItem as TopoListItemDto,
   YearPublished,
 } from '#shared/api/rest/topo';
-
-export type { TopoCondition } from '#shared/api/rest/topo';
-export type { TopoId } from '#shared/api/rest/topo';
-
-export type TopoDetails = TopoDetailsDto;
-export type TopoLibraryItem = TopoLibraryItemDto;
-export type TopoListItem = TopoListItemDto;
 
 export type TopoLibraryRecord = {
   id: TopoId;

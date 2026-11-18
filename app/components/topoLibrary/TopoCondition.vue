@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import type { TopoCondition } from '#shared/api/rest/topo';
+  import { TopoCondition } from '#shared/api/rest/topo';
 
   defineProps<{
     topoCondition: TopoCondition;
@@ -7,16 +7,19 @@
 
   const conditionMap = (condition: TopoCondition) => {
     switch (condition) {
-      case 'as_good_as_new':
+      case TopoCondition.asGoodAsNew:
         return 'New';
-      case 'good':
+      case TopoCondition.good:
         return 'Good';
-      case 'used':
+      case TopoCondition.used:
         return 'Used';
-      case 'damaged':
-      case 'falling_appart':
+      case TopoCondition.damaged:
+      case TopoCondition.fallingApart:
         return 'Damaged';
+      case undefined:
+        return '-';
       default:
+        console.warn(`Unhandled topo condition: ${condition}`);
         return '-';
     }
   };
@@ -26,7 +29,8 @@
     class="badge"
     :class="{
       'badge-success':
-        topoCondition === 'as_good_as_new' || topoCondition === 'good',
+        topoCondition === TopoCondition.asGoodAsNew ||
+        topoCondition === TopoCondition.good,
       'badge-warning': topoCondition === 'used',
       'badge-error': topoCondition === 'damaged',
     }">

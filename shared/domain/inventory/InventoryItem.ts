@@ -20,7 +20,6 @@ import {
 import type { DepositFee } from '#shared/api/rest/rental';
 import { topoIdSchema } from '#shared/api/rest/topo';
 
-declare const _inventoryItemIdBrand: unique symbol;
 const inventoryItemIdSchema = zodUnion([topoIdSchema, gearInventoryIdSchema]);
 export type InventoryItemId = ZodInfer<typeof inventoryItemIdSchema>;
 export const createInventoryItemId = (value: string) =>

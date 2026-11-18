@@ -1,9 +1,9 @@
 import { expect, test } from 'vitest';
 
-import { serviceBuilder } from '#server/serviceBuilder';
 import { createGearItemId } from '#shared/api/rest/gear';
 import { createItemLostAmount } from '#shared/api/rest/inventory';
 import type { RentalId } from '#shared/api/rest/rental';
+import { serviceBuilder } from '#shared/serviceBuilder';
 import { aRentalInput } from '#test/builders/rental';
 import { testServiceBuilder } from '#test/testServices';
 import { GearService } from '~/services/gearService';
