@@ -31,17 +31,17 @@ test.describe('SupabaseTopoRepository topo mapping', () => {
 
     expect(details).toStrictEqual({
       id: topoId,
-      totalAmount: 2,
+      amount: 2,
       authors: ['Marc Bott', 'Jane Doe'],
       condition: 'good',
       countries: ['Belgium'],
       details: 'A detailed description',
       languages: [],
-      place_in_library: 'France',
+      placeInLibrary: 'France',
       tags: ['Epicenter'],
       title: 'Mapping topo',
-      types_of_climbing: ['Sport climbing', 'Multipitch'],
-      year_published: 2021,
+      typesOfClimbing: ['Sport climbing', 'Multipitch'],
+      yearPublished: 2021,
     });
   });
 
@@ -54,17 +54,17 @@ test.describe('SupabaseTopoRepository topo mapping', () => {
 
     expect(details).toStrictEqual({
       id: topoId,
-      totalAmount: 1,
+      amount: 1,
       authors: [],
       condition: undefined,
       countries: [],
       details: undefined,
       languages: [],
-      place_in_library: 'test',
+      placeInLibrary: 'test',
       tags: [],
       title: 'Test topo',
-      types_of_climbing: [],
-      year_published: undefined,
+      typesOfClimbing: [],
+      yearPublished: undefined,
     });
   });
 
@@ -86,7 +86,9 @@ test.describe('SupabaseTopoRepository topo mapping', () => {
       title: 'Mapping topo',
       typesOfClimbing: ['Sport climbing', 'Multipitch'],
       yearPublished: 2021,
-      initialAmount: 2,
+      amount: 2,
+      details: 'A detailed description',
+      languages: [],
     });
     expect(library.find((topo) => topo.id === bareTopoId)).toStrictEqual({
       id: bareTopoId,
@@ -98,7 +100,9 @@ test.describe('SupabaseTopoRepository topo mapping', () => {
       title: 'Test topo',
       typesOfClimbing: [],
       yearPublished: undefined,
-      initialAmount: 1,
+      amount: 1,
+      details: undefined,
+      languages: [],
     });
   });
 

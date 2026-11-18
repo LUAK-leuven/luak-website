@@ -10,11 +10,7 @@ import {
   type InventoryItemEvent,
 } from '#shared/api/rest/inventory';
 import { createPlaceInLibrary } from '#shared/api/rest/topo';
-import {
-  aRandomTopoId,
-  aTopoLibraryRecord,
-  aTopoRecord,
-} from '#test/builders/topo';
+import { aRandomTopoId, aTopoLibraryRecord } from '#test/builders/topo';
 import {
   inventoryRepositoryMock,
   rentalRepositoryMock,
@@ -27,10 +23,10 @@ test.describe('TopoService', () => {
     const topoRepository = topoRepositoryMock({
       getDetails: () =>
         Promise.resolve(
-          aTopoRecord({
+          aTopoLibraryRecord({
             id: topoId,
-            place_in_library: createPlaceInLibrary('A1'),
-            totalAmount: createInitialAmount(3),
+            placeInLibrary: createPlaceInLibrary('A1'),
+            amount: createInitialAmount(3),
           }),
         ),
     });
@@ -76,14 +72,14 @@ test.describe('TopoService', () => {
         Promise.resolve([
           aTopoLibraryRecord({
             id: inStockTopoId,
-            initialAmount: createInitialAmount(1),
+            amount: createInitialAmount(1),
           }),
           aTopoLibraryRecord({
             id: aRandomTopoId(),
-            initialAmount: createInitialAmount(0),
+            amount: createInitialAmount(0),
           }),
         ] satisfies TopoLibraryRecord[]),
-      getAllTopoInventoryItemEvents: () => Promise.resolve([]),
+      getAllTopoInventoryItemEvents: () => Promise.resolve({}),
     });
 
     const topos = await new TopoServiceImpl(

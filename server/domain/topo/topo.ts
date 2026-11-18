@@ -27,24 +27,10 @@ export type TopoDetails = TopoDetailsDto;
 export type TopoLibraryItem = TopoLibraryItemDto;
 export type TopoListItem = TopoListItemDto;
 
-export type TopoRecord = {
-  totalAmount: InitialAmount;
-  authors: Author[];
-  condition: TopoCondition;
-  countries: Country[];
-  details: Details | undefined;
-  id: TopoId;
-  languages: Language[];
-  place_in_library: PlaceInLibrary;
-  tags: Tag[];
-  title: Title;
-  types_of_climbing: ClimbingType[];
-  year_published: YearPublished | undefined;
-};
-
 export type TopoLibraryRecord = {
   id: TopoId;
   authors: Author[];
+  details: Details | undefined;
   condition: TopoCondition;
   countries: Country[];
   placeInLibrary: PlaceInLibrary;
@@ -52,7 +38,8 @@ export type TopoLibraryRecord = {
   title: Title;
   typesOfClimbing: ClimbingType[];
   yearPublished: YearPublished | undefined;
-  initialAmount: InitialAmount;
+  amount: InitialAmount;
+  languages: Language[];
 };
 
 export type TopoSummary = {

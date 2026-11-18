@@ -8,7 +8,6 @@ import type {
   TopoId,
   TopoLibraryItem,
 } from '#server/domain/topo/topo';
-import { groupBy } from '#shared/utils/utils';
 
 export class TopoServiceImpl implements TopoService {
   constructor(
@@ -31,14 +30,14 @@ export class TopoServiceImpl implements TopoService {
       authors: topoDetails.authors,
       condition: topoDetails.condition,
       countries: topoDetails.countries,
-      typesOfClimbing: topoDetails.types_of_climbing,
+      typesOfClimbing: topoDetails.typesOfClimbing,
       details: topoDetails.details,
       languages: topoDetails.languages,
-      placeInLibrary: topoDetails.place_in_library,
+      placeInLibrary: topoDetails.placeInLibrary,
       tags: topoDetails.tags,
-      yearPublished: topoDetails.year_published,
-      initialAmount: topoDetails.totalAmount,
-      amount: foldInventoryItemEvents(topoDetails.totalAmount, topoEvents),
+      yearPublished: topoDetails.yearPublished,
+      initialAmount: topoDetails.amount,
+      amount: foldInventoryItemEvents(topoDetails.amount, topoEvents),
       events: topoEvents,
       rentals: rentals,
     };
@@ -53,8 +52,6 @@ export class TopoServiceImpl implements TopoService {
     const topoEvents =
       await this.topoRepository.getAllTopoInventoryItemEvents();
 
-    const groupedTopoEvents = groupBy(topoEvents, (e) => e.topoId);
-
     return topos
       .map((topo) => ({
         id: topo.id,
@@ -66,10 +63,7 @@ export class TopoServiceImpl implements TopoService {
         title: topo.title,
         typesOfClimbing: topo.typesOfClimbing,
         yearPublished: topo.yearPublished,
-        amount: foldInventoryItemEvents(
-          topo.initialAmount,
-          groupedTopoEvents[topo.id] ?? [],
-        ),
+        amount: foldInventoryItemEvents(topo.amount, topoEvents[topo.id] ?? []),
       }))
       .filter((topo) => includeOutOfStock || topo.amount > 0);
   };
