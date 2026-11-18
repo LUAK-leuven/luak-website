@@ -67,13 +67,15 @@
           <span>{{ topo.languages.join(', ') }}</span>
         </TopoLibraryTopoDetailItem>
         <TopoLibraryTopoDetailItem name="Place in library">
-          <span>{{ topo.placeInLibrary }}</span>
+          <span>{{ topo.placeInLibrary ?? 'N/A' }}</span>
         </TopoLibraryTopoDetailItem>
         <TopoLibraryTopoDetailItem name="Tags">
           <span>{{ topo.tags.join(', ') }}</span>
         </TopoLibraryTopoDetailItem>
         <TopoLibraryTopoDetailItem name="Year published">
-          <span class="badge badge-info">{{ topo.yearPublished ?? 'NA' }}</span>
+          <span class="badge badge-info">{{
+            topo.yearPublished ?? 'N/A'
+          }}</span>
         </TopoLibraryTopoDetailItem>
       </div>
       <template v-if="isBoard">

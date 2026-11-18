@@ -30,7 +30,7 @@ export type TopoDetails = {
   typesOfClimbing: ClimbingType[];
   details: Details | undefined;
   languages: Language[];
-  placeInLibrary: PlaceInLibrary;
+  placeInLibrary: PlaceInLibrary | undefined;
   tags: Tag[];
   yearPublished: YearPublished | undefined;
   initialAmount: InitialAmount;
@@ -48,7 +48,7 @@ export type TopoLibraryItem = {
   authors: Author[];
   condition: TopoCondition;
   countries: Country[];
-  placeInLibrary: PlaceInLibrary;
+  placeInLibrary: PlaceInLibrary | undefined;
   tags: Tag[];
   title: Title;
   typesOfClimbing: ClimbingType[];

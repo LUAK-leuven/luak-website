@@ -14,6 +14,7 @@ import {
   itemEventSchema,
 } from '#shared/api/rest/inventory';
 import { createRentalItemId } from '#shared/api/rest/rental/rentalItem';
+import type { PlaceInLibrary } from '#shared/api/rest/topo';
 import {
   createAuthor,
   createClimbingType,
@@ -96,7 +97,7 @@ const mapTopoLibraryRecord = (topo: TopoRow): TopoLibraryRecord => ({
   condition: mapTopoCondition(topo.condition),
   countries: mapCountries(topo.countries),
   tags: mapTags(topo.tags),
-  placeInLibrary: createPlaceInLibrary(topo.place_in_library),
+  placeInLibrary: mapPlaceInLibrary(topo.place_in_library),
   typesOfClimbing: mapClimbingTypes(topo.types_of_climbing),
   yearPublished: mapYearPublished(topo.year_published),
   amount: createInitialAmount(topo.amount),
@@ -142,3 +143,11 @@ const mapDetails = (details: TopoRow['details']) => {
 
 const mapLanguages = (languages: TopoRow['languages']) =>
   languages.map((it) => createLanguage(it));
+
+function mapPlaceInLibrary(
+  place_in_library: string,
+): PlaceInLibrary | undefined {
+  const trimmedPlace = place_in_library.trim();
+  if (trimmedPlace === '') return undefined;
+  return createPlaceInLibrary(trimmedPlace);
+}

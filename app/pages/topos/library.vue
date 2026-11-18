@@ -195,7 +195,7 @@
                   </NuxtLink>
                 </td>
                 <td v-if="user.permissions.boardSection">
-                  {{ topo.placeInLibrary }}
+                  {{ topo.placeInLibrary ?? 'N/A' }}
                 </td>
                 <td>{{ topo.yearPublished }}</td>
                 <td>{{ topo.countries.join(', ') }}</td>

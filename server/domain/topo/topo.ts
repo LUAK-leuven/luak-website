@@ -33,7 +33,7 @@ export type TopoLibraryRecord = {
   details: Details | undefined;
   condition: TopoCondition;
   countries: Country[];
-  placeInLibrary: PlaceInLibrary;
+  placeInLibrary: PlaceInLibrary | undefined; // TODO: fix data and make this required
   tags: Tag[];
   title: Title;
   typesOfClimbing: ClimbingType[];
