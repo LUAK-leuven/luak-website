@@ -1,7 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-import type { UserRepository } from '#server/domain/user/repository';
 import type { UserId } from '#shared/api/rest/user';
+import type { UserRepository } from '#shared/domain/user/repository';
 import type { Database } from '#shared/types/database.types';
 
 export class SupabaseUserRepository implements UserRepository {

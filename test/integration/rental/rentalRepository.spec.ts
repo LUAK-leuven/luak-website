@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 
-import { SupabaseRentalRepository } from '#server/adapter-supabase/rental/repository';
+import { SupabaseRentalRepository } from '#shared/adapter-supabase/rental/repository';
 import { createGearItemId } from '#shared/api/rest/gear';
 import {
   createRentalItemId,

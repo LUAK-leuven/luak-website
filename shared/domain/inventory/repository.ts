@@ -1,11 +1,11 @@
+import type { GearInventoryId, GearItemId } from '#shared/api/rest/gear';
+import type { InventoryItemEvent } from '#shared/api/rest/inventory';
 import type {
   GearInventoryRecord,
   GearInventorySummaryRecord,
   GearItemRecord,
   InventoryItemId,
-} from '#server/domain/inventory/InventoryItem';
-import type { GearInventoryId, GearItemId } from '#shared/api/rest/gear';
-import type { InventoryItemEvent } from '#shared/api/rest/inventory';
+} from '#shared/domain/inventory/InventoryItem';
 
 export interface InventoryRepository {
   getInventorySummary(): Promise<GearInventorySummaryRecord[]>;

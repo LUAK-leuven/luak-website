@@ -2,7 +2,7 @@ import type {
   TopoDetails,
   TopoId,
   TopoLibraryItem,
-} from '#server/domain/topo/topo';
+} from '#shared/api/rest/topo';
 
 export interface TopoService {
   getDetails(topoId: TopoId): Promise<TopoDetails>;

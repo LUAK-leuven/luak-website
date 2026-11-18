@@ -1,11 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-import { outstandingAmountOf } from '#server/adapter-supabase/rental/outstandingAmount';
-import { foldInventoryItemEvents } from '#server/domain/inventory/InventoryItem';
-import type {
-  RentalItem,
-  RentalItemRepository,
-} from '#server/domain/rental/rentalItem';
+import { outstandingAmountOf } from '#shared/adapter-supabase/rental/outstandingAmount';
 import type { GearItemId } from '#shared/api/rest/gear';
 import { createGearItemId } from '#shared/api/rest/gear';
 import {
@@ -23,6 +18,11 @@ import {
   createRentalItemName,
   createTotalAmount,
 } from '#shared/api/rest/rental/rentalItem';
+import { foldInventoryItemEvents } from '#shared/domain/inventory/InventoryItem';
+import type {
+  RentalItem,
+  RentalItemRepository,
+} from '#shared/domain/rental/rentalItem';
 import type { Database, Json } from '#shared/types/database.types';
 import { sum } from '#shared/utils/utils';
 

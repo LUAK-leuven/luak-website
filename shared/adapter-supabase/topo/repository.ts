@@ -1,12 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-import type { TopoRepository } from '#server/domain/topo/repository';
-import type {
-  TopoCondition,
-  TopoId,
-  TopoLibraryRecord,
-  TopoSummary,
-} from '#server/domain/topo/topo';
 import type { InventoryItemEvent } from '#shared/api/rest/inventory';
 import {
   createInitialAmount,
@@ -14,7 +7,11 @@ import {
   itemEventSchema,
 } from '#shared/api/rest/inventory';
 import { createRentalItemId } from '#shared/api/rest/rental/rentalItem';
-import type { PlaceInLibrary } from '#shared/api/rest/topo';
+import type {
+  PlaceInLibrary,
+  TopoCondition,
+  TopoId,
+} from '#shared/api/rest/topo';
 import {
   createAuthor,
   createClimbingType,
@@ -27,6 +24,8 @@ import {
   createTopoId,
   createYearPublished,
 } from '#shared/api/rest/topo';
+import type { TopoRepository } from '#shared/domain/topo/repository';
+import type { TopoLibraryRecord, TopoSummary } from '#shared/domain/topo/topo';
 import type { Database } from '#shared/types/database.types';
 
 type TopoRow = Database['public']['Tables']['Topos']['Row'];

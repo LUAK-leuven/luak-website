@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 
-import { SupabaseTopoRepository } from '#server/adapter-supabase/topo/repository';
+import { SupabaseTopoRepository } from '#shared/adapter-supabase/topo/repository';
 import { testServiceBuilder } from '#test/testServices';
 
 const { supabase, testDao } = testServiceBuilder();

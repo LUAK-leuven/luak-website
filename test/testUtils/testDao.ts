@@ -1,11 +1,11 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import dayjs from 'dayjs';
 
-import type { InventoryItemId } from '#server/domain/inventory/InventoryItem';
 import type { ItemEvent } from '#shared/api/rest/inventory';
 import type { RentalId } from '#shared/api/rest/rental';
 import type { RentalItemId } from '#shared/api/rest/rental/rentalItem';
 import type { TopoId } from '#shared/api/rest/topo';
+import type { InventoryItemId } from '#shared/domain/inventory/InventoryItem';
 import type { Database } from '#shared/types/database.types';
 import type { UnsavedRental } from '#shared/types/rental';
 import { aRandomRentalItemId } from '#test/builders/rental';

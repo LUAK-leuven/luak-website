@@ -1,14 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import {
-  foldInventoryItemEvents,
-  type GearInventoryRecord,
-  type GearInventorySummaryRecord,
-  type GearItemRecord,
-  type InventoryItemId,
-} from '#server/domain/inventory/InventoryItem';
-import type { InventoryRepository } from '#server/domain/inventory/repository';
-import {
   createDetails,
   createGearInventoryId,
   createGearItemId,
@@ -26,6 +18,14 @@ import {
   itemEventSchema,
 } from '#shared/api/rest/inventory';
 import { createDepositFee } from '#shared/api/rest/rental';
+import {
+  foldInventoryItemEvents,
+  type GearInventoryRecord,
+  type GearInventorySummaryRecord,
+  type GearItemRecord,
+  type InventoryItemId,
+} from '#shared/domain/inventory/InventoryItem';
+import type { InventoryRepository } from '#shared/domain/inventory/repository';
 import type { Database } from '#shared/types/database.types';
 import { groupBy } from '#shared/utils/utils';
 

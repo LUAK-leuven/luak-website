@@ -1,12 +1,12 @@
-import { foldInventoryItemEvents } from '#server/domain/inventory/InventoryItem';
-import type { InventoryRepository } from '#server/domain/inventory/repository';
-import type { TopoRepository } from '#server/domain/topo/repository';
-import type { TopoService } from '#server/domain/topo/service';
 import type {
   TopoDetails,
   TopoId,
   TopoLibraryItem,
-} from '#server/domain/topo/topo';
+} from '#shared/api/rest/topo';
+import { foldInventoryItemEvents } from '#shared/domain/inventory/InventoryItem';
+import type { InventoryRepository } from '#shared/domain/inventory/repository';
+import type { TopoRepository } from '#shared/domain/topo/repository';
+import type { TopoService } from '#shared/domain/topo/service';
 
 export class TopoServiceImpl implements TopoService {
   constructor(

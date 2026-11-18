@@ -1,12 +1,12 @@
 import { expect, test } from 'vitest';
 
-import { InventoryServiceImpl } from '#server/service/inventory';
 import { createGearItemId, createLifeSpanInYears } from '#shared/api/rest/gear';
 import { createTotalAmount } from '#shared/api/rest/inventory';
 import {
   createOutstandingAmount,
   createRentalItemName,
 } from '#shared/api/rest/rental/rentalItem';
+import { InventoryServiceImpl } from '#shared/service/inventory';
 import { aRandomDepositFee } from '#test/builders/rental';
 import {
   inventoryRepositoryMock,

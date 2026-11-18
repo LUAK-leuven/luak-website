@@ -1,11 +1,3 @@
-import {
-  calculateEarliestRetirementDate,
-  calculateRetirementDate,
-} from '#server/domain/inventory/gear';
-import type { InventoryRepository } from '#server/domain/inventory/repository';
-import type { InventoryService } from '#server/domain/inventory/service';
-import type { RentalItemRepository } from '#server/domain/rental/rentalItem';
-import type { RentalRepository } from '#server/domain/rental/repository';
 import type {
   GearInventoryDetails,
   GearInventorySummary,
@@ -13,6 +5,14 @@ import type {
 } from '#shared/api/rest/gear';
 import { createAvailableAmount } from '#shared/api/rest/rental/availability';
 import { createTotalAmount } from '#shared/api/rest/rental/rentalItem';
+import {
+  calculateEarliestRetirementDate,
+  calculateRetirementDate,
+} from '#shared/domain/inventory/gear';
+import type { InventoryRepository } from '#shared/domain/inventory/repository';
+import type { InventoryService } from '#shared/domain/inventory/service';
+import type { RentalItemRepository } from '#shared/domain/rental/rentalItem';
+import type { RentalRepository } from '#shared/domain/rental/repository';
 import { groupBy, sum, sumOf } from '#shared/utils/utils';
 
 export class InventoryServiceImpl implements InventoryService {

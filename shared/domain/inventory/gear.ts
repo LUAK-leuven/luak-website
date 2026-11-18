@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
 
-import type { GearInventorySummaryRecord } from '#server/domain/inventory/InventoryItem';
 import type {
   GearInventorySummary,
   LifeSpanInYears,
@@ -9,6 +8,7 @@ import type {
   RetirementDate,
 } from '#shared/api/rest/gear';
 import { createRetirementDate } from '#shared/api/rest/gear';
+import type { GearInventorySummaryRecord } from '#shared/domain/inventory/InventoryItem';
 
 export const calculateRetirementDate = (args: {
   purchaseDate: PurchaseDate | undefined;
