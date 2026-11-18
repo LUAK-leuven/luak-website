@@ -112,7 +112,9 @@
             <NuxtLink :to="{ name: 'board-rentals' }"> 👀 Rentals </NuxtLink>
           </li>
           <li>
-            <NuxtLink :to="{ name: 'board-gear' }"> ⚙️ Gear </NuxtLink>
+            <NuxtLink :to="{ name: 'board-inventory' }">
+              📋 Inventory
+            </NuxtLink>
           </li>
           <li>
             <a href="/_studio"> 📝 Studio Mode </a>

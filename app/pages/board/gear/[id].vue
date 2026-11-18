@@ -24,7 +24,7 @@
     :data="data"
     :is-loading="pending"
     :error="error?.message"
-    :back-to="{ name: 'board-gear' }">
+    :back-to="{ name: 'board-inventory' }">
     <div class="flex flex-row flex-wrap justify-between gap-3 mt-3">
       <span data-testId="gearItem-amount">
         Available: {{ gearItems.availableAmount }} /

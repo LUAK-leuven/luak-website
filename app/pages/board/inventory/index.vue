@@ -27,7 +27,7 @@
 
 <template>
   <FullPageCard>
-    <template #title>Gear Overview</template>
+    <template #title>Inventory</template>
 
     <Text
       v-model="searchInput"
