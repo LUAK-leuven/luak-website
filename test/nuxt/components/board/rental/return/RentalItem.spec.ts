@@ -1,9 +1,9 @@
-import { describe, expect, test } from 'vitest';
 import { mountSuspended } from '@nuxt/test-utils/runtime';
-import RentalItem from '~/components/board/rental/return/RentalItem.vue';
-import { RentalTopoItem } from '~/model/Rental';
-import { aRandomRentalId } from '#test/builders/ids';
-import { aRandomTopoId } from '#test/builders/topo';
+import { describe, expect, test } from 'vitest';
+
+import { createRentalItemName } from '#shared/api/rest/rental/rentalItem';
+import { aRandomRentalId, aRentalItem } from '#test/builders/rental';
+import RentalItemComponent from '~/components/board/rental/return/RentalItem.vue';
 
 describe('RentalItem', () => {
   test.each([
@@ -21,12 +21,11 @@ describe('RentalItem', () => {
       returnedAmount: number,
       updatedReturnedAmount: number,
     ) => {
-      const wrapper = await mountSuspended(RentalItem, {
+      const wrapper = await mountSuspended(RentalItemComponent, {
         props: {
           rentalId: aRandomRentalId(),
-          item: new RentalTopoItem({
-            id: aRandomTopoId(),
-            name: 'quickdraw',
+          item: aRentalItem({
+            name: createRentalItemName('quickdraw'),
             rentedAmount,
             returnedAmount,
             lostAmount: 0,
@@ -49,12 +48,10 @@ describe('RentalItem', () => {
   );
 
   test('clearing the value does not emit updateReturnedAmount', async () => {
-    const wrapper = await mountSuspended(RentalItem, {
+    const wrapper = await mountSuspended(RentalItemComponent, {
       props: {
         rentalId: aRandomRentalId(),
-        item: new RentalTopoItem({
-          id: aRandomTopoId(),
-          name: 'quickdraw',
+        item: aRentalItem({
           rentedAmount: 1,
           returnedAmount: 0,
           lostAmount: 0,

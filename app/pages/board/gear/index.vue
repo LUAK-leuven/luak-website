@@ -4,6 +4,7 @@
     refDebounced,
     useBreakpoints,
   } from '@vueuse/core';
+
   import RetirementDate from '~/components/board/gear/retirementDate.vue';
   import Text from '~/components/input/Text.vue';
   import WithLazyResource from '~/components/pages/WithLazyResource.vue';

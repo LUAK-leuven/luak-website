@@ -1,4 +1,5 @@
 import { toCanvas } from 'qrcode';
+
 import type { EpcQrCode } from '~/model/EpcQrCode';
 
 export function useEpcQrCodeGenerator(templateRef: string) {

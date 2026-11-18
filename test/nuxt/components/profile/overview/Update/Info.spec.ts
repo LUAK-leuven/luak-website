@@ -1,5 +1,7 @@
-import { beforeEach, expect, test, vi } from 'vitest';
 import { mockNuxtImport, mountSuspended } from '@nuxt/test-utils/runtime';
+import { beforeEach, expect, test, vi } from 'vitest';
+
+import { aRandomUserId } from '#test/builders/ids';
 import Info from '~/components/profile/overview/Update/Info.vue';
 
 const SESSION_EXPIRED_MESSAGE =
@@ -16,6 +18,7 @@ const { authUser, navigateToMock, updateMock, route, signOut } = vi.hoisted(
 );
 
 const userRow = {
+  id: aRandomUserId(),
   first_name: 'Generated',
   last_name: 'User',
   has_newsletter: false,
@@ -50,7 +53,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   signOut.mockResolvedValue({ error: null });
   navigateToMock.mockResolvedValue(undefined);
-  authUser.value = { sub: 'user-id' };
+  authUser.value = { sub: aRandomUserId() };
 });
 
 test('Info form shows session expired toast and redirects to login with the current page when there is no user at submit', async () => {

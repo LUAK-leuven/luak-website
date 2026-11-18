@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import * as yup from 'yup';
+
   import TextField from '~/components/input/TextField.vue';
   import LoadingButton from '~/components/shared/LoadingButton.vue';
   import Modal from '~/components/shared/Modal.vue';
@@ -10,8 +11,8 @@
   const user = useSupabaseUser();
   const { show: showPopup } = useToast();
 
-  const showErrorModal = ref<boolean>(false);
   const authError = ref<{ error: string; description: string }>();
+  const showErrorModal = computed<boolean>(() => !!authError.value);
 
   const formSchema = yup.object({
     pwd1: yup_password.required().label('password'),
@@ -44,12 +45,6 @@
       }
     })();
   };
-
-  watch(authError, (value) => {
-    if (value) {
-      showErrorModal.value = true;
-    }
-  });
 
   onMounted(() => {
     const error = route.query.error;
@@ -100,10 +95,7 @@
       </form>
     </div>
 
-    <Modal
-      v-model:open="showErrorModal"
-      :backdrop="false"
-      data-testId="errorDialog">
+    <Modal :open="showErrorModal" :backdrop="false" data-testId="errorDialog">
       <h2>Error: {{ authError?.error }}</h2>
       <p>{{ authError?.description }}</p>
       <div class="flex flex-row justify-end">

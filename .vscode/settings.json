@@ -4,5 +4,10 @@
   "js/ts.tsdk.path": "node_modules/typescript/lib",
   "js/ts.tsdk.promptToUseWorkspaceVersion": true,
   "js/ts.updateImportsOnFileMove.enabled": "always",
-  "cSpell.words": ["Flone", "jumar", "onsight"]
+  "cSpell.words": ["Flone", "jumar", "onsight"],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always",
+    "source.removeUnusedImports": "always",
+    "source.fixAll.prettier": "always"
+  }
 }

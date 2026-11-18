@@ -1,10 +1,9 @@
 <script setup lang="ts">
-  import Modal from '~/components/shared/Modal.vue';
   import Button from '~/components/shared/Button.vue';
-
-  import { LUAK_PAYMENT } from '~/utils/constants';
-  import { EpcQrCode } from '~/model/EpcQrCode';
+  import Modal from '~/components/shared/Modal.vue';
   import { usePaymentModal } from '~/composables/components/usePaymentModal.ts';
+  import { EpcQrCode } from '~/model/EpcQrCode';
+  import { LUAK_PAYMENT } from '~/utils/constants';
 
   const props = defineProps<{
     amount: number;

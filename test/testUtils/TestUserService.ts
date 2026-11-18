@@ -1,12 +1,14 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
+import dayjs from 'dayjs';
+
+import { createUserId, type UserId } from '#shared/api/rest/user';
 import type { Database } from '#shared/types/database.types';
 import {
-  testUserKeys,
-  testUsers,
   type TestUser,
   type TestUserKey,
+  testUserKeys,
+  testUsers,
 } from '#test/TestUser';
-import dayjs from 'dayjs';
 import { getCurrentMembershipYear } from '~/model/Membership';
 
 export class TestUserService {
@@ -40,16 +42,62 @@ export class TestUserService {
       .throwOnError();
 
     for (const testUser of testUserKeys) {
-      await this.createMemberships(testUser);
+      const userId = await this.getUserId(testUser);
+      await this.createMemberships(userId, testUserConfig[testUser]);
     }
   };
 
   readonly resetTestUsers = async () => {
     await this.deleteAllUsers();
+    await this.provisionTestUsers();
+  };
+
+  private readonly provisionTestUsers = async () => {
     for (const testUser of testUserKeys) {
-      await this.createTestUser(testUser);
-      await this.createMemberships(testUser);
+      if ((await this.findUserId(testUsers[testUser].email)) !== null) continue;
+      await this.createFullUser(
+        testUsers[testUser],
+        testUserConfig[testUser],
+        testUser === 'boardMember',
+      );
     }
+  };
+
+  private readonly createFullUser = async (
+    testUser: TestUser,
+    memberships: MembershipSetup[],
+    isBoardMember = false,
+  ) => {
+    const userId = await this.createUser(testUser);
+
+    if (isBoardMember) {
+      await this.supabase
+        .from('BoardMembers')
+        .insert({
+          user_id: userId,
+        })
+        .throwOnError();
+    }
+
+    await this.createMemberships(userId, memberships);
+  };
+
+  readonly getUserId = async (
+    testUser: TestUser | TestUserKey,
+  ): Promise<UserId> => {
+    if (typeof testUser === 'string') {
+      return this._getUserId(testUsers[testUser]);
+    }
+    return this._getUserId(testUser);
+  };
+
+  private readonly _getUserId = async (testUser: TestUser): Promise<UserId> => {
+    const userId = await this.findUserId(testUser.email);
+    if (userId === null)
+      throw new Error(
+        `Test user ${testUser.email} does not exist; test users are provisioned by the integration global setup`,
+      );
+    return userId;
   };
 
   readonly getUserInfo = async (email: string) => {
@@ -69,31 +117,6 @@ export class TestUserService {
     };
   };
 
-  readonly resetTestUserInfo = async (testUser: TestUserKey) => {
-    const { email, firstName, lastName } = testUsers[testUser];
-    await this.supabase
-      .from('Users')
-      .update({
-        email: email,
-        first_name: firstName,
-        last_name: lastName,
-      })
-      .eq('email', email)
-      .throwOnError();
-  };
-
-  readonly resetTestUserPassword = async (testUser: TestUserKey) => {
-    const { data } = await this.supabase
-      .from('Users')
-      .select('id')
-      .eq('email', testUsers[testUser].email)
-      .single()
-      .throwOnError();
-    await this.supabase.auth.admin.updateUserById(data.id, {
-      password: testUsers[testUser].password,
-    });
-  };
-
   readonly getTestUserSession = async (testUser: TestUserKey) => {
     const { email, password } = testUsers[testUser];
 
@@ -101,24 +124,26 @@ export class TestUserService {
       .from('Users')
       .select('id')
       .eq('email', email)
-      .maybeSingle()
+      .single()
       .throwOnError();
     console.log(`user - ${testUser} - ${email}`, user);
-    if (user === null) {
-      await this.createTestUser(testUser).catch((error: unknown) => {
-        console.warn(`Could not create test user ${testUser}:`, error);
-      });
-    }
 
-    const { data, error } = await this.supabase.auth.signInWithPassword({
-      email,
-      password,
+    const { data, error: signInError } =
+      await this.supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+    if (signInError)
+      throw new Error(`Error signing in user ${email}:`, {
+        cause: signInError,
+      });
+    const { error: signOutError } = await this.supabase.auth.signOut({
+      scope: 'local',
     });
-    if (error)
-      throw new Error(`Error signing in user ${email}:`, { cause: error });
-    const { error: err } = await this.supabase.auth.signOut({ scope: 'local' });
-    if (err)
-      throw new Error(`Error signing out user ${email}:`, { cause: err });
+    if (signOutError)
+      throw new Error(`Error signing out user ${email}:`, {
+        cause: signOutError,
+      });
 
     return data.session;
   };
@@ -140,10 +165,11 @@ export class TestUserService {
       });
   };
 
-  private readonly createMemberships = async (testUser: TestUserKey) => {
-    const userId = await this.getTestUserId(testUser);
-
-    for (const { year, paid, createdOn } of testUserConfig[testUser]) {
+  private readonly createMemberships = async (
+    userId: UserId,
+    memberships: MembershipSetup[],
+  ) => {
+    for (const { year, paid, createdOn } of memberships) {
       const { data: membership } = await this.supabase
         .from('Memberships')
         .insert({
@@ -172,30 +198,16 @@ export class TestUserService {
     }
   };
 
-  private readonly getTestUserId = async (testUser: TestUserKey) => {
+  private readonly findUserId = async (
+    email: string,
+  ): Promise<UserId | null> => {
     const { data } = await this.supabase
       .from('Users')
       .select('id')
-      .eq('email', testUsers[testUser].email)
-      .single()
+      .eq('email', email)
+      .maybeSingle()
       .throwOnError();
-
-    return data.id;
-  };
-
-  private readonly createTestUser = async (testUser: TestUserKey) => {
-    const userId = await this.createUser(testUsers[testUser]);
-
-    if (testUser === 'boardMember') {
-      await this.supabase
-        .from('BoardMembers')
-        .insert({
-          user_id: userId,
-        })
-        .throwOnError();
-    }
-
-    return userId;
+    return data === null ? null : createUserId(data.id);
   };
 
   readonly createUser = async (testUser: TestUser) => {
@@ -211,7 +223,7 @@ export class TestUserService {
         cause: error,
       });
 
-    const userId = data.user.id;
+    const userId = createUserId(data.user.id);
 
     await this.supabase
       .from('Users')
@@ -261,10 +273,13 @@ export class TestUserService {
 const currentMembershipYear = getCurrentMembershipYear();
 const now = dayjs();
 
-const testUserConfig: Record<
-  keyof typeof testUsers,
-  { year: number; paid: boolean; createdOn: string }[]
-> = {
+export type MembershipSetup = {
+  year: number;
+  paid: boolean;
+  createdOn: string;
+};
+
+const testUserConfig: Record<keyof typeof testUsers, MembershipSetup[]> = {
   nonMember: [],
   unpaidMembership: [
     {

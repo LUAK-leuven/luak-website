@@ -1,20 +1,13 @@
-import type { TopoRepository } from '#server/domain/topo/repository';
-import type { InventoryRepository } from '#server/domain/inventory/repository';
 import { foldInventoryItemEvents } from '#server/domain/inventory/InventoryItem';
+import type { InventoryRepository } from '#server/domain/inventory/repository';
 import type { RentalRepository } from '#server/domain/rental/repository';
+import type { TopoRepository } from '#server/domain/topo/repository';
 import type { TopoService } from '#server/domain/topo/service';
-import { groupBy, sumOf } from '#shared/utils/utils';
 import type {
   TopoDetails,
-  TopoLibraryItem,
-  TopoListItem,
   TopoId,
+  TopoLibraryItem,
 } from '#server/domain/topo/topo';
-import {
-  createAvailableAmount,
-  type TotalAmount as InventoryItemTotalAmount,
-} from '#shared/api/rest/inventory';
-import type { TotalAmount as RentalItemTotalAmount } from '~~/shared/api/rest/rental';
 
 export class TopoServiceImpl implements TopoService {
   constructor(
@@ -26,10 +19,8 @@ export class TopoServiceImpl implements TopoService {
   readonly getDetails = async (topoId: TopoId): Promise<TopoDetails> => {
     const topoDetails = await this.topoRepository.getDetails(topoId);
 
-    const topoEvents = await this.inventoryRepository.getInventoryItemEvents({
-      itemType: 'topo',
-      itemId: topoId,
-    });
+    const topoEvents =
+      await this.inventoryRepository.getInventoryItemEvents(topoId);
 
     const rentals = await this.rentalRepository.getRentalsForTopo(topoId);
 
@@ -39,14 +30,14 @@ export class TopoServiceImpl implements TopoService {
       authors: topoDetails.authors,
       condition: topoDetails.condition,
       countries: topoDetails.countries,
-      typesOfClimbing: topoDetails.types_of_climbing,
+      typesOfClimbing: topoDetails.typesOfClimbing,
       details: topoDetails.details,
       languages: topoDetails.languages,
-      placeInLibrary: topoDetails.place_in_library,
+      placeInLibrary: topoDetails.placeInLibrary,
       tags: topoDetails.tags,
-      yearPublished: topoDetails.year_published,
-      initialAmount: topoDetails.totalAmount,
-      amount: foldInventoryItemEvents(topoDetails.totalAmount, topoEvents),
+      yearPublished: topoDetails.yearPublished,
+      initialAmount: topoDetails.amount,
+      amount: foldInventoryItemEvents(topoDetails.amount, topoEvents),
       events: topoEvents,
       rentals: rentals,
     };
@@ -61,8 +52,6 @@ export class TopoServiceImpl implements TopoService {
     const topoEvents =
       await this.topoRepository.getAllTopoInventoryItemEvents();
 
-    const groupedTopoEvents = groupBy(topoEvents, (e) => e.topoId);
-
     return topos
       .map((topo) => ({
         id: topo.id,
@@ -74,45 +63,8 @@ export class TopoServiceImpl implements TopoService {
         title: topo.title,
         typesOfClimbing: topo.typesOfClimbing,
         yearPublished: topo.yearPublished,
-        amount: foldInventoryItemEvents(
-          topo.initialAmount,
-          groupedTopoEvents[topo.id] ?? [],
-        ),
+        amount: foldInventoryItemEvents(topo.amount, topoEvents[topo.id] ?? []),
       }))
       .filter((topo) => includeOutOfStock || topo.amount > 0);
-  };
-
-  readonly getTopos = async (): Promise<TopoListItem[]> => {
-    const topos = await this.topoRepository.getTopos();
-    const events = await this.topoRepository.getAllTopoInventoryItemEvents();
-    const groupedTopoEvents = groupBy(events, (e) => e.topoId);
-    const rentedTopoAmounts =
-      await this.rentalRepository.getRentedTopoAmounts();
-    const groupedOutstandingAmounts = groupBy(
-      rentedTopoAmounts,
-      (x) => x.topoId,
-    );
-
-    return topos
-      .map((topo) => {
-        const totalAmount_ = foldInventoryItemEvents(
-          topo.initialAmount,
-          groupedTopoEvents[topo.id] ?? [],
-        );
-        const rentedAmount = sumOf(
-          groupedOutstandingAmounts[topo.id] ?? [],
-          'rentedAmount',
-        );
-        return {
-          id: topo.id,
-          title: topo.title,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-          totalAmount: totalAmount_ as InventoryItemTotalAmount &
-            RentalItemTotalAmount,
-          availableAmount: createAvailableAmount(totalAmount_ - rentedAmount),
-          yearPublished: topo.yearPublished,
-        };
-      })
-      .filter((topo) => topo.totalAmount > 0);
   };
 }

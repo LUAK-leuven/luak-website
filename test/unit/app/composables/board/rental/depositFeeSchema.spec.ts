@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+
 import { depositFeeSchema } from '~/composables/board/rental/depositFeeSchema';
 
 test('accepts a zero deposit fee', async () => {

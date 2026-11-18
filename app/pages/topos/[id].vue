@@ -1,9 +1,9 @@
 <script setup lang="ts">
+  import { createTopoId, type TopoDetails } from '#shared/api/rest/topo';
   import ItemHistory from '~/components/board/inventory/ItemHistory.vue';
   import RentalsForItem from '~/components/board/inventory/RentalsForItem.vue';
   import BackButton from '~/components/shared/BackButton.vue';
   import TopoCondition from '~/components/topoLibrary/TopoCondition.vue';
-  import { createTopoId, type TopoDetails } from '#shared/api/rest/topo';
 
   definePageMeta({ middleware: 'active-member-guard' });
 
@@ -67,13 +67,15 @@
           <span>{{ topo.languages.join(', ') }}</span>
         </TopoLibraryTopoDetailItem>
         <TopoLibraryTopoDetailItem name="Place in library">
-          <span>{{ topo.placeInLibrary }}</span>
+          <span>{{ topo.placeInLibrary ?? 'N/A' }}</span>
         </TopoLibraryTopoDetailItem>
         <TopoLibraryTopoDetailItem name="Tags">
           <span>{{ topo.tags.join(', ') }}</span>
         </TopoLibraryTopoDetailItem>
         <TopoLibraryTopoDetailItem name="Year published">
-          <span class="badge badge-info">{{ topo.yearPublished ?? 'NA' }}</span>
+          <span class="badge badge-info">{{
+            topo.yearPublished ?? 'N/A'
+          }}</span>
         </TopoLibraryTopoDetailItem>
       </div>
       <template v-if="isBoard">

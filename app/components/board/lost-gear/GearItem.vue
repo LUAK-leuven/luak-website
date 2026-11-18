@@ -1,26 +1,31 @@
 <script setup lang="ts">
-  import WithLazyResource from '~/components/pages/WithLazyResource.vue';
-  import LoadingButton from '~/components/shared/LoadingButton.vue';
-  import Number from '~/components/input/NumberCompact.vue';
   import {
-    object as yupObject,
     number as yupNumber,
+    object as yupObject,
     string as yupString,
   } from 'yup';
-  import GearInventorySelection from './GearInventorySelection.vue';
-  import type { GearInventoryId } from '#shared/api/rest/gear';
-  import type { RentalGearItem } from '~/model/Rental.js';
+
+  import type {
+    GearInventoryDetails,
+    GearInventoryId,
+  } from '#shared/api/rest/gear';
   import type { RentalId } from '#shared/api/rest/rental.ts';
+  import GearInventorySelection from '~/components/board/lost-gear/GearInventorySelection.vue';
+  import Number from '~/components/input/NumberCompact.vue';
+  import WithLazyResource from '~/components/pages/WithLazyResource.vue';
+  import LoadingButton from '~/components/shared/LoadingButton.vue';
+  import type { RentalItem } from '~/model/Rental.js';
 
   const props = defineProps<{
     rentalId: RentalId;
-    gearItem: RentalGearItem;
+    gearItem: RentalItem;
   }>();
 
   const { show } = useToast();
+  const gearService = useGearService();
 
-  const { data, pending, error } = await useLazyFetch(
-    `/api/gear/inventory/${props.gearItem.itemId.id}`,
+  const { data, pending, error } = await useLazyFetch<GearInventoryDetails>(
+    `/api/gear/inventory/${props.gearItem.id}`,
     {
       method: 'get',
     },
@@ -30,7 +35,7 @@
     lostAmount: yupNumber()
       .required()
       .min(1)
-      .max(props.gearItem.unreturnedAmount),
+      .max(props.gearItem.outstandingAmount),
     inventoryItem: yupString<GearInventoryId>()
       .uuid()
       .required('You must select an inventory item'),
@@ -58,14 +63,13 @@
   const onSubmit = async () =>
     handleSubmit(
       async (formState) => {
-        const { error } = await useSupabaseClient().rpc('mark_gear_as_lost', {
-          p_gear_item_id: props.gearItem.itemId.id,
-          p_rental_id: props.rentalId,
-          p_inventory_item_id: formState.inventoryItem,
-          p_lost_amount: formState.lostAmount,
+        const { error } = await gearService.markAsLost({
+          rentalItemId: props.gearItem.id,
+          rentalId: props.rentalId,
+          inventoryItemId: formState.inventoryItem,
+          lostAmount: formState.lostAmount,
         });
         if (error) {
-          console.error(error.message);
           show('error', 'Server error: Failed to submit response.');
         } else {
           await navigateTo({
@@ -93,7 +97,7 @@
         Rented amount: {{ gearItem.rentedAmount }}
       </div>
       <div data-testId="unreturnedAmount">
-        Unreturned amount: {{ gearItem.unreturnedAmount }}
+        Unreturned amount: {{ gearItem.outstandingAmount }}
       </div>
       <div>
         <div class="col-span-full flex flex-row gap-2 items-center">

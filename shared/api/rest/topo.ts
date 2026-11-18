@@ -1,19 +1,19 @@
 import { type infer as ZodInfer, string as zodString } from 'zod';
 
-import { entityIdSchema } from '#shared/types/ddd';
 import type {
-  RentalId,
-  OutstandingAmount,
-  RentalMemberName,
-  TotalAmount as RentalItemTotalAmount,
-} from '#shared/api/rest/rental';
-import type {
-  AvailableAmount,
   InitialAmount,
   InventoryItemEvent,
   TotalAmount as InventoryItemTotalAmount,
 } from '#shared/api/rest/inventory';
+import type { RentalId, RentalMemberName } from '#shared/api/rest/rental';
+import type { AvailableAmount } from '#shared/api/rest/rental/availability';
+import type {
+  OutstandingAmount,
+  RentalItemId,
+  TotalAmount as RentalItemTotalAmount,
+} from '#shared/api/rest/rental/rentalItem';
 import { yearSchema } from '#shared/types/common';
+import { entityIdSchema } from '#shared/types/ddd';
 
 declare const _topoIdBrand: unique symbol;
 export const topoIdSchema = entityIdSchema<typeof _topoIdBrand>();
@@ -30,7 +30,7 @@ export type TopoDetails = {
   typesOfClimbing: ClimbingType[];
   details: Details | undefined;
   languages: Language[];
-  placeInLibrary: PlaceInLibrary;
+  placeInLibrary: PlaceInLibrary | undefined;
   tags: Tag[];
   yearPublished: YearPublished | undefined;
   initialAmount: InitialAmount;
@@ -48,7 +48,7 @@ export type TopoLibraryItem = {
   authors: Author[];
   condition: TopoCondition;
   countries: Country[];
-  placeInLibrary: PlaceInLibrary;
+  placeInLibrary: PlaceInLibrary | undefined;
   tags: Tag[];
   title: Title;
   typesOfClimbing: ClimbingType[];
@@ -57,7 +57,7 @@ export type TopoLibraryItem = {
 };
 
 export type TopoListItem = {
-  id: TopoId;
+  id: RentalItemId;
   title: Title;
   totalAmount: InventoryItemTotalAmount & RentalItemTotalAmount;
   availableAmount: AvailableAmount;

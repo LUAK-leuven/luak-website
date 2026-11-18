@@ -1,5 +1,6 @@
-import { expect, test } from 'vitest';
 import { mountSuspended } from '@nuxt/test-utils/runtime';
+import { expect, test } from 'vitest';
+
 import DepositFeeField from '~/components/board/rental/form/DepositFeeField.vue';
 
 test('When text is empty the modelValue will be initialized with the computedDeposit on focus', async () => {

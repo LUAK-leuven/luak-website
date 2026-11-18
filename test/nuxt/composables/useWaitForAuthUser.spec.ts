@@ -1,5 +1,6 @@
-import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { mockNuxtImport } from '@nuxt/test-utils/runtime';
+import { afterEach, beforeEach, expect, test, vi } from 'vitest';
+
 import {
   AUTH_USER_WAIT_TIMEOUT,
   useWaitForAuthUser,

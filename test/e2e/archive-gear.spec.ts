@@ -1,12 +1,14 @@
-import { authStateFile, cleanDatabase, test } from '#test/e2e/fixtures';
-import { testServiceBuilder } from '#test/testServices';
-import { createGearInventoryId } from '#shared/api/rest/gear';
-import { createTopoId } from '#shared/api/rest/topo';
-import { GearInventoryPage } from '#test/e2e/pages/gear/inventory.page';
 import { expect } from '@playwright/test';
+
+import { createGearInventoryId } from '#shared/api/rest/gear';
+import { createItemArchivedEvent } from '#shared/api/rest/inventory';
+import { RentalItemType } from '#shared/api/rest/rental/rentalItem';
+import { createTopoId } from '#shared/api/rest/topo';
+import { authStateFile, cleanDatabase, test } from '#test/e2e/fixtures';
+import { GearInventoryPage } from '#test/e2e/pages/gear/inventory.page';
 import { RentalFormPage } from '#test/e2e/pages/rental/form.page';
 import { TopoDetailsPage } from '#test/e2e/pages/topos/details.page';
-import { createItemArchivedEvent } from '#shared/api/rest/inventory';
+import { testServiceBuilder } from '#test/testServices';
 
 test.use({ storageState: authStateFile('boardMember') });
 
@@ -23,18 +25,12 @@ test.describe('lost gear form', () => {
     // Archive some stuff
     const testDao = testServiceBuilder().testDao();
     await testDao.addInventoryItemEvent({
-      itemId: {
-        // TODO: find a better solution iso reusing the hardcoded ID from seed.sql
-        itemId: createGearInventoryId('3d7a2a9a-8a8a-456c-997e-8533427f6ed1'),
-        itemType: 'gear',
-      },
+      // TODO: find a better solution iso reusing the hardcoded ID from seed.sql
+      itemId: createGearInventoryId('3d7a2a9a-8a8a-456c-997e-8533427f6ed1'),
       event: createItemArchivedEvent(4),
     });
     await testDao.addInventoryItemEvent({
-      itemId: {
-        itemId: createGearInventoryId('49f1b67b-5289-4056-a43a-c9ad248ad883'),
-        itemType: 'gear',
-      },
+      itemId: createGearInventoryId('49f1b67b-5289-4056-a43a-c9ad248ad883'),
       event: createItemArchivedEvent(2),
     });
 
@@ -49,9 +45,9 @@ test.describe('lost gear form', () => {
     // Rental form
     const rentalFormPage = await RentalFormPage.navigate(page);
 
-    await rentalFormPage.selectSearchBar('gear');
+    await rentalFormPage.selectSearchBar(RentalItemType.gear);
     const item = await rentalFormPage
-      .selectComponent('gear')
+      .selectComponent(RentalItemType.gear)
       .option('quickdraw');
     await expect(item).toContainText('32');
   });
@@ -64,10 +60,7 @@ test.describe('lost gear form', () => {
     // Archive a topo
     const testDao = testServiceBuilder().testDao();
     await testDao.addInventoryItemEvent({
-      itemId: {
-        itemId: topoId,
-        itemType: 'topo',
-      },
+      itemId: topoId,
       event: createItemArchivedEvent(1),
     });
 
@@ -83,8 +76,10 @@ test.describe('lost gear form', () => {
     // Rental form
     const rentalFormPage = await RentalFormPage.navigate(page);
 
-    await rentalFormPage.selectSearchBar('topos');
-    const item = await rentalFormPage.selectComponent('topos').option('flone');
+    await rentalFormPage.selectSearchBar(RentalItemType.topo);
+    const item = await rentalFormPage
+      .selectComponent(RentalItemType.topo)
+      .option('flone');
     await expect(item).toContainText('1');
   });
 });

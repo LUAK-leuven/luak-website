@@ -1,22 +1,39 @@
-<script lang="ts" setup generic="T extends EntityId">
+<script lang="ts" setup>
   import { objectEntries } from '@vueuse/core';
+
+  import {
+    type AvailableAmount,
+    createAvailableAmount,
+  } from '#shared/api/rest/rental/availability';
+  import {
+    createRentalItemName,
+    type RentalItemId,
+    type RentalItemName,
+  } from '#shared/api/rest/rental/rentalItem';
   import type { RentalItem } from '#shared/types/board/form/RentalItem';
-  import { createAvailableAmount } from '#shared/api/rest/inventory';
+  import SearchBar from '~/components/board/rental/form/itemSelection/searchBar.vue';
+  import SelectionOverview from '~/components/board/rental/form/itemSelection/selectionOverview.vue';
+
+  type CompositeItems = Record<string, CompositeSubItem[]>;
+  type CompositeSubItem = {
+    itemId: RentalItemId;
+    amount: number;
+  };
 
   const props = withDefaults(
     defineProps<{
-      allItems: RentalItem<T>[];
-      compositeItems?: Record<string, { itemId: T; amount: number }[]>;
+      allItems: RentalItem[];
+      compositeItems?: Partial<CompositeItems>;
       placeholder: string;
-      selectedItems: Record<T, number | undefined>;
+      selectedItems: Partial<Record<RentalItemId, number>>;
     }>(),
     { compositeItems: () => ({}) },
   );
 
   const emit = defineEmits<{
     computedDeposit: [value: number];
-    setItem: [id: T, amount: number];
-    removeItem: [id: T];
+    setItem: [id: RentalItemId, amount: number];
+    removeItem: [id: RentalItemId];
   }>();
 
   const selectedItems = computed(() =>
@@ -35,8 +52,14 @@
     }),
   );
 
-  const availableItems = computed(() =>
-    props.allItems
+  const availableItems = computed<
+    {
+      id: RentalItemId;
+      name: RentalItemName;
+      availableAmount: AvailableAmount;
+    }[]
+  >(() => [
+    ...props.allItems
       .filter(
         (it) =>
           !selectedItems.value.some(
@@ -47,24 +70,22 @@
         id: it.id,
         name: it.name,
         availableAmount: it.availableAmount,
-      }))
-      .concat(
-        objectEntries(props.compositeItems).map(([name, items]) => ({
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-          id: name as T,
-          name: name,
-          availableAmount: createAvailableAmount(
-            computeAvailableAmountForCompositeItem(items),
-          ),
-        })),
-      ),
-  );
+      })),
+    ...objectEntries(props.compositeItems).flatMap(([name, items]) => {
+      if (items === undefined) return [];
+      return {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+        id: name as RentalItemId,
+        name: createRentalItemName(name),
+        availableAmount: createAvailableAmount(
+          computeAvailableAmountForCompositeItem(items),
+        ),
+      };
+    }),
+  ]);
 
   const computeAvailableAmountForCompositeItem = (
-    subItems: {
-      itemId: T;
-      amount: number;
-    }[],
+    subItems: CompositeSubItem[],
   ) =>
     Math.min(
       ...subItems.map(({ itemId, amount }) => {
@@ -76,21 +97,25 @@
   const getDefaultAmount = (item: { name: string }) =>
     item.name === 'quickdraw' ? 12 : 1;
 
-  const addItem = (id: T) => {
+  const addItem = (id: RentalItemId) => {
     const compositeItem = props.compositeItems[id];
     if (compositeItem !== undefined) {
-      for (const { itemId, amount } of compositeItem) {
-        emit('setItem', itemId, amount);
-      }
+      addCompositeItem(compositeItem);
     } else {
       const item = getBy(props.allItems, 'id', id);
       const defaultAmount = getDefaultAmount(item);
-      const selectedAmount = props.selectedItems[item.id];
-      if (selectedAmount === undefined) {
-        emit('setItem', item.id, defaultAmount);
-      } else {
-        emit('setItem', item.id, selectedAmount + defaultAmount);
-      }
+      _addItem(item.id, defaultAmount);
+    }
+  };
+
+  const _addItem = (id: RentalItemId, amount: number) => {
+    const selectedAmount = props.selectedItems[id] ?? 0;
+    emit('setItem', id, selectedAmount + amount);
+  };
+
+  const addCompositeItem = (compositeItem: CompositeSubItem[]) => {
+    for (const { itemId, amount } of compositeItem) {
+      _addItem(itemId, amount);
     }
   };
 
@@ -105,17 +130,17 @@
 </script>
 
 <template>
-  <BoardRentalFormItemSelectionSearchBar
+  <SearchBar
     :available-items="availableItems"
     :placeholder="placeholder"
     @on-select="addItem">
-  </BoardRentalFormItemSelectionSearchBar>
+  </SearchBar>
 
-  <BoardRentalFormItemSelectionOverview
+  <SelectionOverview
     :selected-items="selectedItems"
-    @remove-item="(itemId: T) => emit('removeItem', itemId)"
+    @remove-item="(itemId: RentalItemId) => emit('removeItem', itemId)"
     @update-selected-item-amount="
       (itemId, amount) => emit('setItem', itemId, amount)
     ">
-  </BoardRentalFormItemSelectionOverview>
+  </SelectionOverview>
 </template>

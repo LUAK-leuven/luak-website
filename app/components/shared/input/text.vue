@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import type { TextType } from './TextType';
+  import type { TextType } from '~/components/shared/input/TextType';
 
   defineProps<{
     modelValue: string | undefined;

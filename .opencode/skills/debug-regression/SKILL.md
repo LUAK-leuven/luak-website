@@ -9,14 +9,14 @@ A regression is caused by a change, not by a missing feature. Your job is to **f
 
 ## Protocol
 
-Follow in order. Do not skip ahead to step 4.
+Follow in order. Do not skip ahead to step 4. Never skip step 0.
 
+0. **Preserve evidence first.** Before running ANY test/build/command that regenerates output, locate (or ask for) existing failure evidence (`playwright-report/`, `test-results/`, traces, screenshots, logs, coverage, `.nuxt`/`.output` etc.). Read it, then copy it to `.tmp/debug/evidence-<timestamp>/` and diagnose from the copy. Re-running Playwright overwrites `playwright-report/` and `test-results/`. If evidence is missing or unreadable, say so rather than silently re-running.
 1. **Reproduce.** Run the failing command. Capture the exact error and the files in the stack trace.
 2. **Find the change.** `git status`, `git diff`, `git log --oneline -15`, and `git log -p -3 -- <suspect file>`. The cause is almost always in the recent diff. Anything in the diff that *configures* the thing that broke is suspect number one.
 3. **Revert to prove it.** Undo the suspect change (`git stash`, `git checkout -- <file>`, or delete the added lines) and re-run. Confirm the failure disappears before writing a single line of fix.
    - If the failure does not disappear, you had the wrong suspect — return to step 2.
-4. **Fix.** Now that the cause is proven, choose the minimal fix. Usually that is keeping the revert.
-5. **Verify.** Re-run the full failing command plus lint/typecheck. Report the cause, not just the fix.
+4. **Report.** Restore the working tree (never commit the revert) and report the proven cause, the evidence, and the minimal fix you suggest (usually keeping the revert). Stop here: the fix is a separate, planned step.
 
 ## Forbidden while diagnosing
 

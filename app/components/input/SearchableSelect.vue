@@ -1,11 +1,13 @@
 <script setup lang="ts" generic="T">
   import {
-    useFloating,
-    offset,
-    flip,
-    shift,
     autoUpdate,
+    flip,
+    offset,
+    shift,
+    useFloating,
   } from '@floating-ui/vue';
+
+  import Button from '~/components/shared/Button.vue';
 
   const props = withDefaults(
     defineProps<{
@@ -93,29 +95,27 @@
           @mouseenter="mouseOnSelection = true"
           @mouseleave="mouseOnSelection = false">
           <li v-if="options === undefined">
-            <div>
-              {{ loadingMessage }} <span class="loading loading-dots"></span>
-            </div>
+            <p>{{ loadingMessage }} <span class="loading loading-dots" /></p>
           </li>
           <template v-else>
             <li
               v-for="(option, idx) in options"
               :key="idx"
               class="hover:opacity-60">
-              <button
+              <Button
                 class="grid-cols-1 p-0"
                 type="button"
                 @click="onSelect(option)">
                 <slot name="item" :data="option" />
-              </button>
+              </Button>
             </li>
             <li v-if="options.length === 0">
-              <div>No results found</div>
+              <p>No results found</p>
             </li>
           </template>
         </ul>
       </Teleport>
     </label>
-    <span v-if="errorMessage" class="text-error">{{ errorMessage }}</span>
+    <p v-if="errorMessage" class="text-error">{{ errorMessage }}</p>
   </div>
 </template>

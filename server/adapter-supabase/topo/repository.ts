@@ -1,36 +1,40 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
+
+import type { TopoRepository } from '#server/domain/topo/repository';
 import type {
   TopoCondition,
-  TopoInventoryItemEvent,
-  TopoLibraryRecord,
-  TopoRecord,
-  TopoSummary,
   TopoId,
+  TopoLibraryRecord,
+  TopoSummary,
 } from '#server/domain/topo/topo';
-import type { TopoRepository } from '#server/domain/topo/repository';
-import type { Database } from '#shared/types/database.types';
+import type { InventoryItemEvent } from '#shared/api/rest/inventory';
 import {
-  createYearPublished,
+  createInitialAmount,
+  createOccurredOn,
+  itemEventSchema,
+} from '#shared/api/rest/inventory';
+import { createRentalItemId } from '#shared/api/rest/rental/rentalItem';
+import type { PlaceInLibrary } from '#shared/api/rest/topo';
+import {
   createAuthor,
+  createClimbingType,
   createCountry,
   createDetails,
-  createTopoId,
   createLanguage,
   createPlaceInLibrary,
   createTag,
   createTitle,
-  createClimbingType,
+  createTopoId,
+  createYearPublished,
 } from '#shared/api/rest/topo';
-import {
-  createOccurredOn,
-  createInitialAmount,
-  itemEventSchema,
-} from '#shared/api/rest/inventory';
+import type { Database } from '#shared/types/database.types';
+
+type TopoRow = Database['public']['Tables']['Topos']['Row'];
 
 export class SupabaseTopoRepository implements TopoRepository {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
 
-  async getDetails(topoId: TopoId): Promise<TopoRecord> {
+  async getDetails(topoId: TopoId): Promise<TopoLibraryRecord> {
     const { data: topo } = await this.supabaseClient
       .from('Topos')
       .select('*')
@@ -38,92 +42,86 @@ export class SupabaseTopoRepository implements TopoRepository {
       .single()
       .throwOnError();
 
-    return {
-      totalAmount: createInitialAmount(topo.amount),
-      authors: topo.authors.map((it) => createAuthor(it)),
-      condition: mapTopoCondition(topo.condition),
-      countries: topo.countries.map((it) => createCountry(it)),
-      details:
-        topo.details === null || topo.details.trim() === ''
-          ? undefined
-          : createDetails(topo.details),
-      id: createTopoId(topo.id),
-      languages: topo.languages.map((it) => createLanguage(it)),
-      place_in_library: createPlaceInLibrary(topo.place_in_library),
-      tags: topo.tags.map((it) => createTag(it.trim())),
-      title: createTitle(topo.title),
-      types_of_climbing: topo.types_of_climbing.map((it) =>
-        createClimbingType(it),
-      ),
-      year_published:
-        topo.year_published === null
-          ? undefined
-          : createYearPublished(topo.year_published),
-    };
+    return mapTopoLibraryRecord(topo);
   }
 
   async getTopoLibrary(): Promise<TopoLibraryRecord[]> {
     const { data } = await this.supabaseClient
       .from('Topos')
-      .select(
-        'id, authors, condition, countries, place_in_library, tags, title, types_of_climbing, year_published, amount',
-      )
+      .select('*')
       .throwOnError();
 
-    return data.map((topo) => ({
-      id: createTopoId(topo.id),
-      authors: topo.authors.map((it) => createAuthor(it)),
-      condition: mapTopoCondition(topo.condition),
-      countries: topo.countries.map((it) => createCountry(it)),
-      placeInLibrary: createPlaceInLibrary(topo.place_in_library),
-      tags: topo.tags.map((it) => createTag(it.trim())),
-      title: createTitle(topo.title),
-      typesOfClimbing: topo.types_of_climbing.map((it) =>
-        createClimbingType(it),
-      ),
-      yearPublished:
-        topo.year_published === null
-          ? undefined
-          : createYearPublished(topo.year_published),
-      initialAmount: createInitialAmount(topo.amount),
-    }));
+    return data.map(mapTopoLibraryRecord);
   }
 
   async getTopos(): Promise<TopoSummary[]> {
     const { data } = await this.supabaseClient
       .from('Topos')
-      .select('id, title, amount, year_published')
+      .select('id, title, amount, year_published, Inventory(rental_item_id)')
       .throwOnError();
 
     return data.map((topo) => ({
       id: createTopoId(topo.id),
+      rentalItemId: createRentalItemId(topo.Inventory.rental_item_id!),
       title: createTitle(topo.title),
       initialAmount: createInitialAmount(topo.amount),
-      yearPublished:
-        topo.year_published === null
-          ? undefined
-          : createYearPublished(topo.year_published),
+      yearPublished: mapYearPublished(topo.year_published),
     }));
   }
 
-  async getAllTopoInventoryItemEvents(): Promise<TopoInventoryItemEvent[]> {
+  async getAllTopoInventoryItemEvents(): Promise<
+    Partial<Record<TopoId, InventoryItemEvent[]>>
+  > {
     const { data } = await this.supabaseClient
-      .from('InventoryItemEvents')
-      .select('*')
-      .eq('item_type', 'topo')
+      .from('Topos')
+      .select('id, Inventory(InventoryItemEvents(occured_on, event))')
       .throwOnError();
 
-    return data.map((it) => ({
-      topoId: createTopoId(it.item_id),
-      occurredOn: createOccurredOn(it.occured_on),
-      ...itemEventSchema.parse(it.event),
-    }));
+    const x: [TopoId, InventoryItemEvent[]][] = data.map((it) => [
+      createTopoId(it.id),
+      it.Inventory.InventoryItemEvents.map((event) => ({
+        occurredOn: createOccurredOn(event.occured_on),
+        ...itemEventSchema.parse(event.event),
+      })),
+    ]);
+
+    return objectFrom(x);
   }
 }
 
-export function mapTopoCondition(
+const mapTopoLibraryRecord = (topo: TopoRow): TopoLibraryRecord => ({
+  id: createTopoId(topo.id),
+  title: createTitle(topo.title),
+  authors: mapAuthors(topo.authors),
+  details: mapDetails(topo.details),
+  condition: mapTopoCondition(topo.condition),
+  countries: mapCountries(topo.countries),
+  tags: mapTags(topo.tags),
+  placeInLibrary: mapPlaceInLibrary(topo.place_in_library),
+  typesOfClimbing: mapClimbingTypes(topo.types_of_climbing),
+  yearPublished: mapYearPublished(topo.year_published),
+  amount: createInitialAmount(topo.amount),
+  languages: mapLanguages(topo.languages),
+});
+
+const mapAuthors = (authors: TopoRow['authors']) =>
+  authors.map((it) => createAuthor(it));
+
+const mapCountries = (countries: TopoRow['countries']) =>
+  countries.map((it) => createCountry(it));
+
+const mapTags = (tags: TopoRow['tags']) =>
+  tags.map((it) => createTag(it.trim()));
+
+const mapClimbingTypes = (typesOfClimbing: TopoRow['types_of_climbing']) =>
+  typesOfClimbing.map((it) => createClimbingType(it));
+
+const mapYearPublished = (yearPublished: TopoRow['year_published']) =>
+  yearPublished === null ? undefined : createYearPublished(yearPublished);
+
+export const mapTopoCondition = (
   condition: Database['public']['Enums']['topo_condition'] | null,
-): TopoCondition {
+): TopoCondition => {
   switch (condition) {
     case null:
       return undefined;
@@ -134,4 +132,22 @@ export function mapTopoCondition(
     case 'falling_appart':
       return condition;
   }
+};
+
+const mapDetails = (details: TopoRow['details']) => {
+  if (details === null) return undefined;
+  const trimmedDetails = details.trim();
+  if (trimmedDetails === '') return undefined;
+  return createDetails(details.trim());
+};
+
+const mapLanguages = (languages: TopoRow['languages']) =>
+  languages.map((it) => createLanguage(it));
+
+function mapPlaceInLibrary(
+  place_in_library: string,
+): PlaceInLibrary | undefined {
+  const trimmedPlace = place_in_library.trim();
+  if (trimmedPlace === '') return undefined;
+  return createPlaceInLibrary(trimmedPlace);
 }

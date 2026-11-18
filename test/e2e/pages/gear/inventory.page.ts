@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+
 import { GearDetailsPage } from '#test/e2e/pages/gear/details.page';
 
 export class GearInventoryPage {

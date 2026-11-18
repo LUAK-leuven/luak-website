@@ -1,19 +1,7 @@
 <script setup lang="ts">
-  const route = useRoute();
-  const { data: doc } = await useAsyncData(route.path, () => {
-    return queryCollection('infoPages').path(route.path).first();
-  });
+  const doc = await useContentDocument('infoPages');
 </script>
+
 <template>
-  <main>
-    <template v-if="doc">
-      <FullPageCard>
-        <template #title>
-          {{ doc.title }}
-        </template>
-        <ContentRenderer class="nuxt-content w-full" :value="doc" />
-      </FullPageCard>
-    </template>
-    <PagesPageNotFound v-else />
-  </main>
+  <PagesTextDetailPage :doc="doc" />
 </template>

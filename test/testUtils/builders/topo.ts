@@ -1,7 +1,11 @@
+import type { TopoLibraryRecord, TopoSummary } from '#server/domain/topo/topo';
+import { createInitialAmount } from '#shared/api/rest/inventory';
+import { createRentalItemId } from '#shared/api/rest/rental/rentalItem';
 import {
   createAuthor,
   createClimbingType,
   createCountry,
+  createDetails,
   createLanguage,
   createPlaceInLibrary,
   createTag,
@@ -10,28 +14,28 @@ import {
   createYearPublished,
   type TopoId,
 } from '#shared/api/rest/topo';
-import type { TopoLibraryRecord, TopoRecord } from '#server/domain/topo/topo';
-import { createInitialAmount } from '#shared/api/rest/inventory';
 
 export const aRandomTopoId = (): TopoId => createTopoId(crypto.randomUUID());
 
-export const aTopoRecord = (args: Partial<TopoRecord> = {}): TopoRecord => {
-  const defaultTopoRecord: TopoRecord = {
-    totalAmount: createInitialAmount(1),
+export const aTopoLibraryRecord = (
+  args: Partial<TopoLibraryRecord> = {},
+): TopoLibraryRecord => {
+  const defaultTopoRecord: TopoLibraryRecord = {
+    amount: createInitialAmount(1),
     authors: [createAuthor('Marc Bott')],
     condition: undefined,
     countries: [createCountry('Belgium')],
-    details: undefined,
     id: createTopoId(crypto.randomUUID()),
-    languages: [createLanguage('French'), createLanguage('Dutch')],
-    place_in_library: createPlaceInLibrary('France'),
-    tags: [createTag('Epicenter of the universe')],
+    placeInLibrary: createPlaceInLibrary('France'),
+    tags: [createTag('Freyr')],
     title: createTitle('Freyr'),
-    types_of_climbing: [
+    typesOfClimbing: [
       createClimbingType('Sport climbing'),
       createClimbingType('Multipitch'),
     ],
-    year_published: createYearPublished(2022),
+    yearPublished: createYearPublished(2022),
+    details: createDetails('The epicenter of the universe'),
+    languages: [createLanguage('French'), createLanguage('Dutch')],
   };
   return {
     ...defaultTopoRecord,
@@ -39,26 +43,16 @@ export const aTopoRecord = (args: Partial<TopoRecord> = {}): TopoRecord => {
   };
 };
 
-export const aTopoLibraryRecord = (
-  args: Partial<TopoLibraryRecord> = {},
-): TopoLibraryRecord => {
-  const defaultTopoRecord: TopoLibraryRecord = {
-    initialAmount: createInitialAmount(1),
-    authors: [createAuthor('Marc Bott')],
-    condition: undefined,
-    countries: [createCountry('Belgium')],
+export const aTopoSummary = (args: Partial<TopoSummary>): TopoSummary => {
+  const defaultTopoSummary: TopoSummary = {
     id: createTopoId(crypto.randomUUID()),
-    placeInLibrary: createPlaceInLibrary('France'),
-    tags: [createTag('Epicenter of the universe')],
+    rentalItemId: createRentalItemId(crypto.randomUUID()),
     title: createTitle('Freyr'),
-    typesOfClimbing: [
-      createClimbingType('Sport climbing'),
-      createClimbingType('Multipitch'),
-    ],
+    initialAmount: createInitialAmount(1),
     yearPublished: createYearPublished(2022),
   };
   return {
-    ...defaultTopoRecord,
+    ...defaultTopoSummary,
     ...args,
   };
 };

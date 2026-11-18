@@ -1,6 +1,7 @@
 import test, { expect } from '@playwright/test';
-import { TopoLibraryPage } from '#test/e2e/pages/topos/library.page';
+
 import { authStateFile, navigateTo } from '#test/e2e/fixtures';
+import { TopoLibraryPage } from '#test/e2e/pages/topos/library.page';
 
 test.use({ storageState: authStateFile('paidMembership') });
 

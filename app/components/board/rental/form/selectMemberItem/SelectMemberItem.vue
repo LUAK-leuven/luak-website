@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-  import type { SelectableUser } from '../selectMember.vue';
-  import ActiveMembership from './ActiveMembership.vue';
-  import MembershipWillExpireSoon from './MembershipWillExpireSoon.vue';
-  import NoMembership from './NoMembership.vue';
-  import NonMember from './NonMember.vue';
+  import type { SelectableUser } from '~/components/board/rental/form/selectMember.vue';
+  import ActiveMembership from '~/components/board/rental/form/selectMemberItem/ActiveMembership.vue';
+  import MembershipWillExpireSoon from '~/components/board/rental/form/selectMemberItem/MembershipWillExpireSoon.vue';
+  import NoMembership from '~/components/board/rental/form/selectMemberItem/NoMembership.vue';
+  import NonMember from '~/components/board/rental/form/selectMemberItem/NonMember.vue';
 
   defineProps<{
     user: SelectableUser;

@@ -1,9 +1,8 @@
 <script setup lang="ts">
-  import createMembershipSchema from '~/components/profile/overview/membership/BuyMembership/createMembershipSchema';
   import BoolField from '~/components/input/BoolField.vue';
+  import createMembershipSchema from '~/components/profile/overview/membership/BuyMembership/createMembershipSchema';
   import Button from '~/components/shared/Button.vue';
   import Modal from '~/components/shared/Modal.vue';
-
   import { Membership } from '~/model/Membership';
 
   const { handleSubmit, isSubmitting } = useForm({

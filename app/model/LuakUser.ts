@@ -1,5 +1,5 @@
-import { DomainValidationException } from './DomainValidationException';
-import { getCurrentMembershipYear, type Membership } from './Membership';
+import { DomainValidationException } from '~/model/DomainValidationException';
+import { getCurrentMembershipYear, type Membership } from '~/model/Membership';
 
 export class LuakUser {
   private readonly memberships: Membership[];

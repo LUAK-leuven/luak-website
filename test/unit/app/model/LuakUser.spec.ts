@@ -1,10 +1,11 @@
 import dayjs from 'dayjs';
 import { expect, test } from 'vitest';
+
+import { randomBool } from '#shared/utils/utils';
+import { withFakeTimers } from '#test/vitest/withFakeTimers';
 import { DomainValidationException } from '~/model/DomainValidationException';
 import { LuakUser } from '~/model/LuakUser';
 import { Membership } from '~/model/Membership';
-import { randomBool } from '#shared/utils/utils';
-import { withFakeTimers } from '#test/vitest/withFakeTimers';
 
 test('create - throws exception when has memberships and is unauthenticated', () => {
   expect(

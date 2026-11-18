@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+
 import type { RentalId } from '#shared/api/rest/rental';
 import { navigateTo } from '#test/e2e/fixtures';
 

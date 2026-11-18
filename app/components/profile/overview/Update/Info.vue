@@ -1,32 +1,17 @@
 <script lang="ts" setup>
-  import { yup_phone } from '~/utils/yup';
   import * as yup from 'yup';
-  import TextField from '~/components/input/TextField.vue';
+
   import BoolField from '~/components/input/BoolField.vue';
+  import TextField from '~/components/input/TextField.vue';
   import Button from '~/components/shared/Button.vue';
+  import { yup_phone } from '~/utils/yup';
 
   const supabase = useSupabaseClient();
   const user = useSupabaseUser();
+  const userService = useUserService();
   const { handle: handleSessionExpired } = useSessionExpiredHandler();
 
-  // TODO: error handling
-  const { data: userData } = await useAsyncData('userData', async () => {
-    if (!user.value) throw createError({ statusCode: 401 });
-    const { data } = await supabase
-      .from('Users')
-      .select('*')
-      .eq('id', user.value.sub)
-      .single()
-      .throwOnError();
-    return data;
-  });
-  const initialValues = {
-    firstName: userData.value?.first_name,
-    lastName: userData.value?.last_name,
-    newsletter: userData.value?.has_newsletter,
-    whatsapp: userData.value?.has_whatsapp,
-    phoneNumber: userData.value?.phone_number ?? undefined,
-  };
+  const userData = await userService.getUserInfo();
 
   const formSchema = yup.object({
     firstName: yup.string().label('First name'),
@@ -35,11 +20,11 @@
     whatsapp: yup.bool(),
     phoneNumber: yup_phone,
   });
-  const isChangedSuccessfull = ref(false);
+  const isChangedSuccessful = ref(false);
 
   const { handleSubmit, isSubmitting, setFieldError, meta } = useForm({
     validationSchema: toTypedSchema(formSchema),
-    initialValues: initialValues,
+    initialValues: userData.value,
   });
   const onSubmit = handleSubmit(async (submitted) => {
     if (!user.value) {
@@ -60,7 +45,7 @@
     if (error) {
       setFieldError('newsletter', error.message);
     } else {
-      isChangedSuccessfull.value = true;
+      isChangedSuccessful.value = true;
     }
   });
 </script>
@@ -99,12 +84,10 @@
     <div class="flex justify-end">
       <Button
         class="btn btn-primary mt-2"
-        :class="{ 'btn-disabled': isChangedSuccessfull || !meta.dirty }"
+        :class="{ 'btn-disabled': isChangedSuccessful || !meta.dirty }"
         data-testId="changeInfo">
         <span v-if="isSubmitting" class="loading loading-spinner">loading</span>
-        <span
-          v-else-if="isChangedSuccessfull"
-          class="material-symbols-outlined">
+        <span v-else-if="isChangedSuccessful" class="material-symbols-outlined">
           check
         </span>
         <span v-else>Change Info</span>

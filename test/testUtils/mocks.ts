@@ -1,6 +1,7 @@
-import type { TopoRepository } from '#server/domain/topo/repository';
 import type { InventoryRepository } from '#server/domain/inventory/repository';
-import type { RentalRepository } from '~~/server/domain/rental/repository';
+import type { RentalItemRepository } from '#server/domain/rental/rentalItem';
+import type { RentalRepository } from '#server/domain/rental/repository';
+import type { TopoRepository } from '#server/domain/topo/repository';
 
 export const topoRepositoryMock = (
   overrides: Partial<TopoRepository>,
@@ -31,6 +32,14 @@ export const rentalRepositoryMock = (
   getRentedTopoAmounts: () => unused(),
   getRentalsFor: () => unused(),
   getRentalsForTopo: () => unused(),
+  ...overrides,
+});
+
+export const rentalItemRepositoryMock = (
+  overrides: Partial<RentalItemRepository> = {},
+): RentalItemRepository => ({
+  getAllRentalGearItems: () => unused(),
+  getAllRentalTopoItems: () => unused(),
   ...overrides,
 });
 

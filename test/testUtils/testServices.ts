@@ -1,10 +1,14 @@
-import { validateSupabaseUrl } from '#test/validateSupabaseUrl';
 import { createClient } from '@supabase/supabase-js';
+
+import { serviceBuilder } from '#server/serviceBuilder';
 import type { Database } from '#shared/types/database.types';
+import { ServerTestService } from '#test/fetch';
+import { MailpitService } from '#test/MailpitService';
+import { RentalTestRepository } from '#test/rental/getSeededData';
 import { TestDao } from '#test/testDao';
 import { TestUserService } from '#test/TestUserService';
-import { ServerTestService } from '#test/fetch';
-import { MailpitService } from '#test/testUtils/MailpitService';
+import { validateSupabaseUrl } from '#test/validateSupabaseUrl';
+import { RentalService } from '~/services/rentalService';
 
 export const createSupabaseClientForTests = () => {
   if (
@@ -34,8 +38,17 @@ const useSingleton = <T>(create: () => T) => {
 export const testServiceBuilder = useSingleton(() => {
   const supabase = useSingleton(() => createSupabaseClientForTests());
 
-  const testDao = useSingleton(() => new TestDao(supabase()));
+  const prodServiceBuilder = serviceBuilder(supabase());
+
+  const rentalService = useSingleton(() => new RentalService(supabase()));
+
+  const testDao = useSingleton(() => new TestDao(supabase(), rentalService()));
+
+  const rentalTestRepository = useSingleton(
+    () => new RentalTestRepository(prodServiceBuilder.rentalItemRepo()),
+  );
   const userTestService = useSingleton(() => new TestUserService(supabase()));
+
   const serverTestService = useSingleton(
     () => new ServerTestService(userTestService()),
   );
@@ -46,7 +59,9 @@ export const testServiceBuilder = useSingleton(() => {
     supabase,
     testDao,
     userTestService,
+    rentalTestRepository,
     serverTestService,
     mailpitService,
+    prodServices: prodServiceBuilder,
   };
 });

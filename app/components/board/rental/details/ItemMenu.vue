@@ -1,10 +1,15 @@
 <script setup lang="ts">
-  import Button from '~/components/shared/Button.vue';
   import type { RentalId } from '#shared/api/rest/rental';
+  import type {
+    RentalItemId,
+    RentalItemType,
+  } from '#shared/api/rest/rental/rentalItem';
+  import Button from '~/components/shared/Button.vue';
 
   defineProps<{
     rentalId: RentalId;
     itemId: RentalItemId;
+    itemType: RentalItemType;
   }>();
 </script>
 <template>
@@ -25,8 +30,8 @@
             name: 'board-lost-gear',
             query: {
               rentalId: rentalId,
-              itemType: itemId.type,
-              itemId: itemId.id,
+              itemType: itemType,
+              itemId: itemId,
             },
           }"
           data-testId="markAsLost">

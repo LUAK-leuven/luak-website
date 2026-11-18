@@ -1,8 +1,7 @@
 import type {
   TopoDetails,
-  TopoLibraryItem,
-  TopoListItem,
   TopoId,
+  TopoLibraryItem,
 } from '#server/domain/topo/topo';
 
 export interface TopoService {
@@ -10,5 +9,4 @@ export interface TopoService {
   getTopoLibrary(options: {
     includeOutOfStock: boolean;
   }): Promise<TopoLibraryItem[]>;
-  getTopos(): Promise<TopoListItem[]>;
 }

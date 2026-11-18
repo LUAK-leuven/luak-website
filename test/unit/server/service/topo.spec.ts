@@ -1,17 +1,7 @@
 import { expect, test } from 'vitest';
+
 import type { TopoLibraryRecord } from '#server/domain/topo/topo';
 import { TopoServiceImpl } from '#server/service/topo';
-import { createPlaceInLibrary } from '#shared/api/rest/topo';
-import {
-  aRandomTopoId,
-  aTopoLibraryRecord,
-  aTopoRecord,
-} from '#test/builders/topo';
-import {
-  topoRepositoryMock,
-  inventoryRepositoryMock,
-  rentalRepositoryMock,
-} from '#test/mocks';
 import {
   createInitialAmount,
   createItemArchivedAmount,
@@ -19,7 +9,13 @@ import {
   createOccurredOn,
   type InventoryItemEvent,
 } from '#shared/api/rest/inventory';
-import { createOutstandingAmount } from '#shared/api/rest/rental';
+import { createPlaceInLibrary } from '#shared/api/rest/topo';
+import { aRandomTopoId, aTopoLibraryRecord } from '#test/builders/topo';
+import {
+  inventoryRepositoryMock,
+  rentalRepositoryMock,
+  topoRepositoryMock,
+} from '#test/mocks';
 
 test.describe('TopoService', () => {
   test('maps topo details and folds inventory events', async () => {
@@ -27,10 +23,10 @@ test.describe('TopoService', () => {
     const topoRepository = topoRepositoryMock({
       getDetails: () =>
         Promise.resolve(
-          aTopoRecord({
+          aTopoLibraryRecord({
             id: topoId,
-            place_in_library: createPlaceInLibrary('A1'),
-            totalAmount: createInitialAmount(3),
+            placeInLibrary: createPlaceInLibrary('A1'),
+            amount: createInitialAmount(3),
           }),
         ),
     });
@@ -76,14 +72,14 @@ test.describe('TopoService', () => {
         Promise.resolve([
           aTopoLibraryRecord({
             id: inStockTopoId,
-            initialAmount: createInitialAmount(1),
+            amount: createInitialAmount(1),
           }),
           aTopoLibraryRecord({
             id: aRandomTopoId(),
-            initialAmount: createInitialAmount(0),
+            amount: createInitialAmount(0),
           }),
         ] satisfies TopoLibraryRecord[]),
-      getAllTopoInventoryItemEvents: () => Promise.resolve([]),
+      getAllTopoInventoryItemEvents: () => Promise.resolve({}),
     });
 
     const topos = await new TopoServiceImpl(
@@ -93,24 +89,5 @@ test.describe('TopoService', () => {
     ).getTopoLibrary({ includeOutOfStock: false });
 
     expect(topos.map((topo) => topo.id)).toEqual([inStockTopoId]);
-  });
-
-  test('allows negative availability when more topos are rented than stocked', async () => {
-    const topo = aTopoLibraryRecord({ initialAmount: createInitialAmount(1) });
-    const topos = await new TopoServiceImpl(
-      topoRepositoryMock({
-        getTopos: () => Promise.resolve([topo]),
-        getAllTopoInventoryItemEvents: () => Promise.resolve([]),
-      }),
-      inventoryRepositoryMock(),
-      rentalRepositoryMock({
-        getRentedTopoAmounts: () =>
-          Promise.resolve([
-            { topoId: topo.id, rentedAmount: createOutstandingAmount(2) },
-          ]),
-      }),
-    ).getTopos();
-
-    expect(topos[0]?.availableAmount).toBe(-1);
   });
 });

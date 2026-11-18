@@ -1,6 +1,7 @@
 import type { Locator, Page } from '@playwright/test';
-import { TopoDetailsPage } from '#test/e2e/pages/topos/details.page';
+
 import { navigateTo } from '#test/e2e/fixtures';
+import { TopoDetailsPage } from '#test/e2e/pages/topos/details.page';
 
 export class TopoLibraryPage {
   private readonly page: Page;

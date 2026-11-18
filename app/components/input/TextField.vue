@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { useField } from 'vee-validate';
+
   import Text from '~/components/input/Text.vue';
   import type { TextType } from '~/components/shared/input/TextType';
 

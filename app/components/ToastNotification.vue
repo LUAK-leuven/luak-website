@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import Button from './shared/Button.vue';
+  import Button from '~/components/shared/Button.vue';
 
   const { type, progress } = defineProps<{
     type: 'success' | 'warning' | 'error' | 'info';

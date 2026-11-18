@@ -1,6 +1,7 @@
-import { string as zodString, type infer as ZodInfer } from 'zod';
-import { entityIdSchema } from '#shared/types/ddd';
+import { type infer as ZodInfer, string as zodString } from 'zod';
+
 import { amountSchema } from '#shared/types/common';
+import { entityIdSchema } from '#shared/types/ddd';
 
 declare const _depositFeeBrand: unique symbol;
 const depositFeeSchema = amountSchema.brand<typeof _depositFeeBrand>();
@@ -20,16 +21,3 @@ declare const _rentalIdBrand: unique symbol;
 export const rentalIdSchema = entityIdSchema<typeof _rentalIdBrand>();
 export type RentalId = ZodInfer<typeof rentalIdSchema>;
 export const createRentalId = (value: string) => rentalIdSchema.parse(value);
-
-declare const _outstandingAmountBrand: unique symbol;
-const outstandingAmountSchema =
-  amountSchema.brand<typeof _outstandingAmountBrand>();
-export type OutstandingAmount = ZodInfer<typeof outstandingAmountSchema>;
-export const createOutstandingAmount = (n: number): OutstandingAmount =>
-  outstandingAmountSchema.parse(n);
-
-declare const _totalAmountBrand: unique symbol;
-const totalAmountSchema = amountSchema.brand<typeof _totalAmountBrand>();
-export type TotalAmount = ZodInfer<typeof totalAmountSchema>;
-export const createTotalAmount = (n: number): TotalAmount =>
-  totalAmountSchema.parse(n);

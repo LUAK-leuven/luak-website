@@ -1,17 +1,21 @@
-<script setup lang="ts" generic="T extends EntityId">
-  import type { AvailableAmount } from '#shared/api/rest/inventory';
+<script setup lang="ts">
+  import type { AvailableAmount } from '#shared/api/rest/rental/availability';
+  import type {
+    RentalItemId,
+    RentalItemName,
+  } from '#shared/api/rest/rental/rentalItem';
 
   const props = defineProps<{
     availableItems: {
-      id: T;
-      name: string;
+      id: RentalItemId;
+      name: RentalItemName;
       availableAmount: AvailableAmount;
     }[];
     placeholder: string;
   }>();
 
   const emit = defineEmits<{
-    onSelect: [itemId: T];
+    onSelect: [itemId: RentalItemId];
   }>();
 
   const filterItemsByName = (searchTerm: string | undefined) => {

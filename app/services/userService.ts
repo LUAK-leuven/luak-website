@@ -1,12 +1,13 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import dayjs from 'dayjs';
+
+import { createUserId, type UserId } from '#shared/api/rest/user';
 import { LuakUser } from '~/model/LuakUser';
 import {
   getCurrentMembershipYear,
   getMembershipStatus,
   Membership,
 } from '~/model/Membership';
-import { createUserId, type UserId } from '#shared/api/rest/user';
 
 export class UserService {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
@@ -81,7 +82,9 @@ export class UserService {
   readonly getUserInfo = async (userId: UserId) => {
     const { data } = await this.supabaseClient
       .from('Users')
-      .select('id, first_name, last_name, email, phone_number')
+      .select(
+        'id, first_name, last_name, email, phone_number, has_newsletter, has_whatsapp',
+      )
       .eq('id', userId)
       .single()
       .throwOnError();
@@ -93,6 +96,8 @@ export class UserService {
       fullName: data.first_name + ' ' + data.last_name,
       email: data.email,
       phoneNumber: data.phone_number ?? undefined,
+      newsletter: data.has_newsletter,
+      whatsapp: data.has_whatsapp,
     };
   };
 

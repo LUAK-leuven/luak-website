@@ -1,5 +1,5 @@
-import { defineConfig } from 'vitest/config';
 import { defineVitestProject } from '@nuxt/test-utils/config';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
@@ -8,7 +8,7 @@ export default defineConfig({
         resolve: { tsconfigPaths: true },
         test: {
           name: 'unit',
-          include: ['test/unit/**/*.spec.ts'],
+          include: ['test/unit/**/*.spec.ts', 'eslint-rules/**/*.spec.ts'],
           environment: 'node',
         },
       },
@@ -18,7 +18,9 @@ export default defineConfig({
           name: 'integration',
           include: ['test/integration/**/*.spec.ts'],
           environment: 'node',
-          setupFiles: ['test/integration/global-setup.ts'],
+          globalSetup: ['test/integration/global-setup.ts'],
+          setupFiles: ['test/integration/setup.ts'],
+          fileParallelism: false, // TODO LUAK-44: remove once we can insert topos atomically
         },
       },
       await defineVitestProject({

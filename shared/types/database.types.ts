@@ -39,6 +39,7 @@ export type Database = {
           created_at: string;
           user_id: string;
         };
+        ComputedFields: never;
         Insert: {
           created_at?: string;
           user_id: string;
@@ -62,6 +63,7 @@ export type Database = {
           id: string;
           name: string;
         };
+        ComputedFields: never;
         Insert: {
           id?: string;
           name: string;
@@ -78,6 +80,7 @@ export type Database = {
           composite_gear_item_id: string;
           gear_item_id: string;
         };
+        ComputedFields: never;
         Insert: {
           amount: number;
           composite_gear_item_id: string;
@@ -100,7 +103,7 @@ export type Database = {
             foreignKeyName: 'CompositeGearItems_GearItems_gear_item_id_fkey';
             columns: ['gear_item_id'];
             isOneToOne: false;
-            referencedRelation: 'GearItems';
+            referencedRelation: 'RentalItems';
             referencedColumns: ['id'];
           },
         ];
@@ -110,17 +113,18 @@ export type Database = {
           amount: number;
           created_at: string;
           details: string;
-          gear_item_id: string | null;
           id: string;
+          lifespan: number;
           production_date: string | null;
           purchase_date: string | null;
         };
+        ComputedFields: never;
         Insert: {
           amount: number;
           created_at?: string;
           details?: string;
-          gear_item_id?: string | null;
           id?: string;
+          lifespan?: number;
           production_date?: string | null;
           purchase_date?: string | null;
         };
@@ -128,65 +132,77 @@ export type Database = {
           amount?: number;
           created_at?: string;
           details?: string;
-          gear_item_id?: string | null;
           id?: string;
+          lifespan?: number;
           production_date?: string | null;
           purchase_date?: string | null;
         };
         Relationships: [
           {
-            foreignKeyName: 'GearInventory_gear_item_id_fkey';
-            columns: ['gear_item_id'];
-            isOneToOne: false;
-            referencedRelation: 'GearItems';
+            foreignKeyName: 'GearInventory_Inventory_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'Inventory';
             referencedColumns: ['id'];
           },
         ];
       };
-      GearItems: {
+      Inventory: {
         Row: {
-          deposit_fee: number;
+          created_at: string;
           id: string;
-          lifespan: number;
-          name: string;
+          rental_item_id: string | null;
         };
+        ComputedFields: never;
         Insert: {
-          deposit_fee: number;
+          created_at?: string;
           id?: string;
-          lifespan: number;
-          name: string;
+          rental_item_id?: string | null;
         };
         Update: {
-          deposit_fee?: number;
+          created_at?: string;
           id?: string;
-          lifespan?: number;
-          name?: string;
+          rental_item_id?: string | null;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: 'Inventory_rental_item_id_fkey';
+            columns: ['rental_item_id'];
+            isOneToOne: false;
+            referencedRelation: 'RentalItems';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       InventoryItemEvents: {
         Row: {
-          event: Json;
+          event: NonNullable<Json>;
           id: string;
           item_id: string;
-          item_type: Database['public']['Enums']['item_type'];
           occured_on: string;
         };
+        ComputedFields: never;
         Insert: {
-          event: Json;
+          event: NonNullable<Json>;
           id?: string;
           item_id: string;
-          item_type: Database['public']['Enums']['item_type'];
           occured_on?: string;
         };
         Update: {
-          event?: Json;
+          event?: NonNullable<Json>;
           id?: string;
           item_id?: string;
-          item_type?: Database['public']['Enums']['item_type'];
           occured_on?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: 'InventoryItemEvents_Inventory_id_fkey';
+            columns: ['item_id'];
+            isOneToOne: false;
+            referencedRelation: 'Inventory';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       Memberships: {
         Row: {
@@ -198,6 +214,7 @@ export type Database = {
           user_id: string;
           year: number;
         };
+        ComputedFields: never;
         Insert: {
           created_at?: string;
           id?: string;
@@ -234,6 +251,7 @@ export type Database = {
           id: string;
           membership_id: string;
         };
+        ComputedFields: never;
         Insert: {
           amount?: number | null;
           approved: boolean;
@@ -258,6 +276,31 @@ export type Database = {
           },
         ];
       };
+      RentalItems: {
+        Row: {
+          created_at: string;
+          deposit_fee: number;
+          id: string;
+          item_type: Database['public']['Enums']['rental_item_type'];
+          name: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          deposit_fee: number;
+          id?: string;
+          item_type: Database['public']['Enums']['rental_item_type'];
+          name: string;
+        };
+        Update: {
+          created_at?: string;
+          deposit_fee?: number;
+          id?: string;
+          item_type?: Database['public']['Enums']['rental_item_type'];
+          name?: string;
+        };
+        Relationships: [];
+      };
       Rentals: {
         Row: {
           board_member_id: string;
@@ -272,6 +315,7 @@ export type Database = {
           member_id: string | null;
           payment_method: Database['public']['Enums']['payment_method'];
         };
+        ComputedFields: never;
         Insert: {
           board_member_id?: string;
           comments?: string | null;
@@ -315,86 +359,45 @@ export type Database = {
           },
         ];
       };
-      RentedGear: {
+      RentedItems: {
         Row: {
-          gear_item_id: string;
-          last_edited_date: string;
+          created_at: string;
           lost_amount: number;
           rental_id: string;
+          rental_item_id: string;
           rented_amount: number;
           returned_amount: number;
         };
+        ComputedFields: never;
         Insert: {
-          gear_item_id: string;
-          last_edited_date?: string;
+          created_at?: string;
           lost_amount?: number;
           rental_id: string;
+          rental_item_id: string;
           rented_amount: number;
-          returned_amount: number;
+          returned_amount?: number;
         };
         Update: {
-          gear_item_id?: string;
-          last_edited_date?: string;
+          created_at?: string;
           lost_amount?: number;
           rental_id?: string;
+          rental_item_id?: string;
           rented_amount?: number;
           returned_amount?: number;
         };
         Relationships: [
           {
-            foreignKeyName: 'RentedGear_gear_item_id_fkey';
-            columns: ['gear_item_id'];
-            isOneToOne: false;
-            referencedRelation: 'GearItems';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'RentedGear_rental_id_fkey';
-            columns: ['rental_id'];
-            isOneToOne: false;
-            referencedRelation: 'Rentals';
-            referencedColumns: ['id'];
-          },
-        ];
-      };
-      RentedTopos: {
-        Row: {
-          last_edited_date: string;
-          lost_amount: number;
-          rental_id: string;
-          rented_amount: number;
-          returned_amount: number;
-          topo_id: string;
-        };
-        Insert: {
-          last_edited_date?: string;
-          lost_amount?: number;
-          rental_id: string;
-          rented_amount: number;
-          returned_amount: number;
-          topo_id: string;
-        };
-        Update: {
-          last_edited_date?: string;
-          lost_amount?: number;
-          rental_id?: string;
-          rented_amount?: number;
-          returned_amount?: number;
-          topo_id?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'RentedTopos_rental_id_fkey';
+            foreignKeyName: 'RentedItems_rental_id_fkey';
             columns: ['rental_id'];
             isOneToOne: false;
             referencedRelation: 'Rentals';
             referencedColumns: ['id'];
           },
           {
-            foreignKeyName: 'RentedTopos_topo_id_fkey';
-            columns: ['topo_id'];
+            foreignKeyName: 'RentedItems_rental_item_id_fkey';
+            columns: ['rental_item_id'];
             isOneToOne: false;
-            referencedRelation: 'Topos';
+            referencedRelation: 'RentalItems';
             referencedColumns: ['id'];
           },
         ];
@@ -414,6 +417,7 @@ export type Database = {
           types_of_climbing: string[];
           year_published: number | null;
         };
+        ComputedFields: never;
         Insert: {
           amount: number;
           authors: string[];
@@ -442,7 +446,15 @@ export type Database = {
           types_of_climbing?: string[];
           year_published?: number | null;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: 'Topos_Inventory_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'Inventory';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       Users: {
         Row: {
@@ -455,6 +467,7 @@ export type Database = {
           last_name: string;
           phone_number: string | null;
         };
+        ComputedFields: never;
         Insert: {
           created_at?: string;
           email: string;
@@ -490,10 +503,9 @@ export type Database = {
           p_date_borrow: string;
           p_date_return: string;
           p_deposit: number;
-          p_gear: Json;
+          p_items: Json;
           p_member_id: string;
           p_payment_method: Database['public']['Enums']['payment_method'];
-          p_topos: Json;
         };
         Returns: string;
       };
@@ -504,24 +516,19 @@ export type Database = {
           p_date_borrow: string;
           p_date_return: string;
           p_deposit: number;
-          p_gear: Json;
+          p_items: Json;
           p_payment_method: Database['public']['Enums']['payment_method'];
           p_rental_id: string;
-          p_topos: Json;
         };
         Returns: string;
       };
-      mark_gear_as_lost: {
+      mark_item_as_lost: {
         Args: {
-          p_gear_item_id: string;
           p_inventory_item_id: string;
           p_lost_amount: number;
           p_rental_id: string;
+          p_rental_item_id: string;
         };
-        Returns: undefined;
-      };
-      mark_topo_as_lost: {
-        Args: { p_lost_amount: number; p_rental_id: string; p_topo_id: string };
         Returns: undefined;
       };
       save_membership: {
@@ -538,9 +545,8 @@ export type Database = {
           p_comments: string;
           p_date_return: string;
           p_deposit_returned: boolean;
-          p_gear: Json;
+          p_items: Json;
           p_rental_id: string;
-          p_topos: Json;
         };
         Returns: undefined;
       };
@@ -549,6 +555,7 @@ export type Database = {
       item_type: 'topo' | 'gear';
       kbf_uiaa: 'not' | 'kbf_luak' | 'kbf_other' | 'uiaa';
       payment_method: 'cash' | 'transfer';
+      rental_item_type: 'topo' | 'gear';
       student: 'student_kul' | 'phd_kul' | 'student_other' | 'not_student';
       topo_condition:
         'as_good_as_new' | 'good' | 'used' | 'damaged' | 'falling_appart';
@@ -573,6 +580,7 @@ export type Database = {
           type: Database['storage']['Enums']['buckettype'];
           updated_at: string | null;
         };
+        ComputedFields: never;
         Insert: {
           allowed_mime_types?: string[] | null;
           avif_autodetection?: boolean | null;
@@ -611,6 +619,7 @@ export type Database = {
           type: Database['storage']['Enums']['buckettype'];
           updated_at: string;
         };
+        ComputedFields: never;
         Insert: {
           created_at?: string;
           deleted_at?: string | null;
@@ -638,6 +647,7 @@ export type Database = {
           type: Database['storage']['Enums']['buckettype'];
           updated_at: string;
         };
+        ComputedFields: never;
         Insert: {
           created_at?: string;
           id: string;
@@ -658,16 +668,17 @@ export type Database = {
           catalog_id: string;
           created_at: string;
           id: string;
-          metadata: Json;
+          metadata: NonNullable<Json>;
           name: string;
           updated_at: string;
         };
+        ComputedFields: never;
         Insert: {
           bucket_name: string;
           catalog_id: string;
           created_at?: string;
           id?: string;
-          metadata?: Json;
+          metadata?: NonNullable<Json>;
           name: string;
           updated_at?: string;
         };
@@ -676,7 +687,7 @@ export type Database = {
           catalog_id?: string;
           created_at?: string;
           id?: string;
-          metadata?: Json;
+          metadata?: NonNullable<Json>;
           name?: string;
           updated_at?: string;
         };
@@ -704,6 +715,7 @@ export type Database = {
           shard_key: string | null;
           updated_at: string;
         };
+        ComputedFields: never;
         Insert: {
           bucket_name: string;
           catalog_id: string;
@@ -754,6 +766,7 @@ export type Database = {
           id: number;
           name: string;
         };
+        ComputedFields: never;
         Insert: {
           executed_at?: string | null;
           hash: string;
@@ -783,6 +796,7 @@ export type Database = {
           user_metadata: Json | null;
           version: string | null;
         };
+        ComputedFields: never;
         Insert: {
           bucket_id?: string | null;
           created_at?: string | null;
@@ -792,7 +806,7 @@ export type Database = {
           name?: string | null;
           owner?: string | null;
           owner_id?: string | null;
-          path_tokens?: string[] | null;
+          path_tokens?: never;
           updated_at?: string | null;
           user_metadata?: Json | null;
           version?: string | null;
@@ -806,7 +820,7 @@ export type Database = {
           name?: string | null;
           owner?: string | null;
           owner_id?: string | null;
-          path_tokens?: string[] | null;
+          path_tokens?: never;
           updated_at?: string | null;
           user_metadata?: Json | null;
           version?: string | null;
@@ -834,6 +848,7 @@ export type Database = {
           user_metadata: Json | null;
           version: string;
         };
+        ComputedFields: never;
         Insert: {
           bucket_id: string;
           created_at?: string;
@@ -881,6 +896,7 @@ export type Database = {
           upload_id: string;
           version: string;
         };
+        ComputedFields: never;
         Insert: {
           bucket_id: string;
           created_at?: string;
@@ -934,6 +950,7 @@ export type Database = {
           name: string;
           updated_at: string;
         };
+        ComputedFields: never;
         Insert: {
           bucket_id: string;
           created_at?: string;
@@ -991,7 +1008,7 @@ export type Database = {
         Returns: string;
       };
       get_size_by_bucket: {
-        Args: never;
+        Args: Record<PropertyKey, never>;
         Returns: {
           bucket_id: string;
           size: number;
@@ -1031,7 +1048,7 @@ export type Database = {
           updated_at: string;
         }[];
       };
-      operation: { Args: never; Returns: string };
+      operation: { Args: Record<PropertyKey, never>; Returns: string };
       search: {
         Args: {
           bucketname: string;
@@ -1230,6 +1247,7 @@ export const Constants = {
       item_type: ['topo', 'gear'],
       kbf_uiaa: ['not', 'kbf_luak', 'kbf_other', 'uiaa'],
       payment_method: ['cash', 'transfer'],
+      rental_item_type: ['topo', 'gear'],
       student: ['student_kul', 'phd_kul', 'student_other', 'not_student'],
       topo_condition: [
         'as_good_as_new',

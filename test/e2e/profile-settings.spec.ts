@@ -1,26 +1,20 @@
 import { expect } from '@playwright/test';
-import { TestUser, testUsers } from '#test/TestUser';
-import {
-  authStateFile,
-  login,
-  navigateTo,
-  generatedUserTest,
-  randomUserTest,
-  test,
-} from '#test/e2e/fixtures';
-import { LoginPage } from '#test/e2e/pages/login.page';
-import { ProfileSettingsPage } from '#test/e2e/pages/profile/settings.page';
-import { testServiceBuilder } from '#test/testServices';
-import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
-import { ForgotPasswordPage } from '#test/e2e/pages/forgot-password.page';
-import { findBy, sleep } from '#shared/utils/utils';
 import dayjs from 'dayjs';
+
+import { findBy, sleep } from '#shared/utils/utils';
+import { generatedUserTest, navigateTo } from '#test/e2e/fixtures';
+import { LoginPage } from '#test/e2e/pages/login.page';
+import { ProfileOverviewPage } from '#test/e2e/pages/profile/overview.page';
+import { ProfileSettingsPage } from '#test/e2e/pages/profile/settings.page';
 import { ResetPasswordPage } from '#test/e2e/pages/reset-password.page';
+import { testServiceBuilder } from '#test/testServices';
+import { TestUser } from '#test/TestUser';
 
 const testUserService = testServiceBuilder().userTestService();
 
-randomUserTest('Can change user information', async ({ page, user }) => {
-  const profileSettingsPage = await ProfileSettingsPage.navigate(page);
+generatedUserTest('Can change user information', async ({ luakPage, user }) => {
+  await luakPage.login(user);
+  const profileSettingsPage = await luakPage.toMySettings();
 
   await profileSettingsPage.firstNameInput.fill('NewFirstName');
   await profileSettingsPage.lastNameInput.fill('NewLastName');
@@ -33,21 +27,18 @@ randomUserTest('Can change user information', async ({ page, user }) => {
   await expect(profileSettingsPage.changeInfoButton).toHaveText('check');
   await sleep(200);
 
-  const userInfo = await testUserService.getUserInfo(testUsers[user].email);
+  const userInfo = await testUserService.getUserInfo(user.email);
   expect(userInfo.firstName).toBe('NewFirstName');
   expect(userInfo.lastName).toBe('NewLastName');
   expect(userInfo.phoneNumber).toBe('+1234567890');
   expect(userInfo.whatsApp).toBe(true);
   expect(userInfo.newsletter).toBe(true);
-
-  await testUserService.resetTestUserInfo(user);
 });
 
 generatedUserTest(
   'Can change password via settings',
-  async ({ luakPage, generatedUser }) => {
-    await luakPage.login(generatedUser);
-
+  async ({ luakPage, user }) => {
+    await luakPage.login(user);
     const profileSettingsPage = await luakPage.toMySettings();
 
     await profileSettingsPage.newPasswordInput.fill('NewPassword123!');
@@ -65,9 +56,9 @@ generatedUserTest(
 
     await luakPage.login(
       new TestUser({
-        firstName: generatedUser.firstName,
-        lastName: generatedUser.lastName,
-        email: generatedUser.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
         password: 'NewPassword123!',
       }),
     );
@@ -76,10 +67,10 @@ generatedUserTest(
 
 generatedUserTest(
   'Change password with a revoked session redirects to login and back after logging in again',
-  async ({ page, luakPage, generatedUser }) => {
-    await luakPage.login(generatedUser);
+  async ({ page, luakPage, user }) => {
+    await luakPage.login(user);
     const profileSettingsPage = await luakPage.toMySettings();
-    await testUserService.revokeAllSessions(generatedUser);
+    await testUserService.revokeAllSessions(user);
 
     await profileSettingsPage.newPasswordInput.fill('NewPassword123!');
     await profileSettingsPage.confirmPasswordInput.fill('NewPassword123!');
@@ -91,17 +82,17 @@ generatedUserTest(
     );
 
     const loginPage = new LoginPage(page);
-    await loginPage.login(generatedUser.email, generatedUser.password);
+    await loginPage.login(user.email, user.password);
     await page.waitForURL(ProfileSettingsPage.path);
   },
 );
 
 generatedUserTest(
   'Change info with a revoked session saves silently and stays on settings',
-  async ({ page, luakPage, generatedUser }) => {
-    await luakPage.login(generatedUser);
+  async ({ page, luakPage, user }) => {
+    await luakPage.login(user);
     const profileSettingsPage = await luakPage.toMySettings();
-    await testUserService.revokeAllSessions(generatedUser);
+    await testUserService.revokeAllSessions(user);
 
     await profileSettingsPage.firstNameInput.fill('NewFirstName');
     await profileSettingsPage.changeInfoButton.click();
@@ -110,63 +101,47 @@ generatedUserTest(
     await expect(page).toHaveURL(ProfileSettingsPage.path);
     await expect(profileSettingsPage.changeInfoButton).toHaveText('check');
 
-    const userInfo = await testUserService.getUserInfo(generatedUser.email);
+    const userInfo = await testUserService.getUserInfo(user.email);
     expect(userInfo.firstName).toBe('NewFirstName');
   },
 );
 
-test.describe('Forgot password', () => {
-  test.use({ storageState: undefined });
+generatedUserTest(
+  'Forgot password - can reset password via email',
+  async ({ page, luakPage, user }) => {
+    const start = dayjs();
+    const forgotPasswordPage = await luakPage.toForgotPasswordPage();
+    await forgotPasswordPage.emailInput.fill(user.email);
+    await forgotPasswordPage.emailInput.press('Enter');
+    await expect(forgotPasswordPage.submitButton).toHaveText('check');
 
-  randomUserTest(
-    'Can reset password via email',
-    async ({ page, context, user }) => {
-      const start = dayjs();
-      const forgotPasswordPage = await ForgotPasswordPage.navigate(page);
-      await forgotPasswordPage.emailInput.fill(testUsers[user].email);
-      await forgotPasswordPage.emailInput.press('Enter');
-      await expect(forgotPasswordPage.submitButton).toHaveText('check');
+    const mailpitService = testServiceBuilder().mailpitService();
+    const email = await mailpitService.waitForEmail((message) => {
+      if (message.Read) return false;
+      if (message.Subject !== 'Reset your LUAK password') return false;
+      if (findBy(message.To, 'Address', user.email) === undefined) return false;
+      if (dayjs(message.Created).isBefore(start)) return false;
+      return true;
+    });
 
-      const mailpitService = testServiceBuilder().mailpitService();
-      const email = await mailpitService.waitForEmail((message) => {
-        if (message.Read) return false;
-        if (message.Subject !== 'Reset your LUAK password') return false;
-        if (findBy(message.To, 'Address', testUsers[user].email) === undefined)
-          return false;
-        if (dayjs(message.Created).isBefore(start)) return false;
-        return true;
-      });
+    const passwordResetLink = extractPasswordResetLink(email.Text);
 
-      const passwordResetLink = extractPasswordResetLink(email.Text);
+    await navigateTo(page, passwordResetLink);
+    const resetPasswordPage = new ResetPasswordPage(page);
 
-      await navigateTo(page, passwordResetLink);
-      const resetPasswordPage = new ResetPasswordPage(page);
+    await resetPasswordPage.newPasswordInput.fill('my new password :)');
+    await resetPasswordPage.changePasswordInput.fill('my new password :)');
+    await resetPasswordPage.submitButton.click();
 
-      await resetPasswordPage.newPasswordInput.fill('my new password :)');
-      await resetPasswordPage.changePasswordInput.fill('my new password :)');
-      await resetPasswordPage.submitButton.click();
+    await page.waitForURL(ProfileOverviewPage.path);
+    const profilePage = new ProfileOverviewPage(page);
+    await expect(profilePage.hiUserName).toBeVisible();
 
-      await page.waitForURL(ProfileOverviewPage.path);
-      const profilePage = new ProfileOverviewPage(page);
-      await expect(profilePage.hiUserName).toBeVisible();
+    await profilePage.logout();
 
-      await profilePage.logout();
-
-      await login(
-        page,
-        // eslint-disable-next-line @typescript-eslint/no-misused-spread
-        new TestUser({ ...testUsers[user], password: 'my new password :)' }),
-      );
-
-      await profilePage.logout();
-      await testUserService.resetTestUserPassword(user);
-      await login(page, testUsers[user]);
-      await context.storageState({
-        path: authStateFile(user),
-      });
-    },
-  );
-});
+    await luakPage.login(user.copy({ password: 'my new password :)' }));
+  },
+);
 
 const extractPasswordResetLink = (text: string) => {
   const match = text.match(/(?<=Reset password \( ).+(?= \))/);

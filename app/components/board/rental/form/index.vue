@@ -1,18 +1,17 @@
 <script setup lang="ts">
-  import type { RentalItem } from '~~/shared/types/board/form/RentalItem';
-  import Text from '~/components/input/Text.vue';
-  import { useToast } from '~/composables/useToast';
-  import { useRentalForm } from '~/composables/board/rental/useRentalForm';
-  import DepositFeeField from './DepositFeeField.vue';
-  import type { GearItemId } from '#shared/api/rest/gear';
-  import type { TopoId } from '#shared/api/rest/topo';
+  import { createDepositFee, type DepositFee } from '#shared/api/rest/rental';
+  import type { RentalItemId } from '#shared/api/rest/rental/rentalItem';
   import type { UserId } from '#shared/api/rest/user.ts';
-  import { createDepositFee } from '#shared/api/rest/rental';
+  import type { RentalItem } from '#shared/types/board/form/RentalItem';
+  import DepositFeeField from '~/components/board/rental/form/DepositFeeField.vue';
+  import Text from '~/components/input/Text.vue';
+  import { useRentalForm } from '~/composables/board/rental/useRentalForm';
+  import { useToast } from '~/composables/useToast';
 
   const props = defineProps<{
     boardMemberName: string;
-    allGear: RentalItem<GearItemId>[];
-    allTopos: RentalItem<TopoId>[];
+    allGear: RentalItem[];
+    allTopos: RentalItem[];
     initialValues: Partial2<{
       memberId: UserId | 'non-user';
       contactInfo: {
@@ -22,10 +21,10 @@
       };
       dateBorrow: string;
       dateReturn: string;
-      gear: Record<GearItemId, number>;
-      topos: Record<TopoId, number>;
-      depositFee: number;
-      paymentMethod: Enums<'payment_method'>;
+      gear: Record<RentalItemId, number>;
+      topos: Record<RentalItemId, number>;
+      depositFee: DepositFee;
+      paymentMethod: PaymentMethod;
       comments: string;
     }>;
     handleSubmit: (
@@ -38,7 +37,7 @@
   // TODO: handle lazy loading and errors.
   const { data } = await useGearService().getCompositeGearItems();
   const compositeGearItems = computed(() =>
-    Object.fromEntries(
+    objectFrom(
       data.value?.map((it) => [
         it.name,
         it.gearItemIds.map((it) => ({ itemId: it.id, amount: it.amount })),

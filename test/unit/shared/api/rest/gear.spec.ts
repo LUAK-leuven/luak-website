@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+
 import { createLifeSpanInYears } from '#shared/api/rest/gear';
 
 test('creates a positive lifespan in years', () => {

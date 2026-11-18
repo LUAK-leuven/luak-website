@@ -1,6 +1,6 @@
+import { createUserId } from '#shared/api/rest/user';
 import { LuakUser } from '~/model/LuakUser';
 import { luakUserFromDb, UserService } from '~/services/userService';
-import { createUserId } from '#shared/api/rest/user';
 
 export function useUserService() {
   const user = useSupabaseUser();
@@ -17,7 +17,7 @@ export function useUserService() {
     );
 
   const getMembershipInfo = async (args?: { authRequired?: boolean }) => {
-    const { data, error } = await useAsyncData(
+    const membershipInfo = await useRequiredAsyncData(
       `getMembershipInfo-${userId.value ?? 'null'}`,
       async () => {
         if (userId.value === undefined)
@@ -27,20 +27,17 @@ export function useUserService() {
         if (userData === null) return 'unauthenticated';
         return userData;
       },
-      { watch: [userId], lazy: false },
+      { watch: [userId] },
     );
-    watch(error, async (value) => {
-      if (value) await useNuxtApp().runWithContext(() => showError(value));
-    });
     return computed(() => {
-      if (data.value === undefined || data.value === 'unauthenticated')
+      if (membershipInfo.value === 'unauthenticated')
         return LuakUser.UnauthenticatedUser();
-      return luakUserFromDb(data.value);
+      return luakUserFromDb(membershipInfo.value);
     });
   };
 
-  const getUserInfo = async () => {
-    const { data, error } = await useAsyncData(
+  const getUserInfo = async () =>
+    await useRequiredAsyncData(
       `getUserInfo-${userId.value ?? 'null'}`,
       async () => {
         if (userId.value === undefined) throw new Error('User not logged in');
@@ -48,13 +45,6 @@ export function useUserService() {
       },
       { watch: [userId] },
     );
-    watch(error, (err) => {
-      if (err) console.warn(err);
-    });
-    return computed(() => {
-      return data.value;
-    });
-  };
 
   return {
     getMembershipInfo,

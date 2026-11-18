@@ -1,18 +1,13 @@
-import type { GearItemId } from '#shared/api/rest/gear';
-import type { TopoId } from '#shared/api/rest/topo';
+import type { RentalId, RentalMemberName } from '#shared/api/rest/rental';
 import type {
-  RentalId,
   OutstandingAmount,
-  RentalMemberName,
-} from '#shared/api/rest/rental';
-
-export type RentedGearAmount = {
-  gearItemId: GearItemId;
-  rentedAmount: OutstandingAmount;
-};
+  RentalItemId,
+} from '#shared/api/rest/rental/rentalItem';
+import type { TopoId } from '#shared/api/rest/topo';
 
 export type RentedTopoAmount = {
   topoId: TopoId;
+  rentalItemId: RentalItemId;
   rentedAmount: OutstandingAmount;
 };
 

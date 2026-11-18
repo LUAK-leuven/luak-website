@@ -1,4 +1,4 @@
--- Chagne RentedGear index
+-- Change RentedGear index
 alter table "public"."RentedGear" drop constraint "RentedGear_pkey";
 drop index if exists "public"."RentedGear_pkey";
 alter table "public"."RentedGear" drop column "id";

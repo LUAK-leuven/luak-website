@@ -1,15 +1,16 @@
 <script setup lang="ts">
   import {
-    object as yupObject,
-    string as yupString,
     bool as yupBool,
+    object as yupObject,
     ref as yupRef,
+    string as yupString,
   } from 'yup';
-  import { yup_password, yup_phone } from '~/utils/yup';
-  import { useWaitForAuthUser } from '~/composables/useWaitForAuthUser';
+
+  import BoolField from '~/components/input/BoolField.vue';
   import TextField from '~/components/input/TextField.vue';
   import LoadingButton from '~/components/shared/LoadingButton.vue';
-  import BoolField from '~/components/input/BoolField.vue';
+  import { useWaitForAuthUser } from '~/composables/useWaitForAuthUser';
+  import { yup_password, yup_phone } from '~/utils/yup';
 
   definePageMeta({
     middleware: 'unauthenticated',

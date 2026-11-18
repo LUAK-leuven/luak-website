@@ -1,57 +1,69 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
+
+import { outstandingAmountOf } from '#server/adapter-supabase/rental/outstandingAmount';
+import * as RentedItems from '#server/adapter-supabase/rental/RentedItemsTable';
+import type {
+  RentalForItem,
+  RentedTopoAmount,
+} from '#server/domain/rental/rental';
+import type { RentalRepository } from '#server/domain/rental/repository';
 import { createGearItemId, type GearItemId } from '#shared/api/rest/gear';
-import { createTopoId, type TopoId } from '#shared/api/rest/topo';
 import {
   createRentalId,
-  createOutstandingAmount,
   createRentalMemberName,
 } from '#shared/api/rest/rental';
+import {
+  createRentalItemId,
+  type RentalItemId,
+} from '#shared/api/rest/rental/rentalItem';
+import { createTopoId, type TopoId } from '#shared/api/rest/topo';
 import type { Database } from '#shared/types/database.types';
-import type { RentalRepository } from '#server/domain/rental/repository';
-import type {
-  RentedGearAmount,
-  RentedTopoAmount,
-  RentalForItem,
-} from '#server/domain/rental/rental';
+import { objectFrom, single } from '#shared/utils/utils';
 
 export class SupabaseRentalRepository implements RentalRepository {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
 
-  async getRentedGearAmounts(): Promise<RentedGearAmount[]> {
+  async getRentedGearAmounts(): Promise<Partial<Record<GearItemId, number[]>>> {
     const { data } = await this.supabaseClient
-      .from('RentedGear')
-      .select('gear_item_id, rented_amount, returned_amount, lost_amount')
+      .from('RentalItems')
+      .select(`id, ${RentedItems.table}(${RentedItems.availabilityColumns})`)
+      .eq('item_type', 'gear')
       .throwOnError();
 
-    return data.map((x) => ({
-      gearItemId: createGearItemId(x.gear_item_id),
-      rentedAmount: createOutstandingAmount(
-        x.rented_amount - x.returned_amount - x.lost_amount,
-      ),
-    }));
+    return objectFrom(
+      data.map((x) => [
+        createGearItemId(x.id),
+        x.RentedItems.map((y) => outstandingAmountOf(y)),
+      ]),
+    );
   }
 
   async getRentedTopoAmounts(): Promise<RentedTopoAmount[]> {
     const { data } = await this.supabaseClient
-      .from('RentedTopos')
-      .select('topo_id, rented_amount, returned_amount, lost_amount')
+      .from(RentedItems.table)
+      .select(
+        `RentalItems!inner(id, Inventory(id)), ${RentedItems.availabilityColumns}`,
+      )
+      .eq('RentalItems.item_type', 'topo')
       .throwOnError();
 
     return data.map((x) => ({
-      topoId: createTopoId(x.topo_id),
-      rentedAmount: createOutstandingAmount(
-        x.rented_amount - x.returned_amount - x.lost_amount,
-      ),
+      topoId: createTopoId(single(x.RentalItems.Inventory).id),
+      rentalItemId: createRentalItemId(x.RentalItems.id),
+      rentedAmount: outstandingAmountOf(x),
     }));
   }
 
-  async getRentalsFor(gearItemId: GearItemId): Promise<RentalForItem[]> {
+  async getRentalsFor(rentalItemId: RentalItemId): Promise<RentalForItem[]> {
     const { data } = await this.supabaseClient
-      .from('RentedGear')
+      .from(RentedItems.table)
       .select(
-        'rented_amount, returned_amount, lost_amount, Rentals(id, member:Users!member_id(first_name, last_name), contact_info)',
+        `
+          ${RentedItems.availabilityColumns},
+          Rentals(id, member:Users!member_id(first_name, last_name), contact_info)
+        `,
       )
-      .eq('gear_item_id', gearItemId)
+      .eq('rental_item_id', rentalItemId)
       .throwOnError();
 
     return data.map(mapRental).filter((rental) => rental.rentedAmount > 0);
@@ -59,14 +71,27 @@ export class SupabaseRentalRepository implements RentalRepository {
 
   async getRentalsForTopo(topoId: TopoId): Promise<RentalForItem[]> {
     const { data } = await this.supabaseClient
-      .from('RentedTopos')
+      .from('Inventory')
       .select(
-        'rented_amount, returned_amount, lost_amount, Rentals(id, member:Users!member_id(first_name, last_name), contact_info)',
+        `
+          RentalItems(
+            ${RentedItems.table}(
+              ${RentedItems.availabilityColumns},
+              Rentals(id, member:Users!member_id(first_name, last_name), contact_info)
+            )
+          )
+        `,
       )
-      .eq('topo_id', topoId)
+      .eq('id', topoId)
+      .single()
       .throwOnError();
 
-    return data.map(mapRental).filter((rental) => rental.rentedAmount > 0);
+    if (data.RentalItems === null)
+      throw new Error('No rental item found for this topo');
+
+    return data.RentalItems.RentedItems.map(mapRental).filter(
+      (rental) => rental.rentedAmount > 0,
+    );
   }
 }
 
@@ -84,9 +109,7 @@ export const mapRental = (rental: {
   };
 }): RentalForItem => ({
   id: createRentalId(rental.Rentals.id),
-  rentedAmount: createOutstandingAmount(
-    rental.rented_amount - rental.returned_amount - rental.lost_amount,
-  ),
+  rentedAmount: outstandingAmountOf(rental),
   memberName: createRentalMemberName(getMemberName(rental.Rentals)),
 });
 

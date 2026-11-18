@@ -1,5 +1,6 @@
-import type { TestUserKey } from '#test/TestUser';
 import { $fetch } from '@nuxt/test-utils/e2e';
+
+import type { TestUserKey } from '#test/TestUser';
 import type { TestUserService } from '#test/TestUserService';
 
 export class ServerTestService {

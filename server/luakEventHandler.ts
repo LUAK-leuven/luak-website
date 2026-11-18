@@ -1,9 +1,10 @@
+import type { infer as ZodInfer, ZodObject } from 'zod';
+
 import type { H3Event } from '#build/types/nitro-imports';
 import { serviceBuilder } from '#server/serviceBuilder';
 import { createUserId, type UserId } from '#shared/api/rest/user';
-import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server';
 import type { Database } from '#shared/types/database.types';
-import type { ZodObject, infer as ZodInfer } from 'zod';
+import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server';
 
 export default <T>(
   block: (args: {

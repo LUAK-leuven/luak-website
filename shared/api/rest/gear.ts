@@ -1,14 +1,12 @@
 import {
-  string as zodString,
-  number as zodNumber,
   type infer as ZodInfer,
   literal as zodLiteral,
+  number as zodNumber,
+  string as zodString,
   union as zodUnion,
 } from 'zod';
 
-import { dateSchema } from '#shared/types/common';
 import type {
-  AvailableAmount,
   InitialAmount,
   InventoryItemEvent,
   TotalAmount as InventoryItemTotalAmount,
@@ -16,27 +14,35 @@ import type {
 import type {
   DepositFee,
   RentalId,
-  OutstandingAmount,
   RentalMemberName,
-  TotalAmount as RentalItemTotalAmount,
 } from '#shared/api/rest/rental';
+import type { AvailableAmount } from '#shared/api/rest/rental/availability';
+import {
+  type OutstandingAmount,
+  rentalItemIdSchema,
+  type RentalItemName,
+  type TotalAmount as RentalItemTotalAmount,
+} from '#shared/api/rest/rental/rentalItem';
+import { dateSchema } from '#shared/types/common';
 import { entityIdSchema } from '#shared/types/ddd';
 
 declare const _gearItemIdBrand: unique symbol;
-export const gearItemIdSchema = entityIdSchema<typeof _gearItemIdBrand>();
+export const gearItemIdSchema =
+  rentalItemIdSchema.brand<typeof _gearItemIdBrand>();
 export type GearItemId = ZodInfer<typeof gearItemIdSchema>;
 export const createGearItemId = (value: string) =>
   gearItemIdSchema.parse(value);
 
 declare const _gearInventoryIdBrand: unique symbol;
-const gearInventoryIdSchema = entityIdSchema<typeof _gearInventoryIdBrand>();
+export const gearInventoryIdSchema =
+  entityIdSchema<typeof _gearInventoryIdBrand>();
 export type GearInventoryId = ZodInfer<typeof gearInventoryIdSchema>;
 export const createGearInventoryId = (value: string) =>
   gearInventoryIdSchema.parse(value);
 
 export type GearInventorySummary = {
   id: GearItemId;
-  name: GearName;
+  name: RentalItemName;
   totalAmount: RentalItemTotalAmount;
   availableAmount: AvailableAmount;
   earliestRetirementDate: RetirementDate;
@@ -46,7 +52,6 @@ export type GearInventorySummary = {
 export type GearInventoryDetails = {
   id: GearItemId;
   name: GearName;
-  lifespan: LifeSpanInYears;
   depositFee: DepositFee;
   totalAmount: RentalItemTotalAmount;
   availableAmount: AvailableAmount;
@@ -55,6 +60,7 @@ export type GearInventoryDetails = {
     productionDate: ProductionDate | undefined;
     purchaseDate: PurchaseDate | undefined;
     retirementDate: RetirementDate;
+    lifespan: LifeSpanInYears;
     details: Details;
     initialAmount: InitialAmount;
     totalAmount: InventoryItemTotalAmount;
