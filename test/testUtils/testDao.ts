@@ -10,10 +10,13 @@ import type { Database } from '#shared/types/database.types';
 import type { UnsavedRental } from '#shared/types/rental';
 import { aRandomRentalItemId } from '#test/builders/rental';
 import { aRandomTopoId } from '#test/builders/topo';
-import { RentalService } from '~/services/rentalService';
+import type { RentalService } from '~/services/rentalService';
 
 export class TestDao {
-  constructor(private readonly supabase: SupabaseClient<Database>) {}
+  constructor(
+    private readonly supabase: SupabaseClient<Database>,
+    private readonly rentalService: RentalService,
+  ) {}
 
   readonly cleanInventoryEvents = async () => {
     await this.supabase
@@ -32,7 +35,7 @@ export class TestDao {
   };
 
   readonly addRental = async (rental: UnsavedRental): Promise<RentalId> => {
-    const result = await new RentalService(this.supabase).saveRental(rental);
+    const result = await this.rentalService.saveRental(rental);
     if (result.error) throw new Error(result.error);
     if (!result.id) throw new Error('Failed to create test rental');
     return result.id;
@@ -65,6 +68,7 @@ export class TestDao {
     });
   };
 
+  // TODO LUAK-44: insert topos atomically with rental items
   readonly addTopo = async (
     args: Partial<
       Omit<Database['public']['Tables']['Topos']['Insert'], 'id'>

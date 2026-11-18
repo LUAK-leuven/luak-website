@@ -20,6 +20,7 @@ export default defineConfig({
           environment: 'node',
           globalSetup: ['test/integration/global-setup.ts'],
           setupFiles: ['test/integration/setup.ts'],
+          fileParallelism: false, // TODO LUAK-44: remove once we can insert topos atomically
         },
       },
       await defineVitestProject({

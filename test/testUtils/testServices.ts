@@ -8,6 +8,7 @@ import { RentalTestRepository } from '#test/rental/getSeededData';
 import { TestDao } from '#test/testDao';
 import { TestUserService } from '#test/TestUserService';
 import { validateSupabaseUrl } from '#test/validateSupabaseUrl';
+import { RentalService } from '~/services/rentalService';
 
 export const createSupabaseClientForTests = () => {
   if (
@@ -37,8 +38,12 @@ const useSingleton = <T>(create: () => T) => {
 export const testServiceBuilder = useSingleton(() => {
   const supabase = useSingleton(() => createSupabaseClientForTests());
 
-  const testDao = useSingleton(() => new TestDao(supabase()));
   const prodServiceBuilder = serviceBuilder(supabase());
+
+  const rentalService = useSingleton(() => new RentalService(supabase()));
+
+  const testDao = useSingleton(() => new TestDao(supabase(), rentalService()));
+
   const rentalTestRepository = useSingleton(
     () => new RentalTestRepository(prodServiceBuilder.rentalItemRepo()),
   );
@@ -57,5 +62,6 @@ export const testServiceBuilder = useSingleton(() => {
     rentalTestRepository,
     serverTestService,
     mailpitService,
+    prodServices: prodServiceBuilder,
   };
 });

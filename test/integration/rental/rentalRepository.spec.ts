@@ -13,8 +13,6 @@ import { testUsers } from '#test/TestUser';
 const { supabase, userTestService, testDao, rentalTestRepository } =
   testServiceBuilder();
 
-const unpaidMemberName = `${testUsers.unpaidMembership.firstName} ${testUsers.unpaidMembership.lastName}`;
-
 // Adds a rental with 3 outstanding and a fully returned rental of the same item.
 const addRentalsOfTopo = async (rentalItemId: RentalItemId) => {
   const boardMemberId = await userTestService().getUserId('boardMember');
@@ -125,7 +123,7 @@ test.describe('getRentalsFor', () => {
       {
         id: outstandingRentalId,
         rentedAmount: 3,
-        memberName: unpaidMemberName,
+        memberName: testUsers.unpaidMembership.fullName,
       },
     ]);
   });
@@ -144,7 +142,7 @@ test.describe('getRentalsForTopo', () => {
       {
         id: outstandingRentalId,
         rentedAmount: 3,
-        memberName: unpaidMemberName,
+        memberName: testUsers.unpaidMembership.fullName,
       },
     ]);
   });

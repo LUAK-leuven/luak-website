@@ -5,6 +5,7 @@ import {
   createItemLostAmount,
 } from '#shared/api/rest/inventory';
 import { createTopoId, type TopoLibraryItem } from '#shared/api/rest/topo';
+import { getBy } from '#shared/utils/utils';
 import { testServiceBuilder } from '#test/testServices';
 
 const $fetch = testServiceBuilder().serverTestService().fetch;
@@ -37,7 +38,7 @@ test('Does not return topos with total amount 0 for non-board members', async ()
   );
 
   expect(library.map((topo) => topo.id)).not.toContain(idTopoAilefroide);
-  expect(library.find((topo) => topo.id === idTopoFlone)!.amount).toBe(1);
+  expect(getBy(library, 'id', idTopoFlone).amount).toBe(1);
   expect(library.filter((topo) => topo.amount === 0)).toEqual([]);
 });
 
@@ -47,6 +48,6 @@ test('Also returns topos with total amount 0 for board members', async () => {
     'boardMember',
   );
 
-  expect(library.find((topo) => topo.id === idTopoAilefroide)!.amount).toBe(0);
-  expect(library.find((topo) => topo.id === idTopoFlone)!.amount).toBe(1);
+  expect(getBy(library, 'id', idTopoAilefroide).amount).toBe(0);
+  expect(getBy(library, 'id', idTopoFlone).amount).toBe(1);
 });

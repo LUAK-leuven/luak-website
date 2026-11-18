@@ -1,18 +1,15 @@
-import dayjs from 'dayjs';
-
+import {
+  calculateEarliestRetirementDate,
+  calculateRetirementDate,
+} from '#server/domain/inventory/gear';
 import type { InventoryRepository } from '#server/domain/inventory/repository';
 import type { InventoryService } from '#server/domain/inventory/service';
 import type { RentalItemRepository } from '#server/domain/rental/rentalItem';
 import type { RentalRepository } from '#server/domain/rental/repository';
-import {
-  createRetirementDate,
-  type GearInventoryDetails,
-  type GearInventorySummary,
-  type GearItemId,
-  type LifeSpanInYears,
-  type ProductionDate,
-  type PurchaseDate,
-  type RetirementDate,
+import type {
+  GearInventoryDetails,
+  GearInventorySummary,
+  GearItemId,
 } from '#shared/api/rest/gear';
 import { createAvailableAmount } from '#shared/api/rest/rental/availability';
 import { createTotalAmount } from '#shared/api/rest/rental/rentalItem';
@@ -43,7 +40,7 @@ export class InventoryServiceImpl implements InventoryService {
         availableAmount: createAvailableAmount(
           totalAmount - sum(rented[gearItem.id] ?? []),
         ),
-        earliestRetirementDate: this.calculateEarliestRetirementDate(items),
+        earliestRetirementDate: calculateEarliestRetirementDate(items),
         depositFee: gearItem.depositFee,
       };
     });
@@ -65,7 +62,7 @@ export class InventoryServiceImpl implements InventoryService {
       inventory: inventory.map((item) => ({
         ...item,
         totalAmount: item.amount,
-        retirementDate: this.calculateRetirementDate({
+        retirementDate: calculateRetirementDate({
           productionDate: item.productionDate,
           purchaseDate: item.purchaseDate,
           lifespan: item.lifespan,
@@ -73,39 +70,5 @@ export class InventoryServiceImpl implements InventoryService {
       })),
       rentals,
     };
-  }
-
-  private calculateRetirementDate(args: {
-    purchaseDate: PurchaseDate | undefined;
-    productionDate: ProductionDate | undefined;
-    lifespan: LifeSpanInYears;
-  }): RetirementDate {
-    if (args.lifespan === 'infinite') return createRetirementDate('infinite');
-    const startDate = args.purchaseDate
-      ? dayjs(args.purchaseDate)
-      : args.productionDate
-        ? dayjs(args.productionDate).add(1, 'year')
-        : undefined;
-    if (!startDate) return createRetirementDate('missing info');
-    return createRetirementDate(
-      startDate.add(args.lifespan, 'y').format('YYYY-MM-DD'),
-    );
-  }
-
-  private calculateEarliestRetirementDate(
-    items: {
-      productionDate: ProductionDate | undefined;
-      purchaseDate: PurchaseDate | undefined;
-      lifespan: LifeSpanInYears;
-    }[],
-  ): GearInventorySummary['earliestRetirementDate'] {
-    let earliestDate: RetirementDate = createRetirementDate('missing info');
-    for (const item of items) {
-      const date = this.calculateRetirementDate(item);
-      if (date === 'infinite') return createRetirementDate('infinite');
-      if (earliestDate === 'missing info') earliestDate = date;
-      if (date < earliestDate) earliestDate = date;
-    }
-    return earliestDate;
   }
 }
