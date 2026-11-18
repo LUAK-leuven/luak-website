@@ -1,14 +1,11 @@
 import { type infer as ZodInfer, string as zodString } from 'zod';
 
 import type {
-  InitialAmount,
   InventoryItemEvent,
   TotalAmount as InventoryItemTotalAmount,
 } from '#shared/api/rest/inventory';
-import type { RentalId, RentalMemberName } from '#shared/api/rest/rental';
 import type { AvailableAmount } from '#shared/api/rest/rental/availability';
 import type {
-  OutstandingAmount,
   RentalItemId,
   TotalAmount as RentalItemTotalAmount,
 } from '#shared/api/rest/rental/rentalItem';
@@ -33,14 +30,7 @@ export type TopoDetails = {
   placeInLibrary: PlaceInLibrary | undefined;
   tags: Tag[];
   yearPublished: YearPublished | undefined;
-  initialAmount: InitialAmount;
   amount: InventoryItemTotalAmount;
-  events: TopoEvent[];
-  rentals: {
-    id: RentalId;
-    rentedAmount: OutstandingAmount;
-    memberName: RentalMemberName;
-  }[];
 };
 
 export type TopoLibraryItem = {

@@ -1,6 +1,5 @@
 import { foldInventoryItemEvents } from '#server/domain/inventory/InventoryItem';
 import type { InventoryRepository } from '#server/domain/inventory/repository';
-import type { RentalRepository } from '#server/domain/rental/repository';
 import type { TopoRepository } from '#server/domain/topo/repository';
 import type { TopoService } from '#server/domain/topo/service';
 import type {
@@ -13,7 +12,6 @@ export class TopoServiceImpl implements TopoService {
   constructor(
     private readonly topoRepository: TopoRepository,
     private readonly inventoryRepository: InventoryRepository,
-    private readonly rentalRepository: RentalRepository,
   ) {}
 
   readonly getDetails = async (topoId: TopoId): Promise<TopoDetails> => {
@@ -21,8 +19,6 @@ export class TopoServiceImpl implements TopoService {
 
     const topoEvents =
       await this.inventoryRepository.getInventoryItemEvents(topoId);
-
-    const rentals = await this.rentalRepository.getRentalsForTopo(topoId);
 
     return {
       id: topoDetails.id,
@@ -36,10 +32,7 @@ export class TopoServiceImpl implements TopoService {
       placeInLibrary: topoDetails.placeInLibrary,
       tags: topoDetails.tags,
       yearPublished: topoDetails.yearPublished,
-      initialAmount: topoDetails.amount,
       amount: foldInventoryItemEvents(topoDetails.amount, topoEvents),
-      events: topoEvents,
-      rentals: rentals,
     };
   };
 

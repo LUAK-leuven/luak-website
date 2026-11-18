@@ -31,7 +31,6 @@ export const rentalRepositoryMock = (
   getRentedGearAmounts: () => unused(),
   getRentedTopoAmounts: () => unused(),
   getRentalsFor: () => unused(),
-  getRentalsForTopo: () => unused(),
   ...overrides,
 });
 

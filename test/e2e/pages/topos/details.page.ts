@@ -1,22 +1,19 @@
-import type { Locator, Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 import type { TopoId } from '#shared/api/rest/topo';
 import { navigateTo } from '#test/e2e/fixtures';
-import { ItemHistoryComponent } from '#test/e2e/pages/ItemHistory';
 
 export class TopoDetailsPage {
   private readonly page: Page;
 
   static readonly path = (topoId: TopoId) => `/topos/${topoId}/`;
 
-  readonly amount: Locator;
-  readonly history: ItemHistoryComponent;
+  private readonly amount: Locator;
 
   constructor(page: Page) {
     this.page = page;
 
     this.amount = page.getByTestId('amount');
-    this.history = new ItemHistoryComponent(page.getByTestId('history'));
   }
 
   static readonly navigate = async (page: Page, topoId: TopoId) => {
@@ -27,5 +24,9 @@ export class TopoDetailsPage {
 
   readonly navigate = async (topoId: TopoId) => {
     await navigateTo(this.page, TopoDetailsPage.path(topoId));
+  };
+
+  readonly expectAmount = async (value: number) => {
+    await expect(this.amount).toHaveText(value.toFixed());
   };
 }

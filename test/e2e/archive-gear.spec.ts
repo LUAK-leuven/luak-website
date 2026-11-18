@@ -55,7 +55,7 @@ test.describe('lost gear form', () => {
   test('topo - amounts are correct', async ({ page }) => {
     const topoId = createTopoId('539bca6e-417e-44b3-8e6a-fecf223b49a2');
     const topoDetailsPage = await TopoDetailsPage.navigate(page, topoId);
-    await expect(topoDetailsPage.amount).toHaveText('2 / 2');
+    await topoDetailsPage.expectAmount(2);
 
     // Archive a topo
     const testDao = testServiceBuilder().testDao();
@@ -66,12 +66,7 @@ test.describe('lost gear form', () => {
 
     // Topo details
     await topoDetailsPage.navigate(topoId);
-    await expect(topoDetailsPage.amount).toHaveText('1 / 1');
-
-    await expect(topoDetailsPage.history.itemArchivedEvents).toHaveCount(1);
-    await expect(topoDetailsPage.history.itemArchivedEvents).toContainText(
-      '1 item(s) archived',
-    );
+    await topoDetailsPage.expectAmount(1);
 
     // Rental form
     const rentalFormPage = await RentalFormPage.navigate(page);

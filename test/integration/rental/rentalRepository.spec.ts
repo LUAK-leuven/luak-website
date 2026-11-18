@@ -128,22 +128,3 @@ test.describe('getRentalsFor', () => {
     ]);
   });
 });
-
-test.describe('getRentalsForTopo', () => {
-  test('returns rentals that still have items out, with outstanding amount and member name', async () => {
-    const { topoId, rentalItemId } = await testDao().addTopo({ amount: 5 });
-    const outstandingRentalId = await addRentalsOfTopo(rentalItemId);
-
-    const result = await new SupabaseRentalRepository(
-      supabase(),
-    ).getRentalsForTopo(topoId);
-
-    expect(result).toEqual([
-      {
-        id: outstandingRentalId,
-        rentedAmount: 3,
-        memberName: testUsers.unpaidMembership.fullName,
-      },
-    ]);
-  });
-});

@@ -16,7 +16,7 @@ import {
   createRentalItemId,
   type RentalItemId,
 } from '#shared/api/rest/rental/rentalItem';
-import { createTopoId, type TopoId } from '#shared/api/rest/topo';
+import { createTopoId } from '#shared/api/rest/topo';
 import type { Database } from '#shared/types/database.types';
 import { objectFrom, single } from '#shared/utils/utils';
 
@@ -67,31 +67,6 @@ export class SupabaseRentalRepository implements RentalRepository {
       .throwOnError();
 
     return data.map(mapRental).filter((rental) => rental.rentedAmount > 0);
-  }
-
-  async getRentalsForTopo(topoId: TopoId): Promise<RentalForItem[]> {
-    const { data } = await this.supabaseClient
-      .from('Inventory')
-      .select(
-        `
-          RentalItems(
-            ${RentedItems.table}(
-              ${RentedItems.availabilityColumns},
-              Rentals(id, member:Users!member_id(first_name, last_name), contact_info)
-            )
-          )
-        `,
-      )
-      .eq('id', topoId)
-      .single()
-      .throwOnError();
-
-    if (data.RentalItems === null)
-      throw new Error('No rental item found for this topo');
-
-    return data.RentalItems.RentedItems.map(mapRental).filter(
-      (rental) => rental.rentedAmount > 0,
-    );
   }
 }
 
