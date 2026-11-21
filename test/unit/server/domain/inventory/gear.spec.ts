@@ -1,12 +1,12 @@
 import { expect, test } from 'vitest';
 
-import { calculateEarliestRetirementDate } from '#server/domain/inventory/gear';
-import type { GearInventorySummaryRecord } from '#server/domain/inventory/InventoryItem';
 import {
   createLifeSpanInYears,
   createPurchaseDate,
 } from '#shared/api/rest/gear';
 import { createTotalAmount } from '#shared/api/rest/inventory';
+import { calculateEarliestRetirementDate } from '#shared/domain/inventory/gear';
+import type { GearInventorySummaryRecord } from '#shared/domain/inventory/InventoryItem';
 import { aRandomGearItemId } from '#test/builders/ids';
 
 test('calculateEarliestRetirementDate - ignores archived items', () => {

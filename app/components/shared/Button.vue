@@ -4,6 +4,7 @@
     type?: HTMLButtonElement['type'];
     tabindex?: number;
     title?: string | undefined;
+    role?: string | undefined;
     [key: `aria-${string}`]: string | undefined;
   }>();
 
@@ -21,6 +22,7 @@
     :type="type"
     :tabindex="tabindex"
     :title="title"
+    :role="role"
     v-bind="$attrs"
     @click="emit('click')">
     <slot />

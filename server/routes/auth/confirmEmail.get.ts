@@ -1,10 +1,10 @@
 import { object as zodObject, string as zodString, union } from 'zod';
 
+import luakEventHandler from '#server/luakEventHandler';
 import {
   type EmailConfirmationCookie,
   emailConfirmationCookieName,
 } from '#shared/api/cookies/email-confirmation';
-import { serverSupabaseClient } from '#supabase/server';
 
 const querySchema = union([
   zodObject({ code: zodString() }),
@@ -15,49 +15,44 @@ const querySchema = union([
   }),
 ]);
 
-export default defineEventHandler(async (event) => {
-  const result = await getValidatedQuery(event, (query) =>
-    querySchema.safeParse(query),
-  );
-  if (!result.success) {
-    throw createError({
-      statusCode: 500,
-      statusMessage: 'Invalid query parameters',
-    });
-  }
+export default luakEventHandler(
+  async ({ getQueryParams, services: { supabase }, event }) => {
+    const queryParams = await getQueryParams(querySchema);
 
-  let toast: EmailConfirmationCookie;
-  let redirectUrl: string;
+    let toast: EmailConfirmationCookie;
+    let redirectUrl: string;
 
-  if ('code' in result.data) {
-    const sb = await serverSupabaseClient(event);
-    const { error } = await sb.auth.exchangeCodeForSession(result.data.code);
-    if (error) {
-      console.warn(
-        `Error exchanging code '${result.data.code}' for session:`,
-        error,
+    if ('code' in queryParams) {
+      const { error } = await supabase.auth.exchangeCodeForSession(
+        queryParams.code,
       );
-      toast = {
-        type: 'success',
-        message: 'Email confirmed successfully',
-      };
-      redirectUrl = '/login/#';
+      if (error) {
+        console.warn(
+          `Error exchanging code '${queryParams.code}' for session:`,
+          error,
+        );
+        toast = {
+          type: 'success',
+          message: 'Email confirmed successfully',
+        };
+        redirectUrl = '/login/#';
+      } else {
+        toast = {
+          type: 'success',
+          message: 'Email confirmed successfully',
+        };
+        redirectUrl = '/profile/overview/#';
+      }
     } else {
       toast = {
-        type: 'success',
-        message: 'Email confirmed successfully',
+        type: 'error',
+        message: queryParams.error_description,
       };
-      redirectUrl = '/profile/overview/#';
+      redirectUrl = '/#';
     }
-  } else {
-    toast = {
-      type: 'error',
-      message: result.data.error_description,
-    };
-    redirectUrl = '/#';
-  }
 
-  setCookie(event, emailConfirmationCookieName, JSON.stringify(toast));
+    setCookie(event, emailConfirmationCookieName, JSON.stringify(toast));
 
-  return sendRedirect(event, redirectUrl);
-});
+    return sendRedirect(event, redirectUrl);
+  },
+);

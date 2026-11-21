@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 
-import { mapRental } from '#server/adapter-supabase/rental/repository';
+import { mapRental } from '#shared/adapter-supabase/rental/repository';
 import type { RentalMemberName } from '#shared/api/rest/rental';
 
 test('maps a rented item to its outstanding amount', () => {

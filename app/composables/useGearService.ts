@@ -1,6 +1,6 @@
-import type { InventoryItemId } from '#server/domain/inventory/InventoryItem';
 import type { RentalId } from '#shared/api/rest/rental';
 import type { RentalItemId } from '#shared/api/rest/rental/rentalItem';
+import type { InventoryItemId } from '#shared/domain/inventory/InventoryItem';
 import { GearService } from '~/services/gearService';
 
 const GEAR = 'gear';

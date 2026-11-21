@@ -1,0 +1,41 @@
+import type { GearInventoryDetails, GearItemId } from '#shared/api/rest/gear';
+import { createAvailableAmount } from '#shared/api/rest/rental/availability';
+import { createTotalAmount } from '#shared/api/rest/rental/rentalItem';
+import { calculateRetirementDate } from '#shared/domain/inventory/gear';
+import type { InventoryRepository } from '#shared/domain/inventory/repository';
+import type { InventoryService } from '#shared/domain/inventory/service';
+import type { RentalRepository } from '#shared/domain/rental/repository';
+import { sumOf } from '#shared/utils/utils';
+
+export class InventoryServiceImpl implements InventoryService {
+  constructor(
+    private readonly inventoryRepository: InventoryRepository,
+    private readonly rentalRepository: RentalRepository,
+  ) {}
+
+  async getDetails(id: GearItemId): Promise<GearInventoryDetails> {
+    const inventory = await this.inventoryRepository.getInventoryDetails(id);
+    const gearItem = await this.inventoryRepository.getGearItem(id);
+    const rentals = await this.rentalRepository.getRentalsFor(id);
+    const totalAmount = createTotalAmount(sumOf(inventory, 'amount'));
+    return {
+      id,
+      name: gearItem.name,
+      depositFee: gearItem.depositFee,
+      totalAmount,
+      availableAmount: createAvailableAmount(
+        totalAmount - sumOf(rentals, 'rentedAmount'),
+      ),
+      inventory: inventory.map((item) => ({
+        ...item,
+        totalAmount: item.amount,
+        retirementDate: calculateRetirementDate({
+          productionDate: item.productionDate,
+          purchaseDate: item.purchaseDate,
+          lifespan: item.lifespan,
+        }),
+      })),
+      rentals,
+    };
+  }
+}

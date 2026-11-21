@@ -1,9 +1,9 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-import type { InventoryItemId } from '#server/domain/inventory/InventoryItem';
 import { createGearItemId } from '#shared/api/rest/gear';
 import type { RentalId } from '#shared/api/rest/rental';
 import type { RentalItemId } from '#shared/api/rest/rental/rentalItem';
+import type { InventoryItemId } from '#shared/domain/inventory/InventoryItem';
 
 export class GearService {
   constructor(private readonly supabase: SupabaseClient<Database>) {}

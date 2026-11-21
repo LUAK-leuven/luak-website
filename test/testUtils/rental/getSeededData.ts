@@ -1,7 +1,7 @@
 import type {
   RentalItem,
   RentalItemRepository,
-} from '#server/domain/rental/rentalItem';
+} from '#shared/domain/rental/rentalItem';
 import { type FixedArray, randomSelection } from '#shared/utils/utils';
 
 export class RentalTestRepository {

@@ -1,17 +1,11 @@
-import { type infer as ZodInfer, string as zodString } from 'zod';
+import {
+  type $brand as ZodBrand,
+  enum as zodEnum,
+  type infer as ZodInfer,
+  string as zodString,
+} from 'zod';
 
-import type {
-  InitialAmount,
-  InventoryItemEvent,
-  TotalAmount as InventoryItemTotalAmount,
-} from '#shared/api/rest/inventory';
-import type { RentalId, RentalMemberName } from '#shared/api/rest/rental';
-import type { AvailableAmount } from '#shared/api/rest/rental/availability';
-import type {
-  OutstandingAmount,
-  RentalItemId,
-  TotalAmount as RentalItemTotalAmount,
-} from '#shared/api/rest/rental/rentalItem';
+import type { TotalAmount as InventoryItemTotalAmount } from '#shared/api/rest/inventory';
 import { yearSchema } from '#shared/types/common';
 import { entityIdSchema } from '#shared/types/ddd';
 
@@ -33,14 +27,7 @@ export type TopoDetails = {
   placeInLibrary: PlaceInLibrary | undefined;
   tags: Tag[];
   yearPublished: YearPublished | undefined;
-  initialAmount: InitialAmount;
   amount: InventoryItemTotalAmount;
-  events: TopoEvent[];
-  rentals: {
-    id: RentalId;
-    rentedAmount: OutstandingAmount;
-    memberName: RentalMemberName;
-  }[];
 };
 
 export type TopoLibraryItem = {
@@ -55,16 +42,6 @@ export type TopoLibraryItem = {
   yearPublished: YearPublished | undefined;
   amount: InventoryItemTotalAmount;
 };
-
-export type TopoListItem = {
-  id: RentalItemId;
-  title: Title;
-  totalAmount: InventoryItemTotalAmount & RentalItemTotalAmount;
-  availableAmount: AvailableAmount;
-  yearPublished: YearPublished | undefined;
-};
-
-export type TopoEvent = InventoryItemEvent;
 
 declare const _titleBrand: unique symbol;
 const titleSchema = zodString().nonempty().brand<typeof _titleBrand>();
@@ -122,5 +99,30 @@ export type YearPublished = ZodInfer<typeof yearPublishedSchema>;
 export const createYearPublished = (n: number): YearPublished =>
   yearPublishedSchema.parse(n);
 
-export type TopoCondition =
-  'as_good_as_new' | 'good' | 'used' | 'damaged' | 'falling_appart' | undefined;
+const topoConditionValues = [
+  'asGoodAsNew',
+  'good',
+  'used',
+  'damaged',
+  'fallingApart',
+] as const;
+type TopoConditionValue = (typeof topoConditionValues)[number];
+declare const _topoConditionBrand: unique symbol;
+const topoConditionSchema = zodEnum(topoConditionValues)
+  .brand<typeof _topoConditionBrand>()
+  .optional();
+export type TopoCondition = ZodInfer<typeof topoConditionSchema>;
+
+const asTopoCondition = <T extends TopoConditionValue>(
+  value: T,
+): T & ZodBrand<typeof _topoConditionBrand> =>
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+  topoConditionSchema.parse(value) as T & ZodBrand<typeof _topoConditionBrand>;
+
+export const TopoCondition = {
+  asGoodAsNew: asTopoCondition('asGoodAsNew'),
+  good: asTopoCondition('good'),
+  used: asTopoCondition('used'),
+  damaged: asTopoCondition('damaged'),
+  fallingApart: asTopoCondition('fallingApart'),
+} as const;

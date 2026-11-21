@@ -3,7 +3,7 @@ import type { Page } from '@playwright/test';
 import { GearDetailsPage } from '#test/e2e/pages/gear/details.page';
 
 export class GearInventoryPage {
-  readonly path = '/board/gear';
+  readonly path = '/board/inventory';
 
   constructor(private readonly page: Page) {}
 
@@ -18,7 +18,7 @@ export class GearInventoryPage {
   }
 
   gearItem(itemName: string) {
-    const row = this.page.getByTestId(`gearItem-${itemName}`);
+    const row = this.page.getByTestId(`rentalItem-${itemName}`);
     return {
       navigateToDetails: async () => {
         await row.getByTestId('linkToDetails').click();

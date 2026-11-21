@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 
-import { SupabaseRentalItemRepository } from '#server/adapter-supabase/rental/rentalItem';
+import { SupabaseRentalItemRepository } from '#shared/adapter-supabase/rental/rentalItem';
 import { aRentalInput } from '#test/builders/rental';
 import { testServiceBuilder } from '#test/testServices';
 

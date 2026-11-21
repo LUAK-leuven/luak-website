@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 
-import { serviceBuilder } from '#server/serviceBuilder';
+import { serviceBuilder } from '#shared/serviceBuilder';
 import type { Database } from '#shared/types/database.types';
 import { ServerTestService } from '#test/fetch';
 import { MailpitService } from '#test/MailpitService';

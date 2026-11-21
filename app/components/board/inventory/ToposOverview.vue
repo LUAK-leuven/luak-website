@@ -1,0 +1,38 @@
+<script lang="ts" setup>
+  import { refDebounced } from '@vueuse/core';
+
+  import RentalItemsTable from '~/components/board/inventory/RentalItemsTable.vue';
+  import Text from '~/components/input/Text.vue';
+  import WithLazyResource from '~/components/pages/WithLazyResource.vue';
+
+  const { data, status, error } = useLazyFetch('/api/inventory', {
+    method: 'get',
+    query: { itemType: 'topo' },
+  });
+  const searchInput = ref<string>();
+  const searchTerm = refDebounced(searchInput, 250);
+
+  const filteredTopos_ = computed(() =>
+    data.value?.filter((item) => fuzzySearch(item.name, searchTerm.value)),
+  );
+</script>
+
+<template>
+  <Text
+    v-model="searchInput"
+    class="mb-2"
+    label="Search by name"
+    placeholder="Search by name ..." />
+
+  <WithLazyResource
+    v-slot="{ data: filteredTopos }"
+    :data="filteredTopos_"
+    :is-loading="status === 'pending'"
+    :error="error?.message">
+    <div v-if="filteredTopos.length === 0" class="text-center py-10">
+      <p>No topos found matching your criteria.</p>
+    </div>
+
+    <RentalItemsTable :items="filteredTopos" />
+  </WithLazyResource>
+</template>

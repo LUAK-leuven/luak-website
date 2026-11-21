@@ -9,7 +9,7 @@
   } from '#shared/api/rest/gear';
   import InventoryTableItem from '~/components/board/gear/inventoryTableItem.vue';
   import RetirementDate from '~/components/board/gear/retirementDate.vue';
-  import ItemHistory from '~/components/board/inventory/ItemHistory.vue';
+  import ItemHistory from '~/components/board/inventory/details/ItemHistory.vue';
 
   const props = defineProps<{
     inventory: GearInventoryDetails['inventory'];
