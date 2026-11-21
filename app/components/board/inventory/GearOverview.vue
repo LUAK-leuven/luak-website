@@ -27,21 +27,28 @@
     placeholder="Search by name ..." />
 
   <WithLazyResource
-    v-slot="{ data: filteredGear }"
     :data="filteredGear_"
     :is-loading="status === 'pending'"
     :error="error?.message">
-    <div v-if="filteredGear.length === 0" class="text-center py-10">
-      <p>No gear found matching your criteria.</p>
-    </div>
+    <template #loading>
+      <div class="flex justify-center items-center py-10 mb-[80vh]">
+        <span class="loading loading-spinner loading-lg" />
+      </div>
+    </template>
 
-    <RentalItemsTable
-      :items="filteredGear"
-      :link-to-details="
-        (id) => ({
-          name: 'board-gear-id',
-          params: { id },
-        })
-      " />
+    <template #default="{ data: filteredGear }">
+      <div v-if="filteredGear.length === 0" class="text-center py-10">
+        <p>No gear found matching your criteria.</p>
+      </div>
+
+      <RentalItemsTable
+        :items="filteredGear"
+        :link-to-details="
+          (id) => ({
+            name: 'board-gear-id',
+            params: { id },
+          })
+        " />
+    </template>
   </WithLazyResource>
 </template>

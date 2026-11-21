@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import ProfileCard from '~/components/profile/overview/Card.vue';
+  import ActionCard from '~/components/ActionCard.vue';
   import BuyMembershipModal from '~/components/profile/overview/membership/BuyMembership/Modal.vue';
 
   defineProps<{
@@ -7,7 +7,7 @@
   }>();
 </script>
 <template>
-  <ProfileCard image="/aiguilles_rouges.jpg" data-testId="buyMembershipCard">
+  <ActionCard image="/aiguilles_rouges.jpg" data-testId="buyMembershipCard">
     <template #title>
       Not yet a member for
       {{ formatMembershipYear(currentMembershipYear, 'long') }} 😢
@@ -18,5 +18,5 @@
     <template #actions>
       <BuyMembershipModal />
     </template>
-  </ProfileCard>
+  </ActionCard>
 </template>

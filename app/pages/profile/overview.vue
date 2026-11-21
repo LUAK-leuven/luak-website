@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import ProfileCard from '~/components/profile/overview/Card.vue';
+  import ProfileCard from '~/components/ActionCard.vue';
   import LogOutCard from '~/components/profile/overview/LogOutCard.vue';
   import MembershipCard from '~/components/profile/overview/membership/MembershipCard.vue';
 
@@ -26,7 +26,7 @@
       </h2>
       Welcome to your profile page. Here you can manage your membership! In the
       future more functionality will be added.
-      <div class="my-5 mx-2 flex flex-wrap justify-evenly gap-x-4">
+      <div class="my-5 mx-2 flex flex-wrap justify-evenly gap-5">
         <MembershipCard :membership="activeMembership" />
 
         <ProfileCard image="/IMG_20240410_125659.jpg">

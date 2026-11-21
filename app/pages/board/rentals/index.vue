@@ -2,6 +2,7 @@
   import { refDebounced } from '@vueuse/core';
 
   import Text from '~/components/input/Text.vue';
+  import BackButton from '~/components/shared/BackButton.vue';
   import { useRentalService } from '~/composables/useRentalService';
 
   definePageMeta({
@@ -64,7 +65,9 @@
 <template>
   <NuxtLayout name="page-with-title">
     <template #title>Rental Overview</template>
-    <div class="flex flex-row w-full sm:w-2/3 items-center gap-3 mb-5">
+    <div
+      class="flex flex-row w-full sm:w-3/4 md:w-4/5 lg:w-2/3 items-center gap-3 mb-5">
+      <BackButton :to="{ name: 'board' }" />
       <Text
         v-model="searchInput"
         class="w-full"

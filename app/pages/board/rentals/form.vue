@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import dayjs from 'dayjs';
 
+  import BackButton from '~/components/shared/BackButton.vue';
   import { useFetchGearAndTopos } from '~/composables/board/rental/useFetchGearAndTopos';
   import { usePaymentModal } from '~/composables/components/usePaymentModal';
   import { useRentalService } from '~/composables/useRentalService';
@@ -42,6 +43,8 @@
 <template>
   <FullPageCard>
     <template #title>Rental form 🧗</template>
+
+    <BackButton :to="{ name: 'board' }" />
 
     <div v-if="pending" class="flex justify-center">
       <span class="loading loading-spinner loading-lg" />

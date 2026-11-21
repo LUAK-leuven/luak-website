@@ -25,14 +25,21 @@
     placeholder="Search by name ..." />
 
   <WithLazyResource
-    v-slot="{ data: filteredTopos }"
     :data="filteredTopos_"
     :is-loading="status === 'pending'"
     :error="error?.message">
-    <div v-if="filteredTopos.length === 0" class="text-center py-10">
-      <p>No topos found matching your criteria.</p>
-    </div>
+    <template #loading>
+      <div class="flex justify-center items-center py-10 mb-[80vh]">
+        <span class="loading loading-spinner loading-lg" />
+      </div>
+    </template>
 
-    <RentalItemsTable :items="filteredTopos" />
+    <template #default="{ data: filteredTopos }">
+      <div v-if="filteredTopos.length === 0" class="text-center py-10">
+        <p>No topos found matching your criteria.</p>
+      </div>
+
+      <RentalItemsTable :items="filteredTopos" />
+    </template>
   </WithLazyResource>
 </template>

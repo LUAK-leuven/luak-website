@@ -12,7 +12,7 @@
         IBAN -- BE03 7340 3133 8584 <br />
         MAIL -- luak.bestuur@gmail.com
       </p>
-      <p>Copyright © 2024 - All right reserved</p>
+      <p>Copyright © 2026 - All right reserved</p>
     </aside>
     <nav>
       <div class="grid grid-flow-col gap-4">

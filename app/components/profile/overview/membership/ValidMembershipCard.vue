@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import ProfileCard from '~/components/profile/overview/Card.vue';
+  import ProfileCard from '~/components/ActionCard.vue';
   import type { Membership } from '~/model/Membership';
   import { formatMembershipYear } from '~/utils/membershipYear';
 

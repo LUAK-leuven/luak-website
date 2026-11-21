@@ -110,7 +110,7 @@
 
 <template>
   <form @submit.prevent>
-    <h2>General info</h2>
+    <h2 class="mt-2">General info</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-2 mb-3">
       <div class="w-full self-end">
         <BoardRentalFormSelectMember

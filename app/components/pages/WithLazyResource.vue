@@ -17,9 +17,11 @@
 <template>
   <div v-if="error">ERROR: {{ error }}</div>
 
-  <div v-else-if="isLoading" class="flex justify-center items-center py-10">
-    <span class="loading loading-spinner loading-lg" />
-  </div>
+  <slot v-else-if="isLoading" name="loading">
+    <div class="flex justify-center items-center py-10">
+      <span class="loading loading-spinner loading-lg" />
+    </div>
+  </slot>
 
   <div v-else-if="data === undefined || data === null">
     {{ defaultError ?? 'Failed to load page data' }}

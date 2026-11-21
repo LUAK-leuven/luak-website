@@ -2,6 +2,7 @@
   import GearOverview from '~/components/board/inventory/GearOverview.vue';
   import Tabs from '~/components/board/inventory/Tabs.vue';
   import ToposOverview from '~/components/board/inventory/ToposOverview.vue';
+  import BackButton from '~/components/shared/BackButton.vue';
 
   type Tab = 'gear' | 'topos';
 
@@ -16,6 +17,10 @@
 <template>
   <FullPageCard>
     <template #title>Inventory</template>
+
+    <BackButton
+      class="relative top-[-4.5rem] sm:top-[-5rem] left-[-1rem]"
+      :to="{ name: 'board' }" />
 
     <Tabs v-model:active-tab="activeTab" :tabs="tabs" />
 

@@ -37,11 +37,15 @@
         class="p-4 w-80 min-h-full bg-base-200" />
     </div>
 
-    <NuxtLink
-      v-if="user.permissions.boardSection"
-      class="btn btn-lg btn-circle bg-blue-400 m-1 fixed bottom-4 end-4 z-50 hover:bg-blue-300"
-      :to="{ name: 'board-rentals-form' }">
-      🧗‍♀️
-    </NuxtLink>
+    <div
+      class="tooltip tooltip-left fixed bottom-4 end-4 z-50"
+      data-tip="Board Section">
+      <NuxtLink
+        v-if="user.permissions.boardSection"
+        class="btn btn-lg btn-circle bg-blue-400 m-1 hover:bg-blue-300"
+        :to="{ name: 'board' }">
+        🧗‍♀
+      </NuxtLink>
+    </div>
   </div>
 </template>

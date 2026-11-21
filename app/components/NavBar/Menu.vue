@@ -95,32 +95,7 @@
       </details>
     </li>
     <li v-if="user.permissions.boardSection">
-      <details :ref="boardToggleRefName">
-        <summary>Board</summary>
-        <ul class="p-2 bg-base-200 rounded-t-none w-52">
-          <li>
-            <NuxtLink :to="{ name: 'board-subscriptions-overview' }">
-              👥 Members
-            </NuxtLink>
-          </li>
-          <li>
-            <NuxtLink :to="{ name: 'board-rentals-form' }">
-              🧗 Rental form
-            </NuxtLink>
-          </li>
-          <li>
-            <NuxtLink :to="{ name: 'board-rentals' }"> 👀 Rentals </NuxtLink>
-          </li>
-          <li>
-            <NuxtLink :to="{ name: 'board-inventory' }">
-              📋 Inventory
-            </NuxtLink>
-          </li>
-          <li>
-            <a href="/_studio"> 📝 Studio Mode </a>
-          </li>
-        </ul>
-      </details>
+      <NuxtLink :to="{ name: 'board' }"> Board Section </NuxtLink>
     </li>
     <li>
       <NuxtLink :to="{ name: 'pages-slug', params: { slug: ['contact'] } }">

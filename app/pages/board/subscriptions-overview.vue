@@ -8,6 +8,7 @@
     formatStudentStatus,
   } from '~/components/board/subscriptions-overview/helpers';
   import Text from '~/components/input/Text.vue';
+  import BackButton from '~/components/shared/BackButton.vue';
   import { getCurrentMembershipYear } from '~/model/Membership';
 
   const supabase = useSupabaseClient();
@@ -168,6 +169,10 @@
 <template>
   <FullPageCard>
     <template #title>👥 Members Overview </template>
+
+    <BackButton
+      class="relative top-[-4.5rem] sm:top-[-5rem] left-[-1rem]"
+      :to="{ name: 'board' }" />
 
     <!-- Error message -->
     <div v-if="error" class="alert alert-error">
