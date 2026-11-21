@@ -21,7 +21,6 @@ import { createDepositFee } from '#shared/api/rest/rental';
 import {
   foldInventoryItemEvents,
   type GearInventoryRecord,
-  type GearInventorySummaryRecord,
   type GearItemRecord,
   type InventoryItemId,
 } from '#shared/domain/inventory/InventoryItem';
@@ -31,22 +30,6 @@ import { groupBy } from '#shared/utils/utils';
 
 export class SupabaseInventoryRepository implements InventoryRepository {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
-
-  async getInventorySummary(): Promise<GearInventorySummaryRecord[]> {
-    const inventory = await this.getInventoryRows();
-    const events = await this.getAllGearInventoryItemEvents();
-    const grouped = groupBy(events, (event) => event.gearInventoryId);
-    return inventory.map((item) => ({
-      gearItemId: item.rentalItemId,
-      productionDate: item.productionDate,
-      purchaseDate: item.purchaseDate,
-      lifespan: item.lifespan,
-      totalAmount: foldInventoryItemEvents(
-        createInitialAmount(item.amount),
-        grouped[item.id] ?? [],
-      ),
-    }));
-  }
 
   async getInventoryDetails(id: GearItemId): Promise<GearInventoryRecord[]> {
     const { data } = await this.supabaseClient
@@ -69,16 +52,6 @@ export class SupabaseInventoryRepository implements InventoryRepository {
       const itemEvents = events[id] ?? [];
       return mapGearInventoryRecord(item.GearInventory, itemEvents);
     });
-  }
-
-  async getAllGearItems(): Promise<GearItemRecord[]> {
-    const { data } = await this.supabaseClient
-      .from('RentalItems')
-      .select('id, name, deposit_fee')
-      .eq('item_type', 'gear')
-      .order('name')
-      .throwOnError();
-    return data.map(mapGearItem);
   }
 
   async getGearItem(id: GearItemId): Promise<GearItemRecord> {
@@ -112,31 +85,6 @@ export class SupabaseInventoryRepository implements InventoryRepository {
       gearInventoryId: createGearInventoryId(item.item_id),
       ...mapInventoryItemEvent(item),
     }));
-  }
-
-  private async getInventoryRows() {
-    const { data } = await this.supabaseClient
-      .from('GearInventory')
-      .select(
-        'id, Inventory(rental_item_id), production_date, purchase_date, amount, lifespan',
-      )
-      .throwOnError();
-    return data.flatMap((item) => {
-      if (item.Inventory.rental_item_id === null) return [];
-      return [
-        {
-          id: createGearInventoryId(item.id),
-          rentalItemId: createGearItemId(item.Inventory.rental_item_id),
-          productionDate: mapOptional(
-            item.production_date,
-            createProductionDate,
-          ),
-          purchaseDate: mapOptional(item.purchase_date, createPurchaseDate),
-          amount: item.amount,
-          lifespan: mapLifeSpan(item.lifespan),
-        },
-      ];
-    });
   }
 }
 

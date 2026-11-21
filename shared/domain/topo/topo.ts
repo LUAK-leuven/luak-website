@@ -1,7 +1,4 @@
-import type {
-  InitialAmount,
-  InventoryItemEvent,
-} from '#shared/api/rest/inventory';
+import type { InitialAmount } from '#shared/api/rest/inventory';
 import type { RentalItemId } from '#shared/api/rest/rental/rentalItem';
 import type {
   Author,
@@ -38,8 +35,4 @@ export type TopoSummary = {
   title: Title;
   initialAmount: InitialAmount;
   yearPublished: YearPublished | undefined;
-};
-
-export type TopoInventoryItemEvent = InventoryItemEvent & {
-  topoId: TopoId;
 };

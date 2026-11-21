@@ -16,9 +16,7 @@ export const topoRepositoryMock = (
 export const inventoryRepositoryMock = (
   overrides: Partial<InventoryRepository> = {},
 ): InventoryRepository => ({
-  getInventorySummary: () => unused(),
   getInventoryDetails: () => unused(),
-  getAllGearItems: () => unused(),
   getGearItem: () => unused(),
   getInventoryItemEvents: () => unused(),
   getAllGearInventoryItemEvents: () => unused(),
@@ -28,8 +26,6 @@ export const inventoryRepositoryMock = (
 export const rentalRepositoryMock = (
   overrides: Partial<RentalRepository> = {},
 ): RentalRepository => ({
-  getRentedGearAmounts: () => unused(),
-  getRentedTopoAmounts: () => unused(),
   getRentalsFor: () => unused(),
   ...overrides,
 });

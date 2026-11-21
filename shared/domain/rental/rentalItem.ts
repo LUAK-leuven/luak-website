@@ -1,4 +1,3 @@
-import type { GearItemId } from '#shared/api/rest/gear';
 import type { DepositFee } from '#shared/api/rest/rental';
 import type { RentalItemWithAvailability } from '#shared/api/rest/rental/availability';
 import type {
@@ -7,7 +6,7 @@ import type {
 } from '#shared/api/rest/rental/rentalItem';
 
 export interface RentalItemRepository {
-  getAllRentalGearItems(): Promise<RentalItem<GearItemId>[]>;
+  getAllRentalGearItems(): Promise<RentalItemWithAvailability[]>;
   getAllRentalTopoItems(): Promise<RentalItemWithAvailability[]>;
 }
 

@@ -37,8 +37,7 @@ export const serviceBuilder = (supabase: SupabaseClient<Database>) => {
     () => new TopoServiceImpl(topoRepo(), inventoryRepo()),
   );
   const inventoryService = useSingleton<InventoryService>(
-    () =>
-      new InventoryServiceImpl(inventoryRepo(), rentalRepo(), rentalItemRepo()),
+    () => new InventoryServiceImpl(inventoryRepo(), rentalRepo()),
   );
 
   return {

@@ -1,8 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import { outstandingAmountOf } from '#shared/adapter-supabase/rental/outstandingAmount';
-import type { GearItemId } from '#shared/api/rest/gear';
-import { createGearItemId } from '#shared/api/rest/gear';
 import {
   createInitialAmount,
   itemEventSchema,
@@ -12,32 +10,36 @@ import {
   createAvailableAmount,
   type RentalItemWithAvailability,
 } from '#shared/api/rest/rental/availability';
-import type { RentalItemId } from '#shared/api/rest/rental/rentalItem';
 import {
   createRentalItemId,
   createRentalItemName,
   createTotalAmount,
 } from '#shared/api/rest/rental/rentalItem';
 import { foldInventoryItemEvents } from '#shared/domain/inventory/InventoryItem';
-import type {
-  RentalItem,
-  RentalItemRepository,
-} from '#shared/domain/rental/rentalItem';
+import type { RentalItemRepository } from '#shared/domain/rental/rentalItem';
 import type { Database, Json } from '#shared/types/database.types';
 import { sum } from '#shared/utils/utils';
 
 export class SupabaseRentalItemRepository implements RentalItemRepository {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
 
-  async getAllRentalGearItems(): Promise<RentalItem<GearItemId>[]> {
+  async getAllRentalGearItems(): Promise<RentalItemWithAvailability[]> {
     const { data } = await this.supabaseClient
       .from('RentalItems')
-      .select('id, name, deposit_fee')
+      .select(
+        `
+          id,
+          name,
+          deposit_fee,
+          Inventory(id, GearInventory(amount), InventoryItemEvents(event)),
+          RentedItems(rented_amount, returned_amount, lost_amount)
+        `,
+      )
       .eq('item_type', 'gear')
       .order('name')
       .throwOnError();
 
-    return data.map(mapRentalItem<GearItemId>);
+    return data.map(mapRentalItemWithAvailability);
   }
 
   async getAllRentalTopoItems(): Promise<RentalItemWithAvailability[]> {
@@ -60,23 +62,13 @@ export class SupabaseRentalItemRepository implements RentalItemRepository {
   }
 }
 
-const mapRentalItem = <T extends RentalItemId>(item: {
-  id: string;
-  name: string;
-  deposit_fee: number;
-}): RentalItem<T> => ({
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-  id: createGearItemId(item.id) as unknown as T,
-  name: createRentalItemName(item.name),
-  depositFee: createDepositFee(item.deposit_fee),
-});
-
 const mapRentalItemWithAvailability = (item: {
   id: string;
   name: string;
   deposit_fee: number;
   Inventory: {
-    Topos: { amount: number } | null;
+    Topos?: { amount: number } | null;
+    GearInventory?: { amount: number } | null;
     InventoryItemEvents: { event: Json }[];
   }[];
   RentedItems: {
@@ -85,7 +77,7 @@ const mapRentalItemWithAvailability = (item: {
     lost_amount: number;
   }[];
 }): RentalItemWithAvailability => {
-  const totalAmount = sum(item.Inventory.map(mapTopoInventoryAmount));
+  const totalAmount = sum(item.Inventory.map(mapInventoryAmount));
   const outstandingAmount = sum(item.RentedItems.map(outstandingAmountOf));
   return {
     id: createRentalItemId(item.id),
@@ -96,13 +88,22 @@ const mapRentalItemWithAvailability = (item: {
   };
 };
 
-const mapTopoInventoryAmount = (inventoryItem: {
-  Topos: { amount: number } | null;
+const mapInventoryAmount = (inventoryItem: {
+  Topos?: { amount: number } | null;
+  GearInventory?: { amount: number } | null;
   InventoryItemEvents: { event: Json }[];
-}) =>
-  foldInventoryItemEvents(
-    createInitialAmount(inventoryItem.Topos!.amount),
+}): number => {
+  const initialAmount =
+    inventoryItem.Topos?.amount ?? inventoryItem.GearInventory?.amount;
+  if (initialAmount === undefined) {
+    throw new Error(
+      'Inventory item is not linked to any topo or gear inventory',
+    );
+  }
+  return foldInventoryItemEvents(
+    createInitialAmount(initialAmount),
     inventoryItem.InventoryItemEvents.map(({ event }) =>
       itemEventSchema.parse(event),
     ),
   );
+};

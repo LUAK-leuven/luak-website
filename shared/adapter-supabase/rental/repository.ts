@@ -2,57 +2,17 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 
 import { outstandingAmountOf } from '#shared/adapter-supabase/rental/outstandingAmount';
 import * as RentedItems from '#shared/adapter-supabase/rental/RentedItemsTable';
-import { createGearItemId, type GearItemId } from '#shared/api/rest/gear';
 import {
   createRentalId,
   createRentalMemberName,
 } from '#shared/api/rest/rental';
-import {
-  createRentalItemId,
-  type RentalItemId,
-} from '#shared/api/rest/rental/rentalItem';
-import { createTopoId } from '#shared/api/rest/topo';
-import type {
-  RentalForItem,
-  RentedTopoAmount,
-} from '#shared/domain/rental/rental';
+import type { RentalItemId } from '#shared/api/rest/rental/rentalItem';
+import type { RentalForItem } from '#shared/domain/rental/rental';
 import type { RentalRepository } from '#shared/domain/rental/repository';
 import type { Database } from '#shared/types/database.types';
-import { objectFrom, single } from '#shared/utils/utils';
 
 export class SupabaseRentalRepository implements RentalRepository {
   constructor(private readonly supabaseClient: SupabaseClient<Database>) {}
-
-  async getRentedGearAmounts(): Promise<Partial<Record<GearItemId, number[]>>> {
-    const { data } = await this.supabaseClient
-      .from('RentalItems')
-      .select(`id, ${RentedItems.table}(${RentedItems.availabilityColumns})`)
-      .eq('item_type', 'gear')
-      .throwOnError();
-
-    return objectFrom(
-      data.map((x) => [
-        createGearItemId(x.id),
-        x.RentedItems.map((y) => outstandingAmountOf(y)),
-      ]),
-    );
-  }
-
-  async getRentedTopoAmounts(): Promise<RentedTopoAmount[]> {
-    const { data } = await this.supabaseClient
-      .from(RentedItems.table)
-      .select(
-        `RentalItems!inner(id, Inventory(id)), ${RentedItems.availabilityColumns}`,
-      )
-      .eq('RentalItems.item_type', 'topo')
-      .throwOnError();
-
-    return data.map((x) => ({
-      topoId: createTopoId(single(x.RentalItems.Inventory).id),
-      rentalItemId: createRentalItemId(x.RentalItems.id),
-      rentedAmount: outstandingAmountOf(x),
-    }));
-  }
 
   async getRentalsFor(rentalItemId: RentalItemId): Promise<RentalForItem[]> {
     const { data } = await this.supabaseClient
