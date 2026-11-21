@@ -4,8 +4,9 @@
   import Text from '~/components/input/Text.vue';
   import WithLazyResource from '~/components/pages/WithLazyResource.vue';
 
-  const { data, status, error } = useLazyFetch('/api/gear/inventory', {
+  const { data, status, error } = useLazyFetch('/api/inventory', {
     method: 'get',
+    query: { itemType: 'gear' },
   });
   const searchInput = ref<string>();
   const searchTerm = refDebounced(searchInput, 250);

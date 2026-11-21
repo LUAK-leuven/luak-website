@@ -14,19 +14,23 @@ export type RentalItemId = ZodInfer<typeof rentalItemIdSchema>;
 export const createRentalItemId = (value: string) =>
   rentalItemIdSchema.parse(value);
 
+const itemTypeValues = ['gear', 'topo'] as const;
+type ItemTypeValues = (typeof itemTypeValues)[number];
 declare const _rentalItemTypeBrand: unique symbol;
-export const rentalItemTypeSchema = zodEnum(['gear', 'topo']).brand<
-  typeof _rentalItemTypeBrand
->();
+export const rentalItemTypeSchema =
+  zodEnum(itemTypeValues).brand<typeof _rentalItemTypeBrand>();
 export type RentalItemType = ZodInfer<typeof rentalItemTypeSchema>;
-export const createRentalItemType = (value: string): RentalItemType =>
-  rentalItemTypeSchema.parse(value);
-// TODO: Find better solution
+
+const asRentalItemType = <T extends ItemTypeValues>(
+  value: T,
+): T & ZodBrand<typeof _rentalItemTypeBrand> =>
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+  rentalItemTypeSchema.parse(value) as T &
+    ZodBrand<typeof _rentalItemTypeBrand>;
+
 export const RentalItemType = {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-  gear: 'gear' as 'gear' & ZodBrand<typeof _rentalItemTypeBrand>,
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-  topo: 'topo' as 'topo' & ZodBrand<typeof _rentalItemTypeBrand>,
+  gear: asRentalItemType('gear'),
+  topo: asRentalItemType('topo'),
 } as const;
 
 declare const _rentalItemNameBrand: unique symbol;

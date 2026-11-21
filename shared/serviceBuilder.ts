@@ -50,6 +50,8 @@ export const serviceBuilder = (supabase: SupabaseClient<Database>) => {
     rentalRepo,
     rentalItemRepo,
     userRepo,
+
+    supabase,
   };
 };
 

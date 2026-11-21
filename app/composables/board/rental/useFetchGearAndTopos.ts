@@ -2,12 +2,12 @@ import { toRentalItem } from '~/composables/board/rental/rentalFormItems';
 
 export const useFetchGearAndTopos = () => {
   const { data: allGear_, pending: gearPending } = useLazyFetch(
-    '/api/gear/inventory',
-    { method: 'get' },
+    '/api/inventory',
+    { method: 'get', query: { itemType: 'gear' } },
   );
   const { data: allTopos_, pending: toposPending } = useLazyFetch(
-    '/api/topos',
-    { method: 'get' },
+    '/api/inventory',
+    { method: 'get', query: { itemType: 'topo' } },
   );
 
   const allGear = computed(() =>

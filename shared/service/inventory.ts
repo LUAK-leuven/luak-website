@@ -3,7 +3,10 @@ import {
   createAvailableAmount,
   type RentalItemWithAvailability,
 } from '#shared/api/rest/rental/availability';
-import { createTotalAmount } from '#shared/api/rest/rental/rentalItem';
+import {
+  createTotalAmount,
+  RentalItemType,
+} from '#shared/api/rest/rental/rentalItem';
 import { calculateRetirementDate } from '#shared/domain/inventory/gear';
 import type { InventoryRepository } from '#shared/domain/inventory/repository';
 import type { InventoryService } from '#shared/domain/inventory/service';
@@ -39,6 +42,18 @@ export class InventoryServiceImpl implements InventoryService {
         depositFee: gearItem.depositFee,
       };
     });
+  }
+
+  async getRentalItemsWithAvailability(
+    itemType: RentalItemType,
+  ): Promise<RentalItemWithAvailability[]> {
+    switch (itemType) {
+      case RentalItemType.gear:
+        return await this.getInventorySummary();
+      case RentalItemType.topo:
+        return await this.rentalItemRepository.getAllRentalTopoItems();
+    }
+    throw new Error('Method not implemented.');
   }
 
   async getDetails(id: GearItemId): Promise<GearInventoryDetails> {
