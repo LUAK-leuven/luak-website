@@ -18,7 +18,7 @@ export class GearInventoryPage {
   }
 
   gearItem(itemName: string) {
-    const row = this.page.getByTestId(`gearItem-${itemName}`);
+    const row = this.page.getByTestId(`rentalItem-${itemName}`);
     return {
       navigateToDetails: async () => {
         await row.getByTestId('linkToDetails').click();
