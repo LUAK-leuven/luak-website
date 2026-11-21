@@ -8,5 +8,3 @@ export const yup_phone = yup
   .matches(phoneRegExp, 'Format of the phone number is incorrect.');
 
 export const yup_password = yup.string().min(8);
-
-export const yupUuid = yup.string().uuid().required();
