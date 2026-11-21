@@ -50,6 +50,5 @@ test('maps gear stock and allows negative availability', async () => {
   expect(result[0]).toMatchObject({
     totalAmount: 3,
     availableAmount: -1,
-    earliestRetirementDate: 'infinite',
   });
 });

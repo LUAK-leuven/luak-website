@@ -1,14 +1,10 @@
-import type {
-  GearInventoryDetails,
-  GearInventorySummary,
-  GearItemId,
-} from '#shared/api/rest/gear';
-import { createAvailableAmount } from '#shared/api/rest/rental/availability';
-import { createTotalAmount } from '#shared/api/rest/rental/rentalItem';
+import type { GearInventoryDetails, GearItemId } from '#shared/api/rest/gear';
 import {
-  calculateEarliestRetirementDate,
-  calculateRetirementDate,
-} from '#shared/domain/inventory/gear';
+  createAvailableAmount,
+  type RentalItemWithAvailability,
+} from '#shared/api/rest/rental/availability';
+import { createTotalAmount } from '#shared/api/rest/rental/rentalItem';
+import { calculateRetirementDate } from '#shared/domain/inventory/gear';
 import type { InventoryRepository } from '#shared/domain/inventory/repository';
 import type { InventoryService } from '#shared/domain/inventory/service';
 import type { RentalItemRepository } from '#shared/domain/rental/rentalItem';
@@ -22,7 +18,7 @@ export class InventoryServiceImpl implements InventoryService {
     private readonly rentalItemRepository: RentalItemRepository,
   ) {}
 
-  async getInventorySummary(): Promise<GearInventorySummary[]> {
+  async getInventorySummary(): Promise<RentalItemWithAvailability[]> {
     const inventory = groupBy(
       await this.inventoryRepository.getInventorySummary(),
       (item) => item.gearItemId,
@@ -40,7 +36,6 @@ export class InventoryServiceImpl implements InventoryService {
         availableAmount: createAvailableAmount(
           totalAmount - sum(rented[gearItem.id] ?? []),
         ),
-        earliestRetirementDate: calculateEarliestRetirementDate(items),
         depositFee: gearItem.depositFee,
       };
     });

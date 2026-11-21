@@ -1,11 +1,6 @@
 <script lang="ts" setup>
-  import {
-    breakpointsTailwind,
-    refDebounced,
-    useBreakpoints,
-  } from '@vueuse/core';
+  import { refDebounced } from '@vueuse/core';
 
-  import RetirementDate from '~/components/board/gear/retirementDate.vue';
   import Text from '~/components/input/Text.vue';
   import WithLazyResource from '~/components/pages/WithLazyResource.vue';
 
@@ -20,9 +15,6 @@
       fuzzySearch(gearItem.name, searchTerm.value),
     ),
   );
-
-  const bp = useBreakpoints(breakpointsTailwind);
-  const sm = computed(() => bp.sm.value);
 </script>
 
 <template>
@@ -44,48 +36,41 @@
         <p>No gear found matching your criteria.</p>
       </div>
 
-      <ClientOnly v-else>
-        <div class="max-w-[90vw]">
-          <table class="table table-zebra">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th v-if="sm">Earliest retirement date</th>
-                <th class="px-0">Available / Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="gearItem of filteredGear"
-                :key="gearItem.id"
-                :data-testId="`gearItem-${gearItem.name}`">
-                <td>
-                  <SharedLinkTo
-                    :text="gearItem.name"
-                    :to="{
-                      name: 'board-gear-id',
-                      params: { id: gearItem.id },
-                    }"
-                    data-testId="linkToDetails" />
-                </td>
-                <td v-if="sm">
-                  <RetirementDate
-                    :retirement-date="gearItem.earliestRetirementDate" />
-                </td>
-                <td>
-                  <span data-testId="availableAmount">
-                    {{ gearItem.availableAmount }}
-                  </span>
-                  /
-                  <span data-testId="totalAmount">
-                    {{ gearItem.totalAmount }}
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </ClientOnly>
+      <div class="max-w-[90vw]">
+        <table class="table table-zebra">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th class="px-0">Available / Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="gearItem of filteredGear"
+              :key="gearItem.id"
+              :data-testId="`gearItem-${gearItem.name}`">
+              <td>
+                <SharedLinkTo
+                  :text="gearItem.name"
+                  :to="{
+                    name: 'board-gear-id',
+                    params: { id: gearItem.id },
+                  }"
+                  data-testId="linkToDetails" />
+              </td>
+              <td>
+                <span data-testId="availableAmount">
+                  {{ gearItem.availableAmount }}
+                </span>
+                /
+                <span data-testId="totalAmount">
+                  {{ gearItem.totalAmount }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </WithLazyResource>
   </FullPageCard>
 </template>

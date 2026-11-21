@@ -30,7 +30,7 @@ Use Markdown to make information easy to scan, navigate, and maintain.
 - Keep list items short; split complex items when needed.
 - Use terminology consistently throughout the document.
 - Use links for files, or other documents in the repository.
-- Link all code references (functions, variables, classes, etc.) to their definitions or locations in the repository.
+- Link all code references (functions, variables, classes, etc.) to their definitions or locations in the repository. For example, use `[someFunction](path/to/file#L10)` for a function defined at line 10 in a file.
 
 ## Example: Deployment flow
 

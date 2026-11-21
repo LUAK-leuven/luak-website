@@ -1,7 +1,4 @@
-import {
-  toRentalFormGearItem,
-  toRentalFormTopoItem,
-} from '~/composables/board/rental/rentalFormItems';
+import { toRentalItem } from '~/composables/board/rental/rentalFormItems';
 
 export const useFetchGearAndTopos = () => {
   const { data: allGear_, pending: gearPending } = useLazyFetch(
@@ -14,10 +11,10 @@ export const useFetchGearAndTopos = () => {
   );
 
   const allGear = computed(() =>
-    allGear_.value?.map((gear) => toRentalFormGearItem(gear)),
+    allGear_.value?.map((gear) => toRentalItem(gear)),
   );
   const allTopos = computed(() =>
-    allTopos_.value?.map((topo) => toRentalFormTopoItem(topo)),
+    allTopos_.value?.map((topo) => toRentalItem(topo)),
   );
 
   return {
