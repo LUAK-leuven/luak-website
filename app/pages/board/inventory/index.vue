@@ -18,11 +18,13 @@
   <FullPageCard>
     <template #title>Inventory</template>
 
-    <BackButton
-      class="relative top-[-4.5rem] sm:top-[-5rem] left-[-1rem]"
-      :to="{ name: 'board' }" />
+    <BackButton class="absolute -top-10 left-5" :to="{ name: 'board' }" />
 
-    <Tabs v-model:active-tab="activeTab" :tabs="tabs" />
+    <div class="absolute top-0 left-0 w-full">
+      <Tabs v-model:active-tab="activeTab" class="" :tabs="tabs" />
+    </div>
+
+    <div class="h-8" />
 
     <GearOverview v-if="activeTab === 'gear'" />
     <ToposOverview v-if="activeTab === 'topos'" />

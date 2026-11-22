@@ -170,9 +170,7 @@
   <FullPageCard>
     <template #title>👥 Members Overview </template>
 
-    <BackButton
-      class="relative top-[-4.5rem] sm:top-[-5rem] left-[-1rem]"
-      :to="{ name: 'board' }" />
+    <BackButton class="absolute -top-10 left-5" :to="{ name: 'board' }" />
 
     <!-- Error message -->
     <div v-if="error" class="alert alert-error">
