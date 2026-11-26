@@ -63,7 +63,7 @@
     "@vueuse/core": "^15.0.0",
     "better-sqlite3": "^13.0.3",
     "dayjs": "^1.11.23",
-    "nuxt-typed-router": "^4.0.10",
+    "nuxt-typed-router": "^4.0.12",
     "qrcode": "^1.5.4",
     "yup": "^1.7.1"
   },
