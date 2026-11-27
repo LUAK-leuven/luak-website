@@ -56,7 +56,7 @@
   },
   "dependencies": {
     "@floating-ui/vue": "^2.0.1",
-    "@nuxt/content": "^3.16.2",
+    "@nuxt/content": "^3.17.0",
     "@nuxt/image": "^2.2.1",
     "@vee-validate/nuxt": "^4.12.8",
     "@vee-validate/yup": "^4.12.8",
