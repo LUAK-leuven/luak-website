@@ -20,8 +20,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
     if (data === null || data.length === 0) {
       return abortNavigation(
         createError({
-          statusCode: 403,
-          statusMessage: 'Unauthorized',
+          status: 403,
+          statusText: 'Unauthorized',
         }),
       );
     }
