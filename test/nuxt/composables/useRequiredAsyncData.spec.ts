@@ -85,8 +85,8 @@ test('useRequiredAsyncData throws a fatal error and keeps no last value when a r
 const expectCorrectErrorHandling = (block: () => unknown, failure: unknown) => {
   expect(block).toThrow(
     createError({
-      statusCode: 500,
-      statusMessage: LOAD_FAILED_MESSAGE,
+      status: 500,
+      statusText: LOAD_FAILED_MESSAGE,
       cause: failure,
       fatal: true,
     }),

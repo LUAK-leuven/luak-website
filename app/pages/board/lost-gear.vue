@@ -28,8 +28,8 @@
     if (!result.success) {
       console.error('Invalid query parameters', result.error);
       throw createError({
-        statusCode: 400,
-        statusMessage: `Invalid query parameters: ${JSON.stringify(route.query)}`,
+        status: 400,
+        statusText: `Invalid query parameters: ${JSON.stringify(route.query)}`,
       });
     }
     return result.data;

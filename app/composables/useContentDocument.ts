@@ -23,8 +23,8 @@ export async function useContentDocument<C extends ContentDocumentCollection>(
   }
   if (data.value === undefined) {
     throw showError({
-      statusCode: 404,
-      statusMessage: 'Page Not Found',
+      status: 404,
+      statusText: 'Page Not Found',
     });
   }
   return data.value;

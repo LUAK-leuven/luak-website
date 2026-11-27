@@ -15,8 +15,8 @@ const createFatalLoadError = (
   errorMessage: (error: unknown) => string,
 ) =>
   createError({
-    statusCode: 500,
-    statusMessage: errorMessage(cause),
+    status: 500,
+    statusText: errorMessage(cause),
     cause,
     fatal: true,
   });
